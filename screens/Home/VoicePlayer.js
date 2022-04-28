@@ -16,6 +16,10 @@ import {
   Text,
   TouchableOpacity,
   View,
+<<<<<<< HEAD
+=======
+  Vibration
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 } from 'react-native';
 import { styles } from '../style/Common';
 import { AudioContext, OfflineAudioContext } from 'standardized-audio-context';
@@ -314,6 +318,10 @@ class VoicePlayer extends Component {
   };
 
   onStopPlay = async () => {
+<<<<<<< HEAD
+=======
+    Vibration.vibrate(300);
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
     let { actions } = this.props;
     actions.setVoiceState(false);
     this.setState({isPlaying:false,isStarted:false});

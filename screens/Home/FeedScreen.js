@@ -313,7 +313,11 @@ const FeedScreen = (props) => {
             onPress = {()=>{
               if(noticeCount > 0 ){
                 getVoices(true);
+<<<<<<< HEAD
                 Vibration.vibrate(100);
+=======
+                Vibration.vibrate(200);
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
               }
               noticeDispatch("reset");
             }}

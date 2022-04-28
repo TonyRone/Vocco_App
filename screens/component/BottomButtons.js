@@ -68,7 +68,11 @@ export const BottomButtons = ({
         />
       </TouchableOpacity>
       <TouchableOpacity
+<<<<<<< HEAD
         onPress={()=>{Vibration.vibrate(100);onNavigate("HoldRecord");}}
+=======
+        onPress={()=>{Vibration.vibrate(200);onNavigate("HoldRecord");}}
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
       >
         
           <SvgXml

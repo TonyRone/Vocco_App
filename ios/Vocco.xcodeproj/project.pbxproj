@@ -7,15 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+<<<<<<< HEAD
 		003C14B628F33FE46ED2E2D8 /* libPods-Vocco.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D9449796AA638F67AE81F40 /* libPods-Vocco.a */; };
+=======
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 		00E356F31AD99517003FC87E /* VoccoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* VoccoTests.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+<<<<<<< HEAD
 		59940FACA05F8C12ED715D45 /* libPods-Vocco-VoccoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF1BD19D242BD018492B7C92 /* libPods-Vocco-VoccoTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8CF513DE27D8FD0C00EFBCEF /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 8CF513DD27D8FD0C00EFBCEF /* fonts */; };
 		8CF5140C27DBBB8600EFBCEF /* libRNAudioRecorderPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CF513F827DB8E3800EFBCEF /* libRNAudioRecorderPlayer.a */; };
+=======
+		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8CF513DE27D8FD0C00EFBCEF /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 8CF513DD27D8FD0C00EFBCEF /* fonts */; };
+		8CF5140C27DBBB8600EFBCEF /* libRNAudioRecorderPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CF513F827DB8E3800EFBCEF /* libRNAudioRecorderPlayer.a */; };
+		A3944651A3E77F357CAEB2D5 /* libPods-Vocco.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA8DC331A2187090BD720939 /* libPods-Vocco.a */; };
+		ADA61571E5C8CCCF35845CF1 /* libPods-Vocco-VoccoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8599F9EABA58E38CAF935CA1 /* libPods-Vocco-VoccoTests.a */; };
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,10 +47,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+<<<<<<< HEAD
 		0021E3F2E951878DED66BA0A /* Pods-Vocco-VoccoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vocco-VoccoTests.release.xcconfig"; path = "Target Support Files/Pods-Vocco-VoccoTests/Pods-Vocco-VoccoTests.release.xcconfig"; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* VoccoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoccoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* VoccoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoccoTests.m; sourceTree = "<group>"; };
+=======
+		00E356EE1AD99517003FC87E /* VoccoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoccoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* VoccoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoccoTests.m; sourceTree = "<group>"; };
+		0C470ABA62AB5619A7059D53 /* Pods-Vocco.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vocco.debug.xcconfig"; path = "Target Support Files/Pods-Vocco/Pods-Vocco.debug.xcconfig"; sourceTree = "<group>"; };
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 		0F94F7DBDB4748F8A0ECB236 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		101B9AAE8D2742C3962150E3 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		110111DA239747148E1BE968 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
@@ -50,12 +68,22 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Vocco/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Vocco/main.m; sourceTree = "<group>"; };
 		34B878A7B5F04EDCB024913F /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+<<<<<<< HEAD
 		3D9449796AA638F67AE81F40 /* libPods-Vocco.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Vocco.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E38C5706E08430BB7ABF091 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		578B8860E8EB459B9D526A16 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		702B577D15034D9DA74E256F /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Vocco/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8387C14FE75B2F6FC29C52FB /* Pods-Vocco.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vocco.debug.xcconfig"; path = "Target Support Files/Pods-Vocco/Pods-Vocco.debug.xcconfig"; sourceTree = "<group>"; };
+=======
+		4E38C5706E08430BB7ABF091 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
+		4E75AB5D221DB6ADD6E9D621 /* Pods-Vocco-VoccoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vocco-VoccoTests.debug.xcconfig"; path = "Target Support Files/Pods-Vocco-VoccoTests/Pods-Vocco-VoccoTests.debug.xcconfig"; sourceTree = "<group>"; };
+		578B8860E8EB459B9D526A16 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		5BE340030DE20A4C45D1BBB7 /* Pods-Vocco-VoccoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vocco-VoccoTests.release.xcconfig"; path = "Target Support Files/Pods-Vocco-VoccoTests/Pods-Vocco-VoccoTests.release.xcconfig"; sourceTree = "<group>"; };
+		702B577D15034D9DA74E256F /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Vocco/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8599F9EABA58E38CAF935CA1 /* libPods-Vocco-VoccoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Vocco-VoccoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 		8CB27D9727DC9E49005EF6D7 /* Vocco.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Vocco.entitlements; path = Vocco/Vocco.entitlements; sourceTree = "<group>"; };
 		8CF513DD27D8FD0C00EFBCEF /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../assets/fonts; sourceTree = "<group>"; };
 		8CF513DF27D9061200EFBCEF /* SFProDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SFProDisplay-Bold.ttf"; path = "../assets/fonts/SFProDisplay-Bold.ttf"; sourceTree = "<group>"; };
@@ -79,18 +107,30 @@
 		8CF513F327DB8E3700EFBCEF /* RNAudioRecorderPlayer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNAudioRecorderPlayer.xcodeproj; path = "node_modules/react-native-audio-recorder-player/ios/RNAudioRecorderPlayer.xcodeproj"; sourceTree = "<group>"; };
 		8CF5142327DBDAED00EFBCEF /* AccessibilityResources */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AccessibilityResources; path = "../node_modules/react-native/React/AccessibilityResources"; sourceTree = "<group>"; };
 		9A7BF253F813472DB9A950CA /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
+<<<<<<< HEAD
 		AACCADBCEAC2C693B1CE221E /* Pods-Vocco.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vocco.release.xcconfig"; path = "Target Support Files/Pods-Vocco/Pods-Vocco.release.xcconfig"; sourceTree = "<group>"; };
 		ADFBD98703384C90BF2450E2 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		B8A73BAD87D84B3FBB4A19F1 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		C1CF711B1F71409B8F92184D /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
+=======
+		ADFBD98703384C90BF2450E2 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		B8A73BAD87D84B3FBB4A19F1 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
+		C1CF711B1F71409B8F92184D /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
+		DA8DC331A2187090BD720939 /* libPods-Vocco.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Vocco.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E51BB94756F29D619AB98798 /* Pods-Vocco.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vocco.release.xcconfig"; path = "Target Support Files/Pods-Vocco/Pods-Vocco.release.xcconfig"; sourceTree = "<group>"; };
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EF8683E132CB43C281461E8E /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		F66F1A5E29F84FB89206BF9F /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		F7093A66A3B74FBF9EF42A19 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		F9E31B3594144E56AF91F849 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+<<<<<<< HEAD
 		FA7EF048B6AA2E8D38E0E4DE /* Pods-Vocco-VoccoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vocco-VoccoTests.debug.xcconfig"; path = "Target Support Files/Pods-Vocco-VoccoTests/Pods-Vocco-VoccoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		FCE0FF28A70F4FBFA012E125 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		FF1BD19D242BD018492B7C92 /* libPods-Vocco-VoccoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Vocco-VoccoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+=======
+		FCE0FF28A70F4FBFA012E125 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,7 +138,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+<<<<<<< HEAD
 				59940FACA05F8C12ED715D45 /* libPods-Vocco-VoccoTests.a in Frameworks */,
+=======
+				ADA61571E5C8CCCF35845CF1 /* libPods-Vocco-VoccoTests.a in Frameworks */,
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,7 +151,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				8CF5140C27DBBB8600EFBCEF /* libRNAudioRecorderPlayer.a in Frameworks */,
+<<<<<<< HEAD
 				003C14B628F33FE46ED2E2D8 /* libPods-Vocco.a in Frameworks */,
+=======
+				A3944651A3E77F357CAEB2D5 /* libPods-Vocco.a in Frameworks */,
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,10 +196,17 @@
 		22E4243A31B28A08E943AAB0 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+<<<<<<< HEAD
 				8387C14FE75B2F6FC29C52FB /* Pods-Vocco.debug.xcconfig */,
 				AACCADBCEAC2C693B1CE221E /* Pods-Vocco.release.xcconfig */,
 				FA7EF048B6AA2E8D38E0E4DE /* Pods-Vocco-VoccoTests.debug.xcconfig */,
 				0021E3F2E951878DED66BA0A /* Pods-Vocco-VoccoTests.release.xcconfig */,
+=======
+				0C470ABA62AB5619A7059D53 /* Pods-Vocco.debug.xcconfig */,
+				E51BB94756F29D619AB98798 /* Pods-Vocco.release.xcconfig */,
+				4E75AB5D221DB6ADD6E9D621 /* Pods-Vocco-VoccoTests.debug.xcconfig */,
+				5BE340030DE20A4C45D1BBB7 /* Pods-Vocco-VoccoTests.release.xcconfig */,
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -160,8 +215,13 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
+<<<<<<< HEAD
 				3D9449796AA638F67AE81F40 /* libPods-Vocco.a */,
 				FF1BD19D242BD018492B7C92 /* libPods-Vocco-VoccoTests.a */,
+=======
+				DA8DC331A2187090BD720939 /* libPods-Vocco.a */,
+				8599F9EABA58E38CAF935CA1 /* libPods-Vocco-VoccoTests.a */,
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -257,11 +317,19 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "VoccoTests" */;
 			buildPhases = (
+<<<<<<< HEAD
 				94C05BA206AECCB22AEE500B /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
 				D802CA0B318CD08E9E07AD71 /* [CP] Copy Pods Resources */,
+=======
+				F94E92395DD533C92B48DFB2 /* [CP] Check Pods Manifest.lock */,
+				00E356EA1AD99517003FC87E /* Sources */,
+				00E356EB1AD99517003FC87E /* Frameworks */,
+				00E356EC1AD99517003FC87E /* Resources */,
+				A45CF774E6B52BA2DBE4BC46 /* [CP] Copy Pods Resources */,
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 			);
 			buildRules = (
 			);
@@ -277,13 +345,21 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Vocco" */;
 			buildPhases = (
+<<<<<<< HEAD
 				9C2B0310C6302DB51640A9B0 /* [CP] Check Pods Manifest.lock */,
+=======
+				0B0C18E04F947ED71253F3DE /* [CP] Check Pods Manifest.lock */,
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+<<<<<<< HEAD
 				5F6434CEE86DAC7DDA35EEBC /* [CP] Copy Pods Resources */,
+=======
+				B2B897862BCBF7F460F57F81 /* [CP] Copy Pods Resources */,
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 			);
 			buildRules = (
 			);
@@ -382,12 +458,17 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
+<<<<<<< HEAD
 		5F6434CEE86DAC7DDA35EEBC /* [CP] Copy Pods Resources */ = {
+=======
+		0B0C18E04F947ED71253F3DE /* [CP] Check Pods Manifest.lock */ = {
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+<<<<<<< HEAD
 				"${PODS_ROOT}/Target Support Files/Pods-Vocco/Pods-Vocco-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -400,11 +481,31 @@
 			showEnvVarsInLog = 0;
 		};
 		94C05BA206AECCB22AEE500B /* [CP] Check Pods Manifest.lock */ = {
+=======
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Vocco-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A45CF774E6B52BA2DBE4BC46 /* [CP] Copy Pods Resources */ = {
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+<<<<<<< HEAD
 			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
@@ -422,11 +523,26 @@
 			showEnvVarsInLog = 0;
 		};
 		9C2B0310C6302DB51640A9B0 /* [CP] Check Pods Manifest.lock */ = {
+=======
+				"${PODS_ROOT}/Target Support Files/Pods-Vocco-VoccoTests/Pods-Vocco-VoccoTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Vocco-VoccoTests/Pods-Vocco-VoccoTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Vocco-VoccoTests/Pods-Vocco-VoccoTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B2B897862BCBF7F460F57F81 /* [CP] Copy Pods Resources */ = {
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+<<<<<<< HEAD
 			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
@@ -444,11 +560,26 @@
 			showEnvVarsInLog = 0;
 		};
 		D802CA0B318CD08E9E07AD71 /* [CP] Copy Pods Resources */ = {
+=======
+				"${PODS_ROOT}/Target Support Files/Pods-Vocco/Pods-Vocco-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Vocco/Pods-Vocco-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Vocco/Pods-Vocco-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F94E92395DD533C92B48DFB2 /* [CP] Check Pods Manifest.lock */ = {
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+<<<<<<< HEAD
 				"${PODS_ROOT}/Target Support Files/Pods-Vocco-VoccoTests/Pods-Vocco-VoccoTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -458,6 +589,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Vocco-VoccoTests/Pods-Vocco-VoccoTests-resources.sh\"\n";
+=======
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Vocco-VoccoTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -524,7 +671,11 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
+<<<<<<< HEAD
 			baseConfigurationReference = FA7EF048B6AA2E8D38E0E4DE /* Pods-Vocco-VoccoTests.debug.xcconfig */;
+=======
+			baseConfigurationReference = 4E75AB5D221DB6ADD6E9D621 /* Pods-Vocco-VoccoTests.debug.xcconfig */;
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -552,7 +703,11 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
+<<<<<<< HEAD
 			baseConfigurationReference = 0021E3F2E951878DED66BA0A /* Pods-Vocco-VoccoTests.release.xcconfig */;
+=======
+			baseConfigurationReference = 5BE340030DE20A4C45D1BBB7 /* Pods-Vocco-VoccoTests.release.xcconfig */;
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -577,7 +732,11 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
+<<<<<<< HEAD
 			baseConfigurationReference = 8387C14FE75B2F6FC29C52FB /* Pods-Vocco.debug.xcconfig */;
+=======
+			baseConfigurationReference = 0C470ABA62AB5619A7059D53 /* Pods-Vocco.debug.xcconfig */;
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -594,13 +753,21 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+<<<<<<< HEAD
 				MARKETING_VERSION = 1.1;
+=======
+				MARKETING_VERSION = 1.11;
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
+<<<<<<< HEAD
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+=======
+				PRODUCT_BUNDLE_IDENTIFIER = org.RaiseYourVoice;
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 				PRODUCT_NAME = Vocco;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
@@ -614,7 +781,11 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
+<<<<<<< HEAD
 			baseConfigurationReference = AACCADBCEAC2C693B1CE221E /* Pods-Vocco.release.xcconfig */;
+=======
+			baseConfigurationReference = E51BB94756F29D619AB98798 /* Pods-Vocco.release.xcconfig */;
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -631,13 +802,21 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+<<<<<<< HEAD
 				MARKETING_VERSION = 1.1;
+=======
+				MARKETING_VERSION = 1.11;
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
+<<<<<<< HEAD
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+=======
+				PRODUCT_BUNDLE_IDENTIFIER = org.RaiseYourVoice;
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 				PRODUCT_NAME = Vocco;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";

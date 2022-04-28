@@ -273,7 +273,11 @@ const SettingScreen =  (props) => {
                         lineHeight={28}
                         color='#263449'
                     />
+<<<<<<< HEAD
                     <TouchableOpacity disabled={!language} onPress={()=>{OnSelectLanguage();setShowLanguageModal(false);}}>
+=======
+                    <TouchableOpacity disabled={!language} onPress={()=>OnSelectLanguage(language)}>
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
                         <DescriptionText
                             text={t('Save')}
                             fontSize={17}

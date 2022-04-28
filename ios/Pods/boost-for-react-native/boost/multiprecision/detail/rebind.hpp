@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ///////////////////////////////////////////////////////////////////////////////
 //  Copyright 2012 John Maddock.
 //  Copyright Christopher Kormanyos 2013. Distributed under the Boost
@@ -18,3 +19,25 @@
   } } } } // namespace boost::multiprecision::backends::detail
 
 #endif // BOOST_MP_DETAIL_REBIND_HPP
+=======
+///////////////////////////////////////////////////////////////////////////////
+//  Copyright 2012 John Maddock.
+//  Copyright Christopher Kormanyos 2013. Distributed under the Boost
+//  Software License, Version 1.0. (See accompanying file
+//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+#ifndef BOOST_MP_DETAIL_REBIND_HPP
+  #define BOOST_MP_DETAIL_REBIND_HPP
+
+  namespace boost { namespace multiprecision { namespace backends { namespace detail
+  {
+    template <class value_type, class my_allocator>
+    struct rebind
+    {
+       typedef typename my_allocator::template rebind<value_type>::other type;
+    };
+  } } } } // namespace boost::multiprecision::backends::detail
+
+#endif // BOOST_MP_DETAIL_REBIND_HPP
+>>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
