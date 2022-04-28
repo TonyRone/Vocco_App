@@ -1,0 +1,6 @@
+module Pods_Vocco_VoccoTests {
+  umbrella header "Pods-Vocco-VoccoTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

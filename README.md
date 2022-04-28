@@ -1,2 +1,1 @@
-# Vocco_App
-RaiseYourVoice
+# Vocco_app
