@@ -1,0 +1,494 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Platform, KeyboardAvoidingView, ImageBackground, Text, TouchableOpacity } from 'react-native';
+import { NavigationActions, StackActions } from 'react-navigation';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { GoogleSignin, statusCodes } from 'react-native-google-signin';
+import appleAuth, { appleAuthAndroid , AppleAuthRequestOperation, AppleAuthRequestScope} from '@invertase/react-native-apple-authentication';
+import {useTranslation} from 'react-i18next';
+import '../../language/i18n';
+import { v4 as uuid } from 'uuid'
+import { TitleText } from '../component/TitleText';
+import { DescriptionText } from '../component/DescriptionText';
+import { MyButton } from '../component/MyButton';
+import { MyTextField } from '../component/MyTextField';
+
+import { SvgXml } from 'react-native-svg';
+import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
+import appleSvg from '../../assets/login/apple.svg';
+import googleSvg from '../../assets/login/google.svg';
+
+import AuthService from '../../services/AuthService';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ACCESSTOKEN_KEY, REFRESHTOKEN_KEY, TUTORIAL_CHECK } from '../../config/config';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../store/actions';
+import { styles } from '../style/Login';
+import { ScrollView } from 'react-native-gesture-handler';
+
+const LoginScreen = (props) => {
+
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [showHeaderTitle, setShowHeaderTitle] = useState(false);
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [emailCheck, setEmailCheck] = useState(false);
+
+  const {t, i18n} = useTranslation();
+
+  const dispatch = useDispatch();
+
+  const scrollRef = useRef(ScrollView);
+
+  const showEye = () => {
+    setSecureTextEntry(!secureTextEntry); 
+  }
+
+  const _storeData = async (aToken, rToken) => {
+    try {
+      await AsyncStorage.setItem(
+        ACCESSTOKEN_KEY,
+        aToken
+      );
+    } catch (err) {
+      console.log(err);
+    }
+
+    try {
+      await AsyncStorage.setItem(
+        REFRESHTOKEN_KEY,
+        rToken
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const checkLogin = async () => {
+  }
+
+  const scrollPage = (sp) => {
+    if (sp.nativeEvent.contentOffset.y > 30) {
+      setShowHeaderTitle(true);
+    } else {
+      setShowHeaderTitle(false);
+    }
+  }
+
+  const onSetEmail = (newVal) =>{
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    setEmailCheck(reg.test(email));
+    setEmail(newVal);
+    setError({});
+  }
+
+  const OnCheckEmailValidation = (val) =>{
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (reg.test(email) === false) {
+      setError({ email: t("invalid email address") })
+    }
+  }
+
+  const handleSubmit = () => {
+    setError({});
+    if (email == '') {
+      setError({
+        email: t("required field"),
+      });
+      return;
+    }
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (reg.test(email) === false) {
+      setError({ email: t("invalid email address") })
+
+      return;
+    }
+    if (password == '') {
+      setError({ password: t("required field") });
+      return;
+    }
+
+    if (password.length < 3) { //8
+      setError({
+        password: t("at least 3 characters"),
+      });
+      return;
+    }
+    const payload = {
+      email,
+      password
+    };
+    setLoading(true);
+    AuthService.login(payload).then(async res => {
+      const jsonRes = await res.json();
+      if (res.respInfo.status === 201) {
+        _storeData(jsonRes.accessToken, jsonRes.refreshToken);
+        onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
+      }
+      else{
+        if(jsonRes.message=='Wrong password'){
+          setError({password: jsonRes.message})
+        }
+        else{
+          setError({email: jsonRes.message,})
+        }
+      }
+      setLoading(false);
+    })
+    .catch(err => {
+      console.log(err);
+      setError({
+        email: err,
+      });
+    });
+  }
+
+  const onSetUserInfo =async(accessToken,refreshToken)=>{
+    AuthService.getUserInfo(accessToken, true).then(async res => {
+      const jsonRes = await res.json();
+      if(res.respInfo.status ==200){
+        dispatch(setUser(jsonRes));
+        let navigateScreen = 'Discover';
+        if (!jsonRes.isEmailVerified) {
+          navigateScreen = 'Verify';
+        } else if (!jsonRes.name) {
+          navigateScreen = 'Username';
+        } else if (!jsonRes.dob) {
+          props.navigation.navigate('');
+          navigateScreen = 'Birthday';
+        } else if (!jsonRes.gender) {
+          navigateScreen = 'Identify';
+        } else if (!jsonRes.country){
+          navigateScreen = 'Country';
+        } else if (!jsonRes.avatar) {
+          navigateScreen = 'Photo';
+        } else {
+          const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
+          if (tutorial_check)
+            navigateScreen = 'Discover';
+          else
+            navigateScreen = 'Tutorial';
+        }
+      //  props.navigation.navigate(navigateScreen,{info:jsonRes})
+        const resetActionTrue = StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: navigateScreen })],
+        });
+        props.navigation.dispatch(resetActionTrue);
+      }
+      else{
+        setError({
+          email: jsonRes.message,
+        });
+      }
+    })
+    .catch(err => {
+      setError({
+        email: err,
+      });
+      console.log(err);
+    });
+  }
+
+  const OnIosAppleLogin = async()=> {
+    try {
+      // performs login request
+      const {email, fullName, identityToken} = await appleAuth.performRequest({
+        requestedOperation:1,
+        requestedScopes: [
+          0,
+          1
+        ],
+      });
+      console.log(identityToken);
+      AuthService.appleLogin({email, fullName, identityToken}).then(async res=>{
+        const jsonRes = await res.json();
+        if (res.respInfo.status === 201) {
+          _storeData(jsonRes.accessToken, jsonRes.refreshToken);
+          onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
+        }
+        else{
+          setError({
+            email: jsonRes.message,
+          });
+        }
+        setLoading(false);
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      
+    } catch (error) {
+      
+    }
+  }
+
+  const onAppleButtonPress = async()=> {
+    // Generate secure, random values for state and nonce
+    const rawNonce = uuid();
+    const state = uuid();
+  
+    // Configure the request
+    appleAuthAndroid.configure({
+      // The Service ID you registered with Apple
+      clientId: '8VYUDK97R2.org.RaiseYourVoice',
+  
+      // Return URL added to your Apple dev console. We intercept this redirect, but it must still match
+      // the URL you provided to Apple. It can be an empty route on your backend as it's never called.
+      redirectUri: 'https://example.com/path/to/endpoint',
+  
+      // The type of response requested - code, id_token, or both.
+      responseType: appleAuthAndroid.ResponseType.ALL,
+  
+      // The amount of user information requested from Apple.
+      scope: appleAuthAndroid.Scope.ALL,
+  
+      // Random nonce value that will be SHA256 hashed before sending to Apple.
+      nonce: rawNonce,
+  
+      // Unique state value used to prevent CSRF attacks. A UUID will be generated if nothing is provided.
+      state,
+    });
+  
+    // Open the browser window for user sign in
+    const response = await appleAuthAndroid.signIn();
+    // Send the authorization code to your backend for verification
+  }
+
+  const signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const {idToken} = await GoogleSignin.signIn();
+      const tokens = await GoogleSignin.getTokens()
+      setLoading(true);
+      AuthService.googleLogin({token:tokens.accessToken}).then(async res=>{
+        const jsonRes = await res.json();
+        if (res.respInfo.status === 201) {
+          _storeData(jsonRes.accessToken, jsonRes.refreshToken);
+          onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
+        }
+        else{
+          setError({
+            email: jsonRes.message,
+          });
+        }
+        setLoading(false);
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+      //log in is success!
+    } catch (error) {
+      console.log(error, statusCodes, error.code);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (f.e. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  };
+
+  const isSignedIn = async () => {
+    const isSignedIn = await GoogleSignin.isSignedIn();
+    if (!!isSignedIn) {
+      getCurrentUserInfo()
+    } else {
+        console.log('Please Login')
+    }
+  };
+
+  const getCurrentUserInfo = async () => {
+    try {
+      const {idToken} = await GoogleSignin.signIn()
+      const tokens = await GoogleSignin.getTokens()
+      
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_REQUIRED) {
+        alert(t("User has not signed in yet"));
+      } else {
+        alert(t("Something went wrong. Unable to get user's info"));
+      }
+    }
+  };
+  const signOut = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      dispatch(setUser({})); // Remember to remove the user from your app's state as well
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    checkLogin();
+
+    GoogleSignin.configure({
+      androidClientId: '411872622691-jtn0id6ql8ugta4i8qo962tngerf79vl.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+      iosClientId:'1034099036541-va0ioishaoaueb7elaogc2ra1h4u1if3.apps.googleusercontent.com'
+    });
+
+    // isSignedIn()
+  }, [])
+
+  return (
+    <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
+      <View style={styles.LoginContainer}>
+        <ImageBackground
+          source={require('../../assets/login/background.png')}
+          resizeMode="stretch"
+          style={styles.background}
+        >
+          <View
+            style={[
+              { marginTop: 60, paddingHorizontal: 20, marginBottom: 20, height: 30 },
+              styles.rowJustifyCenter
+            ]}
+          >
+            <TouchableOpacity
+              onPress={() => props.navigation.goBack()}
+              style={{
+                position: 'absolute',
+                left: 20
+              }}
+            >
+              <SvgXml
+                width="24"
+                height="24"
+                xml={arrowBendUpLeft}
+              />
+            </TouchableOpacity>
+            {
+              !showHeaderTitle ||
+              <TitleText
+                text={t("Hello Again")}
+                fontSize={20}
+                color="#281E30"
+              />
+            }
+          </View>
+          <ScrollView
+            ref={scrollRef}
+            onScroll={scrollPage}
+          >
+            <View
+              style={{ marginTop: 20, paddingHorizontal: 20 }}
+            >
+              <TitleText
+                text={t("Hello Again")}
+                fontSize={34}
+              />
+              <DescriptionText
+                text={t("Welcome back. You've been missed!")}
+                fontSize={20}
+                marginTop={10}
+              />
+            </View>
+            <View
+              style={
+                {
+                  marginTop: 37,
+                  padding: 16,
+                  backgroundColor: '#FFF',
+                  borderTopLeftRadius: 24,
+                  borderTopRightRadius: 24
+                }
+              }
+            >
+              <TitleText
+                text={t("Log In")}
+                fontSize={22}
+                marginTop={17}
+              />
+              <MyTextField
+                label={t("Your email")}
+                keyboardType="email-address"
+                refer={emailRef}
+                color='#281E30'
+                placeholderText="email@example.com"
+                value={email}
+                check={emailCheck}
+                onChangeText={(newVal) => onSetEmail(newVal)}
+                onEndEditing={(val) => OnCheckEmailValidation(val)}
+                errorText={error.email}
+                marginTop={18}
+              />
+              <MyTextField
+                label={t("Your password")}
+                refer={passwordRef}
+                secureTextEntry = {secureTextEntry}
+                color='#281E30'
+                placeholderText={t("Enter your password")}
+                value={password}
+                onChangeText={(newVal) => {setPassword(newVal),setError({})}}
+                showEye={()=>showEye()}
+                isPassword={true}
+                errorText={error.password}
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end'
+                }}
+              >
+                <TouchableOpacity>
+                  <TitleText
+                    text={t("Forgot password?")}
+                    fontSize={12}
+                    fontFamily="SFProDisplay-Regular"
+                    marginTop={9}
+                  />
+                </TouchableOpacity>
+              </View>
+              <MyButton
+                label={t("Log In")}
+                onPress={handleSubmit}
+                loading={loading}
+              />
+              <DescriptionText text={t("or continue with")} fontSize={12} color="#281E30" textAlign="center" marginTop={20} />
+              <View style={[styles.rowSpaceBetween, { marginTop: 20 }]}>
+                <TouchableOpacity
+                  style={styles.externalButton}
+                  onPress={()=>Platform.OS=='ios'?OnIosAppleLogin():onAppleButtonPress()}
+                >
+                  <SvgXml width="24" height="24" xml={appleSvg} />
+                  <Text style={styles.externalButtonText}>Apple</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.externalButton}
+                  onPress={() => signIn()}
+                >
+                  <SvgXml width="24" height="24" xml={googleSvg} />
+                  <Text style={styles.externalButtonText}>Google</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.rowJustifyCenter, { marginBottom: 30, marginTop: 32, alignItems:'center'}]}>
+                <DescriptionText
+                  text={t("Don't have an account?")}
+                  color="#281E30"
+                  fontSize={15}
+                />
+                <TouchableOpacity
+                  onPress={() => props.navigation.navigate("Register")}
+                >
+                  <Text style={styles.signupButton}>{t('Sign Up!')}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+        </ImageBackground>
+      </View>
+    </KeyboardAwareScrollView>
+  );
+};
+
+export default LoginScreen;

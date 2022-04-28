@@ -1,0 +1,25 @@
+{
+  "name": "react-native-utils-scale",
+  "version": "2.1.10",
+  "summary": "Provide solutions to make your app flexible for different screen sizes, different devices.",
+  "description": "react-native-utils-scale",
+  "homepage": "https://github.com/github_account/react-native-utils-scale",
+  "license": "MIT",
+  "authors": {
+    "Your Name": "yourname@email.com"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source": {
+    "git": "https://github.com/github_account/react-native-utils-scale.git",
+    "tag": "2.1.10"
+  },
+  "source_files": "ios/**/*.{h,c,m,swift}",
+  "requires_arc": true,
+  "dependencies": {
+    "React": [
+
+    ]
+  }
+}
