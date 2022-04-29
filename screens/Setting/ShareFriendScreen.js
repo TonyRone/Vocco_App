@@ -30,11 +30,7 @@ const ShareFriendScreen = (props) => {
 
     const [password, setPassword] = useState("");
     const [statetype,setStatetype] =useState('current');
-<<<<<<< HEAD
     const [referLink, setReferLink] = useState('deeplink/sleaning.com/232323')
-=======
-    const [referLink, setReferLink] = useState('https://testflight.apple.com/join/ztQ4TQlu')
->>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 
     const handleSubmit = ()=>{
         if(statetype=='current'){
@@ -61,11 +57,7 @@ const ShareFriendScreen = (props) => {
         }
     };
     const onCopyLink = ()=>{
-<<<<<<< HEAD
         Clipboard.setString('deeplink/sleaning.com/232323')
-=======
-        Clipboard.setString(referLink);
->>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
     }
     useEffect(() => {
       //  checkLogin();

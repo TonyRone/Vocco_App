@@ -147,11 +147,12 @@ const LoginScreen = (props) => {
     });
   }
 
-  const onSetUserInfo =async(accessToken,refreshToken)=>{
+  const onSetUserInfo =async(accessToken = null,refreshToken = null)=>{
     AuthService.getUserInfo(accessToken, true).then(async res => {
       const jsonRes = await res.json();
       if(res.respInfo.status ==200){
         dispatch(setUser(jsonRes));
+        console.log(jsonRes);
         let navigateScreen = 'Discover';
         if (!jsonRes.isEmailVerified) {
           navigateScreen = 'Verify';

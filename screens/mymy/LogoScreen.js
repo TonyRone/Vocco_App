@@ -97,7 +97,7 @@ const LogoScreen = (props) => {
     }
 
     useEffect(() => {
-        PushNotification.requestPermissions();
+      //  PushNotification.requestPermissions();
         checkLogin();
     }, [])
 

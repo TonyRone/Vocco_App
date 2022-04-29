@@ -94,11 +94,7 @@ const PostingAnswerVoiceScreen = (props) => {
         const jsonRes = await res.json();
         if (res.respInfo.status !== 201) {
         } else {
-<<<<<<< HEAD
           Vibration.vibrate(100);
-=======
-          Vibration.vibrate(200);
->>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
             setShowShareVoice(jsonRes);
         }
         setIsLoading(false);

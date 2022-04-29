@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useReducer } from 'react';
 import { 
   View, 
   KeyboardAvoidingView, 
   Text, 
   TouchableOpacity, 
   Pressable,
-  ScrollView
+  ScrollView,
+  Image
 } from 'react-native';
 
 import * as Progress from "react-native-progress";
@@ -30,6 +31,7 @@ import searchSvg from '../../assets/login/search.svg';
 import { windowWidth, Categories, windowHeight } from '../../config/config';
 import { styles } from '../style/Common';
 import VoiceService from '../../services/VoiceService';
+import { CommenText } from '../component/CommenText';
 
 const DiscoverScreen = (props) => {
 
@@ -41,6 +43,8 @@ const DiscoverScreen = (props) => {
   const [selectedIndex,setSelectedIndex] = useState(0);
   const [isloading, setIsloading] = useState(false);
   const [loadmore, setloadmore] = useState(10);
+  const [showEnd,setShowEnd] = useState(false);
+
 
   let { refreshState } = useSelector((state) => {
     return (
@@ -55,14 +59,32 @@ const DiscoverScreen = (props) => {
     getVoices(true,categoryId);
   }
 
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 10;
+    return layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom;
+  };
+
+  const OnShowEnd = ()=>{
+    if(showEnd) return ;
+    setShowEnd(true);
+    setTimeout(() => {
+     setShowEnd(false);
+    }, 2000);
+  }
+
   const getVoices = async(isNew,categoryId=category) => {
     if(isNew)
       onStopPlay();
-    else if(loadmore < 10)
+    else if(isloading){
       return ;
+    }
+    else if(loadmore < 10){
+      OnShowEnd();
+      return ;
+    }
     let len = isNew?0:filteredVoices.length;
-    if(isNew) 
-      setIsloading(true);
+    setIsloading(true);
     VoiceService.getDiscoverVoices('',len, Categories[categoryId].label ).then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
@@ -163,25 +185,33 @@ const DiscoverScreen = (props) => {
             </Pressable>
           </View>
         </View>
-        
-        <View
-          style={[styles.paddingH16, styles.rowSpaceBetween, styles.mt25]}
+        <ScrollView
+          style = {{marginBottom:80, marginTop:25}}
+          onScroll={({nativeEvent}) => {
+            if (isCloseToBottom(nativeEvent)) {
+              getVoices(false);
+            }
+          }}
+          scrollEventThrottle={400}
         >
-          <TitleText 
-            text={t("Top Category")}
-            fontSize={20}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              setShowModal(true);
-            }}
+          <View
+          style={[styles.paddingH16, styles.rowSpaceBetween]}
           >
-            <DescriptionText 
-              text={t("SEE ALL")}
-              fontSize={13}
-              color='#281E30'
+            <TitleText 
+              text={t("Top Category")}
+              fontSize={20}
             />
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setShowModal(true);
+              }}
+            >
+              <DescriptionText 
+                text={t("SEE ALL")}
+                fontSize={13}
+                color='#281E30'
+              />
+            </TouchableOpacity>
         </View>
         <View> 
           <FlatList
@@ -208,23 +238,18 @@ const DiscoverScreen = (props) => {
             marginLeft = {16}
         />
         {!isloading?
-          (filteredVoices.length>0?<FlatList
-          style={{marginBottom:80,marginTop:3}}
-          data={filteredVoices}
-          renderItem={({item,index})=><VoiceItem 
-            key={index+'discover'}
-            info={item}
-            props={props}
-            isPlaying = {index==nowVoice}
-            onPressPostContext={()=>tapHoldToAnswer(index)}
-            onPressPlay={() => pressPlayVoice(index)}
-            onStopPlay={()=>onStopPlay()}
-          />}
-          keyExtractor={(item, index) => index.toString()}
-          onEndReached = {()=>getVoices(false)}
-          onEndReachedThreshold = {0.1}
-          onEndThreshold={0}
-          />:
+          (filteredVoices.length>0?
+          filteredVoices.map((item,index)=><VoiceItem 
+              key={index+'discover'}
+              info={item}
+              props={props}
+              isPlaying = {index==nowVoice}
+              onPressPostContext={()=>tapHoldToAnswer(index)}
+              onPressPlay={() => pressPlayVoice(index)}
+              onStopPlay={()=>onStopPlay()}
+            />
+          )
+          :
           <View style = {{marginTop:80,alignItems:'center',width:windowWidth}}>
             <SvgXml
                 xml={box_blankSvg}
@@ -243,6 +268,20 @@ const DiscoverScreen = (props) => {
             style={{ alignSelf: "center", marginTop:windowHeight/6 }}
           />
         }
+        {showEnd&&<View style={{flexDirection:'row',alignItems:'center',justifyContent:'center', padding:12}}>
+          <Image
+            style={{
+              width:20,
+              height:20
+            }}
+            source={require('../../assets/common/happy.png')} 
+          />
+          <DescriptionText
+            marginLeft={15}
+            text = {t("You are up to date!")}
+          />
+        </View>}
+        </ScrollView>
         <SwipeDownModal
           modalVisible={showModal}
           ContentModal={

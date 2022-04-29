@@ -52,6 +52,7 @@ const FeedScreen = (props) => {
   const [refresh,setRefresh] = useState(false);
   const [loadmore, setloadmore] = useState(10);
   const [loading, setLoading] = useState(false);
+  const [showEnd,setShowEnd] = useState(false);
 
   const {t, i18n} = useTranslation();
 
@@ -66,9 +67,16 @@ const FeedScreen = (props) => {
   });
 
   const getVoices = (isNew = false) => {
-    if(isNew==false && loadmore < 10) return ;
-    if(isNew == true)
-      setLoading(true);
+    if(isNew)
+      onStopPlay();
+    else if(loading){
+      return ;
+    }
+    else if(loadmore < 10){
+      OnShowEnd();
+      return ;
+    } 
+    setLoading(true);
     VoiceService.getHomeVoice(isNew?0:voices.length).then(async res => {
         if (res.respInfo.status === 200) {
           const jsonRes = await res.json();
@@ -110,6 +118,20 @@ const FeedScreen = (props) => {
     tp[selectedIndex].islike = !tp[selectedIndex].islike;
     setVoices(tp);
   }
+
+  const OnShowEnd = ()=>{
+    if(showEnd) return ;
+    setShowEnd(true);
+    setTimeout(() => {
+     setShowEnd(false);
+    }, 2000);
+  }
+
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 10;
+    return layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom;
+  };
 
   let socket = null;
 
@@ -254,12 +276,19 @@ const FeedScreen = (props) => {
             }
             keyExtractor={(item, index) => index.toString()} 
           /> 
-        </View>       
-        {!loading?(voices.length>0?<FlatList
+        </View>
+        <ScrollView
+          style = {{marginBottom:80, marginTop:25}}
           ref={scrollRef}
-          style={[styles.mt25,{marginBottom:80,marginTop:3}]}
-          data={voices}
-          renderItem={({item,index})=>
+          onScroll={({nativeEvent}) => {
+            if (isCloseToBottom(nativeEvent)) {
+              getVoices(false);
+            }
+          }}
+          scrollEventThrottle={400}
+        >
+          {!loading?(voices.length>0? 
+          voices.map((item,index)=>
             item.temporary?null:
             <VoiceItem 
               key={index+'voiceitem_feed'}
@@ -272,71 +301,79 @@ const FeedScreen = (props) => {
               onStopPlay={()=>onStopPlay()}
               spread = {nowVoice==null}
             />
-          }
-          keyExtractor={(item, index) => index.toString()}
-          onEndReached = {()=>getVoices()}
-          onEndReachedThreshold={0.1}
-          onEndThreshold={0}
-        />:
-        <View style = {{marginTop:windowHeight/9,alignItems:'center',width:windowWidth}}>
-          <SvgXml
-              xml={box_blankSvg}
-          />
-          <DescriptionText
-            text = 'No result found'
-            fontSize = {17}
-            lineHeight = {28}
-            marginTop = {22}
-          />
-        </View>):
-        <Progress.Circle
-          indeterminate
-          size={30}
-          color="rgba(0, 0, 255, .7)"
-          style={{ alignSelf: "center", marginTop:windowHeight/5 }}
-        />
-        }
-        {
-          noticeCount != 0&&
-          <TouchableOpacity style={{
-            position:'absolute',
-            top:220,
-            left:windowWidth/2-78,
-            width:noticeCount<0?183:156, 
-            height:40, 
-            backgroundColor:noticeCount<0?'#45BF58':'#8327D8', 
-            borderRadius:34, 
-            flexDirection:'row',
-            justifyContent:'space-between',
-            alignItems:'center'
-          }}
-            onPress = {()=>{
-              if(noticeCount > 0 ){
-                getVoices(true);
-<<<<<<< HEAD
-                Vibration.vibrate(100);
-=======
-                Vibration.vibrate(200);
->>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
-              }
-              noticeDispatch("reset");
-            }}
-          >
-            <DescriptionText
-              text={noticeCount<0?'Successful upload':(noticeCount+' new voices')}
-              color='#F6EFFF'
-              marginLeft={16}
-              fontSize={15}
-              lineHeight={15}
-            />
+          )
+          :
+          <View style = {{marginTop:windowHeight/9,alignItems:'center',width:windowWidth}}>
             <SvgXml
-              width={20}
-              height={20}
-              style={{marginRight:14}}
-              xml = {closeSvg}
+                xml={box_blankSvg}
             />
-          </TouchableOpacity>
-        }
+            <DescriptionText
+              text = 'No result found'
+              fontSize = {17}
+              lineHeight = {28}
+              marginTop = {22}
+            />
+          </View>):
+          <Progress.Circle
+            indeterminate
+            size={30}
+            color="rgba(0, 0, 255, .7)"
+            style={{ alignSelf: "center", marginTop:windowHeight/5 }}
+          />
+          }
+          {
+            noticeCount != 0&&
+            <TouchableOpacity style={{
+              position:'absolute',
+              top:220,
+              left:windowWidth/2-78,
+              width:noticeCount<0?183:156, 
+              height:40, 
+              backgroundColor:noticeCount<0?'#45BF58':'#8327D8', 
+              borderRadius:34, 
+              flexDirection:'row',
+              justifyContent:'space-between',
+              alignItems:'center'
+            }}
+              onPress = {()=>{
+                if(noticeCount > 0 ){
+                  getVoices(true);
+                  Vibration.vibrate(100);
+                }
+                noticeDispatch("reset");
+              }}
+            >
+              <DescriptionText
+                text={noticeCount<0?'Successful upload':(noticeCount+' new voices')}
+                color='#F6EFFF'
+                marginLeft={16}
+                fontSize={15}
+                lineHeight={15}
+              />
+              <SvgXml
+                width={20}
+                height={20}
+                style={{marginRight:14}}
+                xml = {closeSvg}
+              />
+            </TouchableOpacity>
+          }
+          {showEnd&&
+            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center', padding:12}}>
+              <Image
+                style={{
+                  width:20,
+                  height:20
+                }}
+                source={require('../../assets/common/happy.png')} 
+              />
+              <DescriptionText
+                marginLeft={15}
+                text = {t("You are up to date!")}
+              />
+            </View>
+          }
+        </ScrollView>
         {showContext&&
           <PostContext
             postInfo = {voices[selectedIndex]}
