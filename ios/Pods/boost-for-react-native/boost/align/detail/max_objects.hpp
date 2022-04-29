@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
 (c) 2014 Glen Joseph Fernandes
 <glenjofe -at- gmail.com>
@@ -27,33 +26,3 @@ struct max_objects
 } /* .boost */
 
 #endif
-=======
-/*
-(c) 2014 Glen Joseph Fernandes
-<glenjofe -at- gmail.com>
-
-Distributed under the Boost Software
-License, Version 1.0.
-http://boost.org/LICENSE_1_0.txt
-*/
-#ifndef BOOST_ALIGN_DETAIL_MAX_OBJECTS_HPP
-#define BOOST_ALIGN_DETAIL_MAX_OBJECTS_HPP
-
-#include <boost/align/detail/integral_constant.hpp>
-#include <cstddef>
-
-namespace boost {
-namespace alignment {
-namespace detail {
-
-template<class T>
-struct max_objects
-    : integral_constant<std::size_t,
-        ~static_cast<std::size_t>(0) / sizeof(T)> { };
-
-} /* .detail */
-} /* .alignment */
-} /* .boost */
-
-#endif
->>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798

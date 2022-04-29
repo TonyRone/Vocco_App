@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //  memory.hpp  --------------------------------------------------------------//
 
 //  Copyright 2010 Vicente J. Botet Escriba
@@ -19,25 +18,3 @@
 #endif
 
 #endif // BOOST_DETAIL_WINAPI_MEMORY_HPP
-=======
-//  memory.hpp  --------------------------------------------------------------//
-
-//  Copyright 2010 Vicente J. Botet Escriba
-//  Copyright 2015 Andrey Semashev
-
-//  Distributed under the Boost Software License, Version 1.0.
-//  See http://www.boost.org/LICENSE_1_0.txt
-
-
-#ifndef BOOST_DETAIL_WINAPI_MEMORY_HPP
-#define BOOST_DETAIL_WINAPI_MEMORY_HPP
-
-#include <boost/detail/winapi/heap_memory.hpp>
-#include <boost/detail/winapi/local_memory.hpp>
-
-#ifdef BOOST_HAS_PRAGMA_ONCE
-#pragma once
-#endif
-
-#endif // BOOST_DETAIL_WINAPI_MEMORY_HPP
->>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798

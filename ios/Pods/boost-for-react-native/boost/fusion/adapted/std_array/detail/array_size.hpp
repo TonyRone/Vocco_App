@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*=============================================================================
     Copyright (c) 2013 Mateusz Loskot
 
@@ -24,30 +23,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-=======
-/*=============================================================================
-    Copyright (c) 2013 Mateusz Loskot
-
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
-    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-==============================================================================*/
-#if !defined(BOOST_FUSION_STD_ARRAY_ARRAY_SIZE_01062013_1700)
-#define BOOST_FUSION_STD_ARRAY_ARRAY_SIZE_01062013_1700
-
-#include <cstddef>
-#include <type_traits>
-
-namespace boost { namespace fusion
-{
-    namespace extension
-    {
-        template<class T>
-        struct std_array_size;
-
-        template<template<typename, std::size_t> class Array, typename T, std::size_t N>
-        struct std_array_size<Array<T, N>> : std::integral_constant<std::size_t, N> {};
-    }
-}}
-
-#endif
->>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798

@@ -8,11 +8,8 @@
 	<array>
 		<string>Default</string>
 	</array>
-<<<<<<< HEAD
 	<key>com.apple.developer.usernotifications.communication</key>
 	<true/>
-=======
->>>>>>> 5ae3c2e28cc85ece3f79eae8300dd539bc803798
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
 	<key>com.apple.security.device.audio-input</key>
