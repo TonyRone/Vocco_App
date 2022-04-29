@@ -15,13 +15,13 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "Vocco.app"
-               BlueprintName = "Vocco"
-               ReferencedContainer = "container:Vocco.xcodeproj">
+               BuildableName = "RaiseYourVoice.app"
+               BlueprintName = "RaiseYourVoice"
+               ReferencedContainer = "container:RaiseYourVoice.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
-            buildForTesting = "YES"
+            buildForTesting = "NO"
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
@@ -29,23 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "VoccoTests.xctest"
-               BlueprintName = "VoccoTests"
-               ReferencedContainer = "container:Vocco.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1BEE828C124E6416179B904A9F66D794"
-               BuildableName = "React"
-               BlueprintName = "React"
-               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+               BuildableName = "RaiseYourVoiceTests.xctest"
+               BlueprintName = "RaiseYourVoiceTests"
+               ReferencedContainer = "container:RaiseYourVoice.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -73,9 +59,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Vocco.app"
-            BlueprintName = "Vocco"
-            ReferencedContainer = "container:Vocco.xcodeproj">
+            BuildableName = "RaiseYourVoice.app"
+            BlueprintName = "RaiseYourVoice"
+            ReferencedContainer = "container:RaiseYourVoice.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -90,9 +76,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Vocco.app"
-            BlueprintName = "Vocco"
-            ReferencedContainer = "container:Vocco.xcodeproj">
+            BuildableName = "RaiseYourVoice.app"
+            BlueprintName = "RaiseYourVoice"
+            ReferencedContainer = "container:RaiseYourVoice.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
