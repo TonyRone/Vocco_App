@@ -414,4 +414,3 @@ export default App = () => {
 };
 
 // AppRegistry.registerComponent("Vocco", () => App);
-// Applogo

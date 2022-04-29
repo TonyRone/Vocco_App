@@ -1,4 +1,5 @@
 # compiled output
+/android
 /node_modules
 /dist
 
