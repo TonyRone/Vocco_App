@@ -49,7 +49,7 @@ class AuthService {
             );
     }
 
-    async getUserInfo( accessToken = null, checkDevice = false) {
+    async getUserInfo( accessToken = null, checkDevice = '') {
         const token = accessToken?accessToken:await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         const deviceToken = await AsyncStorage.getItem(DEVICE_TOKEN);
         const deviceOs = await AsyncStorage.getItem(DEVICE_OS);

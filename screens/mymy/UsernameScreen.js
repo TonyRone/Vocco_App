@@ -44,8 +44,12 @@ const UsernameScreen = (props) => {
 }
 const handleSubmit = ()=>{
   if(validUsername==false){
-      setInputState({username:'Username is not available'})
+      setInputState({username:t("Username is not available")})
       setWarningState(true);
+  }
+  else if(username.length < 4){
+    setInputState({username:t("Username must be at least 4 letters")})
+    setWarningState(true);
   }
   else{
       setLoading(true);

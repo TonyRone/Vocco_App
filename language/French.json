@@ -190,6 +190,8 @@
       "Clear":"Dégager",
       "SHOW LESS":"MONTRER MOINS",
       "SHOW MORE":"MONTRE PLUS",
-      "You are up to date!":"Vous êtes à jour!"
+      "You are up to date!":"Vous êtes à jour!",
+      "Username is not available":"Le nom d'utilisateur n'est pas disponible",
+      "Username must be at least 4 letters":"Le nom d'utilisateur doit comporter au moins 4 lettres"
     }
   }

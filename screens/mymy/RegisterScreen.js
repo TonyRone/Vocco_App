@@ -207,7 +207,7 @@ const RegisterScreen = (props) => {
   }
 
   const onSetUserInfo =async(accessToken,refreshToken)=>{
-    AuthService.getUserInfo(accessToken, true).then(async res => {
+    AuthService.getUserInfo(accessToken, 'reg').then(async res => {
       const jsonRes = await res.json();
       if(res.respInfo.status ==200){
         dispatch(setUser(jsonRes));

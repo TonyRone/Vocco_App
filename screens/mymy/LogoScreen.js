@@ -43,7 +43,8 @@ const LogoScreen = (props) => {
                 .then(async res => {
                     try {
                         const jsonRes = await res.json();
-                        if (res.respInfo.status ==200){
+                        console.log(jsonRes);
+                        if (res.respInfo.status ==200 && jsonRes != null){
                             dispatch(setUser(jsonRes));
                             let navigateScreen = 'Discover';
                             if(!jsonRes.id){
@@ -97,7 +98,7 @@ const LogoScreen = (props) => {
     }
 
     useEffect(() => {
-      //  PushNotification.requestPermissions();
+        PushNotification.requestPermissions();
         checkLogin();
     }, [])
 

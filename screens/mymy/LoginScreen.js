@@ -148,8 +148,10 @@ const LoginScreen = (props) => {
   }
 
   const onSetUserInfo =async(accessToken = null,refreshToken = null)=>{
-    AuthService.getUserInfo(accessToken, true).then(async res => {
+    AuthService.getUserInfo(accessToken, 'reg').then(async res => {
       const jsonRes = await res.json();
+      console.log(jsonRes);
+      console.log(res.respInfo.status);
       if(res.respInfo.status ==200){
         dispatch(setUser(jsonRes));
         console.log(jsonRes);
@@ -268,6 +270,7 @@ const LoginScreen = (props) => {
       setLoading(true);
       AuthService.googleLogin({token:tokens.accessToken}).then(async res=>{
         const jsonRes = await res.json();
+        console.log("############# "+res.respInfo.status);
         if (res.respInfo.status === 201) {
           _storeData(jsonRes.accessToken, jsonRes.refreshToken);
           onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);

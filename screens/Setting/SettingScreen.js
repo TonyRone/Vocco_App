@@ -31,19 +31,27 @@ import { ACCESSTOKEN_KEY, MAIN_LANGUAGE, windowHeight } from '../../config/confi
 import { styles } from '../style/Common';
 import { CommenText } from '../component/CommenText';
 import { SettingList } from '../component/SettingList';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 import { useSelector } from 'react-redux';
 
 const SettingScreen =  (props) => {
 
     const user = useSelector((state)=>state.user.user);
-
     let userData = {...user};
 
     const [showModal, setShowModal] = useState(false);
     const [showLanguageModal, setShowLanguageModal] = useState(false);
     const [language, setLanguage] = useState(null);
     const {t, i18n} = useTranslation();
+
+    const onNavigate = (des, par = null) =>{
+        const resetActionTrue = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: des, params:par })],
+        });
+        props.navigation.dispatch(resetActionTrue);
+      }
 
     const OnSelectLanguage = async()=>{
         i18n.changeLanguage(language.language).then(async () => {
@@ -74,7 +82,7 @@ const SettingScreen =  (props) => {
         const isSignedIn = await GoogleSignin.isSignedIn();
         if(isSignedIn)
             await GoogleSignin.signOut();
-        props.navigation.navigate('Welcome');
+        onNavigate("Welcome")
     }
 
     useEffect(() => {
