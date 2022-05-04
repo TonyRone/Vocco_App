@@ -524,7 +524,7 @@ SPEC CHECKSUMS:
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: 01b1e7b724a3750c4bf30fb5bd1a5ac493609e2a
+  FBReactNativeSpec: 38b97203b2127da2a1ba1ff29e9405e50418583a
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
   GTMAppAuth: 987526d41b07efb1bedda5e936fe0cb718a03113
