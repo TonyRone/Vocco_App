@@ -17,6 +17,7 @@ import { setUser } from '../../store/actions/index';
 import { useSelector , useDispatch } from 'react-redux';
 import { styles } from '../style/Login';
 import EditService from '../../services/EditService';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CountryScreen = (props) => {
 
@@ -80,7 +81,7 @@ const CountryScreen = (props) => {
   }, [])
 
   return (
-    <KeyboardAvoidingView
+    <SafeAreaView
       style={{
         backgroundColor: '#FFF',
         flex: 1
@@ -89,7 +90,7 @@ const CountryScreen = (props) => {
       <Text style={[styles.message, {color: isError ? 'red' : 'green'}]}>{message ? getMessage() : null}</Text>
       <View
         style={[
-          { marginTop: 50, paddingHorizontal: 20, marginBottom: 20, height: 30 },
+          { marginTop: 20, paddingHorizontal: 20, marginBottom: 20, height: 30 },
           styles.rowSpaceBetween
         ]}
       >
@@ -148,7 +149,7 @@ const CountryScreen = (props) => {
           active={country ? true : false}
         />
     </LinearGradient>
-    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

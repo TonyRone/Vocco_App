@@ -2,15 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   View, 
   KeyboardAvoidingView, 
-  Text, 
-  TextInput, 
   TouchableOpacity, 
-  TouchableHighlight, 
   Image, 
-  Pressable, 
-  ScrollView,
-  Platform, StatusBar,
-  ImageBackground
+  Platform
 } from 'react-native';
 
 import { NavigationActions, StackActions } from 'react-navigation';
@@ -251,7 +245,7 @@ const UserProfileScreen = (props) => {
             }
           ]}
         >
-          <TouchableOpacity onPress={()=>props.navigation.goBack()} style={{position:'absolute',left:0,top:24}}>
+          <TouchableOpacity onPress={()=>props.navigation.goBack()} style={{position:'absolute',left:0,top:Platform.OS=='ios'?24:12}}>
             <SvgXml
               xml = {boxbackArrowSvg}
             />

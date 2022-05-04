@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ACCESSTOKEN_KEY, REFRESHTOKEN_KEY, windowHeight, API_URL } from '../../config/config';
 import { styles } from '../style/Login';
 import AuthService from '../../services/AuthService';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const VerifyScreen = (props) => {
 
@@ -31,7 +32,7 @@ const VerifyScreen = (props) => {
   }, [])
 
   return (
-      <KeyboardAvoidingView 
+      <SafeAreaView 
         style={{
           backgroundColor:'#FFF',
           flex:1
@@ -39,7 +40,7 @@ const VerifyScreen = (props) => {
       >
         <View
           style={[
-            { marginTop: 50, paddingHorizontal: 20, marginBottom:20, height:30 }, 
+            { marginTop: 20, paddingHorizontal: 20, marginBottom:20, height:30 }, 
             styles.rowJustifyCenter
           ]}
         >
@@ -66,7 +67,7 @@ const VerifyScreen = (props) => {
           marginTop={20}
           onSuccess = {()=>props.navigation.navigate('Username')}
         />
-      </KeyboardAvoidingView>
+      </SafeAreaView>
   );
 };
 

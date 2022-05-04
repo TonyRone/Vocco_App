@@ -33,6 +33,7 @@ import { styles } from '../style/Common';
 import { useSelector } from 'react-redux';
 import VoiceService from '../../services/VoiceService';
 import { DescriptionText } from '../component/DescriptionText';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const FeedScreen = (props) => {
 
@@ -181,7 +182,7 @@ const FeedScreen = (props) => {
   }
  
   return (
-      <KeyboardAvoidingView 
+      <SafeAreaView 
         style={{
           backgroundColor:'#FFF',
           flex:1,
@@ -189,7 +190,7 @@ const FeedScreen = (props) => {
       >
         <View
           style={[
-            { marginTop: 50, paddingHorizontal: 20, marginBottom:25, height:30 }, 
+            { marginTop: 20, paddingHorizontal: 20, marginBottom:25, height:30 }, 
             styles.rowJustifyCenter
           ]}
         >
@@ -386,7 +387,7 @@ const FeedScreen = (props) => {
           active='home'
           props={props}
         />
-      </KeyboardAvoidingView>
+      </SafeAreaView>
   );
 };
 

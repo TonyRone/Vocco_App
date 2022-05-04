@@ -15,6 +15,7 @@ import { styles } from '../style/Login';
 
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const IdentifyScreen = (props) => {
 
@@ -43,7 +44,7 @@ const IdentifyScreen = (props) => {
   }, [])
 
   return (
-      <KeyboardAvoidingView  
+      <SafeAreaView  
         style={{
           backgroundColor:'#FFF',
           flex:1
@@ -51,7 +52,7 @@ const IdentifyScreen = (props) => {
       >
         <View
           style={[
-            { marginTop: 50, paddingHorizontal: 20, marginBottom:20, height:30 }, 
+            { marginTop: 20, paddingHorizontal: 20, marginBottom:20, height:30 }, 
             styles.rowSpaceBetween
           ]}
         >
@@ -129,7 +130,7 @@ const IdentifyScreen = (props) => {
             active={identify ? true : false}
           />
         </View>
-      </KeyboardAvoidingView>
+      </SafeAreaView>
   );
 };
 

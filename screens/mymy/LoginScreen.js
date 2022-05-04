@@ -354,7 +354,7 @@ const LoginScreen = (props) => {
         >
           <View
             style={[
-              { marginTop: 60, paddingHorizontal: 20, marginBottom: 20, height: 30 },
+              { marginTop: Platform.OS=='ios'?60:20, paddingHorizontal: 20, height: 30 },
               styles.rowJustifyCenter
             ]}
           >
@@ -400,7 +400,7 @@ const LoginScreen = (props) => {
             <View
               style={
                 {
-                  marginTop: 37,
+                  marginTop: 10,
                   padding: 16,
                   backgroundColor: '#FFF',
                   borderTopLeftRadius: 24,

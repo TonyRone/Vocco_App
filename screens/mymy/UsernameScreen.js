@@ -16,6 +16,7 @@ import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 
 import { styles } from '../style/Login';
 import EditService from '../../services/EditService';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 const UsernameScreen = (props) => {
 
@@ -85,7 +86,7 @@ const handleSubmit = ()=>{
   }, [])
 
   return (
-      <KeyboardAvoidingView 
+      <SafeAreaView 
         style={{
           backgroundColor:'#FFF',
           flex:1
@@ -93,7 +94,7 @@ const handleSubmit = ()=>{
       >
         <View
           style={[
-            { marginTop: 50, paddingHorizontal: 20, marginBottom:20, height:30 }, 
+            { marginTop: 20, paddingHorizontal: 20, marginBottom:20, height:30 }, 
             styles.rowSpaceBetween
           ]}
         >
@@ -163,7 +164,7 @@ const handleSubmit = ()=>{
             style={{ alignSelf: "center" }}
           />
         </View>}
-      </KeyboardAvoidingView>
+      </SafeAreaView>
   );
 };
 

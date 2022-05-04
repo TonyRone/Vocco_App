@@ -241,6 +241,18 @@ class VoiceService {
             }
         );
     }
+
+    async deleteVoice(id) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+        fetch(
+            'DELETE',
+            `${API_URL}/records/deletevoice?id=${id}`, {
+                'Authorization': `Bearer ${token}`
+            }
+        );
+    }
+
     async markAllactivitySeen() {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).

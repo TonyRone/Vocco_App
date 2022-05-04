@@ -6,6 +6,7 @@ import {
   Pressable,
   Image, 
   Text,
+  Platform,
   ImageBackground
 } from 'react-native';
 
@@ -135,6 +136,13 @@ const VoiceProfileScreen = (props) => {
 
     const deleteVoice = ()=>{
       setDeleteModal(false);
+      VoiceService.deleteVoice(info.id).then(async res=>{
+        dispatch(setRefreshState(!refreshState));
+        props.navigation.goBack();
+      })
+      .catch(err=>{
+        console.log(err)
+      })
     }
 
     const setIsLiked= (index)=>{
@@ -200,7 +208,7 @@ const VoiceProfileScreen = (props) => {
           resizeMode="stretch"
           style={{marginTop:-10,width:windowWidth,height:400}}
         >
-          <View style={{marginTop:55,paddingHorizontal:16, flexDirection:'row',justifyContent:'space-between',alignItems:'center',}}>
+          <View style={{marginTop:Platform.OS=='ios'?55:25,paddingHorizontal:16, flexDirection:'row',justifyContent:'space-between',alignItems:'center',}}>
             <TouchableOpacity onPress={()=>props.navigation.goBack()}>
               <SvgXml width="24" height="24" xml={closeBlackSvg} />  
             </TouchableOpacity>

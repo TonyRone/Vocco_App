@@ -299,7 +299,7 @@ const RegisterScreen = (props) => {
           >
             <View
               style={[
-                { marginTop: 60, paddingHorizontal: 20, marginBottom:20, height:30 }, 
+                { marginTop: Platform.OS=='ios'?60:20, paddingHorizontal: 20, marginBottom:20, height:30 }, 
                 styles.rowJustifyCenter
               ]}
             >
@@ -331,7 +331,7 @@ const RegisterScreen = (props) => {
             >
               
             <View
-              style={{ marginTop: 20, paddingHorizontal: 20 }}
+              style={{ marginTop: 0, paddingHorizontal: 20 }}
             >
               <TitleText
                 text={t("Let's start")}
@@ -346,7 +346,7 @@ const RegisterScreen = (props) => {
             <View
               style={
                 {
-                  marginTop: 37,
+                  marginTop: 20,
                   padding: 16,
                   backgroundColor: '#FFF',
                   borderTopLeftRadius: 24,

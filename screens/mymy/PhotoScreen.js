@@ -27,6 +27,7 @@ import { setUser } from '../../store/actions';
 
 import { styles } from '../style/Login';
 import AuthService from '../../services/AuthService';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const  PhotoScreen = (props) => {
 
@@ -51,7 +52,9 @@ const  PhotoScreen = (props) => {
     setModalVisible(false);
     var options = {
       mediaType:'photo',
-      cameraType:'back'
+      cameraType:'back',
+      maxWidth: 600,
+      maxHeight: 600,
     };
     
     launchCamera(options, res => {
@@ -104,6 +107,8 @@ const  PhotoScreen = (props) => {
             skipBackup: true,
             path: 'images',
         },
+        maxWidth: 600,
+        maxHeight: 600,
     };
     
     launchImageLibrary(options, res => {
@@ -175,7 +180,7 @@ const  PhotoScreen = (props) => {
   }, [])
 
   return (
-      <KeyboardAvoidingView 
+      <SafeAreaView 
         style={{
           backgroundColor:'#FFF',
           flex:1
@@ -189,7 +194,7 @@ const  PhotoScreen = (props) => {
         }
         <View
           style={[
-            { marginTop: 50, paddingHorizontal: 20, marginBottom:20, height:30 }, 
+            { marginTop: 20, paddingHorizontal: 20, marginBottom:20, height:30 }, 
             styles.rowSpaceBetween
           ]}
         >
@@ -313,7 +318,7 @@ const  PhotoScreen = (props) => {
             </View>
           </Pressable>
         </Modal>
-      </KeyboardAvoidingView>
+      </SafeAreaView>
   );
 };
 

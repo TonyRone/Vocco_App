@@ -35,6 +35,7 @@ import { styles } from '../style/Common';
 import { AllCategory } from '../component/AllCategory';
 import VoiceService from '../../services/VoiceService';
 import VoicePlayer from "../Home/VoicePlayer";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const PostingVoiceScreen = (props) => {
@@ -115,14 +116,14 @@ const PostingVoiceScreen = (props) => {
     //  checkLogin();
   }, [])
   return (
-    <KeyboardAvoidingView
+    <SafeAreaView
       style={{
         backgroundColor: '#FFF',
         flex: 1
       }}
     >
       <View style={{ width: windowWidth, height: 280, borderBottomLeftRadius: 50, borderBottomRightRadius: 50, backgroundColor: '#F8F0FF' }}>
-        <View style={{ marginTop: 50, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}>
+        <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}>
           <Pressable style={{ 
             marginLeft: 16,
             position:'absolute',
@@ -330,7 +331,7 @@ const PostingVoiceScreen = (props) => {
             setShowModal(false);
         }}
       />
-    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

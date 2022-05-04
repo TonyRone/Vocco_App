@@ -136,7 +136,6 @@ const HoldRecordScreen = (props) => {
       rtime = Math.floor(rtime/1000);
       if(rtime > fill)
         rtime = fill;
-      clearRecorder();
       setIsRecording(false);
       setIsPaused(true);
       dispatch(setVoiceState(false));
@@ -144,6 +143,7 @@ const HoldRecordScreen = (props) => {
       setStartTime(null);
       setRecordTime(0);
       setIsTime(true);
+      clearRecorder();
       if(publish==true&&rtime>0){
         if(info)
           props.navigation.navigate('PostingAnswerVoice',{info:info,recordSecs:rtime})
@@ -156,28 +156,30 @@ const HoldRecordScreen = (props) => {
     }
   };
  
-  const onChangeRecord = ()=>{
-    if(isRecording == false && isTime)
+  const onChangeRecord = ( v = false )=>{
+    if(v == true && isRecording == false && isTime){
       onStartRecord();
-    else{
-      if(isPaused && isTime){
+    }
+    else {
+      if(v == true && isPaused && isTime){
         audioRecorderPlayer.resumeRecorder();
+        setIsPaused(false);
         setStartTime(new Date());
       }
-      else{
+      else if( v== false && isRecording == true){
+        
         audioRecorderPlayer.pauseRecorder();
+        setIsPaused(true);
         if(startTime){
           setRecordTime(recordTime+(new Date()-startTime));
           setStartTime(null);
         }
       }
-      setIsPaused(!isPaused);
     }
   }
 
   const onTimeEnd = ()=>{
-    onChangeRecord();
-    setIsTime(false);
+    onStopRecord(true);
   }
 
   const checkPermission = async () => {
@@ -346,8 +348,8 @@ const HoldRecordScreen = (props) => {
           }}
         >
           <View
-            onTouchStart={()=>onChangeRecord()}
-            onTouchEnd={()=>onChangeRecord()}
+            onTouchStart={()=>onChangeRecord( true )}
+            onTouchEnd={()=>onChangeRecord( false )}
           >
             <SvgXml
               width={76}

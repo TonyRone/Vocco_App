@@ -13,6 +13,7 @@ import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import { styles } from '../style/Login';
 import { useSelector , useDispatch } from 'react-redux';
 import { setUser } from '../../store/actions/index';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const BirthdayScreen = (props) => {
 
@@ -38,7 +39,7 @@ const BirthdayScreen = (props) => {
   }, [])
 
   return (
-      <KeyboardAvoidingView 
+      <SafeAreaView 
         style={{
           backgroundColor:'#FFF',
           flex:1
@@ -46,7 +47,7 @@ const BirthdayScreen = (props) => {
       >
         <View
           style={[
-            { marginTop: 50, paddingHorizontal: 20, marginBottom:20, height:30 }, 
+            { marginTop: 20, paddingHorizontal: 20, marginBottom:20, height:30 }, 
             styles.rowSpaceBetween
           ]}
         >
@@ -105,7 +106,7 @@ const BirthdayScreen = (props) => {
             onPress={handleSubmit}
           />
         </View>
-      </KeyboardAvoidingView>
+      </SafeAreaView>
   );
 };
 

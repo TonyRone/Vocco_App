@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   View, 
   KeyboardAvoidingView, 
-  TouchableOpacity, 
+  TouchableOpacity,
+  Platform 
 } from 'react-native';
 
 import {useTranslation} from 'react-i18next';
@@ -38,7 +39,7 @@ export const AllCategory = ({
       <View
         style={[
           { 
-            marginTop: 50, 
+          marginTop: Platform.OS=='ios'?50:20, 
             paddingHorizontal: 20, 
             marginBottom:20, 
             height:30,

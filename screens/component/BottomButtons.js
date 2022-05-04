@@ -80,7 +80,7 @@ export const BottomButtons = ({
         
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={()=>onNavigate("Profile")}
+        onPress={()=>props.navigation.navigate("Profile")}
       >
         <SvgXml
           width={30}

@@ -1,11 +1,11 @@
 import React, { useEffect} from 'react';
-import { KeyboardAvoidingView,  Image  } from 'react-native';
+import { KeyboardAvoidingView,  Image ,Text } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 
 import io from "socket.io-client";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE,  DEVICE_TOKEN, DEVICE_OS } from '../../config/config';
+import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE,  DEVICE_TOKEN, DEVICE_OS, windowWidth, windowHeight } from '../../config/config';
 import { NavigationActions, StackActions } from 'react-navigation';
 
 import {useTranslation} from 'react-i18next';

@@ -32,6 +32,7 @@ import { windowWidth, Categories, windowHeight } from '../../config/config';
 import { styles } from '../style/Common';
 import VoiceService from '../../services/VoiceService';
 import { CommenText } from '../component/CommenText';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DiscoverScreen = (props) => {
 
@@ -129,7 +130,7 @@ const DiscoverScreen = (props) => {
   }, [refreshState])
 
   return (
-      <KeyboardAvoidingView 
+      <SafeAreaView
         style={{
           backgroundColor:'#FFF',
           flex:1
@@ -137,7 +138,7 @@ const DiscoverScreen = (props) => {
       >
         <View
           style={[
-            { marginTop: 50, paddingHorizontal: 20, marginBottom:20, height:30 }, 
+            { marginTop: 20, paddingHorizontal: 20, marginBottom:20, height:30 }, 
             styles.rowJustifyCenter
           ]}
         >
@@ -309,7 +310,7 @@ const DiscoverScreen = (props) => {
           active='global'
           props = {props}
         />
-      </KeyboardAvoidingView>
+      </SafeAreaView>
   );
 };
 

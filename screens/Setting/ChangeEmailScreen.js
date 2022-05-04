@@ -23,6 +23,7 @@ import { setUser } from '../../store/actions';
 
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ChangeEmailScreen = (props) => {
 
@@ -111,7 +112,7 @@ const ChangeEmailScreen = (props) => {
       //  checkLogin();
     }, [])
     return (
-      <KeyboardAvoidingView 
+      <SafeAreaView 
         style={{
           backgroundColor:'#FFF',
           flex:1,
@@ -191,7 +192,7 @@ const ChangeEmailScreen = (props) => {
                 isChanging = {true}
             /></>
         }
-      </KeyboardAvoidingView>
+      </SafeAreaView>
     );
   };
   

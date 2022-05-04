@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   Pressable,
+  Platform
 } from 'react-native';
 
 import * as Progress from "react-native-progress";
@@ -19,6 +20,7 @@ import { VoiceItem } from '../component/VoiceItem';
 import { SvgXml } from 'react-native-svg';
 import editSvg from '../../assets/common/edit.svg';
 import box_blankSvg from '../../assets/discover/box_blank.svg';
+import boxbackArrowSvg from '../../assets/profile/box_backarrow.svg';
 
 import { useSelector } from 'react-redux';
 import { setRefreshState } from '../../store/actions';
@@ -153,6 +155,11 @@ const ProfileScreen = (props) => {
             }
           ]}
         >
+          <TouchableOpacity onPress={()=>props.navigation.goBack()} style={{position:'absolute',left:0,top:Platform.OS=='ios'?24:12}}>
+            <SvgXml
+              xml = {boxbackArrowSvg}
+            />
+          </TouchableOpacity>
           <View style={{ alignItems: 'center' }}>
             <DescriptionText
               text={t("Voices")}
