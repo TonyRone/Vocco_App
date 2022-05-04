@@ -330,7 +330,7 @@ const VoiceProfileScreen = (props) => {
               marginBottom:-42,
               marginTop:-35
             }}>
-              <TouchableOpacity onPress={()=>onNavigate("HoldRecord",{info:info})}>
+              <TouchableOpacity onPress={()=>props.navigation.navigate("HoldRecord",{info:info})}>
                 <SvgXml
                   width={54}
                   height={54}

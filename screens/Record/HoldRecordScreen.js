@@ -32,6 +32,7 @@ import cancelSvg from '../../assets/record/cancel.svg';
 import publicSvg from '../../assets/record/public.svg';
 import { DescriptionText } from '../component/DescriptionText';
 
+import { setRefreshState } from '../../store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { setVoiceState } from '../../store/actions';
 
@@ -41,7 +42,7 @@ const HoldRecordScreen = (props) => {
 
   let isTemporary = props.navigation.state.params?.isTemporary;
 
-  let { user , voiceState } = useSelector((state) => state.user) ;
+  let { user , voiceState , refreshState} = useSelector((state) => state.user) ;
   const dispatch = useDispatch();
 
   let info = props.navigation.state.params?.info;
@@ -79,6 +80,7 @@ const HoldRecordScreen = (props) => {
   useEffect(() => {
     setFill(user.premium!='none'?180:60);
     setKey(prevKey => prevKey + 1);
+    dispatch(setVoiceState(false));
     return clearRecorder();
   }, [])
 
@@ -150,7 +152,7 @@ const HoldRecordScreen = (props) => {
       }
     }
     if(publish == false){
-      props.navigation.navigate('Discover');
+      props.navigation.goBack();
     }
   };
  

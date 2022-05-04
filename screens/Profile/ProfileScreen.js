@@ -21,6 +21,8 @@ import editSvg from '../../assets/common/edit.svg';
 import box_blankSvg from '../../assets/discover/box_blank.svg';
 
 import { useSelector } from 'react-redux';
+import { setRefreshState } from '../../store/actions';
+import { useDispatch } from 'react-redux';
 
 import { FlatList } from 'react-native-gesture-handler';
 import { styles } from '../style/Common';
@@ -35,6 +37,8 @@ const ProfileScreen = (props) => {
         state.user
     )
   });
+
+  const dispatch = useDispatch();
 
   const {t, i18n} = useTranslation();
 

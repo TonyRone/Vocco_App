@@ -79,7 +79,6 @@ class VoicePlayer extends Component {
     if(fileRemoteUrl==null){
       this._playerPath = this.path;
       if(this.props.playing==true) {
-        this.setState({isStarted:true,isPlaying:true})
         this.onStartPlay()
       }
     }
@@ -101,7 +100,6 @@ class VoicePlayer extends Component {
         if(this._isMounted&&res.respInfo.status==200){
           this._playerPath= `${Platform.OS === 'android' ? res.path() : 'ss.m4a'}`;
           if(this.props.playing==true) {
-            this.setState({isStarted:true,isPlaying:true})
             this.onStartPlay()
             }
         }
@@ -111,9 +109,11 @@ class VoicePlayer extends Component {
       })
     }
   }
-  componentDidUpdate(){
-    if(this.props.forcePlay != this.state.forcePlay){
-      this.setState({forcePlay:this.props.forcePlay});
+  componentDidUpdate(prevProps){
+    if(this.props.forcePlay != prevProps.forcePlay){
+      this.onStopPlay();
+    }
+    if(prevProps.voiceState == true && this.state.isStarted==true && this.props.voiceState == false){
       this.onStopPlay();
     }
   }
@@ -263,16 +263,16 @@ class VoicePlayer extends Component {
     //? Custom path
     let { voiceState, actions } = this.props;
     if(voiceState) return ;
-    this.setState({forcePlay:this.props.forcePlay});
     try
     {
       const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath);
       const volume = await this.audioRecorderPlayer.setVolume(1.0);
+      actions.setVoiceState(true);
       this.setState({
         isStarted:true,
         isPlaying:true
       });
-      actions.setVoiceState(true);
+      this.setState({forcePlay:this.props.forcePlay});
       this.audioRecorderPlayer.addPlayBackListener((e) => {
         if(this._isMounted){
           if(this.state.isPlaying)

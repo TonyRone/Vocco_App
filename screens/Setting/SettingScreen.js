@@ -34,6 +34,7 @@ import { SettingList } from '../component/SettingList';
 import { NavigationActions, StackActions } from 'react-navigation';
 
 import { useSelector } from 'react-redux';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SettingScreen =  (props) => {
 
@@ -93,7 +94,7 @@ const SettingScreen =  (props) => {
     });
     }, [])
     return (
-      <KeyboardAvoidingView 
+      <SafeAreaView
         style={{
           backgroundColor:'#FFF',
           flex:1
@@ -318,7 +319,7 @@ const SettingScreen =  (props) => {
               setShowLanguageModal(false);
           }}
         />
-      </KeyboardAvoidingView>
+      </SafeAreaView>
     );
   };
   

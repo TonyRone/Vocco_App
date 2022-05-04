@@ -16,6 +16,7 @@ import {
 import { NavigationActions, StackActions } from 'react-navigation';
 import * as Progress from "react-native-progress";
 import LinearGradient from 'react-native-linear-gradient';
+import { useDispatch } from 'react-redux';
 import SwipeDownModal from 'react-native-swipe-down';
 import { LinearTextGradient } from "react-native-text-gradient";
 import { TitleText } from '../component/TitleText';
@@ -23,6 +24,7 @@ import { Warning } from '../component/Warning';
 import { BlockList } from '../component/BlockList';
 import { CategoryIcon } from '../component/CategoryIcon';
 import { DescriptionText } from '../component/DescriptionText';
+import { setRefreshState } from '../../store/actions';
 import { ShareVoice } from '../component/ShareVoice';
 import { MyButton } from '../component/MyButton';
 import { MyProgressBar } from '../component/MyProgressBar';
@@ -97,6 +99,8 @@ const UserProfileScreen = (props) => {
       )
     });
 
+    const dispatch = useDispatch();
+
     let userId = props.navigation.state.params.userId;
 
     const onNavigate = (des, par = null) =>{
@@ -167,7 +171,8 @@ const UserProfileScreen = (props) => {
         setFollowloading(false);
         const jsonRes = await res.json();
         if(res.respInfo.status==201){ 
-          onNavigate('Discover');
+          dispatch(setRefreshState(!refreshState));
+          props.navigation.navigate('Discover');
         }
       })
       .catch(err => {

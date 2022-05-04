@@ -210,7 +210,7 @@ const PostingAnswerVoiceScreen = (props) => {
       {showShareVoice&&
       <ShareVoice
         info = {{file:{url:showShareVoice.file.url}, title:'answer voice'}}
-        onCloseModal={()=>{setShowShareVoice(false);onNavigate("VoiceProfile",{info:info});}}
+        onCloseModal={()=>{setShowShareVoice(false);props.navigation.navigate("VoiceProfile",{info:info});}}
       />}
     </KeyboardAvoidingView>
   );
