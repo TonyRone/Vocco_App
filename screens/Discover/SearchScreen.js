@@ -77,9 +77,14 @@ const SearchScreen = (props) => {
     if(showVoices) setShowVoices(false);
     if(v!=''){
       setIsLoading(true);
+      console.log(v);
       VoiceService.getDiscoverTitle(v,0,Categories[category].label).then(async res => {
+        console.log("EEEEEEEEEEEEEEEEEEEEEEEE");
+        console.log(res.respInfo.status);
         if (res.respInfo.status === 200) {
           const jsonRes = await res.json();
+          console.log("SSSSSSSSSSSSSSSSSSSSSSSSS");
+          console.log(jsonRes.user[0]);
           setFilterTitles(jsonRes);
           setIsEmpty(jsonRes.length==0);
           setIsLoading(false);

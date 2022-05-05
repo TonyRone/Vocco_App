@@ -333,7 +333,7 @@ export const VoiceItem = ({
         renderItem={({item,index})=>index<5?
           <AnswerSimpleItem
             key={index+info.id+'simpleItem'}
-            info = {item}
+            info = {answerVoices[answerVoices.length-index-1]}
             isPlaying = {index==nowVoice}
             onPressPlay={() => pressPlayVoice(index)}
             onStopPlay={()=>onStopAnswerPlay()}

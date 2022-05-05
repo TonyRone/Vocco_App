@@ -77,7 +77,8 @@ const FeedScreen = (props) => {
       OnShowEnd();
       return ;
     } 
-    setLoading(true);
+    if(isNew)
+      setLoading(true);
     VoiceService.getHomeVoice(isNew?0:voices.length).then(async res => {
         if (res.respInfo.status === 200) {
           const jsonRes = await res.json();
@@ -279,7 +280,7 @@ const FeedScreen = (props) => {
           /> 
         </View>
         <ScrollView
-          style = {{marginBottom:80, marginTop:25}}
+          style = {{marginBottom:Platform.OS=='ios'?65:75, marginTop:25}}
           ref={scrollRef}
           onScroll={({nativeEvent}) => {
             if (isCloseToBottom(nativeEvent)) {

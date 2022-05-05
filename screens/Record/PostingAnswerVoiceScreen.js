@@ -133,7 +133,7 @@ const PostingAnswerVoiceScreen = (props) => {
         </View>
       </View>
       <View style={{ alignItems: 'center', marginTop: 150 }}>
-        <TouchableOpacity onPress={() => setVisibleReaction(true)} style={[{ width: 80, height: 80, backgroundColor: '#FFFFFF', borderRadius: 40 }, styles.contentCenter]}>
+        {/* <TouchableOpacity onPress={() => setVisibleReaction(true)} style={[{ width: 80, height: 80, backgroundColor: '#FFFFFF', borderRadius: 40 }, styles.contentCenter]}>
           <Text
             style={{
               fontSize: 45,
@@ -152,7 +152,7 @@ const PostingAnswerVoiceScreen = (props) => {
               />
             </View>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TitleText
           text={`Duration: ${displayDuration} seconds`}
           fontFamily="SFProDisplay-Regular"

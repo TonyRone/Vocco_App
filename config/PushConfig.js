@@ -1,6 +1,7 @@
 import PushNotification from 'react-native-push-notification'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DEVICE_TOKEN, DEVICE_OS } from './config';
+import NavigationService from '../services/NavigationService';
 
 PushNotification.configure({
   onRegister: async ({token, os}) => {
@@ -16,7 +17,7 @@ PushNotification.configure({
   },
 
   onNotification: (notification) => {
-    this.props.navigation.navigate(notification.custom.nav,notification.custom.params)
+    NavigationService.navigate(notification.custom.nav,notification.custom.params)
   }
 
 });

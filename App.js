@@ -3,6 +3,7 @@ import * as React from 'react';
 import { AppRegistry } from "react-native";
 import { createStackNavigator } from "react-navigation-stack";
 import {createAppContainer} from 'react-navigation'
+import { useNavigation } from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen'
 import LoginScreen from './screens/mymy/LoginScreen';
 import RegisterScreen from './screens/mymy/RegisterScreen';
@@ -45,6 +46,8 @@ import ContactScreen from './screens/Setting/ContactScreen';
 import NotificationScreen from './screens/Notification/NotificationScreen';
 import UserProfileScreen from './screens/UserProfile/UserProfileScreen';
 import UserProfileListScreen from './screens/UserProfile/UserProfileListScreen';
+
+import NavigationService from './services/NavigationService';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { Provider } from 'react-redux';
@@ -400,6 +403,7 @@ const AppNavigator = createStackNavigator({
 }
 );
 
+
 const AppContainer = createAppContainer(AppNavigator);
 
 export default App = () => {
@@ -408,7 +412,11 @@ export default App = () => {
   }, []);
   return (
     <Provider store = { store }>
-      <AppContainer />
+      <AppContainer
+        ref={navigatorRef => {
+          NavigationService.setTopLevelNavigator(navigatorRef);
+        }}
+      />
     </Provider>
   );
 };

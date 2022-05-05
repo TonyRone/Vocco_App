@@ -6,7 +6,8 @@ import {
   TouchableOpacity, 
   Pressable,
   ScrollView,
-  Image
+  Image,
+  Platform
 } from 'react-native';
 
 import * as Progress from "react-native-progress";
@@ -85,7 +86,8 @@ const DiscoverScreen = (props) => {
       return ;
     }
     let len = isNew?0:filteredVoices.length;
-    setIsloading(true);
+    if(isNew)
+      setIsloading(true);
     VoiceService.getDiscoverVoices('',len, Categories[categoryId].label ).then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
@@ -187,7 +189,7 @@ const DiscoverScreen = (props) => {
           </View>
         </View>
         <ScrollView
-          style = {{marginBottom:80, marginTop:25}}
+          style = {{marginBottom:Platform.OS=='ios'?65:75, marginTop:25}}
           onScroll={({nativeEvent}) => {
             if (isCloseToBottom(nativeEvent)) {
               getVoices(false);
