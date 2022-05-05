@@ -13,5 +13,10 @@ PushNotification.configure({
       DEVICE_OS,
       os
     );
+  },
+
+  onNotification: (notification) => {
+    this.props.navigation.navigate(notification.custom.nav,notification.custom.params)
   }
+
 });
