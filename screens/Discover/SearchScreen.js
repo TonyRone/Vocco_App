@@ -61,6 +61,7 @@ const SearchScreen = (props) => {
   const [nowVoice, setNowVoice] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(0);
 
   const {t, i18n} = useTranslation();
 
@@ -77,14 +78,9 @@ const SearchScreen = (props) => {
     if(showVoices) setShowVoices(false);
     if(v!=''){
       setIsLoading(true);
-      console.log(v);
       VoiceService.getDiscoverTitle(v,0,Categories[category].label).then(async res => {
-        console.log("EEEEEEEEEEEEEEEEEEEEEEEE");
-        console.log(res.respInfo.status);
         if (res.respInfo.status === 200) {
           const jsonRes = await res.json();
-          console.log("SSSSSSSSSSSSSSSSSSSSSSSSS");
-          console.log(jsonRes.user[0]);
           setFilterTitles(jsonRes);
           setIsEmpty(jsonRes.length==0);
           setIsLoading(false);
@@ -352,7 +348,7 @@ const SearchScreen = (props) => {
             </TouchableOpacity>
           </View>
           <View>
-            <FlatList
+            {/* <FlatList
               horizontal = {true}
               showsHorizontalScrollIndicator = {false}
               style={[{marginLeft:12},styles.mt16]}
@@ -367,6 +363,29 @@ const SearchScreen = (props) => {
                 />
               }
               keyExtractor={(item, index) => index.toString()} 
+            /> */}
+            <FlatList
+              horizontal = {true}
+              showsHorizontalScrollIndicator = {false}
+              style={[{marginLeft:12},styles.mt16]}
+              data = {Categories}
+              renderItem={({item,index})=>{
+                let idx = 0;
+                if(selectedCategory > 0){
+                  if(index == 0) idx = selectedCategory;
+                  else if(index <= selectedCategory) idx = index-1;
+                  else idx = index;
+                }
+                else idx = index;
+                return <CategoryIcon 
+                  key = {'category'+idx}
+                  label={Categories[idx].label}
+                  source={Categories[idx].uri}
+                //  onPress={()=>{setCategory(index);getLabel('');}}
+                  active={category == idx ? true : false}
+                />
+              }}
+              keyExtractor={(item, idx) => idx.toString()} 
             />
           </View>
           <TitleText
@@ -412,7 +431,7 @@ const SearchScreen = (props) => {
           </View>
           <View style={{height:1,backgroundColor:'#F0F4FC',marginTop:9,marginLeft:16}}></View>
           <View>
-            <FlatList
+            {/* <FlatList
               horizontal = {true}
               showsHorizontalScrollIndicator = {false}
               style={[{marginLeft:12},styles.mt16]}
@@ -427,6 +446,29 @@ const SearchScreen = (props) => {
                 />
               }
               keyExtractor={(item, index) => index.toString()} 
+            /> */}
+            <FlatList
+              horizontal = {true}
+              showsHorizontalScrollIndicator = {false}
+              style={[{marginLeft:12},styles.mt16]}
+              data = {Categories}
+              renderItem={({item,index})=>{
+                let idx = 0;
+                if(selectedCategory > 0){
+                  if(index == 0) idx = selectedCategory;
+                  else if(index <= selectedCategory) idx = index-1;
+                  else idx = index;
+                }
+                else idx = index;
+                return <CategoryIcon 
+                  key = {'category'+idx}
+                  label={Categories[idx].label}
+                  source={Categories[idx].uri}
+                  onPress={()=>setCategory(index)}
+                  active={category == idx ? true : false}
+                />
+              }}
+              keyExtractor={(item, idx) => idx.toString()} 
             />
           </View>
           <ScrollView style={{paddingLeft:16,marginTop:31}}>
@@ -440,7 +482,7 @@ const SearchScreen = (props) => {
             <AllCategory
               closeModal={()=>setShowModal(false)}
               selectedCategory = {category}
-              setCategory={(id)=>{setCategory(id);getLabel('');setShowModal(false)}}
+              setCategory={(id)=>{setCategory(id);getLabel('');setSelectedCategory(id);setShowModal(false)}}
             />
           }
           ContentModalStyle={styles.swipeModal}

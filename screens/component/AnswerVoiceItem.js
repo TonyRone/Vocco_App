@@ -26,7 +26,7 @@ export const AnswerVoiceItem = ({
   onPressPlay = () => {},
 }) => {
 
-  const voiceState = useSelector((state)=> state.user.voiceState);
+  const {user, voiceState} = useSelector((state)=> state.user);
 
   const {t, i18n} = useTranslation();
   const [lastTap,setLastTap] = useState(0);
@@ -36,7 +36,7 @@ export const AnswerVoiceItem = ({
       check = info.isLiked;
   let num = Math.ceil((new Date().getTime()-new Date(info.createdAt).getTime())/60000),minute = num%60;
   num = (num-minute)/60;
-  let hour = num%24,day = (num-hour)/24,time = (day>0?(day.toString()+' '+t("days")+' '):'')+(hour>0?(hour.toString()+' '+t("hours")+' '):'')+(minute>0?(minute.toString()+' '+t("minutes") ):'')+' '+t("ago");
+  let hour = num%24,day = (num-hour)/24,time = day>0?(day.toString()+' '+t("days")+' '+t("ago")):'';
   
   const DOUBLE_PRESS_DELAY = 400;
 
@@ -87,7 +87,7 @@ export const AnswerVoiceItem = ({
         borderRadius:16,
       //  opacity:isLoading?0.5:1
       }}
-      onLongPress={()=>props.navigation.navigate('UserProfile',{userId:info.user.id})}
+      onLongPress={()=>info.user.id==user.id?props.navigation.navigate('Profile'):props.navigation.navigate('UserProfile',{userId:info.user.id})}
       onPress={() => onClickDouble()}
     >
       <View
@@ -178,6 +178,7 @@ export const AnswerVoiceItem = ({
           <VoicePlayer
             voiceUrl = {info.file.url}
             stopPlay ={()=>onStopPlay()}
+            premium = {info.user.premium!='none'}
             playBtn = {false}
             replayBtn = {false}
             playing={true}

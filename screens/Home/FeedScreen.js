@@ -54,6 +54,7 @@ const FeedScreen = (props) => {
   const [loadmore, setloadmore] = useState(10);
   const [loading, setLoading] = useState(false);
   const [showEnd,setShowEnd] = useState(false);
+  const [temFlag,setTemFlag] =  useState(-1);
 
   const {t, i18n} = useTranslation();
 
@@ -77,14 +78,20 @@ const FeedScreen = (props) => {
       OnShowEnd();
       return ;
     } 
-    if(isNew)
-      setLoading(true);
+   if(isNew)
+     setLoading(true);
     VoiceService.getHomeVoice(isNew?0:voices.length).then(async res => {
         if (res.respInfo.status === 200) {
           const jsonRes = await res.json();
           if(jsonRes.length > 0)
             setVoices((voices.length==0||isNew)?jsonRes:[...voices,...jsonRes]);
           setloadmore(jsonRes.length);
+          let flag = -1;
+          voices.forEach((element,index) => {
+            if(element.temporary == true && element.user.id == user.id && flag ==-1)
+              flag = index;
+          });
+          setTemFlag(flag);
           setLoading(false);
           if(isNew)
             scrollRef.current?.scrollToOffset({ animated: true, offset: 0 });
@@ -138,7 +145,6 @@ const FeedScreen = (props) => {
   let socket = null;
 
   useEffect(() => {
-    checkPermission();
     getVoices(true);
     socketInstance.on("notice_Voice", (data) => {
       // if(data.user_id != user.id){
@@ -151,6 +157,7 @@ const FeedScreen = (props) => {
         noticeDispatch("reset");
       }, 1500);
     }
+  //  checkPermission();
   }, [refreshState])
 
   const checkPermission = async () => {
@@ -221,11 +228,11 @@ const FeedScreen = (props) => {
             style={{
               width:56,
             }}
-            onPress={() => props.navigation.navigate("HoldRecord", {isTemporary: true})}
+            onPress={() =>temFlag>=0?props.navigation.navigate('VoiceProfile', {info:voices[temFlag]}):props.navigation.navigate("HoldRecord", {isTemporary: true})}
           >
             <Image
               source={{uri:user.avatar.url}}
-              style={{width:56,height:56,borderRadius:16}}
+              style={{width:56,height:56,borderRadius:28,}}
               resizeMode='cover'
             />
             <View style={{
@@ -233,7 +240,9 @@ const FeedScreen = (props) => {
               backgroundColor:'rgba(131, 39, 216, 0.4)',
               width:56,
               height:56,
-              borderRadius:16
+              borderRadius:28,
+              borderWidth:temFlag>=0?2:0,
+              borderColor:"#FDB166"
             }}>
             </View>
             <View
@@ -263,24 +272,24 @@ const FeedScreen = (props) => {
               You
             </Text>
           </Pressable>
-          <FlatList
-            horizontal = {true}
-            showsHorizontalScrollIndicator = {false}
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
             style={{paddingLeft:16}}
-            data = {voices}
-            renderItem={({item,index})=>
-              !item.temporary?null:
-              <FriendItem 
-                key={index+'frienditem_feed'}
-                props={props}
-                info = {item}
-              />
+          >
+            {
+              voices.map((item,index)=>
+                (!item.temporary||item.user.id==user.id)?null:
+                <FriendItem 
+                  key={index+'frienditem_feed'}
+                  props={props}
+                  info = {item}
+                />)
             }
-            keyExtractor={(item, index) => index.toString()} 
-          /> 
+          </ScrollView> 
         </View>
         <ScrollView
-          style = {{marginBottom:Platform.OS=='ios'?65:75, marginTop:25}}
+          style = {{marginBottom:Platform.OS=='ios'?65:75, marginTop:10}}
           ref={scrollRef}
           onScroll={({nativeEvent}) => {
             if (isCloseToBottom(nativeEvent)) {

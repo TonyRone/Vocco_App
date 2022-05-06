@@ -4,7 +4,8 @@ import {
   KeyboardAvoidingView, 
   TouchableOpacity, 
   Image, 
-  Platform
+  Platform,
+  Pressable
 } from 'react-native';
 
 import { NavigationActions, StackActions } from 'react-navigation';
@@ -87,7 +88,7 @@ const UserProfileScreen = (props) => {
     const [showShareVoice, setShowShareVoice] = useState(null);
     const [identify, setIdentify] = useState('');
 
-    let { refreshState } = useSelector((state) => {
+    let { user, refreshState } = useSelector((state) => {
       return (
           state.user
       )
@@ -305,7 +306,8 @@ const UserProfileScreen = (props) => {
                   lineHeight={33}
                 />
                 {userInfo.user&&userInfo.user.premium!='none'&&
-                  <Image
+                  <Pressable disabled={user.premium!='none'} onPress={()=>props.navigation.navigate("Premium")}>
+                    <Image
                     style={{
                       width:100,
                       height:33,
@@ -313,15 +315,16 @@ const UserProfileScreen = (props) => {
                     }}
                     source={require('../../assets/common/premiumstar.png')}
                   />
+                  </Pressable>
                 }
               </View>
-              <DescriptionText
+              {/* <DescriptionText
                 text={renderName(userInfo.user?.firstname,userInfo.user?.lastname)}
                 fontSize={12}
                 lineHeight={16}
                 color={'rgba(54, 36, 68, 0.8)'}
                 marginTop={3}
-              />
+              /> */}
             </View>
             <View style={styles.rowAlignItems}>
               {fstate=='accepted'&&<TouchableOpacity>

@@ -28,7 +28,7 @@ export const FriendItem = ({
     >
       <Image
         source={{uri:info.user.avatar.url}}
-        style={{width:56,height:56,borderRadius:16}}
+        style={{width:56,height:56,borderRadius:28}}
         resizeMode='cover'
       />
       <Text

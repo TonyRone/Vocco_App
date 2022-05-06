@@ -11,15 +11,15 @@ import {
   Vibration
 } from 'react-native';
 
-import { useSelector } from 'react-redux';
-
+import { useSelector , useDispatch} from 'react-redux';
+import { FlatList } from 'react-native-gesture-handler';
 import RNFetchBlob from 'rn-fetch-blob';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { TitleText } from '../component/TitleText';
 
 import { CategoryIcon } from '../component/CategoryIcon';
 import { MyButton } from '../component/MyButton';
-import { ReactionEmojies } from '../component/ReactionEmojies';
+import EmojiPicker from 'rn-emoji-keyboard';
 import { ShareHint } from '../component/ShareHint';
 import { ShareVoice } from '../component/ShareVoice';
 
@@ -35,6 +35,7 @@ import { styles } from '../style/Common';
 import { AllCategory } from '../component/AllCategory';
 import VoiceService from '../../services/VoiceService';
 import VoicePlayer from "../Home/VoicePlayer";
+import { setRefreshState } from '../../store/actions';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
@@ -43,7 +44,7 @@ const PostingVoiceScreen = (props) => {
   let displayDuration = props.navigation.state.params?.recordSecs ? props.navigation.state.params?.recordSecs : 0;
   let isTemporary = props.navigation.state.params?.isTemporary?true:false;
 
-  let { user, socketInstance } = useSelector((state) => state.user);
+  let { user, refreshState, socketInstance } = useSelector((state) => state.user);
 
   const [category, setCategory] = useState(0);
   const [visibleStatus, setVisibleStatus] = useState( isTemporary);
@@ -55,6 +56,9 @@ const PostingVoiceScreen = (props) => {
   const [showModal,setShowModal] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [showShareVoice, setShowShareVoice] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(0);
+
+  const dispatch = useDispatch();
 
   const dirs = RNFetchBlob.fs.dirs;
 
@@ -103,6 +107,7 @@ const PostingVoiceScreen = (props) => {
           Vibration.vibrate(100);
           socketInstance.emit("newVoice", {uid:user.id});
           setShowShareVoice(jsonRes);
+          dispatch(setRefreshState(!refreshState));
         }
         setIsLoading(false);
       })
@@ -116,14 +121,14 @@ const PostingVoiceScreen = (props) => {
     //  checkLogin();
   }, [])
   return (
-    <SafeAreaView
+    <KeyboardAvoidingView
       style={{
         backgroundColor: '#FFF',
         flex: 1
       }}
     >
       <View style={{ width: windowWidth, height: 280, borderBottomLeftRadius: 50, borderBottomRightRadius: 50, backgroundColor: '#F8F0FF' }}>
-        <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}>
+        <View style={{ marginTop: Platform.OS=='ios'?50:20, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}>
           <Pressable style={{ 
             marginLeft: 16,
             position:'absolute',
@@ -200,6 +205,7 @@ const PostingVoiceScreen = (props) => {
           <VoicePlayer
             playBtn = {true}
             replayBtn = {true}
+            premium = {user.premium!='none'}
             playing = {false}
             stopPlay = {()=>{}}
           />
@@ -230,7 +236,7 @@ const PostingVoiceScreen = (props) => {
             />
           </TouchableOpacity>
         </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={[{marginLeft:12},styles.mt16]}>
+        {/* <ScrollView horizontal showsHorizontalScrollIndicator={false} style={[{marginLeft:12},styles.mt16]}>
           {Categories.map((item,index)=>{
             var temp_item, id = index;
             // if(category > 4) id = index-1;
@@ -246,7 +252,30 @@ const PostingVoiceScreen = (props) => {
               />
             )
           })}
-        </ScrollView>
+        </ScrollView> */}
+        <FlatList
+          horizontal = {true}
+          showsHorizontalScrollIndicator = {false}
+          style={[{marginLeft:12},styles.mt16]}
+          data = {Categories}
+          renderItem={({item,index})=>{
+            let idx = 0;
+            if(selectedCategory > 0){
+              if(index == 0) idx = selectedCategory;
+              else if(index <= selectedCategory) idx = index-1;
+              else idx = index;
+            }
+            else idx = index;
+            return <CategoryIcon 
+              key = {'category'+idx}
+              label={Categories[idx].label}
+              source={Categories[idx].uri}
+              onPress={()=>setCategory(index)}
+              active={category == idx ? true : false}
+            />
+          }}
+          keyExtractor={(item, idx) => idx.toString()} 
+        />
         <TitleText
           text='Privacy settings'
           fontFamily="SFProDisplay-Regular"
@@ -303,10 +332,11 @@ const PostingVoiceScreen = (props) => {
         />
       </View>
       {visibleReaction && 
-      <ReactionEmojies
-        onSelectIcon ={(icon)=>selectIcon(icon)}   
-        onCloseModal ={()=>setVisibleReaction(false)}
-      />}
+      <EmojiPicker
+        onEmojiSelected={(icon)=>selectIcon(icon.emoji)}
+        open={visibleReaction}
+        onClose={() => setVisibleReaction(false)} />
+      }
       {showHint&&
       <ShareHint
         onCloseModal={()=>{setShowHint(false);handleSubmit();}}
@@ -322,7 +352,7 @@ const PostingVoiceScreen = (props) => {
           <AllCategory
             closeModal={()=>setShowModal(false)}
             selectedCategory = {category}
-            setCategory={(id)=>{setCategory(id);setShowModal(false)}}
+            setCategory={(id)=>{setCategory(id);setSelectedCategory(id);setShowModal(false)}}
           />
         }
         ContentModalStyle={styles.swipeModal}
@@ -331,7 +361,7 @@ const PostingVoiceScreen = (props) => {
             setShowModal(false);
         }}
       />
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 

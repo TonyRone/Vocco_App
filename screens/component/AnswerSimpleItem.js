@@ -75,6 +75,7 @@ export const AnswerSimpleItem = ({
         <VoicePlayer
           voiceUrl = {info.file.url}
           rPlayBtn = {true}
+          premium = {info.user.premium!='none'}
           height = {22}
           tinWidth = {windowWidth/500}
           mrg = {windowWidth/1500}

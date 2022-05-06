@@ -38,6 +38,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const DiscoverScreen = (props) => {
 
   const [category, setCategory] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState(0);
   const [filteredVoices, setFilteredVoices] = useState([]);
   const [nowVoice, setNowVoice] = useState(null);
   const [showModal,setShowModal] = useState(false);
@@ -46,6 +47,7 @@ const DiscoverScreen = (props) => {
   const [isloading, setIsloading] = useState(false);
   const [loadmore, setloadmore] = useState(10);
   const [showEnd,setShowEnd] = useState(false);
+  const [showEmoji, setShowEmoji] = useState(false);
 
 
   let { refreshState } = useSelector((state) => {
@@ -58,7 +60,7 @@ const DiscoverScreen = (props) => {
 
   const onSetCategory = (categoryId)=>{
     setCategory(categoryId);
-    getVoices(true,categoryId);
+    getVoices(true);
   }
 
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
@@ -75,7 +77,7 @@ const DiscoverScreen = (props) => {
     }, 2000);
   }
 
-  const getVoices = async(isNew,categoryId=category) => {
+  const getVoices = async(isNew) => {
     if(isNew)
       onStopPlay();
     else if(isloading){
@@ -88,7 +90,7 @@ const DiscoverScreen = (props) => {
     let len = isNew?0:filteredVoices.length;
     if(isNew)
       setIsloading(true);
-    VoiceService.getDiscoverVoices('',len, Categories[categoryId].label ).then(async res => {
+    VoiceService.getDiscoverVoices('',len, Categories[category].label ).then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
         setFilteredVoices((filteredVoices.length==0||isNew)?jsonRes:[...filteredVoices,...jsonRes]);
@@ -222,16 +224,23 @@ const DiscoverScreen = (props) => {
             showsHorizontalScrollIndicator = {false}
             style={[{marginLeft:12},styles.mt16]}
             data = {Categories}
-            renderItem={({item,index})=>
-              <CategoryIcon 
-                key = {'category'+index}
-                label={item.label}
-                source={item.uri}
-                onPress={()=>onSetCategory(index)}
-                active={category == index ? true : false}
+            renderItem={({item,index})=>{
+              let idx = 0;
+              if(selectedCategory > 0){
+                if(index == 0) idx = selectedCategory;
+                else if(index <= selectedCategory) idx = index-1;
+                else idx = index;
+              }
+              else idx = index;
+              return <CategoryIcon 
+                key = {'category'+idx}
+                label={Categories[idx].label}
+                source={Categories[idx].uri}
+                onPress={()=>onSetCategory(idx)}
+                active={category == idx ? true : false}
               />
-            }
-            keyExtractor={(item, index) => index.toString()} 
+            }}
+            keyExtractor={(item, idx) => idx.toString()} 
           /> 
         </View>
         <TitleText
@@ -291,7 +300,7 @@ const DiscoverScreen = (props) => {
             <AllCategory
               closeModal={()=>setShowModal(false)}
               selectedCategory = {category}
-              setCategory={(id)=>{onSetCategory(id);setShowModal(false)}}
+              setCategory={(id)=>{onSetCategory(id);setSelectedCategory(id);setShowModal(false)}}
             />
           }
           ContentModalStyle={styles.swipeModal}

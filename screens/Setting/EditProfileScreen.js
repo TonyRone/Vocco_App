@@ -61,7 +61,7 @@ const EditProfileScreen = (props) => {
     const [showModal,setShowModal] = useState(false);
     const [gender,setGender] = useState(userDate.gender);
     const [userCountry,setUserCountry] = useState({country:userDate.country});
-    const [validUsername, setValidUsername] = useState(false);
+    const [validUsername, setValidUsername] = useState(true);
     const [inputState, setInputState] = useState({});
     const [privated,setPrivateStatus] = useState(userDate.isPrivate);
     const [date, setDate] = useState(birthdate);

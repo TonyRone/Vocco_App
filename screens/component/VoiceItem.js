@@ -7,13 +7,12 @@ import {
   Pressable,
 } from "react-native";
 
-import EmojiBoard from 'react-native-emoji-board'
 import {useTranslation} from 'react-i18next';
+import EmojiPicker from 'rn-emoji-keyboard';
 import '../../language/i18n';
 import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
 import { AnswerSimpleItem } from './AnswerSimpleItem';
-import { ReactionEmojies } from './ReactionEmojies';
 import { FlatList} from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import { SvgXml } from 'react-native-svg';
@@ -255,6 +254,7 @@ export const VoiceItem = ({
               stopPlay ={()=>onStopPlay()}
               playBtn = {false}
               replayBtn = {false}
+              premium = {premium!='none'}
               playing={true}
               tinWidth={windowWidth/150}
               mrg={windowWidth/600}
@@ -343,11 +343,10 @@ export const VoiceItem = ({
         keyExtractor={(item, index) => index.toString()}
       />}
       {showEmojies&&
-        <ReactionEmojies
-          onSelectIcon={(icon)=>selectIcon(icon)}
-          onCloseModal = {()=>setShowEmojies(false)}
-        />
-        // <EmojiBoard showBoard={showEmojies} onClick={selectIcon} />
+        <EmojiPicker
+          onEmojiSelected={(icon)=>selectIcon(icon.emoji)}
+          open={showEmojies}
+          onClose={() => setShowEmojies(false)} />
       }
     </>
   );

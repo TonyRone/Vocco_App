@@ -41,10 +41,18 @@ import { ACCESSTOKEN_KEY, REFRESHTOKEN_KEY, TUTORIAL_CHECK,POST_CHECK, API_URL, 
 import { styles } from '../style/Common';
 import VoiceService from '../../services/VoiceService';
 import VoicePlayer from '../Home/VoicePlayer';
+import { setRefreshState } from '../../store/actions';
+import { useSelector , useDispatch} from 'react-redux';
 
 const PostingAnswerVoiceScreen = (props) => {
 
   let info = props.navigation.state.params.info;
+
+  let { user , refreshState } = useSelector((state) => {
+    return (
+        state.user
+    )
+  });
 
   const [playStatus, setPlayStatus] = useState(false);
   const [displayDuration, setDisplayDuration] = useState(props.navigation.state.params?.recordSecs ? props.navigation.state.params?.recordSecs : 0);
@@ -53,6 +61,8 @@ const PostingAnswerVoiceScreen = (props) => {
   const [visibleReaction, setVisibleReaction] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [showShareVoice, setShowShareVoice] = useState(false);
+
+  const dispatch = useDispatch();
 
   const dirs = RNFetchBlob.fs.dirs;
 
@@ -95,7 +105,8 @@ const PostingAnswerVoiceScreen = (props) => {
         if (res.respInfo.status !== 201) {
         } else {
           Vibration.vibrate(100);
-            setShowShareVoice(jsonRes);
+          dispatch(setRefreshState(!refreshState));
+          setShowShareVoice(jsonRes);
         }
         setIsLoading(false);
       })
@@ -180,6 +191,7 @@ const PostingAnswerVoiceScreen = (props) => {
         <VoicePlayer
           playBtn = {true}
           replayBtn = {true}
+          premium = {user.premium!='none'}
           playing = {false}
           stopPlay = {()=>{}}
         />

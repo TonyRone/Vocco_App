@@ -394,13 +394,13 @@ const LoginScreen = (props) => {
               <DescriptionText
                 text={t("Welcome back. You've been missed!")}
                 fontSize={20}
-                marginTop={10}
+                marginTop={20}
               />
             </View>
             <View
               style={
                 {
-                  marginTop: 10,
+                  marginTop: 20,
                   padding: 16,
                   backgroundColor: '#FFF',
                   borderTopLeftRadius: 24,
@@ -438,7 +438,7 @@ const LoginScreen = (props) => {
                 isPassword={true}
                 errorText={error.password}
               />
-              <View
+              {/* <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'flex-end'
@@ -452,9 +452,10 @@ const LoginScreen = (props) => {
                     marginTop={9}
                   />
                 </TouchableOpacity>
-              </View>
+              </View> */}
               <MyButton
                 label={t("Log In")}
+                marginTop = {40}
                 onPress={handleSubmit}
                 loading={loading}
               />

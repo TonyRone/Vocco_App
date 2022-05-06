@@ -68,7 +68,7 @@ const  PremiumScreen = (props) => {
           resizeMode="stretch"
           style={styles.background}
         >
-          <View style={{position:'absolute', width:'100%',bottom:68,paddingHorizontal:16}}>
+          <View style={{position:'absolute', width:'100%',bottom:108,paddingHorizontal:16}}>
             <View style={{ flexDirection:'row',alignItems:'center',marginLeft:15}}>
               <SvgXml
                 width={24}
@@ -161,7 +161,7 @@ const  PremiumScreen = (props) => {
               backgroundColor:'rgba(255,255,255,0.7)',
               paddingHorizontal:16,
               paddingVertical:11,
-              marginTop:12,
+              marginTop:16,
             }}
               onPress={()=>setPremiumState('yearly')}
             >
@@ -203,14 +203,22 @@ const  PremiumScreen = (props) => {
                 color='rgba(59, 31, 82, 0.6)'
               />
             </TouchableOpacity>
-            <MyButton
-              marginTop={24}
-              label={t("Continue to checkout")}
-              onPress={changePremiumState}
-              loading = {loading}
-            />
           </View>
         </ImageBackground>
+        <View 
+          style={{
+            paddingHorizontal:16,
+            position:'absolute',
+            width:'100%',
+            bottom:30
+          }}
+        >
+          <MyButton
+            label={t("Continue to checkout")}
+            onPress={changePremiumState}
+            loading = {loading}
+          />
+        </View>
       </KeyboardAvoidingView>
   );
 };

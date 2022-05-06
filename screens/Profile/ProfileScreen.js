@@ -227,13 +227,13 @@ const ProfileScreen = (props) => {
                 />
               }
             </View>
-            <DescriptionText
+            {/* <DescriptionText
               text={renderName(userData.firstname,userData.lastname)}
               fontSize={12}
               lineHeight={16}
               color={'rgba(54, 36, 68, 0.8)'}
               marginTop={3}
-            />
+            /> */}
           </View>
           <View style={[styles.contentCenter, { height: 40, width: 40, borderRadius: 20, backgroundColor: '#F8F0FF' }]}>
             <TouchableOpacity onPress={()=>props.navigation.navigate('EditProfile')}>

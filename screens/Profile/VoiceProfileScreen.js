@@ -14,8 +14,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
 import SwipeDownModal from 'react-native-swipe-down';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState } from '../../store/actions';
 import { DescriptionText } from '../component/DescriptionText';
 import { FlatList } from 'react-native-gesture-handler';
@@ -38,7 +37,7 @@ import { windowHeight, windowWidth , SHARE_CHECK } from '../../config/config';
 import { styles } from '../style/Common';
 import { CommenText } from '../component/CommenText';
 import { AnswerVoiceItem } from '../component/AnswerVoiceItem';
-import { ReactionEmojies } from '../component/ReactionEmojies';
+import EmojiPicker from 'rn-emoji-keyboard';
 
 const VoiceProfileScreen = (props) => {
 
@@ -195,7 +194,7 @@ const VoiceProfileScreen = (props) => {
 
     useEffect(() => {
       getAnswerVoices();
-    }, [])
+    }, [refreshState])
     return (
       <KeyboardAvoidingView 
         style={{
@@ -275,6 +274,7 @@ const VoiceProfileScreen = (props) => {
               voiceUrl = {info?.file.url}
               playBtn = {true}
               replayBtn = {true}
+              premium = {info.user.premium !='none'}
               forcePlay = {forcePlay}
               playing = {false}
               stopPlay = {()=>{}}
@@ -414,10 +414,10 @@ const VoiceProfileScreen = (props) => {
           </View>
         </View>
         {showEmojies&&
-          <ReactionEmojies
-            onSelectIcon={(icon)=>selectIcon(icon)}
-            onCloseModal = {()=>setShowEmojies(false)}
-          />
+          <EmojiPicker
+            onEmojiSelected={(icon)=>selectIcon(icon.emoji)}
+            open={showEmojies}
+            onClose={() => setShowEmojies(false)} />
         }
         <SwipeDownModal
           modalVisible={showModal}

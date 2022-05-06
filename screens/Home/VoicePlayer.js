@@ -184,8 +184,8 @@ class VoicePlayer extends Component {
       else h = this.waveheights[i]*this.waveHeight/39.0;
       waveCom.push(
         <LinearGradient
-          colors={['#D89DF4', '#B35CF8','#8229F4']}
-          locations={[0,0.52,1]}
+          colors={this.props.premium==true?['#FFC701','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
+          locations={this.props.premium==true?[0,1]:[0,0.52,1]}
           start={{x: 0, y: 0}} end={{x: 0, y: 1}}
           key={i}
           style={{
