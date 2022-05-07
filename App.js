@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
-import { AppRegistry } from "react-native";
+import { AppRegistry, Platform } from "react-native";
 import { createStackNavigator } from "react-navigation-stack";
 import {createAppContainer} from 'react-navigation'
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
@@ -421,7 +421,8 @@ export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
     PushNotification.requestPermissions();
-    PushNotificationIOS.addEventListener('notification', onRemoteNotification);
+    if(Platform.OS =='ios' )
+      PushNotificationIOS.addEventListener('notification', onRemoteNotification);
   }, []);
   return (
     <Provider store = { store }>
