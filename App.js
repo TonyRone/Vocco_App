@@ -421,8 +421,7 @@ export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
     PushNotification.requestPermissions();
-    if(Platform.OS =='ios' )
-      PushNotificationIOS.addEventListener('notification', onRemoteNotification);
+    PushNotificationIOS.addEventListener('notification', onRemoteNotification);
   }, []);
   return (
     <Provider store = { store }>
