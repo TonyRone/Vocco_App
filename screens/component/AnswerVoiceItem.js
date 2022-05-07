@@ -85,7 +85,6 @@ export const AnswerVoiceItem = ({
         shadowOpacity:0.5,
         shadowRadius:8,
         borderRadius:16,
-      //  opacity:isLoading?0.5:1
       }}
       onLongPress={()=>info.user.id==user.id?props.navigation.navigate('Profile'):props.navigation.navigate('UserProfile',{userId:info.user.id})}
       onPress={() => onClickDouble()}
@@ -108,7 +107,7 @@ export const AnswerVoiceItem = ({
           >
           <View style={{marginLeft:14}}>
             <View style={styles.rowAlignItems}>
-              <TouchableOpacity onPress={()=>props.navigation.navigate('UserProfile',{userId:info.user.id})}>
+              <TouchableOpacity onPress={()=>info.user.id==user.id?props.navigation.navigate('Profile'):props.navigation.navigate('UserProfile',{userId:info.user.id})}>
                 <Image
                   style={{
                     width:35,
