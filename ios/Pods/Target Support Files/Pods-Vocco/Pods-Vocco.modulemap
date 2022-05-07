@@ -1,6 +1,0 @@
-module Pods_Vocco {
-  umbrella header "Pods-Vocco-umbrella.h"
-
-  export *
-  module * { export * }
-}
