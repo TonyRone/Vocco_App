@@ -156,6 +156,7 @@ const NotificationScreen = (props) => {
                 setRequests(tp);
                 setRequestNum(requestNum-1);
             }
+            props.navigation.navigate('UserProfile',{userId:tp[index].fromUser.id});
         }
     }
     const onDeleteNotification=(id,index,isActive)=>{
