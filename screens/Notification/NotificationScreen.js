@@ -37,13 +37,13 @@ const NotificationScreen = (props) => {
     const [activities,setActivities] = useState([]);
     const [requests,setRequests] = useState([]);
     const [refresh,setRefresh] = useState(false);
-    const [allSeen,setAllseen] = useState(false);
-    const [allaccept,setAllaccept] = useState(false);
-    const [isActloading, setIsActloading] = useState(false);
-    const [isReqloading, setIsReqloading] = useState(false);
-    const [actloadmore, setActloadmore] = useState(10);
-    const [reqloadmore, setReqloadmore] = useState(10);
-    const [isloading, setIsloading] = useState(false);
+    const [allSeen,setAllSeen] = useState(false);
+    const [allAccept,setAllAccept] = useState(false);
+    const [isActLoading, setIsActLoading] = useState(true);
+    const [isReqLoading, setIsReqLoading] = useState(true);
+    const [actLoadMore, setActLoadMore] = useState(10);
+    const [reqLoadMore, setReqLoadMore] = useState(10);
+    const [isLoading, setIsLoading] = useState(false);
 
     let { user , voiceState} = useSelector((state) => {
         return (
@@ -85,15 +85,15 @@ const NotificationScreen = (props) => {
     }
 
     const getActivities=()=>{
-        if(actloadmore < 10) return ;
-        setIsActloading(true);
+        if(actLoadMore < 10) return ;
+        setIsActLoading(true);
         VoiceService.getActivities(activities.length).then(async res => {
             if (res.respInfo.status == 200) {
                 const jsonRes = await res.json();
                 if(jsonRes.length > 0)
                     setActivities(activities.length==0?jsonRes:[...activities,...jsonRes]);
-                setActloadmore(jsonRes.length);
-                setIsActloading(false);
+                setActLoadMore(jsonRes.length);
+                setIsActLoading(false);
             }
          })
          .catch(err => {
@@ -101,15 +101,15 @@ const NotificationScreen = (props) => {
          });
     }
     const getRequests=()=>{
-        if(reqloadmore < 10) return ;
-        setIsReqloading(true);
+        if(reqLoadMore < 10) return ;
+        setIsReqLoading(true);
         VoiceService.getRequests(requests.length).then(async res => {
             if (res.respInfo.status == 200) {
                 const jsonRes = await res.json();
                 if(jsonRes.length > 0)
                     setRequests(requests.length==0?jsonRes:[...requests,...jsonRes]);
-                setReqloadmore(jsonRes.length);
-                setIsReqloading(false);
+                setReqLoadMore(jsonRes.length);
+                setIsReqLoading(false);
             }
          })
          .catch(err => {
@@ -127,17 +127,17 @@ const NotificationScreen = (props) => {
                 setActiveNum(activeNum-1);
             }
             if(tp[index].type == 'likeRecord' || tp[index].type == 'newAnswer'){
-                setIsloading(true);
+                setIsLoading(true);
                 VoiceService.getDiscoverVoices('',0, 'All', tp[index].record.id ).then(async res => {
                     if (res.respInfo.status === 200) {
                         const jsonRes = await res.json();
                         props.navigation.navigate("VoiceProfile",{info:jsonRes[0],answerId:tp[index].answer?.id})
-                        setIsloading(false);
+                        setIsLoading(false);
                     }
                 })
                 .catch(err => {
                     console.log(err);
-                    setIsloading(false);
+                    setIsLoading(false);
                 });
             }
             else{
@@ -149,6 +149,7 @@ const NotificationScreen = (props) => {
         }
         else{
             let tp = requests;
+            console.log(tp[0]);
             if(tp[index].seen == false){
                 VoiceService.seenNotification(tp[index].id)
                 tp[index].seen = true;
@@ -181,11 +182,11 @@ const NotificationScreen = (props) => {
         repo.then(async res => {
             if (res.respInfo.status == 200) {
                 if(isActiveState){
-                    setAllseen(true);
+                    setAllSeen(true);
                     setActiveNum(0);
                 }
                 else{
-                    setAllaccept(true);
+                    setAllAccept(true);
                     setRequestNum(0);
                 }
             }
@@ -302,7 +303,7 @@ const NotificationScreen = (props) => {
             )}
             scrollEventThrottle={16}
         >
-            {!isActloading ? (activities.length==0?
+            {!isActLoading ? (activities.length==0?
             <View style = {{marginTop:windowHeight/7,alignItems:'center',width:windowWidth}}>
                 <SvgXml
                     xml={noNotificationSvg}
@@ -342,7 +343,7 @@ const NotificationScreen = (props) => {
                     />
                 </View>
             }
-            {!isReqloading ? (requests.length==0?
+            {!isReqLoading ? (requests.length==0?
             <View style = {{marginTop:windowHeight/7,alignItems:'center',width:windowWidth}}>
                 <SvgXml
                     xml={noRequestSvg}
@@ -366,7 +367,7 @@ const NotificationScreen = (props) => {
                         details = {item.type=='friendRequest'?'Request follow':'Appreciated your voice'}
                         notificationTime = {item.createdAt}
                         isActivity = {false}
-                        accepted = {item.friend.status=='accepted'||allaccept}
+                        accepted = {item.friend.status=='accepted'||allAccept}
                         onPressItem = {()=>onReadNotification(index,false)}
                         onAcceptUser = {()=>onAcceptRequest(item.fromUser.id,index)}
                         onDeleteItem = {()=>onDeleteNotification(item.id,index,false)}
@@ -412,7 +413,7 @@ const NotificationScreen = (props) => {
                 />
             </TouchableOpacity>
         </View>}
-        {isloading&&
+        {isLoading&&
         <View style={{position:'absolute', width:'100%', height:'100%', backgroundColor:'rgba(1,1,1,0.3)'}}>
             <View style = {{marginTop:windowHeight/2.5,alignItems:'center',width:windowWidth}}>
                 <Progress.Circle

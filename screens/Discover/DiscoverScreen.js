@@ -44,7 +44,7 @@ const DiscoverScreen = (props) => {
   const [showModal,setShowModal] = useState(false);
   const [showContext,setShowContext] = useState(false);
   const [selectedIndex,setSelectedIndex] = useState(0);
-  const [isloading, setIsloading] = useState(false);
+  const [isloading, setIsloading] = useState(true);
   const [loadmore, setloadmore] = useState(10);
   const [showEnd,setShowEnd] = useState(false);
   const [showEmoji, setShowEmoji] = useState(false);
@@ -60,7 +60,7 @@ const DiscoverScreen = (props) => {
 
   const onSetCategory = (categoryId)=>{
     setCategory(categoryId);
-    getVoices(true);
+    getVoices(true,categoryId);
   }
 
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
@@ -77,7 +77,7 @@ const DiscoverScreen = (props) => {
     }, 2000);
   }
 
-  const getVoices = async(isNew) => {
+  const getVoices = async(isNew, categoryId = 0) => {
     if(isNew)
       onStopPlay();
     else if(isloading){
@@ -90,7 +90,7 @@ const DiscoverScreen = (props) => {
     let len = isNew?0:filteredVoices.length;
     if(isNew)
       setIsloading(true);
-    VoiceService.getDiscoverVoices('',len, Categories[category].label ).then(async res => {
+    VoiceService.getDiscoverVoices('',len, Categories[categoryId].label ).then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
         setFilteredVoices((filteredVoices.length==0||isNew)?jsonRes:[...filteredVoices,...jsonRes]);

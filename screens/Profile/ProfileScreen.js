@@ -51,14 +51,14 @@ const ProfileScreen = (props) => {
   const [refresh,setRefresh] = useState(false);
   const [showContext, setShowContext] = useState(false);
   const [selectedIndex,setSelectedIndex] = useState(0);
-  const [loadmore, setloadmore] = useState(10);
-  const [loading, setLoading] = useState(false);
+  const [loadMore, setLoadMore] = useState(10);
+  const [loading, setLoading] = useState(true);
 
   if(props.navigation.state.params)
     ()=>setRefresh(!refresh);
 
   const getUserVoices = () => {
-    if(loadmore < 10)
+    if(loadMore < 10)
       return ;
     if(voices.length==0)
       setLoading(true);
@@ -67,7 +67,7 @@ const ProfileScreen = (props) => {
         const jsonRes = await res.json();
         if(jsonRes.length>0)
           setVoices(voices.length==0?jsonRes:[...voices,...jsonRes]);
-        setloadmore(jsonRes.length);
+        setLoadMore(jsonRes.length);
         setLoading(false);
       } 
     })

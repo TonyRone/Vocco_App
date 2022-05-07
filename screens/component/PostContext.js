@@ -37,6 +37,7 @@ export const PostContext = ({
   onCloseModal=()=>{},
 }) => {
 
+  console.log(postInfo);
   const {t, i18n} = useTranslation();
 
   const [showReport, setShowReport] = useState(false);
@@ -151,8 +152,8 @@ export const PostContext = ({
               onPress = {()=>{
                 if(postInfo.user.id==user.id)
                   props.navigation.navigate('Profile');
-                else
-                  props.navigation.navigate('UserProfile',{userId:postInfo.user.id});
+               else
+                 props.navigation.navigate('UserProfile',{userId:postInfo.user.id});
                 closeModal();
               }}
             >

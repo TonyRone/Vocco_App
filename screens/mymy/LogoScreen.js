@@ -1,7 +1,5 @@
 import React, { useEffect} from 'react';
 import { KeyboardAvoidingView,  Image ,Text } from 'react-native';
-import PushNotification from 'react-native-push-notification';
-
 import io from "socket.io-client";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -43,7 +41,6 @@ const LogoScreen = (props) => {
                 .then(async res => {
                     try {
                         const jsonRes = await res.json();
-                        console.log(jsonRes);
                         if (res.respInfo.status ==200 && jsonRes != null){
                             dispatch(setUser(jsonRes));
                             let navigateScreen = 'Discover';
@@ -98,7 +95,6 @@ const LogoScreen = (props) => {
     }
 
     useEffect(() => {
-        PushNotification.requestPermissions();
         checkLogin();
     }, [])
 

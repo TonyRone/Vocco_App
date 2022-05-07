@@ -3,7 +3,8 @@ import * as React from 'react';
 import { AppRegistry } from "react-native";
 import { createStackNavigator } from "react-navigation-stack";
 import {createAppContainer} from 'react-navigation'
-import { useNavigation } from '@react-navigation/native';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import PushNotification from 'react-native-push-notification';
 import SplashScreen from 'react-native-splash-screen'
 import LoginScreen from './screens/mymy/LoginScreen';
 import RegisterScreen from './screens/mymy/RegisterScreen';
@@ -404,11 +405,23 @@ const AppNavigator = createStackNavigator({
 );
 
 
+const onRemoteNotification = (notification) => {
+  const isClicked = notification.getData().userInteraction === 1;
+
+  if (isClicked) {
+    NavigationService.navigate(notification.custom.nav,notification.custom.params);
+  } else {
+    
+  }
+};
+
 const AppContainer = createAppContainer(AppNavigator);
 
 export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
+    PushNotification.requestPermissions();
+    PushNotificationIOS.addEventListener('notification', onRemoteNotification);
   }, []);
   return (
     <Provider store = { store }>

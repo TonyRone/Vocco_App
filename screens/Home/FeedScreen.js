@@ -51,8 +51,8 @@ const FeedScreen = (props) => {
   const [showContext, setShowContext] = useState(false);
   const [selectedIndex,setSelectedIndex] = useState(0);
   const [refresh,setRefresh] = useState(false);
-  const [loadmore, setloadmore] = useState(10);
-  const [loading, setLoading] = useState(false);
+  const [LoadMore, setLoadMore] = useState(10);
+  const [loading, setLoading] = useState(true);
   const [showEnd,setShowEnd] = useState(false);
   const [temFlag,setTemFlag] =  useState(-1);
 
@@ -74,7 +74,7 @@ const FeedScreen = (props) => {
     else if(loading){
       return ;
     }
-    else if(loadmore < 10){
+    else if(LoadMore < 10){
       OnShowEnd();
       return ;
     } 
@@ -85,13 +85,14 @@ const FeedScreen = (props) => {
           const jsonRes = await res.json();
           if(jsonRes.length > 0)
             setVoices((voices.length==0||isNew)?jsonRes:[...voices,...jsonRes]);
-          setloadmore(jsonRes.length);
+          setLoadMore(jsonRes.length);
           let flag = -1;
-          voices.forEach((element,index) => {
-            if(element.temporary == true && element.user.id == user.id && flag ==-1)
+          jsonRes.forEach((element,index) => {
+            if(element.temporary == true && element.user.id == user.id && flag ==-1){
               flag = index;
+              setTemFlag(flag);
+            }
           });
-          setTemFlag(flag);
           setLoading(false);
           if(isNew)
             scrollRef.current?.scrollToOffset({ animated: true, offset: 0 });
@@ -242,7 +243,7 @@ const FeedScreen = (props) => {
               height:56,
               borderRadius:28,
               borderWidth:temFlag>=0?2:0,
-              borderColor:"#FDB166"
+              borderColor:"#E326A6"
             }}>
             </View>
             <View
@@ -277,9 +278,8 @@ const FeedScreen = (props) => {
             showsHorizontalScrollIndicator={false}
             style={{paddingLeft:16}}
           >
-            {
-              voices.map((item,index)=>
-                (!item.temporary||item.user.id==user.id)?null:
+            {!loading&&
+              voices.map((item,index)=>(!item.temporary||item.user.id==user.id)?null:
                 <FriendItem 
                   key={index+'frienditem_feed'}
                   props={props}
@@ -299,19 +299,21 @@ const FeedScreen = (props) => {
           scrollEventThrottle={400}
         >
           {!loading?(voices.length>0? 
-          voices.map((item,index)=>
+          voices.map((item,index)=>{
             item.temporary?null:
-            <VoiceItem 
-              key={index+'voiceitem_feed'}
-              props={props}
-              info = {item}
-              isPlaying = {index==nowVoice}
-              isRefresh = {refresh}
-              onPressPostContext={()=>tapHoldToAnswer(index)}
-              onPressPlay={() => pressPlayVoice(index)}
-              onStopPlay={()=>onStopPlay()}
-              spread = {nowVoice==null}
-            />
+              console.log(index);
+              return <VoiceItem 
+                key={index+'voiceitem_feed'}
+                props={props}
+                info = {item}
+                isPlaying = {index==nowVoice}
+                isRefresh = {refresh}
+                onPressPostContext={()=>tapHoldToAnswer(index)}
+                onPressPlay={() => pressPlayVoice(index)}
+                onStopPlay={()=>onStopPlay()}
+                spread = {nowVoice==null}
+              />
+            }
           )
           :
           <View style = {{marginTop:windowHeight/9,alignItems:'center',width:windowWidth}}>
@@ -332,43 +334,6 @@ const FeedScreen = (props) => {
             style={{ alignSelf: "center", marginTop:windowHeight/5 }}
           />
           }
-          {
-            noticeCount != 0&&
-            <TouchableOpacity style={{
-              position:'absolute',
-              top:220,
-              left:windowWidth/2-78,
-              width:noticeCount<0?183:156, 
-              height:40, 
-              backgroundColor:noticeCount<0?'#45BF58':'#8327D8', 
-              borderRadius:34, 
-              flexDirection:'row',
-              justifyContent:'space-between',
-              alignItems:'center'
-            }}
-              onPress = {()=>{
-                if(noticeCount > 0 ){
-                  getVoices(true);
-                  Vibration.vibrate(100);
-                }
-                noticeDispatch("reset");
-              }}
-            >
-              <DescriptionText
-                text={noticeCount<0?'Successful upload':(noticeCount+' new voices')}
-                color='#F6EFFF'
-                marginLeft={16}
-                fontSize={15}
-                lineHeight={15}
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                style={{marginRight:14}}
-                xml = {closeSvg}
-              />
-            </TouchableOpacity>
-          }
           {showEnd&&
             <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center', padding:12}}>
               <Image
@@ -385,6 +350,43 @@ const FeedScreen = (props) => {
             </View>
           }
         </ScrollView>
+        {
+          noticeCount != 0&&
+          <TouchableOpacity style={{
+            position:'absolute',
+            top:130,
+            left:windowWidth/2-78,
+            width:noticeCount<0?183:156, 
+            height:40, 
+            backgroundColor:noticeCount<0?'#45BF58':'#8327D8', 
+            borderRadius:34, 
+            flexDirection:'row',
+            justifyContent:'space-between',
+            alignItems:'center'
+          }}
+            onPress = {()=>{
+              if(noticeCount > 0 ){
+                getVoices(true);
+                Vibration.vibrate(100);
+              }
+              noticeDispatch("reset");
+            }}
+          >
+            <DescriptionText
+              text={noticeCount<0?'Successful upload':(noticeCount+' new voices')}
+              color='#F6EFFF'
+              marginLeft={16}
+              fontSize={15}
+              lineHeight={15}
+            />
+            <SvgXml
+              width={20}
+              height={20}
+              style={{marginRight:14}}
+              xml = {closeSvg}
+            />
+          </TouchableOpacity>
+        }
         {showContext&&
           <PostContext
             postInfo = {voices[selectedIndex]}

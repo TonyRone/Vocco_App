@@ -51,8 +51,8 @@ export const styles = StyleSheet.create({
         flex: 1,
         width: windowWidth,
         height: windowHeight,
-        position: 'absolute',
-        top: 0
+      //  position: 'absolute',
+       // top: 0
     },
     externalButton: {
         paddingVertical: 16,

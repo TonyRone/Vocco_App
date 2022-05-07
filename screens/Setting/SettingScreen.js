@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   View, 
-  KeyboardAvoidingView, 
-  TouchableOpacity, 
+  TouchableOpacity,
+  ScrollView, 
   Image, 
 } from 'react-native';
 
@@ -107,7 +107,7 @@ const SettingScreen =  (props) => {
             textAlign='center'
             marginTop={20}
         />
-        <View style={{marginTop:5}}>
+        <ScrollView style={{marginTop:5,marginBottom:75}}>
             <TouchableOpacity onPress={()=>props.navigation.navigate('EditProfile')} style={[styles.rowSpaceBetween,{paddingVertical:16,marginHorizontal:16,borderBottomWidth:1,borderBottomColor:'#F2F0F5'}]}>
                 <View style={styles.rowAlignItems}>
                     <Image
@@ -199,7 +199,7 @@ const SettingScreen =  (props) => {
                 titleContent = {t("Logout")}
                 onPressList = {()=>setShowModal(true)}
             />
-        </View>
+        </ScrollView>
         <BottomButtons
             active = 'settings'
             props={props}

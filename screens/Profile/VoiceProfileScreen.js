@@ -48,7 +48,7 @@ const VoiceProfileScreen = (props) => {
     const [refresh,setRefresh] = useState(false);
     const [reactions,setReactions] = useState(info.reactions);
     const [reactionsCount,setReactionsCount]= useState(info.reactionsCount)
-    const [showEmojies,setShowEmojies] = useState(false);
+    const [showEmoji,setShowEmojis] = useState(false);
     const [nowVoice,setNowVoice] = useState(null);
     const [forcePlay,setForcePlay] = useState(false);
     const [showShareVoice, setShowShareVoice] = useState(null);
@@ -154,7 +154,7 @@ const VoiceProfileScreen = (props) => {
     }
 
     const selectIcon = (icon)=>{
-      setShowEmojies(false);
+      setShowEmojis(false);
       VoiceService.addReaction({id:info.id,emoji:icon}).then(async res=>{
         const jsonRes = await res.json();
         if(res.respInfo.status==201){
@@ -354,7 +354,7 @@ const VoiceProfileScreen = (props) => {
               />
             </View>
             <View style={[{width:windowWidth-32},styles.rowSpaceBetween]}>
-              <Pressable onPress={()=>setShowEmojies(true)} style={{alignItems:'center',marginLeft:31}}>
+              <Pressable onPress={()=>setShowEmojis(true)} style={{alignItems:'center',marginLeft:31}}>
                 <View style={[styles.row, {alignItems:'center'}]}>
                 {reactionsCount>0?
                   reactions?.map((eLikes, index) => {
@@ -413,11 +413,11 @@ const VoiceProfileScreen = (props) => {
             </View>
           </View>
         </View>
-        {showEmojies&&
+        {showEmoji&&
           <EmojiPicker
             onEmojiSelected={(icon)=>selectIcon(icon.emoji)}
-            open={showEmojies}
-            onClose={() => setShowEmojies(false)} />
+            open={showEmoji}
+            onClose={() => setShowEmojis(false)} />
         }
         <SwipeDownModal
           modalVisible={showModal}

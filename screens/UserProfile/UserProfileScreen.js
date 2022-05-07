@@ -76,17 +76,16 @@ const UserProfileScreen = (props) => {
 
     const [showModal,setShowModal] = useState(false);
     const [deleteModal,setDeleteModal] = useState(false);
-    const [isPrivated,setIsPrivated] = useState(false);
-    const [fstate,setFstate] = useState('none');
+    const [isPrivate,setIsPrivate] = useState(false);
+    const [followState,setFollowState] = useState('none');
     const [voices, setVoices] = useState([]);
     const [userInfo,setUserInfo] = useState({});
     const [nowVoice, setNowVoice] = useState(null);
     const [selectedIndex,setSelectedIndex] = useState(0);
     const [showContext, setShowContext] = useState(false);
-    const [followloading, setFollowloading] = useState(false);
-    const [voiceloading, setVoiceloading] = useState(false);
+    const [followLoading, setFollowLoading] = useState(true);
+    const [voiceLoading, setVoiceLoading] = useState(true);
     const [showShareVoice, setShowShareVoice] = useState(null);
-    const [identify, setIdentify] = useState('');
 
     let { user, refreshState } = useSelector((state) => {
       return (
@@ -98,24 +97,15 @@ const UserProfileScreen = (props) => {
 
     let userId = props.navigation.state.params.userId;
 
-    const onNavigate = (des, par = null) =>{
-      //props.navigation.navigate(navigateScreen,{info:jsonRes})
-      const resetActionTrue = StackActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: des, params:par })],
-      });
-      props.navigation.dispatch(resetActionTrue);
-    }
-
     const getUserVoices = () => {
       if(voices.length ==0 )
-        setVoiceloading(true);
+        setVoiceLoading(true);
       VoiceService.getUserVoice(userId,voices.length).then(async res => {
         if (res.respInfo.status === 200) {
           const jsonRes = await res.json();
           if(jsonRes.length>0)
             setVoices(voices.length==0?jsonRes:[...voices,...jsonRes]);
-          setVoiceloading(false);
+          setVoiceLoading(false);
         } 
       })
       .catch(err => {
@@ -124,15 +114,15 @@ const UserProfileScreen = (props) => {
     }
 
     const getUserInfo= () =>{
-      setFollowloading(true);
+      setFollowLoading(true);
       VoiceService.getProfile(userId).then(async res=>{
         if(res.respInfo.status == 200){
-          setFollowloading(false);
+          setFollowLoading(false);
           const jsonRes = await res.json();
           setUserInfo(jsonRes);
           if(jsonRes.isFriend)
-            setFstate(jsonRes.isFriend.status);
-          setIsPrivated(jsonRes.user.isPrivate);
+            setFollowState(jsonRes.isFriend.status);
+          setIsPrivate(jsonRes.user.isPrivate);
         }
       })
       .catch(err => {
@@ -141,17 +131,15 @@ const UserProfileScreen = (props) => {
     }
 
     const changeFollowed =()=>{
-      setFollowloading(true);
-      let repo = fstate=='none'?VoiceService.followFriend(userId):VoiceService.unfollowFriend(userId);
+      setFollowLoading(true);
+      let repo = followState=='none'?VoiceService.followFriend(userId):VoiceService.unfollowFriend(userId);
       repo.then(async res=>{
-          setFollowloading(false);
-          const jsonRes = await res.json();
-          console.log(res.respInfo.status);
+          setFollowLoading(false);
           if(res.respInfo.status==201||res.respInfo.status==200){
-            if(fstate=='none')
-              setFstate('pending');
+            if(followState=='none')
+              setFollowState('pending');
             else
-              setFstate('none');
+              setFollowState('none');
           }
         })
         .catch(err => {
@@ -161,9 +149,9 @@ const UserProfileScreen = (props) => {
     }
 
     const OnBlockUser =()=>{
-      setFollowloading(true);
+      setFollowLoading(true);
       VoiceService.blockUser(userId).then(async res=>{
-        setFollowloading(false);
+        setFollowLoading(false);
         const jsonRes = await res.json();
         if(res.respInfo.status==201){ 
           dispatch(setRefreshState(!refreshState));
@@ -327,7 +315,7 @@ const UserProfileScreen = (props) => {
               /> */}
             </View>
             <View style={styles.rowAlignItems}>
-              {fstate=='accepted'&&<TouchableOpacity>
+              {followState=='accepted'&&<TouchableOpacity>
                 <SvgXml
                   width={24}
                   height={24}
@@ -344,16 +332,16 @@ const UserProfileScreen = (props) => {
             </View>
           </View>
 
-          {(fstate!='accepted')&&<MyButton
+          {(followState!='accepted')&&<MyButton
             marginTop={20}
             marginBottom={4}
             marginHorizontal = {16}
-            label = {fstate=='none'?'Follow':'Sent Request...'}
-            active={fstate=='none'}
+            label = {followState=='none'?'Follow':'Sent Request...'}
+            active={followState=='none'}
             onPress={()=>changeFollowed()}
-            loading={followloading}
+            loading={followLoading}
           />}
-          {(fstate!='accepted'&&isPrivated)?<>
+          {(followState!='accepted'&&isPrivate)?<>
             <View style={{marginTop:90,width:'100%',paddingHorizontal:(windowWidth-251)/2,alignItems:'center'}}>
               <SvgXml
                 xml={blackPrivacySvg}
@@ -381,7 +369,7 @@ const UserProfileScreen = (props) => {
               marginBottom={3}
               marginLeft={16}
             />
-            {!voiceloading?(voices.length>0? <FlatList
+            {!voiceLoading?(voices.length>0? <FlatList
               style={{marginTop:3}}
               data={voices}
               renderItem={({item,index})=><VoiceItem 
@@ -472,14 +460,14 @@ const UserProfileScreen = (props) => {
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=>{
                   setShowModal(false);
-                  if(fstate=='none')
+                  if(followState=='none')
                     changeFollowed();
                   else
                     setDeleteModal(true);
                 }}>
                   <View style={[styles.rowSpaceBetween,{padding:16,borderBottomWidth:1,borderBottomColor:'#F0F4FC'}]}>
                     <DescriptionText
-                      text = {fstate=='none'?t("Follow"):t("Unfollow")}
+                      text = {followState=='none'?t("Follow"):t("Unfollow")}
                       fontSize ={17}
                       lineHeight = {22}
                       color ='#281E30'

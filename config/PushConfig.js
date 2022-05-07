@@ -1,4 +1,5 @@
 import PushNotification from 'react-native-push-notification'
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DEVICE_TOKEN, DEVICE_OS } from './config';
 import NavigationService from '../services/NavigationService';
@@ -17,7 +18,7 @@ PushNotification.configure({
   },
 
   onNotification: (notification) => {
-    NavigationService.navigate(notification.custom.nav,notification.custom.params)
+    notification.finish(PushNotificationIOS.FetchResult.NoData);
   }
 
 });
