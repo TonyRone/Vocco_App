@@ -17,24 +17,22 @@ import AudioRecorderPlayer, {
   AudioEncoderAndroidType,
   AudioSourceAndroidType,
 } from 'react-native-audio-recorder-player';
-import RNFetchBlob from 'rn-fetch-blob';
 
+import RNFetchBlob from 'rn-fetch-blob';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import Draggable from 'react-native-draggable';
 import { LinearTextGradient } from "react-native-text-gradient";
 import { TitleText } from '../component/TitleText';
 import { Warning } from '../component/Warning';
-
-import recordSvg from '../../assets/common/bottomIcons/record.svg';
-import { SvgXml } from 'react-native-svg';
 import { windowHeight, windowWidth } from '../../config/config';
 import cancelSvg from '../../assets/record/cancel.svg';
 import publicSvg from '../../assets/record/public.svg';
 import { DescriptionText } from '../component/DescriptionText';
-
-import { setRefreshState } from '../../store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { setVoiceState } from '../../store/actions';
+
+import recordSvg from '../../assets/common/bottomIcons/record.svg';
+import { SvgXml } from 'react-native-svg';
 
 const HoldRecordScreen = (props) => {
 
@@ -81,7 +79,7 @@ const HoldRecordScreen = (props) => {
     setFill(user.premium!='none'?180:60);
     setKey(prevKey => prevKey + 1);
     dispatch(setVoiceState(false));
-    return clearRecorder();
+    return ()=>clearRecorder();
   }, [])
 
   const [disableCBButton, setDisableCBButton] = useState(false)

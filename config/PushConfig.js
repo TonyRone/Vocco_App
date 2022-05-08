@@ -18,6 +18,7 @@ PushNotification.configure({
   },
 
   onNotification: (notification) => {
+    NavigationService.navigate(notification.data.nav,notification.data.params);
     notification.finish(PushNotificationIOS.FetchResult.NoData);
   }
 

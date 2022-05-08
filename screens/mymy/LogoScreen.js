@@ -31,7 +31,6 @@ const LogoScreen = (props) => {
             );
             mainLanguage = 'English';
         }
-
         i18n.changeLanguage(mainLanguage).then(async() => {
             const aToken = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
             socket = io(SOCKET_URL);

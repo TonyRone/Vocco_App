@@ -399,9 +399,9 @@ const AppNavigator = createStackNavigator({
     }
   },
 },
-{
-  initialRouteName:'Logo'
-}
+// {
+//   initialRouteName:'Logo'
+// }
 );
 
 
@@ -409,7 +409,7 @@ const onRemoteNotification = (notification) => {
   const isClicked = notification.getData().userInteraction === 1;
 
   if (isClicked) {
-    NavigationService.navigate(notification.custom.nav,notification.custom.params);
+    NavigationService.navigate(notification.getData().nav,notification.params);
   } else {
     
   }
@@ -421,7 +421,8 @@ export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
     PushNotification.requestPermissions();
-    PushNotificationIOS.addEventListener('notification', onRemoteNotification);
+    //PushNotificationIOS.addEventListener('notification', onRemoteNotification);
+    //return ()=>PushNotificationIOS.removeEventListener('notification');
   }, []);
   return (
     <Provider store = { store }>
