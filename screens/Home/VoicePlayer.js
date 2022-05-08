@@ -110,10 +110,7 @@ class VoicePlayer extends Component {
     }
   }
   componentDidUpdate(prevProps){
-    if(this.props.forcePlay != prevProps.forcePlay){
-      this.onStopPlay();
-    }
-    if(prevProps.voiceState == true && this.state.isStarted==true && this.props.voiceState == false){
+    if((this.props.forcePlay != prevProps.forcePlay)||(prevProps.voiceState == true && this.state.isStarted==true && this.props.voiceState == false)){
       this.onStopPlay();
     }
   }
