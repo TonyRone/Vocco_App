@@ -11,6 +11,7 @@ import {useTranslation} from 'react-i18next';
 import EmojiPicker from 'rn-emoji-keyboard';
 import '../../language/i18n';
 import { TitleText } from "./TitleText";
+import { HeartIcon } from './HeartIcon';
 import { DescriptionText } from "./DescriptionText";
 import { AnswerSimpleItem } from './AnswerSimpleItem';
 import { FlatList} from 'react-native-gesture-handler';
@@ -20,6 +21,8 @@ import pauseSvg from '../../assets/common/pause.svg';
 import playSvg from '../../assets/common/play.svg';
 import notifySvg from '../../assets/common/notify.svg';
 import yellow_starSvg from '../../assets/common/yellow_star.svg';
+import blankHeartSvg from '../../assets/post/blankHeart.svg';
+import redHeartSvg from '../../assets/post/redHeart.svg';
 
 import { styles } from '../style/Common';
 import VoiceService from '../../services/VoiceService';
@@ -43,8 +46,7 @@ export const VoiceItem = ({
   const [refresh,setRefresh] = useState(false);
   const [nowVoice, setNowVoice] = useState(null);
   const [lastTap,setLastTap] = useState(0);
-  const [delayTime,setDelayTime] = useState(null);
-  const {t, i18n} = useTranslation();
+  const [delayTime,setDelayTime] = useState(null);  const {t, i18n} = useTranslation();
   
   let { user, voiceState } = useSelector((state) => {
     return (
@@ -64,6 +66,8 @@ export const VoiceItem = ({
 
   const [reactions,setReactions] = useState(info.reactions);
   const [reactionsCount,setReactionsCount] = useState(info.reactionsCount);
+  const [likeCount, setLikeCount] = useState(info.likesCount);
+  const [isLiked, setIsLiked] = useState(info.islike);
 
   if(isRefresh != refresh){
     setRefresh(isRefresh);
@@ -85,6 +89,13 @@ export const VoiceItem = ({
     }
     setShowAnswers(!showAnswers);
   }
+
+  const OnSetLike =()=>{
+    setLikeCount(likeCount+1);
+    setIsLiked(true);
+    VoiceService.recordAppreciate({count:1,id:info.id});
+  }
+
   const selectIcon = (icon)=>{
     setShowEmojies(false);
     VoiceService.addReaction({id:info.id,emoji:icon}).then(async res=>{
@@ -142,7 +153,7 @@ export const VoiceItem = ({
     clearTimeout(timeout);
     if (lastTap && timeNow - lastTap < DOUBLE_PRESS_DELAY) {
       clearTimeout(delayTime);
-      onShowAnswers();
+        setIsLiked(true);
     } else {
       setLastTap(timeNow);
       setDelayTime(setTimeout(() => {
@@ -265,8 +276,8 @@ export const VoiceItem = ({
         <View
           style={[styles.rowSpaceBetween, styles.mt16]}
         >
-          <Pressable onPress={()=>setShowEmojies(true)} style={[styles.row, {alignItems:'center'}]}>
-            {reactionsCount>0?
+          <Pressable onPress={()=>{}} style={[styles.row, {alignItems:'center'}]}>
+            {/* {reactionsCount>0?
               reactions?.map((eLikes, index) => {
                 return (
                   <Text
@@ -276,7 +287,6 @@ export const VoiceItem = ({
                       color: 'white',
                     }}
                   >
-                    {/* {String.fromCodePoint(erngSvg)} */}
                     {eLikes.emoji}
                   </Text>
                 )
@@ -289,26 +299,33 @@ export const VoiceItem = ({
                 opacity:0.5
               }}
             >
-              {/* {String.fromCodePoint(erngSvg)} */}
               {"😂"}
             </Text>
-            }
+            } */}
+            {/* <SvgXml
+              width={16}
+              height={16}
+              xml={isLiked?redHeartSvg:blankHeartSvg}
+            /> */}
+            <HeartIcon
+              isLike = {isLiked}
+              OnSetLike = {()=>OnSetLike()}
+            />
             <DescriptionText
-              text={reactionsCount}
-              fontSize={12}
+              text={likeCount}
+              fontSize={16}
               fontFamily="SFProDisplay-Medium"
               color="rgba(59, 31, 82, 0.6)"
-              marginLeft={10}
             />
             <SvgXml
-              width={12}
-              height={12}
+              width={16}
+              height={16}
               xml={notifySvg}
               style={{marginLeft:30}}
             />
             <DescriptionText
               text={comments}
-              fontSize={12}
+              fontSize={16}
               fontFamily="SFProDisplay-Medium"
               color="rgba(59, 31, 82, 0.6)"
               marginLeft={10}
@@ -342,12 +359,12 @@ export const VoiceItem = ({
         }
         keyExtractor={(item, index) => index.toString()}
       />}
-      {showEmojies&&
+      {/* {showEmojies&&
         <EmojiPicker
           onEmojiSelected={(icon)=>selectIcon(icon.emoji)}
           open={showEmojies}
           onClose={() => setShowEmojies(false)} />
-      }
+      } */}
     </>
   );
 };
