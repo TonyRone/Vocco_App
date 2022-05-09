@@ -25,7 +25,7 @@ const ContactScreen = (props) => {
 
     const [password, setPassword] = useState("");
     const [statetype,setStatetype] =useState('current');
-    const [emailaddress,setEmailaddress] = useState('email@vocco.io')
+    const [emailaddress,setEmailaddress] = useState('team@vocco.io')
     const [contactChat,setContactChat] = useState('chat on WhatsApp')
 
     const handleSubmit = ()=>{

@@ -233,17 +233,17 @@ const FeedScreen = (props) => {
           >
             <Image
               source={{uri:user.avatar.url}}
-              style={{width:56,height:56,borderRadius:28,}}
+              style={{width:temFlag>=0?58:56,height:temFlag>=0?58:56,borderRadius:temFlag>=0?29:28,}}
               resizeMode='cover'
             />
             <View style={{
               position:'absolute',
               backgroundColor:'rgba(131, 39, 216, 0.4)',
-              width:56,
-              height:56,
-              borderRadius:28,
+              width:temFlag>=0?58:56,
+              height:temFlag>=0?58:56,
+              borderRadius:temFlag>=0?29:28,
               borderWidth:temFlag>=0?2:0,
-              borderColor:"#FDB166"
+              borderColor:"#FD4146"
             }}>
             </View>
             <View
