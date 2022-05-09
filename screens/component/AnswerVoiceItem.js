@@ -147,12 +147,14 @@ export const AnswerVoiceItem = ({
                 marginLeft={12}
               />
             </View>
-            <DescriptionText
-              text={time}
-              fontSize={13}
-              lineHeight={16}
-              marginTop={8}
-            />
+            {time!=''&&
+              <DescriptionText
+                text={time}
+                fontSize={13}
+                lineHeight={16}
+                marginTop={8}
+              />
+            }
           </View>
         </View>
           
