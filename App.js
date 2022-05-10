@@ -435,4 +435,4 @@ export default App = () => {
   );
 };
 
-// AppRegistry.registerComponent("Vocco", () => App);
+// AppRegistry.registerComponent("Vocco", () => App);"Vocco"
