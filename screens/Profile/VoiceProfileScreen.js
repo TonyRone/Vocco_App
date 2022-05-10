@@ -12,7 +12,7 @@ import {
 
 import { NavigationActions, StackActions } from 'react-navigation';
 import {useTranslation} from 'react-i18next';
-import '../../language/i18n';
+import { HeartIcon } from '../component/HeartIcon';
 import SwipeDownModal from 'react-native-swipe-down';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState } from '../../store/actions';
@@ -37,6 +37,7 @@ import { windowHeight, windowWidth , SHARE_CHECK } from '../../config/config';
 import { styles } from '../style/Common';
 import { CommenText } from '../component/CommenText';
 import { AnswerVoiceItem } from '../component/AnswerVoiceItem';
+import '../../language/i18n';
 import EmojiPicker from 'rn-emoji-keyboard';
 
 const VoiceProfileScreen = (props) => {
@@ -46,9 +47,11 @@ const VoiceProfileScreen = (props) => {
     const [deleteModal,setDeleteModal] = useState(false);
     const [answerVoices,setAnswerVoices] = useState([]);
     const [refresh,setRefresh] = useState(false);
-    const [reactions,setReactions] = useState(info.reactions);
-    const [reactionsCount,setReactionsCount]= useState(info.reactionsCount)
-    const [showEmoji,setShowEmojis] = useState(false);
+    //const [reactions,setReactions] = useState(info.reactions);
+    //const [reactionsCount,setReactionsCount]= useState(info.reactionsCount)
+    //const [showEmoji,setShowEmojis] = useState(false);
+    const [isLike, setIsLike] = useState(info.isLike);
+    const [likeCount, setLikeCount] = useState(info.likesCount);
     const [nowVoice,setNowVoice] = useState(null);
     const [forcePlay,setForcePlay] = useState(false);
     const [showShareVoice, setShowShareVoice] = useState(null);
@@ -190,6 +193,20 @@ const VoiceProfileScreen = (props) => {
       }
       else
         setReactions(temp);
+    }
+
+    const OnSetLike =()=>{
+      let rep;
+      if(isLike == true){
+        setLikeCount(likeCount-1);
+        rep = VoiceService.recordUnAppreciate(info.id);
+      }
+      else{
+        setLikeCount(likeCount+1);
+        rep = VoiceService.recordAppreciate({count:1,id:info.id});
+      }
+      setIsLike(!isLike);
+      rep.then(()=>dispatch(setRefreshState(!refreshState)));
     }
 
     useEffect(() => {
@@ -335,7 +352,7 @@ const VoiceProfileScreen = (props) => {
           }}>
             <View style={{
               alignItems:'center',
-              marginBottom:-42,
+              marginBottom:-39,
               marginTop:-35
             }}>
               <TouchableOpacity onPress={()=>props.navigation.navigate("HoldRecord",{info:info})}>
@@ -354,8 +371,8 @@ const VoiceProfileScreen = (props) => {
               />
             </View>
             <View style={[{width:windowWidth-32},styles.rowSpaceBetween]}>
-              <Pressable onPress={()=>setShowEmojis(true)} style={{alignItems:'center',marginLeft:31}}>
-                <View style={[styles.row, {alignItems:'center'}]}>
+              <View style={{alignItems:'center',marginLeft:31}}>
+                {/* <View style={[styles.row, {alignItems:'center'}]}>
                 {reactionsCount>0?
                   reactions?.map((eLikes, index) => {
                     return (
@@ -366,7 +383,6 @@ const VoiceProfileScreen = (props) => {
                           color: 'white',
                         }}
                       >
-                        {/* {String.fromCodePoint(erngSvg)} */}
                         {eLikes.emoji}
                       </Text>
                     )
@@ -379,19 +395,23 @@ const VoiceProfileScreen = (props) => {
                       opacity:0.5
                     }}
                   >
-                    {/* {String.fromCodePoint(erngSvg)} */}
                     {"😂"}
                   </Text>
                 }
-                </View>
+                </View> */}
+                <HeartIcon
+                  isLike = {isLike}
+                  height = {24}
+                  OnSetLike = {()=>OnSetLike()}
+                />
                 <CommenText
-                  text = {reactionsCount}
+                  text = {likeCount}
                   fontSize = {12}
                   lineHeight = {12}
                   marginTop = {6}
                   color = {'rgba(54, 36, 68, 0.8)'}
                 />
-              </Pressable>
+              </View>
               <View style={{alignItems:'center',marginRight:20}}>
                 <TouchableOpacity onPress={()=>OnShareVoice()}>
                   <View style={[styles.row, {alignItems:'center'}]}>
@@ -413,12 +433,12 @@ const VoiceProfileScreen = (props) => {
             </View>
           </View>
         </View>
-        {showEmoji&&
+        {/* {showEmoji&&
           <EmojiPicker
             onEmojiSelected={(icon)=>selectIcon(icon.emoji)}
             open={showEmoji}
             onClose={() => setShowEmojis(false)} />
-        }
+        } */}
         <SwipeDownModal
           modalVisible={showModal}
           ContentModal={

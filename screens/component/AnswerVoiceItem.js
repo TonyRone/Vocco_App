@@ -5,6 +5,7 @@ import { DescriptionText } from "./DescriptionText";
 
 import { useSelector } from 'react-redux';
 
+import { HeartIcon } from './HeartIcon';
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
 import { SvgXml } from 'react-native-svg';
@@ -76,8 +77,8 @@ export const AnswerVoiceItem = ({
         marginBottom:4,
         paddingHorizontal:14,
         marginHorizontal:16,
-        paddingTop:18,
-        paddingBottom:18,
+        paddingTop:12,
+        paddingBottom:12,
         backgroundColor:'#FFF',
         shadowColor: 'rgba(88, 74, 117, 1)',
         elevation:10,
@@ -159,19 +160,19 @@ export const AnswerVoiceItem = ({
         </View>
           
         </View>
-        <TouchableOpacity onPress={()=>onLikeVoice()} style={styles.rowAlignItems}>
+        <View style={styles.rowAlignItems}>
           <DescriptionText
             text = {heartNum}
             color = 'rgba(54, 36, 68, 0.8)'
-            fontSize={22}
-            marginRight = {5}
+            fontSize={20}
+            marginRight = {8}
           />
-          <SvgXml
-              width={windowWidth/18}
-              height={windowWidth/18}
-              xml={check?redHeartSvg:blankHeartSvg}
-            />
-        </TouchableOpacity>
+          <HeartIcon
+            isLike = {check}
+            height = {windowWidth/17}
+            OnSetLike = {()=>onLikeVoice()}
+          />
+        </View>
       </View>
       {
         isPlaying&&

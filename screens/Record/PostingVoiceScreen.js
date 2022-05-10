@@ -169,7 +169,7 @@ const PostingVoiceScreen = (props) => {
             placeholderTextColor="#3B1F5290"
             color="#281E30"
             value={voiceTitle}
-            onChangeText={(s)=>s.length<=20?setVoiceTitle(s):null}
+            onChangeText={(s)=>s.length<=25?setVoiceTitle(s):null}
             fontFamily="SFProDisplay-Regular"
             fontSize={28}
             lineHeight={34}

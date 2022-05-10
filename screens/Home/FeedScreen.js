@@ -140,7 +140,7 @@ const FeedScreen = (props) => {
 
   const setLiked = ()=>{
     let tp = voices;
-    tp[selectedIndex].islike = !tp[selectedIndex].islike;
+    tp[selectedIndex].isLike = !tp[selectedIndex].isLike;
     setVoices(tp);
   }
 
@@ -242,7 +242,7 @@ const FeedScreen = (props) => {
         <View style={{flexDirection:'row', paddingLeft:16}}>
           <Pressable
             style={{
-              width:56,
+              width:temFlag>=0?58:56,
             }}
             onPress={() =>temFlag>=0?props.navigation.navigate('VoiceProfile', {info:voices[temFlag]}):props.navigation.navigate("HoldRecord", {isTemporary: true})}
           >
@@ -264,13 +264,13 @@ const FeedScreen = (props) => {
             <View
               style={{
                 position:'absolute',
-                top:16,
-                left:16
+                top:17,
+                left:17
               }}
             >
               <SvgXml
-                width={22}
-                height={22}
+                width={temFlag>=0?24:22}
+                height={temFlag>=0?24:22}
                 xml={plusSvg}
               />
             </View>

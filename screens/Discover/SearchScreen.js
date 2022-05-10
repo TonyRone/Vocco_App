@@ -9,6 +9,7 @@ import {
   Image
 } from 'react-native';
 
+import * as Progress from "react-native-progress";
 import {useTranslation} from 'react-i18next';
 import { useSelector } from 'react-redux';
 import '../../language/i18n';
@@ -110,6 +111,9 @@ const SearchScreen = (props) => {
   // }
 
   const onLoadVoices = (title,isNew)=>{
+    if(isLoading)
+      return ;
+    setIsLoading(true);
     setLabel(title);
     let len=isNew?0:filteredVoices.length;
     if(isNew)
@@ -120,6 +124,7 @@ const SearchScreen = (props) => {
         setFilteredVoices(filteredVoices.length==0||isNew?jsonRes:[...filteredVoices,...jsonRes]);
         setShowVoices(true);
         setFilterTitles([]);
+        setIsLoading(false);
       }
    })
    .catch(err => {
@@ -148,7 +153,7 @@ const SearchScreen = (props) => {
   }
   const setLiked = ()=>{
     let tp = filteredVoices;
-    tp[selectedIndex].islike = !tp[selectedIndex].islike;
+    tp[selectedIndex].isLike = !tp[selectedIndex].isLike;
     setFilteredVoices(tp);
   }
 
@@ -503,6 +508,14 @@ const SearchScreen = (props) => {
           active='profile'
           props={props}
         />
+        {isLoading&&<View style={{position:'absolute',width:'100%',top:windowHeight/2.8}}>
+          <Progress.Circle
+            indeterminate
+            size={30}
+            color="rgba(0, 0, 255, .7)"
+            style={{ alignSelf: "center"}}
+          />
+        </View>}
       </SafeAreaView>
   );
 };

@@ -67,7 +67,11 @@ export const VoiceItem = ({
   const [reactions,setReactions] = useState(info.reactions);
   const [reactionsCount,setReactionsCount] = useState(info.reactionsCount);
   const [likeCount, setLikeCount] = useState(info.likesCount);
+<<<<<<< HEAD
   const [isLiked, setIsLiked] = useState(info.islike);
+=======
+  const [isLiked, setIsLiked] = useState(info.isLike);
+>>>>>>> origin
 
   if(isRefresh != refresh){
     setRefresh(isRefresh);
@@ -91,9 +95,21 @@ export const VoiceItem = ({
   }
 
   const OnSetLike =()=>{
+<<<<<<< HEAD
     setLikeCount(likeCount+1);
     setIsLiked(true);
     VoiceService.recordAppreciate({count:1,id:info.id});
+=======
+    if(isLiked == true){
+      setLikeCount(likeCount-1);
+      VoiceService.recordUnAppreciate(info.id);
+    }
+    else{
+      setLikeCount(likeCount+1);
+      VoiceService.recordAppreciate({count:1,id:info.id});
+    }
+    setIsLiked(!isLiked);
+>>>>>>> origin
   }
 
   const selectIcon = (icon)=>{
@@ -153,7 +169,11 @@ export const VoiceItem = ({
     clearTimeout(timeout);
     if (lastTap && timeNow - lastTap < DOUBLE_PRESS_DELAY) {
       clearTimeout(delayTime);
+<<<<<<< HEAD
         setIsLiked(true);
+=======
+      OnSetLike();
+>>>>>>> origin
     } else {
       setLastTap(timeNow);
       setDelayTime(setTimeout(() => {
@@ -274,7 +294,7 @@ export const VoiceItem = ({
         }
         
         <View
-          style={[styles.rowSpaceBetween, styles.mt16]}
+          style={[styles.rowSpaceBetween,{marginTop:8}]}
         >
           <Pressable onPress={()=>{}} style={[styles.row, {alignItems:'center'}]}>
             {/* {reactionsCount>0?
@@ -310,6 +330,7 @@ export const VoiceItem = ({
             <HeartIcon
               isLike = {isLiked}
               OnSetLike = {()=>OnSetLike()}
+<<<<<<< HEAD
             />
             <DescriptionText
               text={likeCount}
@@ -326,13 +347,21 @@ export const VoiceItem = ({
             <DescriptionText
               text={comments}
               fontSize={16}
+=======
+              marginLeft={6}
+              marginRight={8}
+            />
+            <DescriptionText
+              text={likeCount}
+              fontSize={16}
+              lineHeight={19}
+>>>>>>> origin
               fontFamily="SFProDisplay-Medium"
               color="rgba(59, 31, 82, 0.6)"
-              marginLeft={10}
             />
           </Pressable>
-          <View>
-            <Text
+          <View style={{flexDirection:'row', alignItems:'center'}}>
+            {/* <Text
               style={{
                 fontFamily:"SFProDisplay-Regular",
                 fontSize:12,
@@ -340,7 +369,21 @@ export const VoiceItem = ({
               }}
             >
               {t("Tap&Hold to answer")}
-            </Text>
+            </Text> */}
+            <SvgXml
+              width={19}
+              height={19}
+              xml={notifySvg}
+            />
+            <DescriptionText
+              text={comments}
+              fontSize={16}
+              lineHeight={19}
+              fontFamily="SFProDisplay-Medium"
+              color="rgba(59, 31, 82, 0.6)"
+              marginLeft={12}
+              marginRight={4}
+            />
           </View>
         </View>
       </TouchableOpacity>

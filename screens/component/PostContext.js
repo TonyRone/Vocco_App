@@ -8,6 +8,7 @@ import { TitleText } from './TitleText';
 import { VoiceItem } from './VoiceItem';
 import SwipeDownModal from 'react-native-swipe-down';
 import Share from 'react-native-share';
+import { setRefreshState } from '../../store/actions';
 
 import { SvgXml } from 'react-native-svg';
 //Context Icons
@@ -24,7 +25,7 @@ import ciBackSvg from '../../assets/discover/context/back.svg';
 import ciTrashSvg from '../../assets/discover/context/trash.svg';
 import ciViolenceSvg from '../../assets/discover/context/violence.svg';
 import VoiceService from '../../services/VoiceService';
-import { useSelector } from 'react-redux';
+import { useSelector , useDispatch} from 'react-redux';
 import { styles } from '../style/Common';
 
 import {useTranslation} from 'react-i18next';
@@ -41,27 +42,33 @@ export const PostContext = ({
 
   const [showReport, setShowReport] = useState(false);
   const [showModal,setShowModal] = useState(true);
-  const [isLiked, setIsLiked] = useState(postInfo.islike);
+  const [isLiked, setIsLiked] = useState(postInfo.isLike);
   const [playstatus,setPlaystatus] = useState(false);
   
-  const user = useSelector((state)=>state.user.user);
+  let { user , refreshState} = useSelector((state) => {
+    return (
+        state.user
+    )
+  });
+
+  const dispatch = useDispatch();
 
   const appreciateVoice = ()=>{
     setIsLiked(!isLiked);
-    onChangeIsLike();
+    //onChangeIsLike();
     let rep; 
     if(isLiked==false)
       rep = VoiceService.recordAppreciate({count:1,id:postInfo.id});
     else
       rep = VoiceService.recordUnAppreciate(postInfo.id);
     rep.then(async res=>{
-        if(res.respInfo.status == 201||res.respInfo.status==200){
-
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
+      if(res.respInfo.status == 201||res.respInfo.status==200){
+        dispatch(setRefreshState(!refreshState));
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
   }
 
   const closeModal = ()=>{
