@@ -125,7 +125,7 @@ const DiscoverScreen = (props) => {
 
   const setLiked = ()=>{
     let tp = filteredVoices;
-    tp[selectedIndex].islike = !tp[selectedIndex].islike;
+    tp[selectedIndex].isLike = !tp[selectedIndex].isLike;
     setFilteredVoices(tp);
   }
 

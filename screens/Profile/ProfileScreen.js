@@ -102,7 +102,7 @@ const ProfileScreen = (props) => {
 }
   const setLiked = ()=>{
     let tp = voices;
-    tp[selectedIndex].islike = !tp[selectedIndex].islike;
+    tp[selectedIndex].isLike = !tp[selectedIndex].isLike;
     setVoices(tp);
   }
 
