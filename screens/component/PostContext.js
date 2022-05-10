@@ -37,7 +37,6 @@ export const PostContext = ({
   onCloseModal=()=>{},
 }) => {
 
-  console.log(postInfo);
   const {t, i18n} = useTranslation();
 
   const [showReport, setShowReport] = useState(false);

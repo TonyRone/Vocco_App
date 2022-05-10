@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useReducer } from 'react';
+import React, { useState, useEffect, useRef, useReducer , useMemo } from 'react';
 import { 
   View, 
   KeyboardAvoidingView, 
@@ -61,6 +61,21 @@ const FeedScreen = (props) => {
   const [noticeCount, noticeDispatch] = useReducer(reducer,new_init);
 
   const scrollRef = useRef(null);
+
+  const voiceList = useMemo(()=>voices.map((item,index)=>
+  item.temporary?null:
+     <VoiceItem 
+      key={index+'voiceitem_feed'}
+      props={props}
+      info = {item}
+      isPlaying = {index==nowVoice}
+      isRefresh = {refresh}
+      onPressPostContext={()=>tapHoldToAnswer(index)}
+      onPressPlay={() => pressPlayVoice(index)}
+      onStopPlay={()=>onStopPlay()}
+      spread = {nowVoice==null}
+    />
+),[voices])
 
   let { user, socketInstance, refreshState } = useSelector((state) => {
     return (
@@ -299,20 +314,7 @@ const FeedScreen = (props) => {
           scrollEventThrottle={400}
         >
           {!loading?(voices.length>0? 
-          voices.map((item,index)=>
-            item.temporary?null:
-               <VoiceItem 
-                key={index+'voiceitem_feed'}
-                props={props}
-                info = {item}
-                isPlaying = {index==nowVoice}
-                isRefresh = {refresh}
-                onPressPostContext={()=>tapHoldToAnswer(index)}
-                onPressPlay={() => pressPlayVoice(index)}
-                onStopPlay={()=>onStopPlay()}
-                spread = {nowVoice==null}
-              />
-          )
+          voiceList
           :
           <View style = {{marginTop:windowHeight/9,alignItems:'center',width:windowWidth}}>
             <SvgXml

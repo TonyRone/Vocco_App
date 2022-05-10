@@ -53,7 +53,6 @@ class AuthService {
         const token = accessToken?accessToken:await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         const deviceToken = await AsyncStorage.getItem(DEVICE_TOKEN);
         const deviceOs = await AsyncStorage.getItem(DEVICE_OS);
-        console.log(deviceToken+' * '+deviceOs);
         return RNFetchBlob
             .config({ trusty: true })
             .fetch(
