@@ -420,7 +420,7 @@ const AppContainer = createAppContainer(AppNavigator);
 export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
-    //PushNotification.requestPermissions();
+    PushNotification.requestPermissions();
     //PushNotificationIOS.addEventListener('notification', onRemoteNotification);
     //return ()=>PushNotificationIOS.removeEventListener('notification');
   }, []);
