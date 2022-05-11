@@ -56,6 +56,7 @@ class VoicePlayer extends Component {
     this._onTouchEnd = this._onTouchEnd.bind(this);
     this.changePlayStatus = this.changePlayStatus.bind(this);
     this.onReplay = this.onReplay.bind(this);
+    this.getPlayLink = this.getPlayLink.bind(this);
     this.state = {
       isLoggingIn: false,
       recordSecs: 0,
@@ -83,29 +84,10 @@ class VoicePlayer extends Component {
       }
     }
     else{
-      const fileExtension = Platform.select({
-        ios: 'm4a',
-        android: `mp3`,
-      });
-      const dirs = RNFetchBlob.fs.dirs.CacheDir;
-      const path = Platform.select({
-        ios: `${dirs}/ss.m4a`,
-        android: `${dirs}/ss.mp3`,
-      });
-      RNFetchBlob.config({
-        fileCache: false,
-        appendExt: fileExtension,
-        path,
-      }).fetch('GET', fileRemoteUrl).then(res=>{
-        if(this._isMounted&&res.respInfo.status==200){
-          this._playerPath= `${Platform.OS === 'android' ? res.path() : 'ss.m4a'}`;
-          if(this.props.playing==true) {
-            this.onStartPlay()
-            }
+      this.getPlayLink().then(()=>{
+        if(this.props.playing==true) {
+          this.onStartPlay()
         }
-      }).catch(err=>{
-        console.log(err);
-        this.onStopPlay();
       })
     }
   }
@@ -127,7 +109,6 @@ class VoicePlayer extends Component {
     this.onStopPlay();
     this._isMounted = false;
   }
-
   _onTouchStart=(e)=> {
     if(this.state.isPlaying){
    //   const touch = e.touches[0];
@@ -150,13 +131,42 @@ class VoicePlayer extends Component {
     }
   }
 
+  getPlayLink= async()=>{
+    const fileRemoteUrl = this.props.voiceUrl;
+    const fileExtension = Platform.select({
+      ios: 'm4a',
+      android: `mp3`,
+    });
+    const dirs = RNFetchBlob.fs.dirs.CacheDir;
+    const path = Platform.select({
+      ios: `${dirs}/ss.m4a`,
+      android: `${dirs}/ss.mp3`,
+    });
+    await RNFetchBlob.config({
+      fileCache: false,
+      appendExt: fileExtension,
+      path,
+    }).fetch('GET', fileRemoteUrl).then(res=>{
+      if(this._isMounted&&res.respInfo.status==200){
+        this._playerPath = `${Platform.OS === 'android' ? res.path() : 'ss.m4a'}`;
+        return 0 ;
+      }
+    }).catch(err=>{
+      console.log(err);
+      this.onStopPlay();
+    })
+  }
+
   changePlayStatus=()=>{
     if(this.state.isPlaying)
       this.onPausePlay();
     else if(this.state.isStarted)
       this.onResumePlay();
-    else
-      this.onStartPlay();
+    else{
+      this.getPlayLink().then(()=>{
+        this.onStartPlay();
+      })
+    }
   }
 
   onReplay=()=>{
@@ -166,8 +176,11 @@ class VoicePlayer extends Component {
       this.audioRecorderPlayer.seekToPlayer(0);
       this.onResumePlay();
     }
-    else
-      this.onStartPlay();
+    else{
+      this.getPlayLink().then(()=>{
+        this.onStartPlay();
+      })
+    }
   }
 
   render() {
@@ -259,7 +272,9 @@ class VoicePlayer extends Component {
   onStartPlay = async () => {
     //? Custom path
     let { voiceState, actions } = this.props;
-    if(voiceState) return ;
+    if(voiceState == true){
+      actions.setVoiceState(false);
+    }
     try
     {
       const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath);

@@ -49,6 +49,7 @@ const DiscoverScreen = (props) => {
   const [showEnd,setShowEnd] = useState(false);
   const [showEmoji, setShowEmoji] = useState(false);
 
+  const scrollRef = useRef();
 
   let { refreshState } = useSelector((state) => {
     return (
@@ -61,6 +62,13 @@ const DiscoverScreen = (props) => {
   const onSetCategory = (categoryId)=>{
     setCategory(categoryId);
     getVoices(true,categoryId);
+  }
+
+  const onChangeCategory = (id)=>{
+    onSetCategory(id);
+    setSelectedCategory(id);
+    scrollRef.current?.scrollToOffset({ animated: true, offset: 0 });
+    setShowModal(false);
   }
 
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
@@ -240,6 +248,7 @@ const DiscoverScreen = (props) => {
         <View> 
           <FlatList
             horizontal = {true}
+            ref = {scrollRef}
             showsHorizontalScrollIndicator = {false}
             style={[{marginLeft:12},styles.mt16]}
             data = {Categories}
@@ -320,7 +329,7 @@ const DiscoverScreen = (props) => {
             <AllCategory
               closeModal={()=>setShowModal(false)}
               selectedCategory = {category}
-              setCategory={(id)=>{onSetCategory(id);setSelectedCategory(id);setShowModal(false)}}
+              setCategory={(id)=>onChangeCategory(id)}
             />
           }
           ContentModalStyle={styles.swipeModal}

@@ -21,13 +21,15 @@ import { windowWidth } from "../../config/config";
 export const AnswerVoiceItem = ({
   info,
   props,
-  isPlaying,
-  onStopPlay=()=>{},
+  //isPlaying,
+  //onStopPlay=()=>{},
   onChangeIsLiked = ()=>{},
-  onPressPlay = () => {},
+  //onPressPlay = () => {},
 }) => {
 
   const {user, voiceState} = useSelector((state)=> state.user);
+
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const {t, i18n} = useTranslation();
   const [lastTap,setLastTap] = useState(0);
@@ -95,7 +97,7 @@ export const AnswerVoiceItem = ({
       >
         <View style={styles.rowAlignItems}>
           <TouchableOpacity
-            onPress={()=>onPressPlay()}
+            onPress={()=>setIsPlaying(!isPlaying)}
           >
             <SvgXml
               width={windowWidth/8}
@@ -117,7 +119,7 @@ export const AnswerVoiceItem = ({
                   }}
                   source={{uri:userImage}}
                 />
-                <View
+                {/* <View
                   style={{
                     backgroundColor:'#FFF',
                     borderWidth:2,
@@ -136,10 +138,9 @@ export const AnswerVoiceItem = ({
                       color: 'white',
                     }}
                   >
-                    {/* {String.fromCodePoint(erngSvg)} */}
                     {info.emoji ? info.emoji : "😁"}
                   </Text>
-                </View>
+                </View> */}
               </TouchableOpacity>
               <TitleText
                 text={userName}
@@ -179,7 +180,7 @@ export const AnswerVoiceItem = ({
         <View style={{marginTop:15,width:'100%'}}> 
           <VoicePlayer
             voiceUrl = {info.file.url}
-            stopPlay ={()=>onStopPlay()}
+            stopPlay ={()=>setIsPlaying(false)}
             premium = {info.user.premium!='none'}
             playBtn = {false}
             replayBtn = {false}

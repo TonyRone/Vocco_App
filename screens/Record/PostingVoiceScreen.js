@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   KeyboardAvoidingView,
@@ -58,6 +58,7 @@ const PostingVoiceScreen = (props) => {
   const [showShareVoice, setShowShareVoice] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(0);
 
+  const scrollRef = useRef();
   const dispatch = useDispatch();
 
   const dirs = RNFetchBlob.fs.dirs;
@@ -79,6 +80,13 @@ const PostingVoiceScreen = (props) => {
   const selectIcon = (icon) => {
     setIcon(icon);
     setVisibleReaction(false);
+  }
+
+  const onChangeCategory = (id)=>{
+    setCategory(id);
+    setSelectedCategory(id);
+    scrollRef.current?.scrollToOffset({ animated: true, offset: 0 });
+    setShowModal(false);
   }
 
   const handleSubmit = async () => {
@@ -255,6 +263,7 @@ const PostingVoiceScreen = (props) => {
         </ScrollView> */}
         <FlatList
           horizontal = {true}
+          ref = {scrollRef}
           showsHorizontalScrollIndicator = {false}
           style={[{marginLeft:12},styles.mt16]}
           data = {Categories}
@@ -352,7 +361,7 @@ const PostingVoiceScreen = (props) => {
           <AllCategory
             closeModal={()=>setShowModal(false)}
             selectedCategory = {category}
-            setCategory={(id)=>{setCategory(id);setSelectedCategory(id);setShowModal(false)}}
+            setCategory={(id)=>onChangeCategory(id)}
           />
         }
         ContentModalStyle={styles.swipeModal}

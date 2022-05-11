@@ -55,7 +55,7 @@ export const PostContext = ({
 
   const appreciateVoice = ()=>{
     setIsLiked(!isLiked);
-    //onChangeIsLike();
+    onChangeIsLike();
     let rep; 
     if(isLiked==false)
       rep = VoiceService.recordAppreciate({count:1,id:postInfo.id});
@@ -63,7 +63,7 @@ export const PostContext = ({
       rep = VoiceService.recordUnAppreciate(postInfo.id);
     rep.then(async res=>{
       if(res.respInfo.status == 201||res.respInfo.status==200){
-        dispatch(setRefreshState(!refreshState));
+       // dispatch(setRefreshState(!refreshState));
       }
     })
     .catch(err => {

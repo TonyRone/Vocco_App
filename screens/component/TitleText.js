@@ -11,13 +11,14 @@ export const TitleText = ({
   marginTop,
   marginLeft,
   marginRight,
+  maxWidth ,
   fontSize = 28,
   letterSpaceing,
   lineHeight
 }) => {
   return (
     <Text
-      numberOfLines={numberOfLines}
+      numberOfLines={1}
       style={{
         fontFamily: fontFamily,
         fontSize: fontSize,
@@ -26,6 +27,7 @@ export const TitleText = ({
         marginBottom: marginBottom,
         marginTop: marginTop,
         marginLeft:marginLeft,
+        maxWidth:maxWidth,
         marginRight:marginRight,
         lineHeight:lineHeight,
       }}

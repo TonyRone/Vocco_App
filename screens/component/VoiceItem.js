@@ -33,11 +33,11 @@ export const VoiceItem = ({
   props,
   info,
   isRefresh = false,
-  isPlaying = false,
+  //isPlaying = false,
   onPressPostContext = () => {},
   onChangeLike = () => {},
-  onPressPlay = () => {},
-  onStopPlay = ()=>{},
+  //onPressPlay = () => {},
+  //onStopPlay = ()=>{},
   spread = true,
 }) => {
   const [answerVoices,setAnswerVoices] = useState([]);
@@ -48,6 +48,7 @@ export const VoiceItem = ({
   const [nowVoice, setNowVoice] = useState(null);
   const [lastTap,setLastTap] = useState(0);
   const [delayTime,setDelayTime] = useState(null);  const {t, i18n} = useTranslation();
+  const [isPlaying, setIsPlaying] = useState(false);
   
   let { user, voiceState } = useSelector((state) => {
     return (
@@ -171,6 +172,11 @@ export const VoiceItem = ({
       }, DOUBLE_PRESS_DELAY));
     }
   };
+
+  // useEffect(() => {
+  //   console.log("wowow");
+  // }, [info])
+
   return (
     <>
       <TouchableOpacity
@@ -238,6 +244,7 @@ export const VoiceItem = ({
             >
               <TitleText
                 text={voiceTitle}
+                maxWidth = {windowWidth-180}
                 fontSize={17}
               />
               <View style={styles.rowAlignItems}>
@@ -256,7 +263,7 @@ export const VoiceItem = ({
             </View>
           </View>
           <TouchableOpacity
-            onPress={()=>onPressPlay()}
+            onPress={()=>setIsPlaying(!isPlaying)}
           >
             <SvgXml
               width={45}
@@ -270,7 +277,7 @@ export const VoiceItem = ({
           <View style={{marginTop:15,width:'100%'}}> 
             <VoicePlayer
               voiceUrl = {info.file.url}
-              stopPlay ={()=>onStopPlay()}
+              stopPlay ={()=>setIsPlaying(false)}
               playBtn = {false}
               replayBtn = {false}
               premium = {premium!='none'}
@@ -284,7 +291,7 @@ export const VoiceItem = ({
         <View
           style={[styles.rowSpaceBetween,{marginTop:8}]}
         >
-          <Pressable onPress={()=>{}} style={[styles.row, {alignItems:'center'}]}>
+          <View style={[styles.row, {alignItems:'center'}]}>
             {/* {reactionsCount>0?
               reactions?.map((eLikes, index) => {
                 return (
@@ -328,7 +335,7 @@ export const VoiceItem = ({
               fontFamily="SFProDisplay-Medium"
               color="rgba(59, 31, 82, 0.6)"
             />
-          </Pressable>
+          </View>
           <View style={{flexDirection:'row', alignItems:'center'}}>
             {/* <Text
               style={{
@@ -363,9 +370,9 @@ export const VoiceItem = ({
           <AnswerSimpleItem
             key={index+info.id+'simpleItem'}
             info = {answerVoices[answerVoices.length-index-1]}
-            isPlaying = {index==nowVoice}
-            onPressPlay={() => pressPlayVoice(index)}
-            onStopPlay={()=>onStopAnswerPlay()}
+          //  isPlaying = {index==nowVoice}
+          //  onPressPlay={() => pressPlayVoice(index)}
+          //  onStopPlay={()=>onStopAnswerPlay()}
           />:
           null
         }

@@ -246,6 +246,7 @@ const VoiceProfileScreen = (props) => {
             <View>
               <CommenText
                 text = {info?.title}
+                maxWidth = {windowWidth-122}
                 marginBottom={7}
               />
               <TouchableOpacity style={styles.rowAlignItems} onPress = {()=>{

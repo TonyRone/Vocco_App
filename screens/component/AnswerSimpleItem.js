@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, TouchableOpacity, Text, Image } from "react-native";
 import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
@@ -18,10 +18,11 @@ import { windowWidth } from "../../config/config";
 
 export const AnswerSimpleItem = ({
   info,
-  onPressPlay = () => {},
-  onStopPlay = ()=>{},
-  isPlaying = false,
+  //onPressPlay = () => {},
+  //onStopPlay = ()=>{},
+  //isPlaying = false,
 }) => {
+
   return (
     <View
       style={{
@@ -79,8 +80,8 @@ export const AnswerSimpleItem = ({
           height = {22}
           tinWidth = {windowWidth/500}
           mrg = {windowWidth/1500}
-          stopPlay ={()=>onStopPlay()}
-          playing={isPlaying}
+          //stopPlay ={()=>onStopPlay()}
+          playing={false}
         />
      
       </View>

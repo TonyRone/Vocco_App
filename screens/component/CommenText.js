@@ -12,16 +12,18 @@ export const CommenText = ({
   marginLeft,
   marginRight,
   fontSize = 20,
-  lineHeight = 24
+  lineHeight = 24,
+  maxWidth ,
 }) => {
   return (
     <Text
-      numberOfLines={numberOfLines}
+      numberOfLines={1}
       style={{
         fontFamily: fontFamily,
         fontSize: fontSize,
         color: color,
         textAlign: textAlign,
+        maxWidth: maxWidth,
         marginBottom: marginBottom,
         marginTop: marginTop,
         marginLeft:marginLeft,

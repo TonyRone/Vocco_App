@@ -69,12 +69,21 @@ const SearchScreen = (props) => {
   const {t, i18n} = useTranslation();
 
   const inputRef = useRef(null);
+  const scrollRef = useRef();
 
   let {user, refreshState} = useSelector((state) => {
     return (
         state.user
     )
   });
+
+  const onChangeCategory =(id)=>{
+    setCategory(id);
+    getLabel('');
+    setSelectedCategory(id);
+    scrollRef.current?.scrollToOffset({ animated: true, offset: 0 });
+    setShowModal(false);
+  }
 
   const getLabel = (v) =>{
     setLabel(v);
@@ -86,8 +95,8 @@ const SearchScreen = (props) => {
           const jsonRes = await res.json();
           setFilterTitles(jsonRes);
           setIsEmpty(jsonRes.length==0);
-          setIsLoading(false);
         }
+        setIsLoading(false);
       })
       .catch(err => {
         console.log(err);
@@ -476,6 +485,7 @@ const SearchScreen = (props) => {
             /> */}
             <FlatList
               horizontal = {true}
+              ref = {scrollRef}
               showsHorizontalScrollIndicator = {false}
               style={[{marginLeft:12},styles.mt16]}
               data = {Categories}
@@ -509,7 +519,7 @@ const SearchScreen = (props) => {
             <AllCategory
               closeModal={()=>setShowModal(false)}
               selectedCategory = {category}
-              setCategory={(id)=>{setCategory(id);getLabel('');setSelectedCategory(id);setShowModal(false)}}
+              setCategory={(id)=>onChangeCategory(id)}
             />
           }
           ContentModalStyle={styles.swipeModal}
