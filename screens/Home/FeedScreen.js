@@ -62,22 +62,6 @@ const FeedScreen = (props) => {
 
   const scrollRef = useRef(null);
 
-  const voiceList = useMemo(()=>voices.map((item,index)=>
-  item.temporary?null:
-     <VoiceItem 
-        key={index+'voiceitem_feed'}
-        props={props}
-        info = {item}
-        isPlaying = {index==nowVoice}
-        isRefresh = {refresh}
-        onPressPostContext={()=>tapHoldToAnswer(index)}
-        onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}
-        onPressPlay={() => pressPlayVoice(index)}
-        onStopPlay={()=>onStopPlay()}
-        spread = {nowVoice==null}
-      />
-),[voices])
-
   let { user, socketInstance, refreshState } = useSelector((state) => {
     return (
         state.user
@@ -335,7 +319,21 @@ const FeedScreen = (props) => {
           scrollEventThrottle={400}
         >
           {!loading?(voices.length>0? 
-          voiceList
+          voices.map((item,index)=>
+          item.temporary?null:
+             <VoiceItem 
+                key={index+'voiceitem_feed'}
+                props={props}
+                info = {item}
+                isPlaying = {index==nowVoice}
+                isRefresh = {refresh}
+                onPressPostContext={()=>tapHoldToAnswer(index)}
+                onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}
+                onPressPlay={() => pressPlayVoice(index)}
+                onStopPlay={()=>onStopPlay()}
+                spread = {nowVoice==null}
+              />
+          )
           :
           <View style = {{marginTop:windowHeight/9,alignItems:'center',width:windowWidth}}>
             <SvgXml
