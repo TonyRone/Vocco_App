@@ -53,7 +53,6 @@ const VoiceProfileScreen = (props) => {
     const [isLike, setIsLike] = useState(info.isLike);
     const [likeCount, setLikeCount] = useState(info.likesCount);
     const [nowVoice,setNowVoice] = useState(null);
-    const [forcePlay,setForcePlay] = useState(false);
     const [showShareVoice, setShowShareVoice] = useState(null);
 
     const dispatch = useDispatch();
@@ -101,7 +100,6 @@ const VoiceProfileScreen = (props) => {
     };
   
     const pressPlayVoice = (index)=>{
-      setForcePlay(!forcePlay);
       if(nowVoice!=null){
         onStopPlay();
       }
@@ -293,7 +291,6 @@ const VoiceProfileScreen = (props) => {
               playBtn = {true}
               replayBtn = {true}
               premium = {info.user.premium !='none'}
-              forcePlay = {forcePlay}
               playing = {false}
               stopPlay = {()=>{}}
             />

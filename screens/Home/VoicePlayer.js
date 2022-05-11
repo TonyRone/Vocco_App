@@ -65,7 +65,6 @@ class VoicePlayer extends Component {
       currentDurationSec: 0,
       playTime: '00:00:00',
       duration: '00:00:00',
-      forcePlay:props.forcePlay,
       isPlaying:false,
       isStarted:false,
       swipe:{}
@@ -92,7 +91,7 @@ class VoicePlayer extends Component {
     }
   }
   componentDidUpdate(prevProps){
-    if((this.props.forcePlay != prevProps.forcePlay)||(prevProps.voiceState == true && this.state.isStarted==true && this.props.voiceState == false)){
+    if(prevProps.voiceState == true && this.state.isStarted==true && this.props.voiceState == false){
       this.onStopPlay();
     }
   }
@@ -284,7 +283,6 @@ class VoicePlayer extends Component {
         isStarted:true,
         isPlaying:true
       });
-      this.setState({forcePlay:this.props.forcePlay});
       this.audioRecorderPlayer.addPlayBackListener((e) => {
         if(this._isMounted){
           if(this.state.isPlaying)
