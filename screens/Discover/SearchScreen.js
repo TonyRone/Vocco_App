@@ -6,7 +6,9 @@ import {
   TouchableOpacity, 
   ScrollView,
   Pressable,
-  Image
+  Image,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
 
 import * as Progress from "react-native-progress";
@@ -153,7 +155,26 @@ const SearchScreen = (props) => {
   }
   const setLiked = ()=>{
     let tp = filteredVoices;
+    let item = tp[selectedIndex].isLike;
+    if(item)
+      tp[selectedIndex].likesCount --;
+    else
+      tp[selectedIndex].likesCount ++;
     tp[selectedIndex].isLike = !tp[selectedIndex].isLike;
+    setFilteredVoices(tp);
+  }
+
+  const onChangeLike = (id, val)=>{
+    let tp = filteredVoices;
+    let item = tp[id].isLike;
+    console.log(item);
+    if(item === true){
+      tp[id].likesCount --;
+    }
+    else{
+      tp[id].likesCount ++;
+    }
+    tp[id].isLike = val;
     setFilteredVoices(tp);
   }
 
@@ -162,13 +183,13 @@ const SearchScreen = (props) => {
   }, [refreshState])
 
   return (
-      <SafeAreaView 
+      <KeyboardAvoidingView 
         style={{
           backgroundColor:'#FFF',
           flex:1
         }}
       >
-        <View style={[styles.paddingH16,{marginTop:18,flexDirection:'row', alignItems:'center',justifyContent:'space-between'}]}>
+        <View style={[styles.paddingH16,{marginTop:Platform.OS=='ios'?50:20,flexDirection:'row', alignItems:'center',justifyContent:'space-between'}]}>
           <View style={{
             flexDirection:'row',
             alignItems:'center',
@@ -408,6 +429,7 @@ const SearchScreen = (props) => {
               props={props}
               isPlaying = {nowVoice==index}
               onPressPostContext={()=>tapHoldToAnswer(index)}
+              onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}
               onPressPlay={() => pressPlayVoice(index)}
               onStopPlay={()=>onStopPlay()}
             />}
@@ -516,7 +538,7 @@ const SearchScreen = (props) => {
             style={{ alignSelf: "center"}}
           />
         </View>}
-      </SafeAreaView>
+      </KeyboardAvoidingView>
   );
 };
 

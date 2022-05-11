@@ -3,7 +3,9 @@ import {
   View, 
   TouchableOpacity,
   ScrollView, 
-  Image, 
+  Image,
+  KeyboardAvoidingView,
+  Platform, 
 } from 'react-native';
 
 import SwipeDownModal from 'react-native-swipe-down';
@@ -94,7 +96,7 @@ const SettingScreen =  (props) => {
     });
     }, [])
     return (
-      <SafeAreaView
+      <KeyboardAvoidingView
         style={{
           backgroundColor:'#FFF',
           flex:1
@@ -105,7 +107,7 @@ const SettingScreen =  (props) => {
             fontSize={20}
             lineHeight={24}
             textAlign='center'
-            marginTop={20}
+            marginTop={Platform.OS=='ios'?50:20}
         />
         <ScrollView style={{marginTop:5,marginBottom:75}}>
             <TouchableOpacity onPress={()=>props.navigation.navigate('EditProfile')} style={[styles.rowSpaceBetween,{paddingVertical:16,marginHorizontal:16,borderBottomWidth:1,borderBottomColor:'#F2F0F5'}]}>
@@ -301,14 +303,14 @@ const SettingScreen =  (props) => {
                     colors={['#FFFFFF', 'rgba(255,255,255, 0)']}
                     locations={[0.7,1]}
                     start={{x: 0, y: 1}} end={{x: 0, y: 0}}
-                    style={{position:'absolute',paddingHorizontal:16, bottom:0,width:windowWidth,height:170}}
+                    style={{position:'absolute',paddingHorizontal:16, bottom:0,width:windowWidth}}
                 >
                     <MyButton
                         label={t("Save")}
-                        marginTop={60}
+                        //marginTop={90}
                         onPress={()=>{OnSelectLanguage();setShowLanguageModal(false);}}
                         active={language ? true : false}
-                        //marginBottom={20}
+                        marginBottom={20}
                     />
                 </LinearGradient>
             </View>
@@ -319,7 +321,7 @@ const SettingScreen =  (props) => {
               setShowLanguageModal(false);
           }}
         />
-      </SafeAreaView>
+      </KeyboardAvoidingView>
     );
   };
   

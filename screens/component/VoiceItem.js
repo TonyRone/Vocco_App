@@ -35,6 +35,7 @@ export const VoiceItem = ({
   isRefresh = false,
   isPlaying = false,
   onPressPostContext = () => {},
+  onChangeLike = () => {},
   onPressPlay = () => {},
   onStopPlay = ()=>{},
   spread = true,
@@ -99,6 +100,7 @@ export const VoiceItem = ({
       setLikeCount(likeCount+1);
       VoiceService.recordAppreciate({count:1,id:info.id});
     }
+    onChangeLike(!isLiked);
     setIsLiked(!isLiked);
   }
 

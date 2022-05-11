@@ -125,7 +125,26 @@ const DiscoverScreen = (props) => {
 
   const setLiked = ()=>{
     let tp = filteredVoices;
+    let item = tp[selectedIndex].isLike;
+    if(item)
+      tp[selectedIndex].likesCount --;
+    else
+      tp[selectedIndex].likesCount ++;
     tp[selectedIndex].isLike = !tp[selectedIndex].isLike;
+    setFilteredVoices(tp);
+  }
+
+  const onChangeLike = (id, val)=>{
+    let tp = filteredVoices;
+    let item = tp[id].isLike;
+    console.log(item);
+    if(item === true){
+      tp[id].likesCount --;
+    }
+    else{
+      tp[id].likesCount ++;
+    }
+    tp[id].isLike = val;
     setFilteredVoices(tp);
   }
 
@@ -134,7 +153,7 @@ const DiscoverScreen = (props) => {
   }, [refreshState])
 
   return (
-      <SafeAreaView
+      <KeyboardAvoidingView
         style={{
           backgroundColor:'#FFF',
           flex:1
@@ -142,7 +161,7 @@ const DiscoverScreen = (props) => {
       >
         <View
           style={[
-            { marginTop: 20, paddingHorizontal: 20, marginBottom:20, height:30 }, 
+            { marginTop: Platform.OS=='ios'?50:20, paddingHorizontal: 20, marginBottom:20, height:30 }, 
             styles.rowJustifyCenter
           ]}
         >
@@ -257,6 +276,7 @@ const DiscoverScreen = (props) => {
               props={props}
               isPlaying = {index==nowVoice}
               onPressPostContext={()=>tapHoldToAnswer(index)}
+              onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}
               onPressPlay={() => pressPlayVoice(index)}
               onStopPlay={()=>onStopPlay()}
             />
@@ -321,7 +341,7 @@ const DiscoverScreen = (props) => {
           active='global'
           props = {props}
         />
-      </SafeAreaView>
+      </KeyboardAvoidingView>
   );
 };
 

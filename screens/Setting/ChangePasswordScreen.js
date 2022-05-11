@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   View, 
   SafeAreaView, 
-  TouchableOpacity, 
+  TouchableOpacity,
+  KeyboardAvoidingViewBase,
+  KeyboardAvoidingView, 
 } from 'react-native';
 
 import { TitleText } from '../component/TitleText';
@@ -94,7 +96,7 @@ const ChangePasswordScreen = (props) => {
       //  checkLogin();
     }, [])
     return (
-      <SafeAreaView 
+      <KeyboardAvoidingView 
         style={{
           backgroundColor:'#FFF',
           flex:1,
@@ -176,7 +178,7 @@ const ChangePasswordScreen = (props) => {
                 onPress = {()=>handleSubmit()}
             />
         </View>
-      </SafeAreaView>
+      </KeyboardAvoidingView>
     );
   };
   

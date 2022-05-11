@@ -180,7 +180,7 @@ const  PhotoScreen = (props) => {
   }, [])
 
   return (
-      <SafeAreaView 
+      <KeyboardAvoidingView 
         style={{
           backgroundColor:'#FFF',
           flex:1
@@ -194,7 +194,7 @@ const  PhotoScreen = (props) => {
         }
         <View
           style={[
-            { marginTop: 20, paddingHorizontal: 20, marginBottom:20, height:30 }, 
+            { marginTop: Platform.OS=='ios'?50:20, paddingHorizontal: 20, marginBottom:20, height:30 }, 
             styles.rowSpaceBetween
           ]}
         >
@@ -318,7 +318,7 @@ const  PhotoScreen = (props) => {
             </View>
           </Pressable>
         </Modal>
-      </SafeAreaView>
+      </KeyboardAvoidingView>
   );
 };
 

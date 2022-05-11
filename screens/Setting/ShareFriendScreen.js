@@ -4,6 +4,7 @@ import {
   SafeAreaView,  
   TouchableOpacity, 
   Share,
+  KeyboardAvoidingView,
 } from 'react-native';
 
 import Clipboard from '@react-native-community/clipboard';
@@ -63,7 +64,7 @@ const ShareFriendScreen = (props) => {
       //  checkLogin();
     }, [])
     return (
-      <SafeAreaView 
+      <KeyboardAvoidingView 
         style={{
           backgroundColor:'#FFF',
           flex:1,
@@ -217,7 +218,7 @@ const ShareFriendScreen = (props) => {
                 </View>
             </View>
         </View>
-      </SafeAreaView>
+      </KeyboardAvoidingView>
     );
   };
   

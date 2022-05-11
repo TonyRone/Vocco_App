@@ -3,7 +3,8 @@ import {
   View, 
   SafeAreaView, 
   TouchableOpacity, 
-  Image, 
+  Image,
+  KeyboardAvoidingView, 
 } from 'react-native';
 
 import { DescriptionText } from '../component/DescriptionText';
@@ -25,7 +26,7 @@ const ContactScreen = (props) => {
 
     const [password, setPassword] = useState("");
     const [statetype,setStatetype] =useState('current');
-    const [emailaddress,setEmailaddress] = useState('team@vocco.io')
+    const [emailaddress,setEmailaddress] = useState('team@vocco.ai')
     const [contactChat,setContactChat] = useState('chat on WhatsApp')
 
     const handleSubmit = ()=>{
@@ -41,7 +42,7 @@ const ContactScreen = (props) => {
       //  checkLogin();
     }, [])
     return (
-      <SafeAreaView 
+      <KeyboardAvoidingView 
         style={{
           backgroundColor:'#FFF',
           flex:1,
@@ -150,7 +151,7 @@ const ContactScreen = (props) => {
                 </View>
             </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      </KeyboardAvoidingView>
     );
   };
   

@@ -112,7 +112,7 @@ const ChangeEmailScreen = (props) => {
       //  checkLogin();
     }, [])
     return (
-      <SafeAreaView 
+      <KeyboardAvoidingView 
         style={{
           backgroundColor:'#FFF',
           flex:1,
@@ -192,7 +192,7 @@ const ChangeEmailScreen = (props) => {
                 isChanging = {true}
             /></>
         }
-      </SafeAreaView>
+      </KeyboardAvoidingView>
     );
   };
   

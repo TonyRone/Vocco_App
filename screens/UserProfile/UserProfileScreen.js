@@ -188,400 +188,420 @@ const UserProfileScreen = (props) => {
     }
   }
 
-    const tapHoldToAnswer = (index) => {
-      setSelectedIndex(index)
-      setShowContext(true);
-    }
-    const setLiked = ()=>{
-      let tp = voices;
-      tp[selectedIndex].isLike = !tp[selectedIndex].isLike;
-      setVoices(tp);
-    }
+  const tapHoldToAnswer = (index) => {
+    setSelectedIndex(index)
+    setShowContext(true);
+  }
+  const setLiked = ()=>{
+    let tp = voices;
+    let item = tp[selectedIndex].isLike;
+    if(item)
+      tp[selectedIndex].likesCount --;
+    else
+      tp[selectedIndex].likesCount ++;
+    tp[selectedIndex].isLike = !tp[selectedIndex].isLike;
+    setVoices(tp);
+  }
 
-    useEffect(() => {
-      //  checkLogin();
-      getUserInfo()
-      getUserVoices();
-    }, [refreshState])
-    return (
-      <KeyboardAvoidingView 
-        style={{
-          backgroundColor:'#FFF',
-          flex:1
-        }}
+  const onChangeLike = (id, val)=>{
+    let tp = voices;
+    let item = tp[id].isLike;
+    console.log(item);
+    if(item === true){
+      tp[id].likesCount --;
+    }
+    else{
+      tp[id].likesCount ++;
+    }
+    tp[id].isLike = val;
+    setVoices(tp);
+  }
+
+  useEffect(() => {
+    //  checkLogin();
+    getUserInfo()
+    getUserVoices();
+  }, [refreshState])
+  return (
+    <KeyboardAvoidingView 
+      style={{
+        backgroundColor:'#FFF',
+        flex:1
+      }}
+    >
+      <Image
+        source={{uri:userInfo.user?.avatar.url}}
+        resizeMode="cover"
+        style={styles.topProfileContainer}
+      />
+      <LinearGradient
+        colors={['rgba(52, 50, 56, 0)', 'rgba(42, 39, 47, 0)', 'rgba(39, 36, 44, 0.65)','rgba(34, 32, 38, 0.9)']}
+        locations={[0,0.63,0.83,1]}
+        start={{x: 0, y: 0}} end={{x: 0, y: 1}}
+        style={[
+          styles.topProfileContainer,
+          { 
+            position:'absolute',
+            top:0,
+            paddingBottom:17,
+            flexDirection:'row',
+            justifyContent:'space-around',
+            alignItems:'flex-end',
+            borderBottomWidth: userInfo.user&&userInfo.user.premium!="none"?3:0,
+            borderLeftWidth: userInfo.user&&userInfo.user.premium!="none"?3:0,
+            marginLeft:userInfo.user&&userInfo.user.premium!="none"?-3:0,
+          }
+        ]}
       >
-        <Image
-          source={{uri:userInfo.user?.avatar.url}}
-          resizeMode="cover"
-          style={styles.topProfileContainer}
-        />
-        <LinearGradient
-          colors={['rgba(52, 50, 56, 0)', 'rgba(42, 39, 47, 0)', 'rgba(39, 36, 44, 0.65)','rgba(34, 32, 38, 0.9)']}
-          locations={[0,0.63,0.83,1]}
-          start={{x: 0, y: 0}} end={{x: 0, y: 1}}
-          style={[
-            styles.topProfileContainer,
-            { 
-              position:'absolute',
-              top:0,
-              paddingBottom:17,
-              flexDirection:'row',
-              justifyContent:'space-around',
-              alignItems:'flex-end',
-              borderBottomWidth: userInfo.user&&userInfo.user.premium!="none"?3:0,
-              borderLeftWidth: userInfo.user&&userInfo.user.premium!="none"?3:0,
-              marginLeft:userInfo.user&&userInfo.user.premium!="none"?-3:0,
-            }
-          ]}
-        >
-          <TouchableOpacity onPress={()=>props.navigation.goBack()} style={{position:'absolute',left:0,top:Platform.OS=='ios'?24:12}}>
-            <SvgXml
-              xml = {boxbackArrowSvg}
-            />
-          </TouchableOpacity>
-          <View style={{alignItems:'center'}}>
-            <DescriptionText
-              text = {t('Voices')}
-              fontSize={12}
-              lineHeight={16}
-              color="#F6EFFF"
-            />
-            <TitleText
-              text = {userInfo.voices?.count}
-              fontFamily="SFProDisplay-Bold"
-              fontSize={22}
-              lineHeight={28}
-              color="#FFFFFF"
-            />
-          </View>
-          <View style={{alignItems:'center'}}>
-            <DescriptionText
-              text = {t('Followers')}
-              fontSize={12}
-              lineHeight={16}
-              color="#F6EFFF"
-            />
-            <TitleText
-              text = {userInfo.followers?.count}
-              fontFamily="SFProDisplay-Bold"
-              fontSize={22}
-              lineHeight={28}
-              color="#FFFFFF"
-            />
-          </View>
-          <View style={{alignItems:'center'}}>
-            <DescriptionText
-              text = {t('Following')}
-              fontSize={12}
-              lineHeight={16}
-              color="#F6EFFF"
-            />
-            <TitleText
-              text = {userInfo.followings?.count}
-              fontFamily="SFProDisplay-Bold"
-              fontSize={22}
-              lineHeight={28}
-              color="#FFFFFF"
-            />
-          </View>
-        </LinearGradient>
-          <View style={[styles.rowSpaceBetween,{marginTop:26,paddingHorizontal:16}]}>
-            <View>
-              <View style={styles.rowAlignItems}>
-                <TitleText
-                  text={userInfo.user?.name}
-                  fontFamily="SFProDisplay-Bold"
-                  lineHeight={33}
-                />
-                {userInfo.user&&userInfo.user.premium!='none'&&
-                  <Pressable disabled={user.premium!='none'} onPress={()=>props.navigation.navigate("Premium")}>
-                    <Image
-                    style={{
-                      width:100,
-                      height:33,
-                      marginLeft:16
-                    }}
-                    source={require('../../assets/common/premiumstar.png')}
-                  />
-                  </Pressable>
-                }
-              </View>
-              {/* <DescriptionText
-                text={renderName(userInfo.user?.firstname,userInfo.user?.lastname)}
-                fontSize={12}
-                lineHeight={16}
-                color={'rgba(54, 36, 68, 0.8)'}
-                marginTop={3}
-              /> */}
-            </View>
+        <TouchableOpacity onPress={()=>props.navigation.goBack()} style={{position:'absolute',left:0,top:Platform.OS=='ios'?24:12}}>
+          <SvgXml
+            xml = {boxbackArrowSvg}
+          />
+        </TouchableOpacity>
+        <View style={{alignItems:'center'}}>
+          <DescriptionText
+            text = {t('Voices')}
+            fontSize={12}
+            lineHeight={16}
+            color="#F6EFFF"
+          />
+          <TitleText
+            text = {userInfo.voices?.count}
+            fontFamily="SFProDisplay-Bold"
+            fontSize={22}
+            lineHeight={28}
+            color="#FFFFFF"
+          />
+        </View>
+        <View style={{alignItems:'center'}}>
+          <DescriptionText
+            text = {t('Followers')}
+            fontSize={12}
+            lineHeight={16}
+            color="#F6EFFF"
+          />
+          <TitleText
+            text = {userInfo.followers?.count}
+            fontFamily="SFProDisplay-Bold"
+            fontSize={22}
+            lineHeight={28}
+            color="#FFFFFF"
+          />
+        </View>
+        <View style={{alignItems:'center'}}>
+          <DescriptionText
+            text = {t('Following')}
+            fontSize={12}
+            lineHeight={16}
+            color="#F6EFFF"
+          />
+          <TitleText
+            text = {userInfo.followings?.count}
+            fontFamily="SFProDisplay-Bold"
+            fontSize={22}
+            lineHeight={28}
+            color="#FFFFFF"
+          />
+        </View>
+      </LinearGradient>
+        <View style={[styles.rowSpaceBetween,{marginTop:26,paddingHorizontal:16}]}>
+          <View>
             <View style={styles.rowAlignItems}>
-              {followState=='accepted'&&<TouchableOpacity>
-                <SvgXml
-                  width={24}
-                  height={24}
-                  xml={followSvg}
+              <TitleText
+                text={userInfo.user?.name}
+                fontFamily="SFProDisplay-Bold"
+                lineHeight={33}
+              />
+              {userInfo.user&&userInfo.user.premium!='none'&&
+                <Pressable disabled={user.premium!='none'} onPress={()=>props.navigation.navigate("Premium")}>
+                  <Image
+                  style={{
+                    width:100,
+                    height:33,
+                    marginLeft:16
+                  }}
+                  source={require('../../assets/common/premiumstar.png')}
                 />
-              </TouchableOpacity>}
-              <TouchableOpacity onPress={()=>setShowModal(true)} style={{marginLeft:28}}>
-                <SvgXml
-                  width={24}
-                  height={24}
-                  xml={moreSvg}
+                </Pressable>
+              }
+            </View>
+            {/* <DescriptionText
+              text={renderName(userInfo.user?.firstname,userInfo.user?.lastname)}
+              fontSize={12}
+              lineHeight={16}
+              color={'rgba(54, 36, 68, 0.8)'}
+              marginTop={3}
+            /> */}
+          </View>
+          <View style={styles.rowAlignItems}>
+            {followState=='accepted'&&<TouchableOpacity>
+              <SvgXml
+                width={24}
+                height={24}
+                xml={followSvg}
+              />
+            </TouchableOpacity>}
+            <TouchableOpacity onPress={()=>setShowModal(true)} style={{marginLeft:28}}>
+              <SvgXml
+                width={24}
+                height={24}
+                xml={moreSvg}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {(followState!='accepted')&&<MyButton
+          marginTop={20}
+          marginBottom={4}
+          marginHorizontal = {16}
+          label = {followState=='none'?'Follow':'Sent Request...'}
+          active={followState=='none'}
+          onPress={()=>changeFollowed()}
+          loading={followLoading}
+        />}
+        {(followState!='accepted'&&isPrivate)?<>
+          <View style={{marginTop:90,width:'100%',paddingHorizontal:(windowWidth-251)/2,alignItems:'center'}}>
+            <SvgXml
+              xml={blackPrivacySvg}
+            />
+            <DescriptionText
+              text = {t("This account is private. Follow on user for see voices")}
+              fontSize = {17}
+              lineHeight = {28}
+              textAlign = 'center'
+              marginTop = {16}
+            />
+              <SvgXml
+              position={'absolute'}
+              //transform= {[{ rotate: '-46.73deg'}]}
+              bottom = {39}
+              right = {28}
+              xml = {arrowPointerSvg}
+            />
+          </View>
+          </>:<>
+          <TitleText
+            text={t("User voices")}
+            fontSize = {20}
+            marginTop={23}
+            marginBottom={3}
+            marginLeft={16}
+          />
+          {!voiceLoading?(voices.length>0? <FlatList
+            style={{marginTop:3}}
+            data={voices}
+            renderItem={({item,index})=><VoiceItem 
+            key={index+'userProfile'}
+            info = {item}
+            props = {props}
+            isPlaying = {index==nowVoice}
+            onPressPostContext={()=>tapHoldToAnswer(index)}
+            onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}
+            onPressPlay={() => pressPlayVoice(index)}
+            onStopPlay={()=>onStopPlay()}
+            spread = {nowVoice==null}
+            />}
+            keyExtractor={(item, index) => index.toString()}
+            onEndReached = {()=>getUserVoices()}
+            onEndThreshold={0}
+          />:
+          <View style = {{marginTop:windowHeight/9,alignItems:'center',width:windowWidth}}>
+            <SvgXml
+                xml={box_blankSvg}
+            />
+            <DescriptionText
+              text = {t('No result found')}
+              fontSize = {17}
+              lineHeight = {28}
+              marginTop = {22}
+            />
+          </View>):
+          <Progress.Circle
+            indeterminate
+            size={30}
+            color="rgba(0, 0, 255, .7)"
+            style={{ alignSelf: "center", marginTop:windowHeight/9 }}
+          />
+          }</>
+        }
+        <SwipeDownModal
+        modalVisible={showModal}
+        ContentModal={
+          <View style={styles.swipeContainerContent}>
+            <View style={[styles.rowSpaceBetween,{paddingLeft:16,paddingRight:14, paddingTop:14,paddingBottom:11,borderBottomWidth:1,borderBottomColor:'#F0F4FC'}]}>
+              <View style={styles.rowAlignItems}>
+                <Image 
+                  style={{
+                    width:38,
+                    height:38
+                  }}
+                  source={{uri:userInfo.user?.avatar.url}}
+                /> 
+                <View style={{marginLeft:18}}>
+                  <CommenText     
+                    text={userInfo.user?.name}
+                    fontSize = {17}
+                    lineHeight = {28}
+                  />
+                  <DescriptionText
+                    fontSize={13}
+                    lineHeight={21}
+                    color={'rgba(54, 36, 68, 0.8)'}
+                    text={renderName(userInfo.user?.firstname,userInfo.user?.lastname)}
+                  />
+                </View>
+              </View>
+              <View style={[styles.contentCenter,{width:28,height:28,borderRadius:14,backgroundColor:'#F0F4FC'}]}>
+                <TouchableOpacity onPress={()=>setShowModal(false)}>
+                  <SvgXml
+                    width={18}
+                    height={18}
+                    xml={closeBlackSvg}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{height:267,borderRadius:20,borderWidth:1,borderColor:'#F0F4FC',marginTop:16,marginBottom:50,marginHorizontal:16}}>
+              <TouchableOpacity onPress={()=>setShowShareVoice(true)}>
+                <View style={[styles.rowSpaceBetween,{padding:16,borderBottomWidth:1,borderBottomColor:'#F0F4FC'}]}>
+                  <DescriptionText
+                    text = {t("Share")}
+                    fontSize ={17}
+                    lineHeight = {22}
+                    color = '#281E30'
+                  />
+                  <View style={[styles.contentCenter,{height:34,width:34,borderRadius:17,backgroundColor:'#F8F0FF'}]}>
+                      <SvgXml
+                        xml={shareSvg}
+                      />
+                  </View>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={()=>{
+                setShowModal(false);
+                if(followState=='none')
+                  changeFollowed();
+                else
+                  setDeleteModal(true);
+              }}>
+                <View style={[styles.rowSpaceBetween,{padding:16,borderBottomWidth:1,borderBottomColor:'#F0F4FC'}]}>
+                  <DescriptionText
+                    text = {followState=='none'?t("Follow"):t("Unfollow")}
+                    fontSize ={17}
+                    lineHeight = {22}
+                    color ='#281E30'
+                  />
+                  <View style={[styles.contentCenter,{height:34,width:34,borderRadius:17,backgroundColor:'#F8F0FF'}]}>
+                      <SvgXml
+                        width={20}
+                        height={20}
+                        xml={unfollowSvg}
+                      />
+                  </View>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress ={()=>{setShowModal(false);OnBlockUser();}} >
+                <View style={[styles.rowSpaceBetween,{padding:16,borderBottomWidth:1,borderBottomColor:'#F0F4FC'}]}>
+                  <DescriptionText
+                    text = {t("Block this user")}
+                    fontSize ={17}
+                    lineHeight = {22}
+                    color = '#E41717'
+                  />
+                  <View style={[styles.contentCenter,{height:34,width:34,borderRadius:17,backgroundColor:'#FFE8E8'}]}>
+                      <SvgXml
+                        width={20}
+                        height={20}
+                        xml={blockSvg}
+                      />
+                  </View>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <View style={[styles.rowSpaceBetween,{padding:16}]}>
+                  <DescriptionText
+                    text = {t("Report User")}
+                    fontSize ={17}
+                    lineHeight = {22}
+                    color = '#E41717'
+                  />
+                  <View style={[styles.contentCenter,{height:34,width:34,borderRadius:17,backgroundColor:'#FFE8E8'}]}>
+                      <SvgXml
+                        width={20}
+                        height={20}
+                        xml={redTrashSvg}
+                      />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.segmentContainer}></View>
+          </View>
+        }
+        ContentModalStyle={styles.swipeModal}
+        onRequestClose={() => {setShowModal(false)}}
+        onClose={() => {
+            setShowModal(false);
+        }}
+      />
+      <SwipeDownModal
+        modalVisible={deleteModal}
+        ContentModal={
+          <View style={{height:'100%',width:'100%'}}>
+            <View style={{position:'absolute', width:windowWidth-16, bottom:112, marginHorizontal:8,borderRadius:14,backgroundColor:'#E9EAEC'}}>
+              <View style={{paddingTop:14,paddingBottom:8.5, width:'100%',borderBottomWidth:1,borderBottomColor:'#B6C2DB',alignItems:'center'}}>
+                <CommenText
+                  text = {userInfo.user?.name}
+                  fontSize = {13}
+                  lineHeight = {21}
+                  color = 'rgba(38, 52, 73, 0.7)'
+                />
+              </View>
+              <TouchableOpacity  onPress={()=>changeFollowed()}style={{paddingVertical:16}}>
+                <DescriptionText
+                    text = {t("Unfollow")}
+                    fontSize = {20}
+                    lineHeight = {24}
+                    color = '#E41717'
+                    textAlign='center'
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{position:'absolute', width:windowWidth-16, bottom:48, marginHorizontal:8,height:56,borderRadius:14,backgroundColor:'white'}}>
+              <TouchableOpacity onPress={()=>setDeleteModal(false)}>
+                <DescriptionText
+                    text = {t("Cancel")}
+                    fontSize = {20}
+                    lineHeight = {24}
+                    color = '#1E61EB'
+                    textAlign='center'
+                    marginTop={16}
                 />
               </TouchableOpacity>
             </View>
           </View>
-
-          {(followState!='accepted')&&<MyButton
-            marginTop={20}
-            marginBottom={4}
-            marginHorizontal = {16}
-            label = {followState=='none'?'Follow':'Sent Request...'}
-            active={followState=='none'}
-            onPress={()=>changeFollowed()}
-            loading={followLoading}
-          />}
-          {(followState!='accepted'&&isPrivate)?<>
-            <View style={{marginTop:90,width:'100%',paddingHorizontal:(windowWidth-251)/2,alignItems:'center'}}>
-              <SvgXml
-                xml={blackPrivacySvg}
-              />
-              <DescriptionText
-                text = {t("This account is private. Follow on user for see voices")}
-                fontSize = {17}
-                lineHeight = {28}
-                textAlign = 'center'
-                marginTop = {16}
-              />
-               <SvgXml
-                position={'absolute'}
-                //transform= {[{ rotate: '-46.73deg'}]}
-                bottom = {39}
-                right = {28}
-                xml = {arrowPointerSvg}
-              />
-            </View>
-            </>:<>
-            <TitleText
-              text={t("User voices")}
-              fontSize = {20}
-              marginTop={23}
-              marginBottom={3}
-              marginLeft={16}
-            />
-            {!voiceLoading?(voices.length>0? <FlatList
-              style={{marginTop:3}}
-              data={voices}
-              renderItem={({item,index})=><VoiceItem 
-              key={index+'userProfile'}
-              info = {item}
-              props = {props}
-              isPlaying = {index==nowVoice}
-              onPressPostContext={()=>tapHoldToAnswer(index)}
-              onPressPlay={() => pressPlayVoice(index)}
-              onStopPlay={()=>onStopPlay()}
-              spread = {nowVoice==null}
-              />}
-              keyExtractor={(item, index) => index.toString()}
-              onEndReached = {()=>getUserVoices()}
-              onEndThreshold={0}
-            />:
-            <View style = {{marginTop:windowHeight/9,alignItems:'center',width:windowWidth}}>
-              <SvgXml
-                  xml={box_blankSvg}
-              />
-              <DescriptionText
-                text = {t('No result found')}
-                fontSize = {17}
-                lineHeight = {28}
-                marginTop = {22}
-              />
-            </View>):
-            <Progress.Circle
-              indeterminate
-              size={30}
-              color="rgba(0, 0, 255, .7)"
-              style={{ alignSelf: "center", marginTop:windowHeight/9 }}
-            />
-            }</>
-          }
-          <SwipeDownModal
-          modalVisible={showModal}
-          ContentModal={
-            <View style={styles.swipeContainerContent}>
-              <View style={[styles.rowSpaceBetween,{paddingLeft:16,paddingRight:14, paddingTop:14,paddingBottom:11,borderBottomWidth:1,borderBottomColor:'#F0F4FC'}]}>
-                <View style={styles.rowAlignItems}>
-                  <Image 
-                    style={{
-                      width:38,
-                      height:38
-                    }}
-                    source={{uri:userInfo.user?.avatar.url}}
-                  /> 
-                  <View style={{marginLeft:18}}>
-                    <CommenText     
-                      text={userInfo.user?.name}
-                      fontSize = {17}
-                      lineHeight = {28}
-                    />
-                    <DescriptionText
-                      fontSize={13}
-                      lineHeight={21}
-                      color={'rgba(54, 36, 68, 0.8)'}
-                      text={renderName(userInfo.user?.firstname,userInfo.user?.lastname)}
-                    />
-                  </View>
-                </View>
-                <View style={[styles.contentCenter,{width:28,height:28,borderRadius:14,backgroundColor:'#F0F4FC'}]}>
-                  <TouchableOpacity onPress={()=>setShowModal(false)}>
-                    <SvgXml
-                      width={18}
-                      height={18}
-                      xml={closeBlackSvg}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View style={{height:267,borderRadius:20,borderWidth:1,borderColor:'#F0F4FC',marginTop:16,marginBottom:50,marginHorizontal:16}}>
-                <TouchableOpacity onPress={()=>setShowShareVoice(true)}>
-                  <View style={[styles.rowSpaceBetween,{padding:16,borderBottomWidth:1,borderBottomColor:'#F0F4FC'}]}>
-                    <DescriptionText
-                      text = {t("Share")}
-                      fontSize ={17}
-                      lineHeight = {22}
-                      color = '#281E30'
-                    />
-                    <View style={[styles.contentCenter,{height:34,width:34,borderRadius:17,backgroundColor:'#F8F0FF'}]}>
-                        <SvgXml
-                          xml={shareSvg}
-                        />
-                    </View>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={()=>{
-                  setShowModal(false);
-                  if(followState=='none')
-                    changeFollowed();
-                  else
-                    setDeleteModal(true);
-                }}>
-                  <View style={[styles.rowSpaceBetween,{padding:16,borderBottomWidth:1,borderBottomColor:'#F0F4FC'}]}>
-                    <DescriptionText
-                      text = {followState=='none'?t("Follow"):t("Unfollow")}
-                      fontSize ={17}
-                      lineHeight = {22}
-                      color ='#281E30'
-                    />
-                    <View style={[styles.contentCenter,{height:34,width:34,borderRadius:17,backgroundColor:'#F8F0FF'}]}>
-                        <SvgXml
-                          width={20}
-                          height={20}
-                          xml={unfollowSvg}
-                        />
-                    </View>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress ={()=>{setShowModal(false);OnBlockUser();}} >
-                  <View style={[styles.rowSpaceBetween,{padding:16,borderBottomWidth:1,borderBottomColor:'#F0F4FC'}]}>
-                    <DescriptionText
-                      text = {t("Block this user")}
-                      fontSize ={17}
-                      lineHeight = {22}
-                      color = '#E41717'
-                    />
-                    <View style={[styles.contentCenter,{height:34,width:34,borderRadius:17,backgroundColor:'#FFE8E8'}]}>
-                        <SvgXml
-                          width={20}
-                          height={20}
-                          xml={blockSvg}
-                        />
-                    </View>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <View style={[styles.rowSpaceBetween,{padding:16}]}>
-                    <DescriptionText
-                      text = {t("Report User")}
-                      fontSize ={17}
-                      lineHeight = {22}
-                      color = '#E41717'
-                    />
-                    <View style={[styles.contentCenter,{height:34,width:34,borderRadius:17,backgroundColor:'#FFE8E8'}]}>
-                        <SvgXml
-                          width={20}
-                          height={20}
-                          xml={redTrashSvg}
-                        />
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.segmentContainer}></View>
-            </View>
-          }
-          ContentModalStyle={styles.swipeModal}
-          onRequestClose={() => {setShowModal(false)}}
-          onClose={() => {
-              setShowModal(false);
-          }}
-        />
-        <SwipeDownModal
-          modalVisible={deleteModal}
-          ContentModal={
-            <View style={{height:'100%',width:'100%'}}>
-              <View style={{position:'absolute', width:windowWidth-16, bottom:112, marginHorizontal:8,borderRadius:14,backgroundColor:'#E9EAEC'}}>
-                <View style={{paddingTop:14,paddingBottom:8.5, width:'100%',borderBottomWidth:1,borderBottomColor:'#B6C2DB',alignItems:'center'}}>
-                  <CommenText
-                    text = {userInfo.user?.name}
-                    fontSize = {13}
-                    lineHeight = {21}
-                    color = 'rgba(38, 52, 73, 0.7)'
-                  />
-                </View>
-                <TouchableOpacity  onPress={()=>changeFollowed()}style={{paddingVertical:16}}>
-                  <DescriptionText
-                      text = {t("Unfollow")}
-                      fontSize = {20}
-                      lineHeight = {24}
-                      color = '#E41717'
-                      textAlign='center'
-                  />
-                </TouchableOpacity>
-              </View>
-              <View style={{position:'absolute', width:windowWidth-16, bottom:48, marginHorizontal:8,height:56,borderRadius:14,backgroundColor:'white'}}>
-                <TouchableOpacity onPress={()=>setDeleteModal(false)}>
-                  <DescriptionText
-                      text = {t("Cancel")}
-                      fontSize = {20}
-                      lineHeight = {24}
-                      color = '#1E61EB'
-                      textAlign='center'
-                      marginTop={16}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-          }
-          ContentModalStyle={styles.swipeModal}
-          onRequestClose={() => {setDeleteModal(false)}}
-          onClose={() => {
-              setDeleteModal(false);
-          }}
-        />
-        {showContext&&
-          <PostContext
-            postInfo = {voices[selectedIndex]}
-            props = {props}
-            onChangeIsLike = {()=>setLiked()}
-            onCloseModal = {()=>setShowContext(false)}
-          />
         }
-        {showShareVoice&&
-        <ShareVoice
-          onCloseModal={()=>{setShowShareVoice(false);}}
-        />}
-      </KeyboardAvoidingView>
-    );
-  };
-  
-  export default UserProfileScreen;
+        ContentModalStyle={styles.swipeModal}
+        onRequestClose={() => {setDeleteModal(false)}}
+        onClose={() => {
+            setDeleteModal(false);
+        }}
+      />
+      {showContext&&
+        <PostContext
+          postInfo = {voices[selectedIndex]}
+          props = {props}
+          onChangeIsLike = {()=>setLiked()}
+          onCloseModal = {()=>setShowContext(false)}
+        />
+      }
+      {showShareVoice&&
+      <ShareVoice
+        onCloseModal={()=>{setShowShareVoice(false);}}
+      />}
+    </KeyboardAvoidingView>
+  );
+};
+
+export default UserProfileScreen;

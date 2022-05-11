@@ -65,16 +65,17 @@ const FeedScreen = (props) => {
   const voiceList = useMemo(()=>voices.map((item,index)=>
   item.temporary?null:
      <VoiceItem 
-      key={index+'voiceitem_feed'}
-      props={props}
-      info = {item}
-      isPlaying = {index==nowVoice}
-      isRefresh = {refresh}
-      onPressPostContext={()=>tapHoldToAnswer(index)}
-      onPressPlay={() => pressPlayVoice(index)}
-      onStopPlay={()=>onStopPlay()}
-      spread = {nowVoice==null}
-    />
+        key={index+'voiceitem_feed'}
+        props={props}
+        info = {item}
+        isPlaying = {index==nowVoice}
+        isRefresh = {refresh}
+        onPressPostContext={()=>tapHoldToAnswer(index)}
+        onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}
+        onPressPlay={() => pressPlayVoice(index)}
+        onStopPlay={()=>onStopPlay()}
+        spread = {nowVoice==null}
+      />
 ),[voices])
 
   let { user, socketInstance, refreshState } = useSelector((state) => {
@@ -140,7 +141,26 @@ const FeedScreen = (props) => {
 
   const setLiked = ()=>{
     let tp = voices;
+    let item = tp[selectedIndex].isLike;
+    if(item)
+      tp[selectedIndex].likesCount --;
+    else
+      tp[selectedIndex].likesCount ++;
     tp[selectedIndex].isLike = !tp[selectedIndex].isLike;
+    setVoices(tp);
+  }
+
+  const onChangeLike = (id, val)=>{
+    let tp = voices;
+    let item = tp[id].isLike;
+    console.log(item);
+    if(item === true){
+      tp[id].likesCount --;
+    }
+    else{
+      tp[id].likesCount ++;
+    }
+    tp[id].isLike = val;
     setVoices(tp);
   }
 
@@ -174,6 +194,7 @@ const FeedScreen = (props) => {
       }, 1500);
     }
   //  checkPermission();
+    return socketInstance.off("notice_Voice");
   }, [refreshState])
 
   const checkPermission = async () => {
@@ -206,7 +227,7 @@ const FeedScreen = (props) => {
   }
  
   return (
-      <SafeAreaView 
+      <KeyboardAvoidingView 
         style={{
           backgroundColor:'#FFF',
           flex:1,
@@ -214,7 +235,7 @@ const FeedScreen = (props) => {
       >
         <View
           style={[
-            { marginTop: 20, paddingHorizontal: 20, marginBottom:25, height:30 }, 
+            { marginTop:Platform.OS=='ios'?50:20, paddingHorizontal: 20, marginBottom:25, height:30 }, 
             styles.rowJustifyCenter
           ]}
         >
@@ -399,7 +420,7 @@ const FeedScreen = (props) => {
           active='home'
           props={props}
         />
-      </SafeAreaView>
+      </KeyboardAvoidingView>
   );
 };
 

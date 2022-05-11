@@ -291,7 +291,7 @@ const RegisterScreen = (props) => {
 
   return (
       <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
-        <View style={styles.LgoinContainer}>
+        <View style={styles.LoginContainer}>
           <ImageBackground
             source={require('../../assets/login/background.png')}
             resizeMode="stretch"

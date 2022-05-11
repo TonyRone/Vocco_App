@@ -5,6 +5,7 @@ import {
   TouchableOpacity, 
   Image, 
   ScrollView,
+  KeyboardAvoidingView,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -178,7 +179,7 @@ const EditProfileScreen = (props) => {
       //  checkLogin();
     }, [])
     return (
-      <SafeAreaView 
+      <KeyboardAvoidingView 
         style={{
           backgroundColor:'#FFF',
           flex:1,
@@ -564,7 +565,7 @@ const EditProfileScreen = (props) => {
             style={{ alignSelf: "center" }}
           />
         </View>}
-      </SafeAreaView>
+      </KeyboardAvoidingView>
     );
   };
   

@@ -1,5 +1,5 @@
 import { underline } from 'chalk';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { Directions } from 'react-native-gesture-handler';
 
 
@@ -82,7 +82,7 @@ export const styles = StyleSheet.create({
      //   position:'absolute',
      //   bottom:0,
         width:'100%',
-        marginTop:30,
+        marginTop:Platform.OS=='ios'?60:30,
       //  paddingHorizontal: 16,
         backgroundColor: 'white',
         borderWidth:1,
@@ -120,7 +120,7 @@ export const styles = StyleSheet.create({
         paddingVertical:14,
         borderBottomColor:'#F2F0F5',
         borderBottomWidth:1,
-        marginTop:10
+        marginTop:Platform.OS=='ios'?40:10
     },
     bottomContainer:{
         position:'absolute',

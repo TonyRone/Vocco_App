@@ -45,7 +45,7 @@ const VerifyScreen = (props) => {
           ]}
         >
           <TouchableOpacity
-            onPress={() => props.navigation.goBack()}
+            onPress={() => props.navigation.navigate("Welcome")}
             style={{
               position:'absolute',
               left:20

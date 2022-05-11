@@ -45,7 +45,7 @@ const ProfileScreen = (props) => {
   const {t, i18n} = useTranslation();
 
   let userData = {...user};
-  const[voices,setVoices] = useState([]);
+  const [voices,setVoices] = useState([]);
   const [userInfo,setUserInfo] = useState({});
   const [nowVoice, setNowVoice] = useState(null);
   const [refresh,setRefresh] = useState(false);
@@ -99,10 +99,29 @@ const ProfileScreen = (props) => {
         fullname += lname;
     }
     return fullname
-}
+  }
   const setLiked = ()=>{
     let tp = voices;
+    let item = tp[selectedIndex].isLike;
+    if(item)
+      tp[selectedIndex].likesCount --;
+    else
+      tp[selectedIndex].likesCount ++;
     tp[selectedIndex].isLike = !tp[selectedIndex].isLike;
+    setVoices(tp);
+  }
+
+  const onChangeLike = (id, val)=>{
+    let tp = voices;
+    let item = tp[id].isLike;
+    console.log(item);
+    if(item === true){
+      tp[id].likesCount --;
+    }
+    else{
+      tp[id].likesCount ++;
+    }
+    tp[id].isLike = val;
     setVoices(tp);
   }
 
@@ -261,6 +280,7 @@ const ProfileScreen = (props) => {
           props={props}
           isPlaying = {index==nowVoice}
           onPressPostContext={()=>tapHoldToAnswer(index)}
+          onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}
           onPressPlay={() => pressPlayVoice(index)}
           onStopPlay={()=>onStopPlay()}
         />}
