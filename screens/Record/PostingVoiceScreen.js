@@ -99,10 +99,11 @@ const PostingVoiceScreen = (props) => {
       setShowHint(true);
       return ;
     }
+    const audioName = voiceTitle.split(" ").join("");
     if (path) {
       let voiceFile = [
         {
-          name: 'file', filename: Platform.OS==='android'?'hello.mp3':'hello.m4a', data: RNFetchBlob.wrap(path)
+          name: 'file', filename: Platform.OS==='android'?`${audioName}.mp3`:`${audioName}.m4a`, data: RNFetchBlob.wrap(path)
         },
         { name:'title', data:voiceTitle },
         { name:'emoji', data:String(icon) },

@@ -262,7 +262,7 @@ const EditProfileScreen = (props) => {
                     placeholderText=""
                     color='#281E30'
                     value={bio}
-                    onChangeText={(newVal) => setBio(newVal)}
+                    onChangeText={(newVal) => newVal.length<=150?setBio(newVal):null}
                     marginTop={16}
                     numberOfLines={3}
                     multiline={true}

@@ -83,7 +83,7 @@ const PostingAnswerVoiceScreen = (props) => {
         { name:'duaration', data:String(displayDuration) },
         { name:'record', data:info.id },
         { name:'emoji', data:String(icon) },
-        {name: 'file', filename:Platform.OS==='android'?'hello.mp3':'hello.m4a', data: RNFetchBlob.wrap(String(path))},
+        {name: 'file', filename:Platform.OS==='android'?'answer.mp3':'answer.m4a', data: RNFetchBlob.wrap(String(path))},
       ] ;
       VoiceService.postAnswerVoice(voiceFile).then(async res => { 
         const jsonRes = await res.json();

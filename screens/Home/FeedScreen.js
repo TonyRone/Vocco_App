@@ -176,38 +176,8 @@ const FeedScreen = (props) => {
         noticeDispatch("reset");
       }, 1500);
     }
-  //  checkPermission();
     return socketInstance.off("notice_Voice");
   }, [refreshState])
-
-  const checkPermission = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        const grants = await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-        ]);
-
-        if (
-          grants['android.permission.WRITE_EXTERNAL_STORAGE'] ===
-          PermissionsAndroid.RESULTS.GRANTED &&
-          grants['android.permission.READ_EXTERNAL_STORAGE'] ===
-          PermissionsAndroid.RESULTS.GRANTED &&
-          grants['android.permission.RECORD_AUDIO'] ===
-          PermissionsAndroid.RESULTS.GRANTED
-        ) {
-          console.log('Permissions granted');
-        } else {
-          console.log('All required permissions not granted');
-          return;
-        }
-      } catch (err) {
-        console.warn(err);
-        return;
-      }
-    }
-  }
  
   return (
       <KeyboardAvoidingView 
@@ -216,43 +186,6 @@ const FeedScreen = (props) => {
           flex:1,
         }}
       >
-        {
-          noticeCount != 0&&
-          <TouchableOpacity style={{
-            position:'absolute',
-            top:160,
-            left:windowWidth/2-78,
-            width:noticeCount<0?183:156, 
-            height:40, 
-            backgroundColor:noticeCount<0?'#45BF58':'#8327D8', 
-            borderRadius:34, 
-            flexDirection:'row',
-            justifyContent:'space-between',
-            alignItems:'center'
-          }}
-            onPress = {()=>{
-              if(noticeCount > 0 ){
-                getVoices(true);
-                Vibration.vibrate(100);
-              }
-              noticeDispatch("reset");
-            }}
-          >
-            <DescriptionText
-              text={noticeCount<0?'Successful upload':(noticeCount+' new voices')}
-              color='#F6EFFF'
-              marginLeft={16}
-              fontSize={15}
-              lineHeight={15}
-            />
-            <SvgXml
-              width={20}
-              height={20}
-              style={{marginRight:14}}
-              xml = {closeSvg}
-            />
-          </TouchableOpacity>
-        }
         <View
           style={[
             { marginTop:Platform.OS=='ios'?50:20, paddingHorizontal: 20, marginBottom:25, height:30 }, 
@@ -405,6 +338,43 @@ const FeedScreen = (props) => {
             </View>
           }
         </ScrollView>
+        {
+          noticeCount != 0&&
+          <TouchableOpacity style={{
+            position:'absolute',
+            top:160,
+            left:windowWidth/2-78,
+            width:noticeCount<0?183:156, 
+            height:40, 
+            backgroundColor:noticeCount<0?'#45BF58':'#8327D8', 
+            borderRadius:34, 
+            flexDirection:'row',
+            justifyContent:'space-between',
+            alignItems:'center'
+          }}
+            onPress = {()=>{
+              if(noticeCount > 0 ){
+                getVoices(true);
+                Vibration.vibrate(100);
+              }
+              noticeDispatch("reset");
+            }}
+          >
+            <DescriptionText
+              text={noticeCount<0?'Successful upload':(noticeCount+' new voices')}
+              color='#F6EFFF'
+              marginLeft={16}
+              fontSize={15}
+              lineHeight={15}
+            />
+            <SvgXml
+              width={20}
+              height={20}
+              style={{marginRight:14}}
+              xml = {closeSvg}
+            />
+          </TouchableOpacity>
+        }
         {showContext&&
           <PostContext
             postInfo = {voices[selectedIndex]}

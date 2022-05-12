@@ -20,7 +20,7 @@ export const MyTextField = ({
   placeholderText,
   stateText,
   multiline = false,
-  maxWidth,
+  maxWidth = windowWidth - 90,
   keyboardType = "default",
   numberOfLines,
   marginTop = 16,
