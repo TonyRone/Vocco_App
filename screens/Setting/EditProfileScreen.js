@@ -53,28 +53,29 @@ const EditProfileScreen = (props) => {
 
     const user = useSelector((state)=>state.user.user);
     const dispatch = useDispatch();
-    let userDate = {...user};
+    let userData = {...user};
 
-    const [username, setUsername] = useState(userDate.name);
-    const [firstname, setFirstname] = useState(userDate.firstname);
-    const [lastname, setLastname] = useState(userDate.lastname);
-    const [birthdate,setBirthdate] = useState(new Date(userDate.dob));
+    const [username, setUsername] = useState(userData.name);
+    const [firstname, setFirstname] = useState(userData.firstname);
+    const [lastname, setLastname] = useState(userData.lastname);
+    const [birthdate,setBirthdate] = useState(new Date(userData.dob));
     const [showModal,setShowModal] = useState(false);
-    const [gender,setGender] = useState(userDate.gender);
-    const [userCountry,setUserCountry] = useState({country:userDate.country});
+    const [gender,setGender] = useState(userData.gender);
+    const [userCountry,setUserCountry] = useState({country:userData.country});
     const [validUsername, setValidUsername] = useState(true);
     const [inputState, setInputState] = useState({});
-    const [privated,setPrivateStatus] = useState(userDate.isPrivate);
+    const [privated,setPrivateStatus] = useState(userData.isPrivate);
     const [date, setDate] = useState(birthdate);
-    const [identify,setIdentify] = useState(userDate.gender);
+    const [identify,setIdentify] = useState(userData.gender);
     const [secureTextEntry, setSecureTextEntry] = useState(true);
     const [modalType,setModaltype] = useState('');
-    const [country, setCountry] = useState({country:userDate.country});
+    const [country, setCountry] = useState({country:userData.country});
     const [password,setPassword] = useState('');
-    const [useremail,setUseremail] = useState(userDate.email);
+    const [useremail,setUseremail] = useState(userData.email);
     const [loading,setLoading] = useState(false);
     const [allLoading,setAllLoading] = useState(false);
     const [warningState,setWarningState] = useState(false);
+    const [bio, setBio] = useState(userData.bio);
 
     const passwordRef = useRef();
 
@@ -147,6 +148,7 @@ const EditProfileScreen = (props) => {
 
     const handleSubmit = async()=>{
         const payload = {
+            bio:bio,
             name: username,
             dob: birthdate,
             country:userCountry.country,
@@ -209,14 +211,14 @@ const EditProfileScreen = (props) => {
         </View>
         <ScrollView>
             <View style={{alignItems:'center',marginTop:18}}>
-                <TouchableOpacity onLongPress={()=>props.navigation.navigate('Photo',{imageUrl:userDate.avatar.url,backPage:'Setting'})}>
+                <TouchableOpacity onLongPress={()=>props.navigation.navigate('Photo',{imageUrl:userData.avatar.url,backPage:'Setting'})}>
                     <Image
                         style={{
                             width:122,
                             height:122,
                             borderRadius:61,
                         }}
-                        source={{uri:userDate.avatar.url}}
+                        source={{uri:userData.avatar.url}}
                     />
                 </TouchableOpacity>
                 <TouchableOpacity>
@@ -255,6 +257,17 @@ const EditProfileScreen = (props) => {
                 </TouchableOpacity>
             </View>
             <View style={{marginHorizontal:16}}>
+                <MyTextField
+                    label={t("Your bio")}
+                    placeholderText=""
+                    color='#281E30'
+                    value={bio}
+                    onChangeText={(newVal) => setBio(newVal)}
+                    marginTop={16}
+                    numberOfLines={3}
+                    multiline={true}
+                    check={false}
+                />
                 <MyTextField
                     label={t("First Name")}
                     placeholderText="John e.g"

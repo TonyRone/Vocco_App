@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   Pressable,
+  ScrollView,
   Platform
 } from 'react-native';
 
@@ -52,14 +53,17 @@ const ProfileScreen = (props) => {
   const [showContext, setShowContext] = useState(false);
   const [selectedIndex,setSelectedIndex] = useState(0);
   const [loadMore, setLoadMore] = useState(10);
+  const [showEnd,setShowEnd] = useState(false);
   const [loading, setLoading] = useState(true);
 
   if(props.navigation.state.params)
     ()=>setRefresh(!refresh);
 
   const getUserVoices = () => {
-    if(loadMore < 10)
+    if(loadMore < 10){
+      onShowEnd();
       return ;
+    }
     if(voices.length==0)
       setLoading(true);
     VoiceService.getUserVoice(userData.id,voices.length).then(async res => {
@@ -123,20 +127,23 @@ const ProfileScreen = (props) => {
     tp[id].isLike = val;
     setVoices(tp);
   }
-
-  const pressPlayVoice = (index)=>{
-    if(nowVoice!=null){
-      onStopPlay();
-    }
-    if(nowVoice!=index){
-      setTimeout(() => {
-        setNowVoice(index);
-      }, nowVoice?400:0);
-    }
-  }
   const tapHoldToAnswer = (index) => {
     setSelectedIndex(index)
     setShowContext(true);
+  }
+
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 10;
+    return layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom;
+  }
+
+  const onShowEnd = ()=>{
+    if(showEnd) return ;
+    setShowEnd(true);
+    setTimeout(() => {
+     setShowEnd(false);
+    }, 2000);
   }
 
   useEffect(() => {
@@ -225,87 +232,116 @@ const ProfileScreen = (props) => {
           </View>
         </LinearGradient>
       </Pressable>
-      <View style={styles.paddingH16}>
-        <View style={[styles.rowSpaceBetween, { marginTop: 26 }]}>
-          <View>
-            <View style={styles.rowAlignItems}>
-              <TitleText
-                text={userData.name}
-                fontFamily="SFProDisplay-Bold"
-                lineHeight={33}
+      <ScrollView
+          style = {{marginBottom:Platform.OS=='ios'?65:75, marginTop:25}}
+          onScroll={({nativeEvent}) => {
+            if (isCloseToBottom(nativeEvent)) {
+              getUserVoices()
+            }
+          }}
+          scrollEventThrottle={400}
+      >
+        <View style={styles.paddingH16}>
+          <View style={[styles.rowSpaceBetween, { marginTop: 26 }]}>
+            <View>
+              <View style={styles.rowAlignItems}>
+                <TitleText
+                  text={userData.name}
+                  fontFamily="SFProDisplay-Bold"
+                  lineHeight={33}
+                />
+                {userData.premium!='none'&&
+                  <Image
+                    style={{
+                      width:100,
+                      height:33,
+                      marginLeft:16
+                    }}
+                    source={require('../../assets/common/premiumstar.png')}
+                  />
+                }
+              </View>
+              {/* <DescriptionText
+                text={renderName(userData.firstname,userData.lastname)}
+                fontSize={12}
+                lineHeight={16}
+                color={'rgba(54, 36, 68, 0.8)'}
+                marginTop={3}
+              /> */}
+            </View>
+            <View style={[styles.contentCenter, { height: 40, width: 40, borderRadius: 20, backgroundColor: '#F8F0FF' }]}>
+              <TouchableOpacity onPress={()=>props.navigation.navigate('EditProfile')}>
+                <SvgXml
+                  width={18}
+                  height={18}
+                  xml={editSvg}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          {user.bio&&<DescriptionText
+            numberOfLines={3}
+            marginTop = {15}
+            text = {user.bio}
+          />}
+          <TitleText
+            text={t('Your voices')}
+            fontSize = {20}
+            marginTop={21}
+            marginBottom={3}
+          />
+        </View>
+        {!loading?(voices.length?
+          <>
+            {
+              voices.map((item,index)=><VoiceItem 
+                key={index+'myprofile'}
+                info={item}
+                props={props}
+                isPlaying = {index==nowVoice}
+                onPressPostContext={()=>tapHoldToAnswer(index)}
+                onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}
+                onPressPlay={() => pressPlayVoice(index)}
+                onStopPlay={()=>onStopPlay()}
               />
-              {userData.premium!='none'&&
+              )
+            }
+            {showEnd&&
+              <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center', padding:12}}>
                 <Image
                   style={{
-                    width:100,
-                    height:33,
-                    marginLeft:16
+                    width:20,
+                    height:20
                   }}
-                  source={require('../../assets/common/premiumstar.png')}
+                  source={require('../../assets/common/happy.png')} 
                 />
-              }
-            </View>
-            {/* <DescriptionText
-              text={renderName(userData.firstname,userData.lastname)}
-              fontSize={12}
-              lineHeight={16}
-              color={'rgba(54, 36, 68, 0.8)'}
-              marginTop={3}
-            /> */}
-          </View>
-          <View style={[styles.contentCenter, { height: 40, width: 40, borderRadius: 20, backgroundColor: '#F8F0FF' }]}>
-            <TouchableOpacity onPress={()=>props.navigation.navigate('EditProfile')}>
-              <SvgXml
-                width={18}
-                height={18}
-                xml={editSvg}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-        <TitleText
-          text={t('Your voices')}
-          fontSize = {20}
-          marginTop={23}
-          marginBottom={3}
+                <DescriptionText
+                  marginLeft={15}
+                  text = {t("You are up to date!")}
+                />
+              </View>
+            }
+          </>
+        :
+        <View style = {{marginTop:windowHeight/9,alignItems:'center',width:windowWidth}}>
+          <SvgXml
+              xml={box_blankSvg}
+          />
+          <DescriptionText
+            text = {t('No result found')}
+            fontSize = {17}
+            lineHeight = {28}
+            marginTop = {22}
+          />
+        </View>):
+        <Progress.Circle
+          indeterminate
+          size={30}
+          color="rgba(0, 0, 255, .7)"
+          style={{ alignSelf: "center", marginTop:windowHeight/9 }}
         />
-      </View>
-      {!loading?(voices.length?<FlatList
-        style={{marginTop:3,marginBottom:70}}
-        data={voices}
-        renderItem={({item,index})=><VoiceItem 
-          key={index+'profile'}
-          info={item}
-          props={props}
-          isPlaying = {index==nowVoice}
-          onPressPostContext={()=>tapHoldToAnswer(index)}
-          onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}
-          onPressPlay={() => pressPlayVoice(index)}
-          onStopPlay={()=>onStopPlay()}
-        />}
-        keyExtractor={(item, index) => index.toString()}
-        onEndReached = {()=>getUserVoices()}
-        onEndReachedThreshold = {0.1}
-        onEndThreshold={0}
-      />:
-      <View style = {{marginTop:windowHeight/9,alignItems:'center',width:windowWidth}}>
-        <SvgXml
-            xml={box_blankSvg}
-        />
-        <DescriptionText
-          text = {t('No result found')}
-          fontSize = {17}
-          lineHeight = {28}
-          marginTop = {22}
-        />
-      </View>):
-      <Progress.Circle
-        indeterminate
-        size={30}
-        color="rgba(0, 0, 255, .7)"
-        style={{ alignSelf: "center", marginTop:windowHeight/9 }}
-      />
-      }
+        }
+      </ScrollView>
       <BottomButtons
         active='profile'
         props={props}

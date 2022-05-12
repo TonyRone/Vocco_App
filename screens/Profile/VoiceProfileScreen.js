@@ -2,13 +2,14 @@ import React, { useState, useEffect, useRef ,useCallback} from 'react';
 import { 
   View, 
   KeyboardAvoidingView, 
-  TouchableOpacity, 
   Pressable,
   Image, 
   Text,
   Platform,
   ImageBackground
 } from 'react-native';
+
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { NavigationActions, StackActions } from 'react-navigation';
 import {useTranslation} from 'react-i18next';
@@ -346,12 +347,14 @@ const VoiceProfileScreen = (props) => {
             width: windowWidth-32,
             height:56,
             alignItems:'center',
-            flex:1
+            flex:1,
+            zIndex:0
           }}>
             <View style={{
               alignItems:'center',
               marginBottom:-39,
-              marginTop:-35
+              marginTop:-35,
+              zIndex:10
             }}>
               <TouchableOpacity onPress={()=>props.navigation.navigate("HoldRecord",{info:info})}>
                 <SvgXml

@@ -216,6 +216,43 @@ const FeedScreen = (props) => {
           flex:1,
         }}
       >
+        {
+          noticeCount != 0&&
+          <TouchableOpacity style={{
+            position:'absolute',
+            top:160,
+            left:windowWidth/2-78,
+            width:noticeCount<0?183:156, 
+            height:40, 
+            backgroundColor:noticeCount<0?'#45BF58':'#8327D8', 
+            borderRadius:34, 
+            flexDirection:'row',
+            justifyContent:'space-between',
+            alignItems:'center'
+          }}
+            onPress = {()=>{
+              if(noticeCount > 0 ){
+                getVoices(true);
+                Vibration.vibrate(100);
+              }
+              noticeDispatch("reset");
+            }}
+          >
+            <DescriptionText
+              text={noticeCount<0?'Successful upload':(noticeCount+' new voices')}
+              color='#F6EFFF'
+              marginLeft={16}
+              fontSize={15}
+              lineHeight={15}
+            />
+            <SvgXml
+              width={20}
+              height={20}
+              style={{marginRight:14}}
+              xml = {closeSvg}
+            />
+          </TouchableOpacity>
+        }
         <View
           style={[
             { marginTop:Platform.OS=='ios'?50:20, paddingHorizontal: 20, marginBottom:25, height:30 }, 
@@ -351,43 +388,6 @@ const FeedScreen = (props) => {
             color="rgba(0, 0, 255, .7)"
             style={{ alignSelf: "center", marginTop:windowHeight/5 }}
           />
-          }
-          {
-            noticeCount != 0&&
-            <TouchableOpacity style={{
-              position:'absolute',
-              top:220,
-              left:windowWidth/2-78,
-              width:noticeCount<0?183:156, 
-              height:40, 
-              backgroundColor:noticeCount<0?'#45BF58':'#8327D8', 
-              borderRadius:34, 
-              flexDirection:'row',
-              justifyContent:'space-between',
-              alignItems:'center'
-            }}
-              onPress = {()=>{
-                if(noticeCount > 0 ){
-                  getVoices(true);
-                  Vibration.vibrate(100);
-                }
-                noticeDispatch("reset");
-              }}
-            >
-              <DescriptionText
-                text={noticeCount<0?'Successful upload':(noticeCount+' new voices')}
-                color='#F6EFFF'
-                marginLeft={16}
-                fontSize={15}
-                lineHeight={15}
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                style={{marginRight:14}}
-                xml = {closeSvg}
-              />
-            </TouchableOpacity>
           }
           {showEnd&&
             <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center', padding:12}}>

@@ -77,7 +77,7 @@ const DiscoverScreen = (props) => {
       contentSize.height - paddingToBottom;
   };
 
-  const OnShowEnd = ()=>{
+  const onShowEnd = ()=>{
     if(showEnd) return ;
     setShowEnd(true);
     setTimeout(() => {
@@ -92,7 +92,7 @@ const DiscoverScreen = (props) => {
       return ;
     }
     else if(loadmore < 10){
-      OnShowEnd();
+      onShowEnd();
       return ;
     }
     let len = isNew?0:filteredVoices.length;

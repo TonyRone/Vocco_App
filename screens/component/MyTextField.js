@@ -19,8 +19,10 @@ export const MyTextField = ({
   onEndEditing,
   placeholderText,
   stateText,
-  keyboardType = "default",
   multiline = false,
+  maxWidth,
+  keyboardType = "default",
+  numberOfLines,
   marginTop = 16,
   errorText = null,
   secureTextEntry = false,
@@ -65,12 +67,14 @@ export const MyTextField = ({
             { 
               fontSize:17,
               color,
-              width:windowWidth-90 
+              width:windowWidth-60 
             }
           }
           onFocus = {()=>dispatch(true)}
           onBlur = {()=>dispatch(false)}
           multiline={multiline}
+          numberOfLines = {numberOfLines}
+          maxWidth = {maxWidth}
           keyboardType={keyboardType}
           ref={refer}
           value={value}

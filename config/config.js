@@ -58,20 +58,12 @@ export const Categories =
         uri:require('../assets/categories/games.png')
     },
     {
-        label:'Hobby',
-        uri:require('../assets/categories/hobby.png')
-    },
-    {
         label:'Music',
         uri:require('../assets/categories/music.png')
     },
     {
         label:'News',
         uri:require('../assets/categories/news.png')
-    },
-    {
-        label:'People',
-        uri:require('../assets/categories/people.png')
     },
     {
         label:'Animals',
@@ -86,11 +78,43 @@ export const Categories =
         uri:require('../assets/categories/sport.png')
     },
     {
-        label:'Trips',
-        uri:require('../assets/categories/trips.png')
+        label:'Travel',
+        uri:require('../assets/categories/travel.png')
     },
     {
         label:'Jokes',
         uri:require('../assets/categories/jokes.png')
+    },
+    {
+        label:'Vegan',
+        uri:require('../assets/categories/vegan.png')
+    },
+    {
+        label:'Ecology',
+        uri:require('../assets/categories/ecology.png')
+    },
+    {
+        label:'Love',
+        uri:require('../assets/categories/love.png')
+    },
+    {
+        label:'Feminism',
+        uri:require('../assets/categories/feminism.png')
+    },
+    {
+        label:'LGBT',
+        uri:require('../assets/categories/LGBT.png')
+    },
+    {
+        label:'Studies',
+        uri:require('../assets/categories/studies.png')
+    },
+    {
+        label:'Parties',
+        uri:require('../assets/categories/parties.png')
+    },
+    {
+        label:'Astrology',
+        uri:require('../assets/categories/astrology.png')
     },
 ]

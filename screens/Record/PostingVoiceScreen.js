@@ -23,6 +23,8 @@ import EmojiPicker from 'rn-emoji-keyboard';
 import { ShareHint } from '../component/ShareHint';
 import { ShareVoice } from '../component/ShareVoice';
 
+import {useTranslation} from 'react-i18next';
+import '../../language/i18n';
 import SwipeDownModal from 'react-native-swipe-down';
 import { SvgXml } from 'react-native-svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
@@ -45,6 +47,8 @@ const PostingVoiceScreen = (props) => {
   let isTemporary = props.navigation.state.params?.isTemporary?true:false;
 
   let { user, refreshState, socketInstance } = useSelector((state) => state.user);
+
+  const {t, i18n} = useTranslation();
 
   const [category, setCategory] = useState(0);
   const [visibleStatus, setVisibleStatus] = useState( isTemporary);
@@ -146,7 +150,7 @@ const PostingVoiceScreen = (props) => {
           </Pressable>
 
           <TitleText
-            text="Posting voice"
+            text={t("Share your story")}
             fontSize={20}
             lineHeight={24}
           />
@@ -173,7 +177,7 @@ const PostingVoiceScreen = (props) => {
             </View>
           </TouchableOpacity>
           <TextInput
-            placeholder='Your title (3 words max)'
+            placeholder={t("Title of your story")}
             placeholderTextColor="#3B1F5290"
             color="#281E30"
             value={voiceTitle}
@@ -220,7 +224,7 @@ const PostingVoiceScreen = (props) => {
         </View>
         <View style={{flexDirection:'row', justifyContent:'space-between'}}>
           <TitleText
-            text='Select category'
+            text={t("Select category")}
             fontFamily="SFProDisplay-Regular"
             fontSize={15}
             lineHeight={24}
@@ -233,7 +237,7 @@ const PostingVoiceScreen = (props) => {
                 setShowModal(true);
           }}>
             <TitleText
-              text='SEE ALL'
+              text={t('SEE ALL')}
               fontFamily="SFProDisplay-Regular"
               fontSize={15}
               lineHeight={24}
@@ -286,7 +290,7 @@ const PostingVoiceScreen = (props) => {
           keyExtractor={(item, idx) => idx.toString()} 
         />
         <TitleText
-          text='Privacy settings'
+          text={t("Privacy settings")}
           fontFamily="SFProDisplay-Regular"
           fontSize={15}
           lineHeight={24}
@@ -297,7 +301,7 @@ const PostingVoiceScreen = (props) => {
         />
         <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 12, marginBottom: visibleStatus?5:50 }]}>
           <TitleText
-            text='Only visible to friends'
+            text={t("Only visible to friends")}
             fontSize={17}
             lineHeight={28}
             color="#281E30"
@@ -312,7 +316,7 @@ const PostingVoiceScreen = (props) => {
         </View>
         {visibleStatus&&<View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 12, marginBottom: 30 }]}>
           <TitleText
-            text='Temporary Story'
+            text={t("Temporary Story")}
             fontSize={17}
             lineHeight={28}
             color="#281E30"
@@ -334,7 +338,7 @@ const PostingVoiceScreen = (props) => {
         }}
       >
         <MyButton
-          label="Post my voice"
+          label={t("Share my story")}
           loading = {isLoading}
           onPress={handleSubmit}
           active = {voiceTitle!=''}

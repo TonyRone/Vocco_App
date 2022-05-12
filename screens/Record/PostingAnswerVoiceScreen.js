@@ -2,43 +2,26 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   KeyboardAvoidingView,
-  TouchableOpacity,
-  Image,
   Pressable,
-  ScrollView,
   Platform,
-  Text,
-  TextInput,
   Vibration
 } from 'react-native';
-import AudioRecorderPlayer, {
-  AVEncoderAudioQualityIOSType,
-  AVEncodingOption,
-  AudioEncoderAndroidType,
-  AudioSet,
-  AudioSourceAndroidType,
-} from 'react-native-audio-recorder-player';
+
 import RNFetchBlob from 'rn-fetch-blob';
+import {useTranslation} from 'react-i18next';
+import '../../language/i18n';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { TitleText } from '../component/TitleText';
 import { ShareHint } from '../component/ShareHint';
 import { ShareVoice } from '../component/ShareVoice';
 
-import { CategoryIcon } from '../component/CategoryIcon';
 import { MyButton } from '../component/MyButton';
 import { ReactionEmojies } from '../component/ReactionEmojies';
 
 import { SvgXml } from 'react-native-svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
-import pauseSvg from '../../assets/common/pause.svg';
-import playSvg from '../../assets/common/play.svg';
-import yesSwitchSvg from '../../assets/common/yesSwitch.svg';
-import noSwitchSvg from '../../assets/common/noSwitch.svg';
-import replaySvg from '../../assets/common/replay.svg';
-import editSvg from '../../assets/record/edit.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ACCESSTOKEN_KEY, REFRESHTOKEN_KEY, TUTORIAL_CHECK,POST_CHECK, API_URL, windowWidth, windowHeight } from '../../config/config';
-import { styles } from '../style/Common';
+import { POST_CHECK, windowWidth, } from '../../config/config';
 import VoiceService from '../../services/VoiceService';
 import VoicePlayer from '../Home/VoicePlayer';
 import { setRefreshState } from '../../store/actions';
@@ -53,6 +36,8 @@ const PostingAnswerVoiceScreen = (props) => {
         state.user
     )
   });
+
+  const {t, i18n} = useTranslation();
 
   const [playStatus, setPlayStatus] = useState(false);
   const [displayDuration, setDisplayDuration] = useState(props.navigation.state.params?.recordSecs ? props.navigation.state.params?.recordSecs : 0);
@@ -137,7 +122,7 @@ const PostingAnswerVoiceScreen = (props) => {
           </Pressable>
 
           <TitleText
-            text="Your answer"
+            text={t("Your answer")}
             fontSize={20}
             lineHeight={24}
           />
@@ -165,7 +150,7 @@ const PostingAnswerVoiceScreen = (props) => {
           </View>
         </TouchableOpacity> */}
         <TitleText
-          text={`Duration: ${displayDuration} seconds`}
+          text={`${t("Duration")}: ${displayDuration} ${t("seconds")}`}
           fontFamily="SFProDisplay-Regular"
           fontSize={15}
           lineHeight={24}
@@ -205,7 +190,7 @@ const PostingAnswerVoiceScreen = (props) => {
         }}
       >
         <MyButton
-          label="Post my answer"
+          label={t("Post my answer")}
           loading={isLoading}
           onPress={handleSubmit}
         />

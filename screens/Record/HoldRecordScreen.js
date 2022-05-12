@@ -11,6 +11,13 @@ import {
   PermissionsAndroid
 } from 'react-native';
 
+import AudioRecorderPlayer, {
+  AVEncoderAudioQualityIOSType,
+  AVEncodingOption,
+  AudioEncoderAndroidType,
+  AudioSourceAndroidType,
+} from 'react-native-audio-recorder-player';
+
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
 import RNFetchBlob from 'rn-fetch-blob';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
@@ -72,7 +79,7 @@ const HoldRecordScreen = (props) => {
   useEffect(() => {
     setFill(user.premium!='none'?180:60);
     setKey(prevKey => prevKey + 1);
-    dispatch(setVoiceState(voiceState+1));
+    //dispatch(setVoiceState(voiceState+1));
     return ()=>clearRecorder();
   }, [])
 
@@ -130,7 +137,6 @@ const HoldRecordScreen = (props) => {
         rtime = fill;
       setIsRecording(false);
       setIsPaused(true);
-      //dispatch(setVoiceState('none'));
       setKey(prevKey => prevKey + 1);
       setStartTime(null);
       setRecordTime(0);

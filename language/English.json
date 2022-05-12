@@ -197,6 +197,27 @@
       "Users":"Users",
       "man":"man",
       "woman":"woman",
-      "other":"other"
+      "other":"other",
+      "Title of your story":"Title of your story",
+      "Share your story":"Share your story",
+      "Vegan":"Vegan",
+      "Ecology":"Ecology",
+      "Love":"Love",
+      "Feminism":"Feminism",
+      "LGBT":"LGBT",
+      "Studies":"Studies",
+      "Parties":"Parties",
+      "Travel":"Travel",
+      "Astrology":"Astrology",
+      "Select category":"Select category",
+      "Privacy settings":"Privacy settings",
+      "Only visible to friends":"Only visible to friends",
+      "Temporary Story":"Temporary Story",
+      "Share my story":"Partager mon histoire",
+      "Post my answer":"Post my answer",
+      "Your answer":"Your answer",
+      "Duration":"Duration",
+      "seconds":"seconds",
+      "Your bio":"Your bio"
     }
   }

@@ -5,7 +5,8 @@ import {
   TouchableOpacity, 
   Image, 
   Platform,
-  Pressable
+  Pressable,
+  ScrollView,
 } from 'react-native';
 
 import { NavigationActions, StackActions } from 'react-navigation';
@@ -86,6 +87,8 @@ const UserProfileScreen = (props) => {
     const [followLoading, setFollowLoading] = useState(true);
     const [voiceLoading, setVoiceLoading] = useState(true);
     const [showShareVoice, setShowShareVoice] = useState(null);
+    const [loadMore, setLoadMore] = useState(10);
+    const [showEnd,setShowEnd] = useState(false);
 
     let { user, refreshState } = useSelector((state) => {
       return (
@@ -98,6 +101,10 @@ const UserProfileScreen = (props) => {
     let userId = props.navigation.state.params.userId;
 
     const getUserVoices = () => {
+      if(loadMore < 10){
+        onShowEnd();
+        return ;
+      }
       if(voices.length ==0 )
         setVoiceLoading(true);
       VoiceService.getUserVoice(userId,voices.length).then(async res => {
@@ -105,6 +112,7 @@ const UserProfileScreen = (props) => {
           const jsonRes = await res.json();
           if(jsonRes.length>0)
             setVoices(voices.length==0?jsonRes:[...voices,...jsonRes]);
+          setLoadMore(jsonRes.length);
           setVoiceLoading(false);
         } 
       })
@@ -216,6 +224,20 @@ const UserProfileScreen = (props) => {
     setVoices(tp);
   }
 
+  
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 10;
+    return layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom;
+  }
+
+  const onShowEnd = ()=>{
+    if(showEnd) return ;
+    setShowEnd(true);
+    setTimeout(() => {
+     setShowEnd(false);
+    }, 2000);
+  }
   useEffect(() => {
     //  checkLogin();
     getUserInfo()
@@ -303,6 +325,15 @@ const UserProfileScreen = (props) => {
           />
         </View>
       </LinearGradient>
+      <ScrollView
+          style = {{ marginTop:25}}
+          onScroll={({nativeEvent}) => {
+            if (isCloseToBottom(nativeEvent)) {
+              getUserVoices()
+            }
+          }}
+          scrollEventThrottle={400}
+      >
         <View style={[styles.rowSpaceBetween,{marginTop:26,paddingHorizontal:16}]}>
           <View>
             <View style={styles.rowAlignItems}>
@@ -349,7 +380,13 @@ const UserProfileScreen = (props) => {
             </TouchableOpacity>
           </View>
         </View>
-
+        {userInfo.user?.bio&&<View style={{paddingHorizontal:16}}>
+          <DescriptionText
+            numberOfLines={3}
+            marginTop = {15}
+            text = {userInfo.user.bio}
+          />
+        </View>}
         {(followState!='accepted')&&<MyButton
           marginTop={20}
           marginBottom={4}
@@ -379,51 +416,65 @@ const UserProfileScreen = (props) => {
               xml = {arrowPointerSvg}
             />
           </View>
-          </>:<>
-          <TitleText
-            text={t("User voices")}
-            fontSize = {20}
-            marginTop={23}
-            marginBottom={3}
-            marginLeft={16}
-          />
-          {!voiceLoading?(voices.length>0? <FlatList
-            style={{marginTop:3}}
-            data={voices}
-            renderItem={({item,index})=><VoiceItem 
-            key={index+'userProfile'}
-            info = {item}
-            props = {props}
-            isPlaying = {index==nowVoice}
-            onPressPostContext={()=>tapHoldToAnswer(index)}
-            onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}
-            onPressPlay={() => pressPlayVoice(index)}
-            onStopPlay={()=>onStopPlay()}
-            spread = {nowVoice==null}
-            />}
-            keyExtractor={(item, index) => index.toString()}
-            onEndReached = {()=>getUserVoices()}
-            onEndThreshold={0}
-          />:
-          <View style = {{marginTop:windowHeight/9,alignItems:'center',width:windowWidth}}>
-            <SvgXml
-                xml={box_blankSvg}
+          </>:
+          <>
+            <TitleText
+              text={t("User voices")}
+              fontSize = {20}
+              marginTop={23}
+              marginBottom={3}
+              marginLeft={16}
             />
-            <DescriptionText
-              text = {t('No result found')}
-              fontSize = {17}
-              lineHeight = {28}
-              marginTop = {22}
-            />
-          </View>):
-          <Progress.Circle
-            indeterminate
-            size={30}
-            color="rgba(0, 0, 255, .7)"
-            style={{ alignSelf: "center", marginTop:windowHeight/9 }}
-          />
-          }</>
+            {!voiceLoading?(voices.length?
+              <>
+                {
+                  voices.map((item,index)=><VoiceItem 
+                    key={index+'userprofile'}
+                    info={item}
+                    props={props}
+                    onPressPostContext={()=>tapHoldToAnswer(index)}
+                    onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}
+                  />
+                  )
+                }
+                {showEnd&&
+                  <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center', padding:12}}>
+                    <Image
+                      style={{
+                        width:20,
+                        height:20
+                      }}
+                      source={require('../../assets/common/happy.png')} 
+                    />
+                    <DescriptionText
+                      marginLeft={15}
+                      text = {t("You are up to date!")}
+                    />
+                  </View>
+                }
+              </>
+            :
+              <View style = {{marginTop:windowHeight/10,alignItems:'center',width:windowWidth}}>
+                <SvgXml
+                    xml={box_blankSvg}
+                />
+                <DescriptionText
+                  text = {t('No result found')}
+                  fontSize = {17}
+                  lineHeight = {28}
+                  marginTop = {22}
+                />
+              </View>):
+              <Progress.Circle
+                indeterminate
+                size={30}
+                color="rgba(0, 0, 255, .7)"
+                style={{ alignSelf: "center", marginTop:windowHeight/10 }}
+              />
+            }
+          </>
         }
+        </ScrollView>
         <SwipeDownModal
         modalVisible={showModal}
         ContentModal={

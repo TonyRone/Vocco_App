@@ -66,7 +66,7 @@ export const AllCategory = ({
           />
         </TouchableOpacity>
       </View>
-      <View style={{ padding:8, flexDirection: 'row', flexWrap: 'wrap',width:'100%'}}>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap',width:'100%', justifyContent:'center'}}>
         {Categories.map((item,index)=>{
           return(
             <CategoryIcon

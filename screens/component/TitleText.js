@@ -18,7 +18,6 @@ export const TitleText = ({
 }) => {
   return (
     <Text
-      numberOfLines={1}
       style={{
         fontFamily: fontFamily,
         fontSize: fontSize,
