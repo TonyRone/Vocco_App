@@ -194,6 +194,9 @@
     "You are up to date!":"Tu es à jour. Pense à partager Vocco à tes amis !",
     "Username is not available":"Le nom d'utilisateur n'est pas disponible",
     "Username must be at least 4 letters":"Le nom d'utilisateur doit comporter au moins 4 lettres",
-    "Users":"Utilisateurs"
+    "Users":"Utilisateurs",
+    "man":"homme",
+    "woman":"femme",
+    "other":"autre"
   }
 }

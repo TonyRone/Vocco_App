@@ -1,36 +1,19 @@
-import AudioRecorderPlayer, {
-  AVEncoderAudioQualityIOSType,
-  AVEncodingOption,
-  AudioEncoderAndroidType,
-  AudioSet,
-  AudioSourceAndroidType,
-  PlayBackType,
-  RecordBackType,
-} from 'react-native-audio-recorder-player';
 import {
   Dimensions,
-  PermissionsAndroid,
   Platform,
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { styles } from '../style/Common';
-import { AudioContext, OfflineAudioContext } from 'standardized-audio-context';
-import Draggable from 'react-native-draggable';
+import { recorderPlayer } from './AudioRecorderPlayer';
 import React, {Component} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import AudioSpectrum from 'react-audio-spectrum'
 import { SvgXml } from 'react-native-svg';
 import RNFetchBlob from 'rn-fetch-blob'; 
 import { setVoiceState } from '../../store/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from '@reduxjs/toolkit';
-import { windowHeight, windowWidth } from '../../config/config';
-import { TouchableHighlightBase } from 'react-native';
-import ThemedListItem from 'react-native-elements/dist/list/ListItem';
+import { windowWidth } from '../../config/config';
 
 import pauseSvg from '../../assets/common/pause.svg';
 import playSvg from '../../assets/common/play.svg';
@@ -67,9 +50,10 @@ class VoicePlayer extends Component {
       duration: '00:00:00',
       isPlaying:false,
       isStarted:false,
+      voiceKey:props.voiceState,
       swipe:{}
     };
-    this.audioRecorderPlayer = new AudioRecorderPlayer();
+    this.audioRecorderPlayer = recorderPlayer;
     this.audioRecorderPlayer.setSubscriptionDuration(0.5); // optional. Default is 0.5
   }
   
@@ -79,19 +63,19 @@ class VoicePlayer extends Component {
     if(fileRemoteUrl==null){
       this._playerPath = this.path;
       if(this.props.playing==true) {
-        this.onStartPlay()
+        this.onStartPlay(this.props.voiceState)
       }
     }
     else{
-      this.getPlayLink().then(()=>{
+      this.getPlayLink().then((res)=>{
         if(this.props.playing==true) {
-          this.onStartPlay()
+          this.onStartPlay(res)
         }
       })
     }
   }
-  componentDidUpdate(prevProps){
-    if(prevProps.voiceState == true && this.state.isStarted==true && this.props.voiceState == false){
+  componentDidUpdate(prevProp){
+    if(this.props.voiceState != this.state.voiceKey){
       this.onStopPlay();
     }
   }
@@ -130,41 +114,19 @@ class VoicePlayer extends Component {
     }
   }
 
-  getPlayLink= async()=>{
-    const fileRemoteUrl = this.props.voiceUrl;
-    const fileExtension = Platform.select({
-      ios: 'm4a',
-      android: `mp3`,
-    });
-    const dirs = RNFetchBlob.fs.dirs.CacheDir;
-    const path = Platform.select({
-      ios: `${dirs}/ss.m4a`,
-      android: `${dirs}/ss.mp3`,
-    });
-    await RNFetchBlob.config({
-      fileCache: false,
-      appendExt: fileExtension,
-      path,
-    }).fetch('GET', fileRemoteUrl).then(res=>{
-      if(this._isMounted&&res.respInfo.status==200){
-        this._playerPath = `${Platform.OS === 'android' ? res.path() : 'ss.m4a'}`;
-        return 0 ;
-      }
-    }).catch(err=>{
-      console.log(err);
-      this.onStopPlay();
-    })
-  }
-
   changePlayStatus=()=>{
     if(this.state.isPlaying)
       this.onPausePlay();
     else if(this.state.isStarted)
       this.onResumePlay();
     else{
-      this.getPlayLink().then(()=>{
-        this.onStartPlay();
-      })
+      if(this.props.voiceUrl == null){
+        this.onStartPlay(this.props.voiceState);
+      }
+      else 
+        this.getPlayLink().then((res)=>{
+          this.onStartPlay(res);
+        })
     }
   }
 
@@ -176,9 +138,13 @@ class VoicePlayer extends Component {
       this.onResumePlay();
     }
     else{
-      this.getPlayLink().then(()=>{
-        this.onStartPlay();
-      })
+      if(this.props.voiceUrl == null){
+        this.onStartPlay(this.props.voiceState);
+      }
+      else
+        this.getPlayLink().then((res)=>{
+          this.onStartPlay(res);
+        })
     }
   }
 
@@ -268,17 +234,46 @@ class VoicePlayer extends Component {
     }
   };
   
-  onStartPlay = async () => {
-    //? Custom path
+  getPlayLink= async()=>{
     let { voiceState, actions } = this.props;
-    if(voiceState == true){
-      actions.setVoiceState(false);
+    this.setState({voiceKey:voiceState+1});
+    actions.setVoiceState(voiceState+1);
+    const fileRemoteUrl = this.props.voiceUrl;
+    const fileExtension = Platform.select({
+      ios: 'm4a',
+      android: `mp3`,
+    });
+    const dirs = RNFetchBlob.fs.dirs.CacheDir;
+    const path = Platform.select({
+      ios: `${dirs}/ss.m4a`,
+      android: `${dirs}/ss.mp3`,
+    });
+    return await RNFetchBlob.config({
+      fileCache: false,
+      appendExt: fileExtension,
+      path,
+    }).fetch('GET', fileRemoteUrl).then(res=>{
+      if(this._isMounted&&res.respInfo.status==200){
+        this._playerPath = `${Platform.OS === 'android' ? res.path() : 'ss.m4a'}`;
+        return voiceState + 1 ;
+      }
+    })
+    .catch(err=>{
+      console.log(err);
+      this.onStopPlay();
+    })
+  }
+
+  onStartPlay = async (res) => {
+    let { voiceState } = this.props;
+    if(res != voiceState){
+      this.onStopPlay();
+      return ;
     }
     try
     {
       const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath);
       const volume = await this.audioRecorderPlayer.setVolume(1.0);
-      actions.setVoiceState(true);
       this.setState({
         isStarted:true,
         isPlaying:true
@@ -301,13 +296,12 @@ class VoicePlayer extends Component {
       });
     }
     catch(err){
+      console.log(err);
       this.onStopPlay();
     }
   };
 
   onPausePlay = async () => {
-    let { actions } = this.props;
-    actions.setVoiceState(false);
     await this.audioRecorderPlayer.pausePlayer();
     this.setState({
       isPlaying:false
@@ -315,8 +309,6 @@ class VoicePlayer extends Component {
   };
 
   onResumePlay = async () => {
-    let { actions } = this.props;
-    actions.setVoiceState(true);
     await this.audioRecorderPlayer.resumePlayer();
     this.setState({
       isPlaying:true
@@ -324,11 +316,11 @@ class VoicePlayer extends Component {
   };
 
   onStopPlay = async () => {
-    let { actions } = this.props;
-    actions.setVoiceState(false);
-    this.setState({isPlaying:false,isStarted:false});
-    await this.audioRecorderPlayer.stopPlayer();
-    this.audioRecorderPlayer.removePlayBackListener();
+    if(this.state.isStarted == true){
+      this.setState({isPlaying:false,isStarted:false});
+      await this.audioRecorderPlayer.stopPlayer();
+      this.audioRecorderPlayer.removePlayBackListener();
+    }
     this.props.stopPlay();
   };
 }

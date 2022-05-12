@@ -150,7 +150,6 @@ const RegisterScreen = (props) => {
           1
         ],
       });
-      console.log(identityToken);
       AuthService.appleLogin({email, fullName, identityToken}).then(async res=>{
         const jsonRes = await res.json();
         if (res.respInfo.status === 201) {

@@ -11,13 +11,7 @@ import {
   PermissionsAndroid
 } from 'react-native';
 
-import AudioRecorderPlayer, {
-  AVEncoderAudioQualityIOSType,
-  AVEncodingOption,
-  AudioEncoderAndroidType,
-  AudioSourceAndroidType,
-} from 'react-native-audio-recorder-player';
-
+import { recorderPlayer } from '../Home/AudioRecorderPlayer';
 import RNFetchBlob from 'rn-fetch-blob';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import Draggable from 'react-native-draggable';
@@ -53,7 +47,7 @@ const HoldRecordScreen = (props) => {
   const [recordTime,setRecordTime] = useState(0);
   const [isTime, setIsTime] = useState(true);
 
-  const audioRecorderPlayer = useRef(new AudioRecorderPlayer()).current;
+  const audioRecorderPlayer = useRef(recorderPlayer).current;
   audioRecorderPlayer.setSubscriptionDuration(1); // optional. Default is 0.1
 
   const startAnimation = () => {
@@ -78,7 +72,7 @@ const HoldRecordScreen = (props) => {
   useEffect(() => {
     setFill(user.premium!='none'?180:60);
     setKey(prevKey => prevKey + 1);
-    dispatch(setVoiceState(false));
+    dispatch(setVoiceState(voiceState+1));
     return ()=>clearRecorder();
   }, [])
 
@@ -103,7 +97,7 @@ const HoldRecordScreen = (props) => {
   }
 
   const onStartRecord = async () => {
-    if(isRecording==false&&voiceState==false){
+    if(isRecording==false){
       await checkPermission();
       const dirs = RNFetchBlob.fs.dirs;
       const path = Platform.select({
@@ -117,12 +111,12 @@ const HoldRecordScreen = (props) => {
         AVNumberOfChannelsKeyIOS: 2,
         AVFormatIDKeyIOS: AVEncodingOption.aac,
       };
+      dispatch(setVoiceState(voiceState+1));
       audioRecorderPlayer.startRecorder(path, audioSet);
       setStartTime(new Date());
       setRecordTime(0);
       setIsRecording(true);
       setIsPaused(false);
-      dispatch(setVoiceState(true));
     }
   };
 
@@ -136,7 +130,7 @@ const HoldRecordScreen = (props) => {
         rtime = fill;
       setIsRecording(false);
       setIsPaused(true);
-      dispatch(setVoiceState(false));
+      //dispatch(setVoiceState('none'));
       setKey(prevKey => prevKey + 1);
       setStartTime(null);
       setRecordTime(0);

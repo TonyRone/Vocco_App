@@ -194,6 +194,9 @@
       "You are up to date!":"You are up to date!",
       "Username is not available":"Username is not available",
       "Username must be at least 4 letters":"Username must be at least 4 letters",
-      "Users":"Users"
+      "Users":"Users",
+      "man":"man",
+      "woman":"woman",
+      "other":"other"
     }
   }

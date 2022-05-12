@@ -206,7 +206,6 @@ const UserProfileScreen = (props) => {
   const onChangeLike = (id, val)=>{
     let tp = voices;
     let item = tp[id].isLike;
-    console.log(item);
     if(item === true){
       tp[id].likesCount --;
     }

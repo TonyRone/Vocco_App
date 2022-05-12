@@ -45,7 +45,7 @@ const NotificationScreen = (props) => {
     const [reqLoadMore, setReqLoadMore] = useState(10);
     const [isLoading, setIsLoading] = useState(false);
 
-    let { user , voiceState} = useSelector((state) => {
+    let { user } = useSelector((state) => {
         return (
             state.user
         )
@@ -149,7 +149,6 @@ const NotificationScreen = (props) => {
         }
         else{
             let tp = requests;
-            console.log(tp[0]);
             if(tp[index].seen == false){
                 VoiceService.seenNotification(tp[index].id)
                 tp[index].seen = true;

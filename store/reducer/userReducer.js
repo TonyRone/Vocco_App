@@ -2,7 +2,7 @@ import { setNotificationId } from '../actions';
 import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE, SETREFRESHSTATE, SETNOTIFICATIONID } from '../constants';
 const initialState = {
     user: null,
-    voiceState: false,
+    voiceState: 0,
     socketInstance:null,
     refreshState:false,
     notificationId:null

@@ -27,7 +27,7 @@ export const AnswerVoiceItem = ({
   //onPressPlay = () => {},
 }) => {
 
-  const {user, voiceState} = useSelector((state)=> state.user);
+  const {user} = useSelector((state)=> state.user);
 
   const [isPlaying, setIsPlaying] = useState(false);
 

@@ -166,16 +166,12 @@ export const VoiceItem = ({
     } else {
       setLastTap(timeNow);
       setDelayTime(setTimeout(() => {
-        if(voiceState==false){
+      //  if(voiceState==false){
           props.navigation.navigate('VoiceProfile', {info:info});
-        }
+       // }
       }, DOUBLE_PRESS_DELAY));
     }
   };
-
-  // useEffect(() => {
-  //   console.log("wowow");
-  // }, [info])
 
   return (
     <>
@@ -198,8 +194,8 @@ export const VoiceItem = ({
           borderColor:'#FFA002',
           zIndex:0
         }}
-        onLongPress={()=>{if(voiceState==false)return onPressPostContext()}}
-        onPress={()=>{if(voiceState==false)return onClickDouble()}}
+        onLongPress={()=>onPressPostContext()}
+        onPress={()=>onClickDouble()}
       >
         <View
           style={[styles.rowSpaceBetween]}
