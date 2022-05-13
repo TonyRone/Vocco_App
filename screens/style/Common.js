@@ -82,6 +82,7 @@ export const styles = StyleSheet.create({
      //   position:'absolute',
      //   bottom:0,
         width:'100%',
+        flex:1,
         marginTop:Platform.OS=='ios'?60:30,
       //  paddingHorizontal: 16,
         backgroundColor: 'white',

@@ -43,19 +43,20 @@ export const NotificationItem = ({
 
     const [isDeleted,setIsDeleted] = useState(false);
     let num = Math.ceil((new Date().getTime()-new Date(notificationTime).getTime())/60000);
+    let flag = num;
     let minute = num%60;
     num = (num-minute)/60;
     let hour = num%24;
     let day = (num-hour)/24
-    let time = (day>0?(day.toString()+' days '):'')+(hour>0?(hour.toString()+' hours '):'')+' ago';
+    let time = (day>0?(day.toString()+' '+t("days")+' '):'')+(hour>0?(hour.toString()+' '+t("hours")+' '):'')+(minute>0?(minute.toString()+' '+t("minutes")+' '):'')+(flag>0?t("ago"):'');
     if(details == 'friendAccept')
-        details = t("Followed your request");
+        details = t("Followed you");
     if(details == 'friendDelete')
-        details = t("Unfollowed your voice");
+        details = t("Stopped following");
     if(details == 'likeRecord')
-        details = t("Appreciated your voice");
+        details = t("Liked your story");
     if(details == 'newAnswer')
-        details = t("Answer your voice");
+        details = t("Answered your story");
 
     return (
     !isDeleted?

@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Platform, KeyboardAvoidingView, ImageBackground, Text, TouchableOpacity } from 'react-native';
-import { NavigationActions, StackActions } from 'react-navigation';
+
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { GoogleSignin, statusCodes } from 'react-native-google-signin';
 import appleAuth, { appleAuthAndroid , AppleAuthRequestOperation, AppleAuthRequestScope} from '@invertase/react-native-apple-authentication';
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
 import { v4 as uuid } from 'uuid'
+import { NavigationActions, StackActions } from 'react-navigation';
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
 import { MyButton } from '../component/MyButton';
@@ -41,8 +42,6 @@ const LoginScreen = (props) => {
   const {t, i18n} = useTranslation();
 
   const dispatch = useDispatch();
-
-  const scrollRef = useRef(ScrollView);
 
   const showEye = () => {
     setSecureTextEntry(!secureTextEntry); 
@@ -375,7 +374,6 @@ const LoginScreen = (props) => {
             }
           </View>
           <ScrollView
-            ref={scrollRef}
             onScroll={scrollPage}
           >
             <View

@@ -45,7 +45,8 @@ export const styles = StyleSheet.create({
     LoginContainer: {
         alignItems: 'center',
         width: windowWidth,
-        height: windowHeight
+        height: windowHeight,
+        flex:1
     },
     background: {
         flex: 1,

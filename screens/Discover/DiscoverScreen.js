@@ -44,7 +44,7 @@ const DiscoverScreen = (props) => {
   const [showModal,setShowModal] = useState(false);
   const [showContext,setShowContext] = useState(false);
   const [selectedIndex,setSelectedIndex] = useState(0);
-  const [isloading, setIsloading] = useState(true);
+  const [isLoading, setIsloading] = useState(true);
   const [loadmore, setloadmore] = useState(10);
   const [showEnd,setShowEnd] = useState(false);
   const [showEmoji, setShowEmoji] = useState(false);
@@ -88,7 +88,7 @@ const DiscoverScreen = (props) => {
   const getVoices = async(isNew, categoryId = 0) => {
     if(isNew)
       onStopPlay();
-    else if(isloading){
+    else if(isLoading){
       return ;
     }
     else if(loadmore < 10){
@@ -145,7 +145,6 @@ const DiscoverScreen = (props) => {
   const onChangeLike = (id, val)=>{
     let tp = filteredVoices;
     let item = tp[id].isLike;
-    console.log(item);
     if(item === true){
       tp[id].likesCount --;
     }
@@ -230,7 +229,7 @@ const DiscoverScreen = (props) => {
           style={[styles.paddingH16, styles.rowSpaceBetween]}
           >
             <TitleText 
-              text={t("Top Category")}
+              text={t("Top categories")}
               fontSize={20}
             />
             <TouchableOpacity
@@ -272,12 +271,12 @@ const DiscoverScreen = (props) => {
           /> 
         </View>
         <TitleText
-            text={t("World voices")}
+            text={t("World stories")}
             fontSize={20}
             marginTop = {10}
             marginLeft = {16}
         />
-        {!isloading?
+        {!isLoading?
           (filteredVoices.length>0?
           filteredVoices.map((item,index)=><VoiceItem 
               key={index+'discover'}
@@ -319,7 +318,7 @@ const DiscoverScreen = (props) => {
           />
           <DescriptionText
             marginLeft={15}
-            text = {t("You are up to date!")}
+            text = {t("You are up to date 🎉! Share vocco with you friends!")}
           />
         </View>}
         </ScrollView>

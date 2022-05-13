@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, key, ImageBackground, Text, TouchableOpacity, Platform } from 'react-native';
+import { NavigationActions, StackActions } from 'react-navigation';
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
 import { TitleText } from '../component/TitleText';
@@ -22,7 +23,7 @@ import { useSelector , useDispatch } from 'react-redux';
 import { setUser } from '../../store/actions';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ACCESSTOKEN_KEY, REFRESHTOKEN_KEY } from '../../config/config';
+import { ACCESSTOKEN_KEY, REFRESHTOKEN_KEY , TUTORIAL_CHECK } from '../../config/config';
 import { styles } from '../style/Login';
 import { ScrollView } from 'react-native-gesture-handler';
 

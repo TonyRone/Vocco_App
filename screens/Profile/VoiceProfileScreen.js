@@ -112,6 +112,7 @@ const VoiceProfileScreen = (props) => {
     }
 
     const editVoice = ()=>{
+      props.navigation.navigate("PostingVoice",{info:info});
       setShowModal(false);
     }
 
@@ -468,17 +469,17 @@ const VoiceProfileScreen = (props) => {
                   </View>
                 </View>
                 <View style={[styles.contentCenter,{width:28,height:28,borderRadius:14,backgroundColor:'#F0F4FC'}]}>
-                  <TouchableOpacity onPress={()=>setShowModal(false)}>
+                  <Pressable onPress={()=>setShowModal(false)}>
                     <SvgXml
                       width={18}
                       height={18}
                       xml={closeBlackSvg}
                     />
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               </View>
               <View style={{height:200,borderRadius:20,borderWidth:1,borderColor:'#F0F4FC',marginTop:16,marginBottom:50,marginHorizontal:16}}>
-                <TouchableOpacity onPress={editVoice}>
+                <Pressable onPress={editVoice}>
                   <View style={[styles.rowSpaceBetween,{padding:16,borderBottomWidth:1,borderBottomColor:'#F0F4FC'}]}>
                     <DescriptionText
                       text = {t("Edit Voice")}
@@ -494,8 +495,8 @@ const VoiceProfileScreen = (props) => {
                         />
                     </View>
                   </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={onShareAudio}>
+                </Pressable>
+                <Pressable onPress={onShareAudio}>
                   <View style={[styles.rowSpaceBetween,{padding:16,borderBottomWidth:1,borderBottomColor:'#F0F4FC'}]}>
                     <DescriptionText
                       text = {t('Share')}
@@ -511,8 +512,8 @@ const VoiceProfileScreen = (props) => {
                         />
                     </View>
                   </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={deleteConfirm}>
+                </Pressable>
+                <Pressable onPress={deleteConfirm}>
                   <View style={[styles.rowSpaceBetween,{padding:16}]}>
                     <DescriptionText
                       text = {t("Delete Voice")}
@@ -528,7 +529,7 @@ const VoiceProfileScreen = (props) => {
                         />
                     </View>
                   </View>
-                </TouchableOpacity>
+                </Pressable>
               </View>
               <View style={styles.segmentContainer}></View>
             </View>
@@ -558,7 +559,7 @@ const VoiceProfileScreen = (props) => {
                     color = 'rgba(38, 52, 73, 0.7)'
                   />
                 </View>
-                <TouchableOpacity onPress={deleteVoice}>
+                <Pressable onPress={deleteVoice}>
                   <DescriptionText
                       text = {t("Delete Voice")}
                       fontSize = {20}
@@ -567,10 +568,10 @@ const VoiceProfileScreen = (props) => {
                       textAlign='center'
                       marginTop={16}
                   />
-                </TouchableOpacity>
+                </Pressable>
               </View>
               <View style={{position:'absolute', width:windowWidth-16, bottom:48, marginHorizontal:8,height:56,borderRadius:14,backgroundColor:'white'}}>
-                <TouchableOpacity onPress={()=>setDeleteModal(false)}>
+                <Pressable onPress={()=>setDeleteModal(false)}>
                   <DescriptionText
                       text = {t('Cancel')}
                       fontSize = {20}
@@ -579,7 +580,7 @@ const VoiceProfileScreen = (props) => {
                       textAlign='center'
                       marginTop={16}
                   />
-                </TouchableOpacity>
+                </Pressable>
               </View>
             </View>
           }

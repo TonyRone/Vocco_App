@@ -38,6 +38,26 @@ export const Categories =
         uri:require('../assets/categories/horror.png')
     },
     {
+        label:'Feminism',
+        uri:require('../assets/categories/feminism.png')
+    },
+    {
+        label:'LGBT',
+        uri:require('../assets/categories/LGBT.png')
+    },
+    {
+        label:'Studies',
+        uri:require('../assets/categories/studies.png')
+    },
+    {
+        label:'Parties',
+        uri:require('../assets/categories/parties.png')
+    },
+    {
+        label:'Astrology',
+        uri:require('../assets/categories/astrology.png')
+    },
+    {
         label:'Transport',
         uri:require('../assets/categories/transport.png')
     },
@@ -96,25 +116,5 @@ export const Categories =
     {
         label:'Love',
         uri:require('../assets/categories/love.png')
-    },
-    {
-        label:'Feminism',
-        uri:require('../assets/categories/feminism.png')
-    },
-    {
-        label:'LGBT',
-        uri:require('../assets/categories/LGBT.png')
-    },
-    {
-        label:'Studies',
-        uri:require('../assets/categories/studies.png')
-    },
-    {
-        label:'Parties',
-        uri:require('../assets/categories/parties.png')
-    },
-    {
-        label:'Astrology',
-        uri:require('../assets/categories/astrology.png')
     },
 ]

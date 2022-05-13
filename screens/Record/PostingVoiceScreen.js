@@ -43,24 +43,35 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PostingVoiceScreen = (props) => {
 
-  let displayDuration = props.navigation.state.params?.recordSecs ? props.navigation.state.params?.recordSecs : 0;
-  let isTemporary = props.navigation.state.params?.isTemporary?true:false;
+  const param = props.navigation.state.params;
+  let displayDuration = param.recordSecs ? param.recordSecs : param.info.duration;
+  let isTemporary = param.isTemporary?true:false;
 
   let { user, refreshState, socketInstance } = useSelector((state) => state.user);
 
+  let initCategory = 0;
+  if(param.info){
+    for(let i = 0 ; i < Categories.length ; i++){
+      if(Categories[i].label == param.info.category){
+        initCategory = i;
+        break ;
+      }
+    }
+  }
+
   const {t, i18n} = useTranslation();
 
-  const [category, setCategory] = useState(0);
-  const [visibleStatus, setVisibleStatus] = useState( isTemporary);
-  const [temporaryStatus, setTemporaryStatus] = useState(isTemporary);
+  const [category, setCategory] = useState(initCategory);
+  const [visibleStatus, setVisibleStatus] = useState( param.info?param.info.privacy:isTemporary);
+  const [temporaryStatus, setTemporaryStatus] = useState(param.info?param.info.temporary:isTemporary);
   const [visibleReaction, setVisibleReaction] = useState(false);
-  const [icon, setIcon] = useState("😁");
-  const [voiceTitle, setVoiceTitle] = useState('');
+  const [icon, setIcon] = useState(param.info?param.info.emoji:"😁");
+  const [voiceTitle, setVoiceTitle] = useState(param.info?param.info.title:'');
   const [isLoading,setIsLoading] = useState(false);
   const [showModal,setShowModal] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [showShareVoice, setShowShareVoice] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState(initCategory);
 
   const scrollRef = useRef();
   const dispatch = useDispatch();
@@ -99,11 +110,10 @@ const PostingVoiceScreen = (props) => {
       setShowHint(true);
       return ;
     }
-    const audioName = voiceTitle.split(" ").join("");
     if (path) {
       let voiceFile = [
         {
-          name: 'file', filename: Platform.OS==='android'?`${audioName}.mp3`:`${audioName}.m4a`, data: RNFetchBlob.wrap(path)
+          name: 'file', filename: Platform.OS==='android'?`${voiceTitle}.mp3`:`${voiceTitle}.m4a`, data: RNFetchBlob.wrap(path)
         },
         { name:'title', data:voiceTitle },
         { name:'emoji', data:String(icon) },
@@ -130,6 +140,35 @@ const PostingVoiceScreen = (props) => {
     }
   }
 
+  const changeStory = async () => {
+    const payload = {
+      id: param.info.id,
+      title:voiceTitle,
+      emoji:icon,
+      category: Categories[category].label,
+      privacy: visibleStatus,
+      temporary:temporaryStatus
+    };
+    setIsLoading(true);
+    VoiceService.changeVoice(payload).then(async res => { 
+      if (res.respInfo.status !== 200) {
+      } else {
+        dispatch(setRefreshState(!refreshState));
+        let info = param.info;
+        info.title = voiceTitle;
+        info.emoji = icon;
+        info.category = Categories[category].label;
+        info.privacy = visibleStatus;
+        info.temporary = temporaryStatus;
+        props.navigation.navigate("VoiceProfile",{info:info});
+      }
+      setIsLoading(false);
+    })
+    .catch(err => {
+        console.log(err);
+    });
+  }
+
   useEffect(() => {
     //  checkLogin();
   }, [])
@@ -151,7 +190,7 @@ const PostingVoiceScreen = (props) => {
           </Pressable>
 
           <TitleText
-            text={t("Share your story")}
+            text={param.info?t("Change your story"):t("Share your story")}
             fontSize={20}
             lineHeight={24}
           />
@@ -181,6 +220,7 @@ const PostingVoiceScreen = (props) => {
             placeholder={t("Title of your story")}
             placeholderTextColor="#3B1F5290"
             color="#281E30"
+            textAlign={'center'}
             value={voiceTitle}
             onChangeText={(s)=>s.length<=25?setVoiceTitle(s):null}
             fontFamily="SFProDisplay-Regular"
@@ -190,7 +230,7 @@ const PostingVoiceScreen = (props) => {
             letterSpaceing={5}
           />
           <TitleText
-            text={`Duration: ${displayDuration} seconds`}
+            text={`${t("Duration")}: ${displayDuration} ${t("seconds")}`}
             fontFamily="SFProDisplay-Regular"
             fontSize={15}
             lineHeight={24}
@@ -216,6 +256,7 @@ const PostingVoiceScreen = (props) => {
           }}
         >
           <VoicePlayer
+            voiceUrl = {param.info?param.info.file.url:null}
             playBtn = {true}
             replayBtn = {true}
             premium = {user.premium!='none'}
@@ -284,7 +325,7 @@ const PostingVoiceScreen = (props) => {
               key = {'category'+idx}
               label={Categories[idx].label}
               source={Categories[idx].uri}
-              onPress={()=>setCategory(index)}
+              onPress={()=>setCategory(idx)}
               active={category == idx ? true : false}
             />
           }}
@@ -300,7 +341,7 @@ const PostingVoiceScreen = (props) => {
           marginBottom={9}
           color="rgba(54, 36, 68, 0.8)"
         />
-        <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 12, marginBottom: visibleStatus?5:50 }]}>
+        <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 12, marginBottom:5 }]}>
           <TitleText
             text={t("Only visible to friends")}
             fontSize={17}
@@ -315,21 +356,21 @@ const PostingVoiceScreen = (props) => {
             />
           </TouchableOpacity>
         </View>
-        {visibleStatus&&<View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 12, marginBottom: 30 }]}>
+        <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 12, marginBottom: 30 }]}>
           <TitleText
             text={t("Temporary Story")}
             fontSize={17}
             lineHeight={28}
             color="#281E30"
           />
-          <TouchableOpacity onPress={() => setTemporaryStatus(!temporaryStatus)}>
+          <TouchableOpacity disabled={!visibleStatus} onPress={() => setTemporaryStatus(!temporaryStatus)}>
             <SvgXml
               width={55}
               height={35}
               xml={temporaryStatus ? yesSwitchSvg : noSwitchSvg}
             />
           </TouchableOpacity>
-        </View>}
+        </View>
       </ScrollView>
       <View
         style={{
@@ -339,9 +380,9 @@ const PostingVoiceScreen = (props) => {
         }}
       >
         <MyButton
-          label={t("Share my story")}
+          label={param.info?t("Change my story"):t("Share my story")}
           loading = {isLoading}
-          onPress={handleSubmit}
+          onPress={param.info?changeStory:handleSubmit}
           active = {voiceTitle!=''}
         />
       </View>

@@ -78,14 +78,6 @@ class VoicePlayer extends Component {
       this.onStopPlay();
     }
   }
-  // runSpectrum(){
-  //   const bufferLength = this.state.audioData.frequencyBinCount;
-  //   const amplitudeArray = new Uint8Array(bufferLength);
-  //   this.state.audioData.getByteFrequencyData(amplitudeArray)
-  //   console.log(amplitudeArray.length+"  lenlen");
-  //   this.setState({spectrumArray:amplitudeArray})
-  //   requestAnimationFrame(this.runSpectrum)
-  // }
     
   componentWillUnmount(){
     this.onStopPlay();
@@ -242,7 +234,6 @@ class VoicePlayer extends Component {
     });
     actions.setVoiceState(voiceState+1);
     const fileRemoteUrl = this.props.voiceUrl;
-    console.log(fileRemoteUrl);
     const fileExtension = Platform.select({
       ios: 'm4a',
       android: `mp3`,
@@ -257,7 +248,6 @@ class VoicePlayer extends Component {
       appendExt: fileExtension,
       path,
     }).fetch('GET', fileRemoteUrl).then(res=>{
-      console.log(res.respInfo.status);
       if(this._isMounted&&res.respInfo.status==200){
         this._playerPath = `${Platform.OS === 'android' ? res.path() : 'ss.m4a'}`;
         return voiceState + 1 ;
@@ -271,7 +261,6 @@ class VoicePlayer extends Component {
 
   onStartPlay = async (res) => {
     let { voiceState } = this.props;
-    console.log(res + " * " + voiceState);
     if(res != voiceState){
       this.onStopPlay();
       return ;
@@ -325,8 +314,12 @@ class VoicePlayer extends Component {
   onStopPlay = async () => {
     if(this.state.isStarted == true){
       this.setState({isPlaying:false,isStarted:false});
-      await this.audioRecorderPlayer.stopPlayer();
-      this.audioRecorderPlayer.removePlayBackListener();
+      try{
+        await this.audioRecorderPlayer.stopPlayer();
+        this.audioRecorderPlayer.removePlayBackListener();}
+      catch(err){
+        console.log(err);
+      }
     }
     this.props.stopPlay();
   };

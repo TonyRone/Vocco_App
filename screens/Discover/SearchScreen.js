@@ -176,7 +176,6 @@ const SearchScreen = (props) => {
   const onChangeLike = (id, val)=>{
     let tp = filteredVoices;
     let item = tp[id].isLike;
-    console.log(item);
     if(item === true){
       tp[id].likesCount --;
     }
@@ -501,7 +500,7 @@ const SearchScreen = (props) => {
                   key = {'category'+idx}
                   label={Categories[idx].label}
                   source={Categories[idx].uri}
-                  onPress={()=>setCategory(index)}
+                  onPress={()=>setCategory(idx)}
                   active={category == idx ? true : false}
                 />
               }}

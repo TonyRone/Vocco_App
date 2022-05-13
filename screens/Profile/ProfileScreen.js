@@ -317,7 +317,7 @@ const ProfileScreen = (props) => {
                 />
                 <DescriptionText
                   marginLeft={15}
-                  text = {t("You are up to date!")}
+                  text = {t("You are up to date 🎉! Share vocco with you friends!")}
                 />
               </View>
             }

@@ -333,7 +333,7 @@ const FeedScreen = (props) => {
               />
               <DescriptionText
                 marginLeft={15}
-                text = {t("You are up to date!")}
+                text = {t("You are up to date 🎉! Share vocco with you friends!")}
               />
             </View>
           }
@@ -361,7 +361,7 @@ const FeedScreen = (props) => {
             }}
           >
             <DescriptionText
-              text={noticeCount<0?'Successful upload':(noticeCount+' new voices')}
+              text={noticeCount<0?t("Successful upload"):(noticeCount+' '+t("new voices"))}
               color='#F6EFFF'
               marginLeft={16}
               fontSize={15}

@@ -436,14 +436,16 @@ const EditProfileScreen = (props) => {
                                 genderSvg={moreSvg}
                                 onPress={() => setIdentify('other')}
                             />
+                        </View>
+                        <View style={{position:'absolute', bottom:0, width:'100%', paddingHorizontal:16}}>
                             <MyButton
                                 label={t("Save")}
                                 onPress={()=>setUserGender(identify)}
                                 active={identify ? true : false}
                                 marginTop={windowHeight-540}
                                 loading={loading}
-                                marginBottom={45}
-                            />
+                                marginBottom={25}
+                            />        
                         </View>
                     </View>}
                     {modalType=='country'&&<View style={styles.swipeInputContainerContent}>
@@ -482,15 +484,14 @@ const EditProfileScreen = (props) => {
                             colors={['#FFFFFF', 'rgba(255,255,255, 0)']}
                             locations={[0.7,1]}
                             start={{x: 0, y: 1}} end={{x: 0, y: 0}}
-                            style={{position:'absolute',paddingHorizontal:16, bottom:0,width:windowWidth,height:170}}
+                            style={{position:'absolute',paddingHorizontal:16, bottom:0,width:windowWidth}}
                         >
-                            <MyButton
-                                label={t("Save")}
-                                marginTop={60}
-                                onPress={()=>selectCountry(country)}
-                                active={country ? true : false}
-                                //marginBottom={20}
-                            />
+                        <MyButton
+                            label={t("Save")}
+                            onPress={()=>selectCountry(country)}
+                            active={country ? true : false}
+                            marginBottom={25}
+                        />
                         </LinearGradient>
                     </View>}
                     {modalType=='deleteAccount'&&<View style={styles.swipeInputContainerContent}>
@@ -519,24 +520,24 @@ const EditProfileScreen = (props) => {
                                 />
                             </TouchableOpacity>
                         </View>
-                        <TitleText
+                        {/* <TitleText
                             text = {t("Confirm delete")}
                             fontSize = {22}
                             lineHeight = {28}
                             textAlign = 'center'
-                            marginTop = {26}
-                        />
+                            marginTop = {40}
+                        /> */}
                         <DescriptionText
                             text = {t("Enter your password for confirm deleting your account")}
                             fontSize = {17}
                             lineHeight = {28}
                             color = 'rgba(54, 36, 68, 0.8)'
                             textAlign = 'center'
-                            marginTop = {14}
+                            marginTop = {25}
                             marginLeft = {18}
                             marginRight = {16}
                         />
-                        <View style={{paddingHorizontal:16,paddingBottom:windowHeight-325}}>
+                        <View style={{paddingHorizontal:16, marginTop:25}}>
                             <MyTextField
                                 label={t("Enter your password")}
                                 refer={passwordRef}
@@ -550,10 +551,10 @@ const EditProfileScreen = (props) => {
                                 isPassword={true}
                             />
                         </View>
-                        <View style={{position:'absolute',paddingHorizontal:16, bottom:0,width:windowWidth,height:170}}>
+                        <View style={{position:'absolute',paddingHorizontal:16, bottom:0,width:windowWidth}}>
                             <MyColorButton
                                 label={t("Delete account")}
-                                marginTop={60}
+                                marginBottom={20}
                                 onPress={()=>deleteAccount()}
                                 color = '#E41717'
                                 shadowColor = 'rgba(244, 13, 13, 0.47)'

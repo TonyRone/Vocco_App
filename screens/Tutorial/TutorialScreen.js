@@ -87,7 +87,7 @@ const TutorialScreen = (props) => {
           source={require('../../assets/discover/blurback.png')}
           style={{
             width:windowWidth,
-            height: Platform.OS === 'android' ? windowHeight - StatusBar.currentHeight : windowHeight
+            flex:1
           }}
           resizeMode="stretch"
         >

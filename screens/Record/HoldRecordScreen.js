@@ -31,6 +31,8 @@ import publicSvg from '../../assets/record/public.svg';
 import { DescriptionText } from '../component/DescriptionText';
 import { useDispatch, useSelector } from 'react-redux';
 import { setVoiceState } from '../../store/actions';
+import {useTranslation} from 'react-i18next';
+import '../../language/i18n';
 
 import recordSvg from '../../assets/common/bottomIcons/record.svg';
 import { SvgXml } from 'react-native-svg';
@@ -42,7 +44,9 @@ const HoldRecordScreen = (props) => {
   let isTemporary = props.navigation.state.params?.isTemporary;
 
   let { user , voiceState , refreshState} = useSelector((state) => state.user) ;
+
   const dispatch = useDispatch();
+  const {t, i18n} = useTranslation();
 
   let info = props.navigation.state.params?.info;
   const [fill, setFill] = useState(0);
@@ -200,7 +204,7 @@ const HoldRecordScreen = (props) => {
       />}
       <View style={{alignItems:'center',width:'100%'}}>
         <TitleText 
-          text="Click & hold to record" 
+          text={t("Click & hold to record")} 
           fontSize={20}
           marginTop={10}
           color="#281E30"
@@ -233,7 +237,7 @@ const HoldRecordScreen = (props) => {
                   style={{width:197,height:197,alignItems:'center'}}
                 >
                   <DescriptionText
-                    text="seconds" 
+                    text={t("seconds")} 
                     color="rgba(59, 31, 82, 0.6)"
                     fontSize={20}
                     marginTop={32}
@@ -266,7 +270,7 @@ const HoldRecordScreen = (props) => {
           >
             <SvgXml width={20} height={16-(hoverState<0?r*4:0)} xml={cancelSvg} />
             <TitleText
-              text="Cancel" 
+              text={t("Cancel")} 
               fontFamily="SFProDisplay-Regular" 
               fontSize={16}
               marginLeft={8}
@@ -276,7 +280,7 @@ const HoldRecordScreen = (props) => {
           </View>
           <View style={{flexDirection:'row',alignItems:'center',marginRight:18}}>
             <TitleText
-                text="Publish" 
+                text={t("Publish")} 
                 fontFamily="SFProDisplay-Regular" 
                 fontSize={16}
                 marginRight={8}
@@ -328,7 +332,7 @@ const HoldRecordScreen = (props) => {
       </View>
       <Warning
         bottom={'25%'}
-        text = 'Hate, racism, sexism or any kind of violence is stricly prohibited'
+        text = {t("Hate, racism, sexism or any kind of violence is stricly prohibited")}
       />
     </SafeAreaView>
   );
