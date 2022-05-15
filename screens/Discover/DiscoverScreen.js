@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useReducer } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   View, 
   KeyboardAvoidingView, 
@@ -6,11 +6,9 @@ import {
   TouchableOpacity, 
   Pressable,
   ScrollView,
-  Image,
   Platform
 } from 'react-native';
 
-import * as Progress from "react-native-progress";
 import {useTranslation} from 'react-i18next';
 import { useSelector } from 'react-redux';
 import '../../language/i18n';
@@ -19,35 +17,23 @@ import { FlatList } from 'react-native-gesture-handler';
 import SwipeDownModal from 'react-native-swipe-down';
 import { CategoryIcon } from '../component/CategoryIcon';
 import { DescriptionText } from '../component/DescriptionText';
-import { VoiceItem } from '../component/VoiceItem';
 import { BottomButtons } from '../component/BottomButtons';
 import { AllCategory } from '../component/AllCategory';
-import { PostContext } from '../component/PostContext';
 
 import { SvgXml } from 'react-native-svg';
 import notificationSvg from '../../assets/discover/notification.svg';
-import box_blankSvg from '../../assets/discover/box_blank.svg';
 import searchSvg from '../../assets/login/search.svg';
 
-import { windowWidth, Categories, windowHeight } from '../../config/config';
+import { Categories } from '../../config/config';
 import { styles } from '../style/Common';
-import VoiceService from '../../services/VoiceService';
-import { CommenText } from '../component/CommenText';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Stories } from '../component/Stories';
 
 const DiscoverScreen = (props) => {
 
   const [category, setCategory] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(0);
-  const [filteredVoices, setFilteredVoices] = useState([]);
-  const [nowVoice, setNowVoice] = useState(null);
   const [showModal,setShowModal] = useState(false);
-  const [showContext,setShowContext] = useState(false);
-  const [selectedIndex,setSelectedIndex] = useState(0);
-  const [isLoading, setIsloading] = useState(true);
-  const [loadmore, setloadmore] = useState(10);
-  const [showEnd,setShowEnd] = useState(false);
-  const [showEmoji, setShowEmoji] = useState(false);
+  const [loadKey, setLoadKey] = useState(0);
 
   const scrollRef = useRef();
 
@@ -60,8 +46,8 @@ const DiscoverScreen = (props) => {
   const {t, i18n} = useTranslation();
 
   const onSetCategory = (categoryId)=>{
+    setLoadKey(0);
     setCategory(categoryId);
-    getVoices(true,categoryId);
   }
 
   const onChangeCategory = (id)=>{
@@ -77,86 +63,7 @@ const DiscoverScreen = (props) => {
       contentSize.height - paddingToBottom;
   };
 
-  const onShowEnd = ()=>{
-    if(showEnd) return ;
-    setShowEnd(true);
-    setTimeout(() => {
-     setShowEnd(false);
-    }, 2000);
-  }
-
-  const getVoices = async(isNew, categoryId = 0) => {
-    if(isNew)
-      onStopPlay();
-    else if(isLoading){
-      return ;
-    }
-    else if(loadmore < 10){
-      onShowEnd();
-      return ;
-    }
-    let len = isNew?0:filteredVoices.length;
-    if(isNew)
-      setIsloading(true);
-    VoiceService.getDiscoverVoices('',len, Categories[categoryId].label ).then(async res => {
-      if (res.respInfo.status === 200) {
-        const jsonRes = await res.json();
-        setFilteredVoices((filteredVoices.length==0||isNew)?jsonRes:[...filteredVoices,...jsonRes]);
-        setloadmore(jsonRes.length);
-        setIsloading(false);
-      }
-    })
-    .catch(err => {
-      console.log(err);
-    });
-  }
-
-  const onStopPlay = () => {
-    setNowVoice(null);
-  };
-
-  const pressPlayVoice = (index)=>{
-    if(nowVoice!=null){
-      onStopPlay();
-    }
-    if(nowVoice!=index){
-      setTimeout(() => {
-        setNowVoice(index);
-      }, nowVoice?400:0);
-    }
-  }
-
-  const tapHoldToAnswer = (index) => {
-    setSelectedIndex(index)
-    setShowContext(true);
-  }
-
-  const setLiked = ()=>{
-    let tp = filteredVoices;
-    let item = tp[selectedIndex].isLike;
-    if(item)
-      tp[selectedIndex].likesCount --;
-    else
-      tp[selectedIndex].likesCount ++;
-    tp[selectedIndex].isLike = !tp[selectedIndex].isLike;
-    setFilteredVoices(tp);
-  }
-
-  const onChangeLike = (id, val)=>{
-    let tp = filteredVoices;
-    let item = tp[id].isLike;
-    if(item === true){
-      tp[id].likesCount --;
-    }
-    else{
-      tp[id].likesCount ++;
-    }
-    tp[id].isLike = val;
-    setFilteredVoices(tp);
-  }
-
   useEffect(() => {
-    getVoices(true);
   }, [refreshState])
 
   return (
@@ -220,7 +127,7 @@ const DiscoverScreen = (props) => {
           style = {{marginBottom:Platform.OS=='ios'?65:75, marginTop:25}}
           onScroll={({nativeEvent}) => {
             if (isCloseToBottom(nativeEvent)) {
-              getVoices(false);
+              setLoadKey(loadKey+1);
             }
           }}
           scrollEventThrottle={400}
@@ -276,51 +183,12 @@ const DiscoverScreen = (props) => {
             marginTop = {10}
             marginLeft = {16}
         />
-        {!isLoading?
-          (filteredVoices.length>0?
-          filteredVoices.map((item,index)=><VoiceItem 
-              key={index+'discover'}
-              info={item}
-              props={props}
-              isPlaying = {index==nowVoice}
-              onPressPostContext={()=>tapHoldToAnswer(index)}
-              onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}
-              onPressPlay={() => pressPlayVoice(index)}
-              onStopPlay={()=>onStopPlay()}
-            />
-          )
-          :
-          <View style = {{marginTop:80,alignItems:'center',width:windowWidth}}>
-            <SvgXml
-                xml={box_blankSvg}
-            />
-            <DescriptionText
-              text = {t("No result found")}
-              fontSize = {17}
-              lineHeight = {28}
-              marginTop = {22}
-            />
-          </View>):
-          <Progress.Circle
-            indeterminate
-            size={30}
-            color="rgba(0, 0, 255, .7)"
-            style={{ alignSelf: "center", marginTop:windowHeight/6 }}
+          <Stories
+            props={props}
+            loadKey = {loadKey}
+            screenName = "Discover"
+            category = {Categories[category].label}
           />
-        }
-        {showEnd&&<View style={{flexDirection:'row',alignItems:'center',justifyContent:'center', padding:12}}>
-          <Image
-            style={{
-              width:20,
-              height:20
-            }}
-            source={require('../../assets/common/happy.png')} 
-          />
-          <DescriptionText
-            marginLeft={15}
-            text = {t("You are up to date 🎉! Share vocco with you friends!")}
-          />
-        </View>}
         </ScrollView>
         <SwipeDownModal
           modalVisible={showModal}
@@ -337,14 +205,6 @@ const DiscoverScreen = (props) => {
               setShowModal(false);
           }}
         />
-        {showContext&&
-          <PostContext
-            postInfo = {filteredVoices[selectedIndex]}
-            onCloseModal = {()=>setShowContext(false)}
-            onChangeIsLike={()=>setLiked()}
-            props = {props}
-          />
-        }
         <BottomButtons 
           active='global'
           props = {props}

@@ -10,6 +10,7 @@ import {
 import {useTranslation} from 'react-i18next';
 import EmojiPicker from 'rn-emoji-keyboard';
 import '../../language/i18n';
+import { PostContext } from '../component/PostContext';
 import { TitleText } from "./TitleText";
 import { HeartIcon } from './HeartIcon';
 import { DescriptionText } from "./DescriptionText";
@@ -33,24 +34,21 @@ export const VoiceItem = ({
   props,
   info,
   isRefresh = false,
-  //isPlaying = false,
-  onPressPostContext = () => {},
   onChangeLike = () => {},
-  //onPressPlay = () => {},
-  //onStopPlay = ()=>{},
   spread = true,
 }) => {
   const [answerVoices,setAnswerVoices] = useState([]);
   const [received,setReceived] = useState(false);
   const [showAnswers,setShowAnswers] = useState(false);
   const [showEmojies,setShowEmojies] = useState(false);
+  const [showContext, setShowContext] = useState(false);
   const [refresh,setRefresh] = useState(false);
   const [nowVoice, setNowVoice] = useState(null);
   const [lastTap,setLastTap] = useState(0);
   const [delayTime,setDelayTime] = useState(null);  const {t, i18n} = useTranslation();
   const [isPlaying, setIsPlaying] = useState(false);
   
-  let { user, voiceState } = useSelector((state) => {
+  let { user } = useSelector((state) => {
     return (
         state.user
     )
@@ -68,8 +66,6 @@ export const VoiceItem = ({
 
   const [reactions,setReactions] = useState(info.reactions);
   const [reactionsCount,setReactionsCount] = useState(info.reactionsCount);
-  const [likeCount, setLikeCount] = useState(info.likesCount);
-  const [isLiked, setIsLiked] = useState(info.isLike);
 
   if(isRefresh != refresh){
     setRefresh(isRefresh);
@@ -93,16 +89,13 @@ export const VoiceItem = ({
   }
 
   const OnSetLike =()=>{
-    if(isLiked == true){
-      setLikeCount(likeCount-1);
+    if(info.isLike == true){
       VoiceService.recordUnAppreciate(info.id);
     }
     else{
-      setLikeCount(likeCount+1);
       VoiceService.recordAppreciate({count:1,id:info.id});
     }
-    onChangeLike(!isLiked);
-    setIsLiked(!isLiked);
+    onChangeLike(!info.isLike);
   }
 
   const selectIcon = (icon)=>{
@@ -146,16 +139,6 @@ export const VoiceItem = ({
     setNowVoice(null);
   };
 
-  const pressPlayVoice = (index)=>{
-    if(nowVoice!=null){
-      onStopAnswerPlay();
-    }
-    if(nowVoice!=index){
-      setTimeout(() => {
-        setNowVoice(index);
-      }, nowVoice?400:0);
-    }
-  }
   const onClickDouble = () => {
     const timeNow = Date.now();
     var timeout;
@@ -194,7 +177,7 @@ export const VoiceItem = ({
           borderColor:'#FFA002',
           zIndex:0
         }}
-        onLongPress={()=>onPressPostContext()}
+        onLongPress={()=>setShowContext(true)}
         onPress={()=>onClickDouble()}
       >
         <View
@@ -319,13 +302,13 @@ export const VoiceItem = ({
               xml={isLiked?redHeartSvg:blankHeartSvg}
             /> */}
             <HeartIcon
-              isLike = {isLiked}
+              isLike = {info.isLike}
               OnSetLike = {()=>OnSetLike()}
               marginLeft={6}
               marginRight={8}
             />
             <DescriptionText
-              text={likeCount}
+              text={info.likesCount}
               fontSize={16}
               lineHeight={19}
               fontFamily="SFProDisplay-Medium"
@@ -359,7 +342,15 @@ export const VoiceItem = ({
           </View>
         </View>
       </TouchableOpacity>
-      {showAnswers&&answerVoices.length>0&&<FlatList
+      {showContext&&
+        <PostContext
+          postInfo = {info}
+          props = {props}
+          onChangeIsLike = {()=>OnSetLike()}
+          onCloseModal = {()=>setShowContext(false)}
+        />
+      }
+      {/* {showAnswers&&answerVoices.length>0&&<FlatList
         style={{marginTop:5, marginLeft:15}}
         data={answerVoices}
         renderItem={({item,index})=>index<5?
@@ -373,7 +364,7 @@ export const VoiceItem = ({
           null
         }
         keyExtractor={(item, index) => index.toString()}
-      />}
+      />} */}
       {/* {showEmojies&&
         <EmojiPicker
           onEmojiSelected={(icon)=>selectIcon(icon.emoji)}

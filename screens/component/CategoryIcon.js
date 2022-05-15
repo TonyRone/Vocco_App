@@ -76,7 +76,7 @@ export const CategoryIcon = ({
           marginTop:8
         }}
       >
-        {label=='Adults'?t('For adults'):t(label)}
+        {label==''?t('All'):(label=='Adults'?t('For adults'):t(label))}
       </Text>
     </View>
   );

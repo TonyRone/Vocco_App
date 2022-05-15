@@ -56,10 +56,6 @@ export const ConfirmVerify = ({
     });
   }
 
-  useEffect(() => {
-    checkLogin();
-  }, [])
-
   return (
       <KeyboardAvoidingView 
         style={{

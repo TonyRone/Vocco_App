@@ -42,7 +42,6 @@ export const PostContext = ({
 
   const [showReport, setShowReport] = useState(false);
   const [showModal,setShowModal] = useState(true);
-  const [isLiked, setIsLiked] = useState(postInfo.isLike);
   const [playstatus,setPlaystatus] = useState(false);
   
   let { user , refreshState} = useSelector((state) => {
@@ -54,10 +53,9 @@ export const PostContext = ({
   const dispatch = useDispatch();
 
   const appreciateVoice = ()=>{
-    setIsLiked(!isLiked);
     onChangeIsLike();
     let rep; 
-    if(isLiked==false)
+    if(postInfo.isLike==false)
       rep = VoiceService.recordAppreciate({count:1,id:postInfo.id});
     else
       rep = VoiceService.recordUnAppreciate(postInfo.id);
@@ -150,7 +148,7 @@ export const PostContext = ({
               <SvgXml
                 width={20}
                 height={20}
-                xml={isLiked?redHeartSvg:blankHeartSvg}
+                xml={postInfo.isLike?redHeartSvg:blankHeartSvg}
               />
             </TouchableOpacity>
             <TouchableOpacity

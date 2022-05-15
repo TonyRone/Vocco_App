@@ -18,7 +18,7 @@ export const MAIN_LANGUAGE = 'main_language';
 export const Categories = 
 [
     {
-        label:'All',
+        label:'',
         uri:require('../assets/categories/all.png')
     },
     {

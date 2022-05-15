@@ -48,6 +48,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Categories, STORAGE_KEY, windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { CommenText } from '../component/CommenText';
+import { Stories } from '../component/Stories';
 
 const SearchScreen = (props) => {
 
@@ -57,6 +58,7 @@ const SearchScreen = (props) => {
   const [filterTitles, setFilterTitles] = useState([]);
   const [filteredVoices, setFilteredVoices] = useState([]);
   const [showVoices,setShowVoices] = useState(false);
+  const [searchStory, setSearchStory] = useState('');
   const [isEmpty,setIsEmpty] = useState(false);
   const [showModal,setShowModal] = useState(false);
   const [showContext,setShowContext] = useState(false);
@@ -121,26 +123,10 @@ const SearchScreen = (props) => {
   //   });
   // }
 
-  const onLoadVoices = (title,isNew)=>{
-    if(isLoading)
-      return ;
-    setIsLoading(true);
+  const onLoadVoices = (title,recordId)=>{
     setLabel(title);
-    let len=isNew?0:filteredVoices.length;
-    if(isNew)
-      onStopPlay();
-    VoiceService.getDiscoverVoices(title,len,Categories[category].label).then(async res => {
-      if (res.respInfo.status === 200) {
-       const jsonRes = await res.json();
-        setFilteredVoices(filteredVoices.length==0||isNew?jsonRes:[...filteredVoices,...jsonRes]);
-        setShowVoices(true);
-        setFilterTitles([]);
-        setIsLoading(false);
-      }
-   })
-   .catch(err => {
-     console.log(err);
-   });
+    setSearchStory(recordId);
+    setShowVoices(true);
   }
 
   const onStopPlay = () => {
@@ -346,8 +332,9 @@ const SearchScreen = (props) => {
             <FlatList
               style={[styles.paddingH16]}
               data={filterTitles.record}
-              renderItem={({item,index})=>
-                <TouchableOpacity key = {index+'loadvoices'} onPress={()=>onLoadVoices(item.title,true)}>
+              renderItem={({item,index})=>{
+                console.log(item);
+                return <TouchableOpacity key = {index+'loadvoices'} onPress={()=>onLoadVoices(item.title,item.id)}>
                   <TitleText
                     text = {item.title}
                     fontSize={15}
@@ -355,7 +342,7 @@ const SearchScreen = (props) => {
                     color='#281E30'
                     marginBottom={20}
                   />
-                </TouchableOpacity>
+                </TouchableOpacity>}
               }
               keyExtractor={(item, index) => index.toString()}
             //  onEndReached = {()=>onLoadMoreTitle()}
@@ -382,22 +369,6 @@ const SearchScreen = (props) => {
             </TouchableOpacity>
           </View>
           <View>
-            {/* <FlatList
-              horizontal = {true}
-              showsHorizontalScrollIndicator = {false}
-              style={[{marginLeft:12},styles.mt16]}
-              data = {Categories}
-              renderItem={({item,index})=>
-                <CategoryIcon 
-                  key = {'category'+index}
-                  label={item.label}
-                  source={item.uri}
-                  onPress={()=>{setCategory(index);getLabel('');}}
-                  active={category == index ? true : false}
-                />
-              }
-              keyExtractor={(item, index) => index.toString()} 
-            /> */}
             <FlatList
               horizontal = {true}
               showsHorizontalScrollIndicator = {false}
@@ -428,21 +399,13 @@ const SearchScreen = (props) => {
               marginLeft={16}
               marginTop = {25}
           />
-          <FlatList
-            style={{marginBottom:80,marginTop:3}}
-            data={filteredVoices}
-            renderItem={({item,index})=><VoiceItem 
-              key={index+'searchVoice'}
-              info={item}
-              props={props}
-              isPlaying = {nowVoice==index}
-              onPressPostContext={()=>tapHoldToAnswer(index)}
-              onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}
-              onPressPlay={() => pressPlayVoice(index)}
-              onStopPlay={()=>onStopPlay()}
-            />}
-            keyExtractor={(item, index) => index.toString()}
-          />
+          {searchStory!=''&&
+          <Stories
+            props={props}
+            screenName = "Search"
+            recordId= {searchStory}
+            tem = {true}
+          />}
         </>}
         {label==''&&<View>
           <View
@@ -536,7 +499,7 @@ const SearchScreen = (props) => {
           />
         }
         <BottomButtons 
-          active='profile'
+          active='global'
           props={props}
         />
         {isLoading&&<View style={{position:'absolute',width:'100%',top:windowHeight/2.8}}>

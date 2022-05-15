@@ -63,20 +63,30 @@ class VoiceService {
             'Authorization': `Bearer ${token}`
         });
     }
+
     async getDiscoverVoices(label, skip,category,recordId='') {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
-        if(category=='All')
-            category = '';
         return RNFetchBlob.config({ trusty: true }).
         fetch('GET', `${API_URL}/records/discover?skip=${skip}&take=10&order=DESC&category=${category}&search=${label}&recordId=${recordId}`, {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         });
     }
-    async getHomeVoice(skip) {
+
+    async getStories(skip = 0, userId = '', category = '', recordId='',tem=false){
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        console.log(skip+" ############");
+        return RNFetchBlob.config({ trusty: true }).
+        fetch('GET', `${API_URL}/records/stories?skip=${skip}&take=10&order=DESC&userId=${userId}&category=${category}&recordId=${recordId}&tem=${tem}`, {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        });
+    }
+
+    async getTemporaryList() {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
-        fetch('GET', `${API_URL}/records/list?skip=${skip}&take=10&order=DESC`, {
+        fetch('GET', `${API_URL}/records/temporary?skip=0&take=10&order=DESC`, {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         });

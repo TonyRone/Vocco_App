@@ -32,6 +32,7 @@ import { styles } from '../style/Common';
 import VoiceService from '../../services/VoiceService';
 import { PostContext } from '../component/PostContext';
 import { windowHeight, windowWidth} from '../../config/config';
+import { Stories } from '../component/Stories';
 
 const ProfileScreen = (props) => {
 
@@ -54,6 +55,7 @@ const ProfileScreen = (props) => {
   const [selectedIndex,setSelectedIndex] = useState(0);
   const [loadMore, setLoadMore] = useState(10);
   const [showEnd,setShowEnd] = useState(false);
+  const [loadKey, setLoadKey] = useState(0);
   const [loading, setLoading] = useState(true);
 
   if(props.navigation.state.params)
@@ -236,7 +238,7 @@ const ProfileScreen = (props) => {
           style = {{marginBottom:Platform.OS=='ios'?65:75, marginTop:25}}
           onScroll={({nativeEvent}) => {
             if (isCloseToBottom(nativeEvent)) {
-              getUserVoices()
+              setLoadKey(loadKey+1);
             }
           }}
           scrollEventThrottle={400}
@@ -291,56 +293,12 @@ const ProfileScreen = (props) => {
             marginBottom={3}
           />
         </View>
-        {!loading?(voices.length?
-          <>
-            {
-              voices.map((item,index)=><VoiceItem 
-                key={index+'myprofile'}
-                info={item}
-                props={props}
-                isPlaying = {index==nowVoice}
-                onPressPostContext={()=>tapHoldToAnswer(index)}
-                onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}
-                onPressPlay={() => pressPlayVoice(index)}
-                onStopPlay={()=>onStopPlay()}
-              />
-              )
-            }
-            {showEnd&&
-              <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center', padding:12}}>
-                <Image
-                  style={{
-                    width:20,
-                    height:20
-                  }}
-                  source={require('../../assets/common/happy.png')} 
-                />
-                <DescriptionText
-                  marginLeft={15}
-                  text = {t("You are up to date 🎉! Share vocco with you friends!")}
-                />
-              </View>
-            }
-          </>
-        :
-        <View style = {{marginTop:windowHeight/9,alignItems:'center',width:windowWidth}}>
-          <SvgXml
-              xml={box_blankSvg}
-          />
-          <DescriptionText
-            text = {t('No result found')}
-            fontSize = {17}
-            lineHeight = {28}
-            marginTop = {22}
-          />
-        </View>):
-        <Progress.Circle
-          indeterminate
-          size={30}
-          color="rgba(0, 0, 255, .7)"
-          style={{ alignSelf: "center", marginTop:windowHeight/9 }}
+        <Stories
+          props={props}
+          loadKey = {loadKey}
+          screenName = "Profile"
+          userId = {user.id}
         />
-        }
       </ScrollView>
       <BottomButtons
         active='profile'
