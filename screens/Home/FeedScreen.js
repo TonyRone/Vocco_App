@@ -70,8 +70,7 @@ const FeedScreen = (props) => {
     VoiceService.getTemporaryList().then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
-        setTemporaryStories(jsonRes);
-        console.log(jsonRes.length+" LLLLLLLLLLLLLLLL");
+        setTemporaryStories([...jsonRes]);
         let flag = -1;
         jsonRes.forEach((element,index) => {
           if(element.temporary == true && element.user.id == user.id && flag ==-1){
