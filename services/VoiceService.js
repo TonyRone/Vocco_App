@@ -84,7 +84,6 @@ class VoiceService {
 
     async getTemporaryList(userId="") {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
-        console.log(userId+" ######################");
         return RNFetchBlob.config({ trusty: true }).
         fetch('GET', `${API_URL}/records/temporary?skip=0&take=10&order=DESC&userId=${userId}`, {
             'Content-Type': 'application/json',

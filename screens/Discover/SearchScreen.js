@@ -333,7 +333,6 @@ const SearchScreen = (props) => {
               style={[styles.paddingH16]}
               data={filterTitles.record}
               renderItem={({item,index})=>{
-                console.log(item);
                 return <TouchableOpacity key = {index+'loadvoices'} onPress={()=>onLoadVoices(item.title,item.id)}>
                   <TitleText
                     text = {item.title}

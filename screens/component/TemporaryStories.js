@@ -25,7 +25,6 @@ export const TemporaryStories = ({
   props,
   userId = "",
 }) => {
-
   const {t, i18n} = useTranslation();
   const scrollRef = useRef();
 
@@ -125,7 +124,7 @@ export const TemporaryStories = ({
           key={index+'friendItem_feed'}
           props={props}
           info = {item}
-          IsUserName = {userId==''}
+          isUserName = {userId==''?true:false}
       />),[stories])}
     </ScrollView> 
   </View>
