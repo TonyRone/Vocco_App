@@ -16,7 +16,7 @@ import {useTranslation} from 'react-i18next';
 import { HeartIcon } from '../component/HeartIcon';
 import SwipeDownModal from 'react-native-swipe-down';
 import { useSelector, useDispatch } from 'react-redux';
-import { setRefreshState } from '../../store/actions';
+import { setRefreshState, setVoiceState } from '../../store/actions';
 import { DescriptionText } from '../component/DescriptionText';
 import { FlatList } from 'react-native-gesture-handler';
 import VoiceService from '../../services/VoiceService';
@@ -69,7 +69,7 @@ const VoiceProfileScreen = (props) => {
         setShowShareVoice(true);
     }
 
-    let { user , refreshState} = useSelector((state) => {
+    let { user , refreshState , voiceState} = useSelector((state) => {
       return (
           state.user
       )
@@ -211,6 +211,7 @@ const VoiceProfileScreen = (props) => {
 
     useEffect(() => {
       getAnswerVoices();
+      dispatch(setVoiceState(voiceState+1));
     }, [refreshState])
     return (
       <KeyboardAvoidingView 

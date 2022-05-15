@@ -37,7 +37,7 @@ import { styles } from '../style/Common';
 import { AllCategory } from '../component/AllCategory';
 import VoiceService from '../../services/VoiceService';
 import VoicePlayer from "../Home/VoicePlayer";
-import { setRefreshState } from '../../store/actions';
+import { setRefreshState, setVoiceState } from '../../store/actions';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
@@ -47,7 +47,7 @@ const PostingVoiceScreen = (props) => {
   let displayDuration = param.recordSecs ? param.recordSecs : param.info.duration;
   let isTemporary = param.isTemporary?true:false;
 
-  let { user, refreshState, socketInstance } = useSelector((state) => state.user);
+  let { user, refreshState, voiceState, socketInstance } = useSelector((state) => state.user);
 
   let initCategory = 0;
   if(param.info){
@@ -171,6 +171,7 @@ const PostingVoiceScreen = (props) => {
 
   useEffect(() => {
     //  checkLogin();
+    dispatch(setVoiceState(voiceState+1));
   }, [])
   return (
     <KeyboardAvoidingView
@@ -348,7 +349,7 @@ const PostingVoiceScreen = (props) => {
             lineHeight={28}
             color="#281E30"
           />
-          <TouchableOpacity onPress={() => {setVisibleStatus(!visibleStatus);setTemporaryStatus(false);}}>
+          <TouchableOpacity onPress={() => setVisibleStatus(!visibleStatus)}>
             <SvgXml
               width={55}
               height={35}
@@ -363,7 +364,7 @@ const PostingVoiceScreen = (props) => {
             lineHeight={28}
             color="#281E30"
           />
-          <TouchableOpacity disabled={!visibleStatus} onPress={() => setTemporaryStatus(!temporaryStatus)}>
+          <TouchableOpacity onPress={() => setTemporaryStatus(!temporaryStatus)}>
             <SvgXml
               width={55}
               height={35}

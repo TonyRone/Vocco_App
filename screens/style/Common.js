@@ -97,6 +97,7 @@ export const styles = StyleSheet.create({
         width:windowWidth,
         height:280,
         borderBottomLeftRadius:45,
+        marginBottom:10,
         borderColor:'#FEC613'
     },
     rowAlignItems: {

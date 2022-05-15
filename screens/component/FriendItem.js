@@ -8,6 +8,7 @@ import '../../language/i18n';
 export const FriendItem = ({
   props,
   info,
+  isUserName = false
 }) => {
 
   const {t, i18n} = useTranslation();
@@ -17,18 +18,20 @@ export const FriendItem = ({
         state.user.user
     )
   });
+  let isGreen = false;
+  if(isUserName == true && info.isFriend == true)
+    isGreen = true;
   return (
     <TouchableOpacity
       style={{
         width:56,
         marginRight:16,
-        marginBottom: 16
       }}
       onPress = {()=>props.navigation.navigate('VoiceProfile', {info:info})}
     >
       <Image
         source={{uri:info.user.avatar.url}}
-        style={{width:56,height:56,borderRadius:28}}
+        style={{width:isGreen?57:56,height:isGreen?57:56,borderRadius:isGreen?28.5:28,borderWidth:isGreen?1:0,borderColor:'#00FF00'}}
         resizeMode='cover'
       />
       <Text
@@ -42,7 +45,7 @@ export const FriendItem = ({
           marginTop:8
         }}
       >
-        {info.user.id==user.id?t("You"):info.user.name}
+        {isUserName?info.user.name:info.title}
       </Text>
     </TouchableOpacity>
   );

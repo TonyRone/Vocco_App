@@ -74,6 +74,7 @@ import { PostContext } from '../component/PostContext'
 import { Stories } from '../component/Stories';
 import { t } from 'i18next';
 import { instanceOf } from 'prop-types';
+import { TemporaryStories } from '../component/TemporaryStories';
 
 const UserProfileScreen = (props) => {
 
@@ -328,8 +329,12 @@ const UserProfileScreen = (props) => {
           />
         </View>
       </LinearGradient>
+      <TemporaryStories
+        props={props}
+        userId={userId}
+      />
       <ScrollView
-          style = {{ marginTop:25}}
+          style = {{ marginTop:16}}
           onScroll={({nativeEvent}) => {
             if (isCloseToBottom(nativeEvent)) {
               setLoadKey(loadKey+1)
@@ -337,7 +342,7 @@ const UserProfileScreen = (props) => {
           }}
           scrollEventThrottle={400}
       >
-        <View style={[styles.rowSpaceBetween,{marginTop:26,paddingHorizontal:16}]}>
+        <View style={[styles.rowSpaceBetween,{paddingHorizontal:16}]}>
           <View>
             <View style={styles.rowAlignItems}>
               <TitleText

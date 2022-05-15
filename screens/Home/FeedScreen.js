@@ -26,7 +26,6 @@ import { SvgXml } from 'react-native-svg';
 import notificationSvg from '../../assets/discover/notification.svg';
 import closeSvg from '../../assets/common/close.svg';
 import box_blankSvg from '../../assets/discover/box_blank.svg';
-import plusSvg from '../../assets/Feed/plus.svg'
 
 import { windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
@@ -35,6 +34,7 @@ import { setRefreshState } from '../../store/actions';
 import VoiceService from '../../services/VoiceService';
 import { DescriptionText } from '../component/DescriptionText';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { TemporaryStories } from '../component/TemporaryStories';
 
 const FeedScreen = (props) => {
 
@@ -138,71 +138,10 @@ const FeedScreen = (props) => {
             xml={notificationSvg} 
           />
         </TouchableOpacity>
-
       </View>
-      <View style={{flexDirection:'row', paddingLeft:16}}>
-        <Pressable
-          style={{
-            width:temFlag>=0?58:56,
-          }}
-          onPress={() =>temFlag>=0?props.navigation.navigate('VoiceProfile', {info:voices[temFlag]}):props.navigation.navigate("HoldRecord", {isTemporary: true})}
-        >
-          <Image
-            source={{uri:user.avatar.url}}
-            style={{width:temFlag>=0?58:56,height:temFlag>=0?58:56,borderRadius:temFlag>=0?29:28,}}
-            resizeMode='cover'
-          />
-          <View style={{
-            position:'absolute',
-            backgroundColor:'rgba(131, 39, 216, 0.4)',
-            width:temFlag>=0?58:56,
-            height:temFlag>=0?58:56,
-            borderRadius:temFlag>=0?29:28,
-            borderWidth:temFlag>=0?2:0,
-            borderColor:"#FD4146"
-          }}>
-          </View>
-          <View
-            style={{
-              position:'absolute',
-              top:17,
-              left:17
-            }}
-          >
-            <SvgXml
-              width={temFlag>=0?24:22}
-              height={temFlag>=0?24:22}
-              xml={plusSvg}
-            />
-          </View>
-          <Text
-            numberOfLines={1}
-            style={{
-              fontSize:12,
-              fontFamily:"SFProDisplay-Regular",
-              letterSpacing:0.066,
-              color: 'rgba(54, 36, 68, 0.8)',
-              textAlign:"center",
-              marginTop:8
-            }}
-          >
-            You
-          </Text>
-        </Pressable>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={{paddingLeft:16}}
-        >
-          {useMemo(()=>temporaryStories.map((item,index)=>
-            item.user.id == user.id?null:
-            <FriendItem 
-              key={index+'friendItem_feed'}
-              props={props}
-              info = {item}
-          />),[temporaryStories])}
-        </ScrollView> 
-      </View>
+      <TemporaryStories
+        props={props}
+      />
       <ScrollView
         style = {{marginBottom:Platform.OS=='ios'?65:75, marginTop:10}}
         ref={scrollRef}
@@ -235,7 +174,7 @@ const FeedScreen = (props) => {
         }}
           onPress = {()=>{
             if(noticeCount > 0 ){
-              getVoices(true);
+              dispatch(setRefreshState(!refreshState));
               Vibration.vibrate(100);
             }
             noticeDispatch("reset");

@@ -33,6 +33,7 @@ import VoiceService from '../../services/VoiceService';
 import { PostContext } from '../component/PostContext';
 import { windowHeight, windowWidth} from '../../config/config';
 import { Stories } from '../component/Stories';
+import { TemporaryStories } from '../component/TemporaryStories';
 
 const ProfileScreen = (props) => {
 
@@ -234,8 +235,12 @@ const ProfileScreen = (props) => {
           </View>
         </LinearGradient>
       </Pressable>
+      <TemporaryStories
+        props={props}
+        userId={user.id}
+      />
       <ScrollView
-          style = {{marginBottom:Platform.OS=='ios'?65:75, marginTop:25}}
+          style = {{marginBottom:Platform.OS=='ios'?65:75, marginTop:16}}
           onScroll={({nativeEvent}) => {
             if (isCloseToBottom(nativeEvent)) {
               setLoadKey(loadKey+1);
@@ -244,7 +249,7 @@ const ProfileScreen = (props) => {
           scrollEventThrottle={400}
       >
         <View style={styles.paddingH16}>
-          <View style={[styles.rowSpaceBetween, { marginTop: 26 }]}>
+          <View style={styles.rowSpaceBetween}>
             <View>
               <View style={styles.rowAlignItems}>
                 <TitleText

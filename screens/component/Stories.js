@@ -23,8 +23,8 @@ export const Stories = ({
   screenName = '',
   category = '',
   userId = '',
+  searchTitle = '',
   recordId = '',
-  tem = false
 }) => {
 
   const {t, i18n} = useTranslation();
@@ -57,9 +57,7 @@ export const Stories = ({
       return ;
     }
 
-    console.log(category, isNew);
-    VoiceService.getStories(isNew?0:stories.length, userId, category, recordId, tem).then(async res => {
-      console.log(res.respInfo.status);
+    VoiceService.getStories(isNew?0:stories.length, userId, category, searchTitle, recordId).then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
         setStories((stories.length==0||isNew)?[...jsonRes]:[...stories,...jsonRes]);
@@ -88,9 +86,7 @@ export const Stories = ({
   }
 
   const storyItems = useMemo(()=>{
-    console.log("*****************");
     return stories.map((item, index) =>{
-      console.log(index);
       return <VoiceItem 
         key={index+screenName}
         props={props}
@@ -106,7 +102,7 @@ export const Stories = ({
   return <>
     {(
       !loading?(stories.length>0?storyItems:
-      <View style = {{marginTop:windowHeight/9,alignItems:'center',width:windowWidth}}>
+      <View style = {{marginTop:windowHeight/20,alignItems:'center',width:windowWidth}}>
         <SvgXml
             xml={box_blankSvg}
         />
@@ -121,7 +117,7 @@ export const Stories = ({
         indeterminate
         size={30}
         color="rgba(0, 0, 255, .7)"
-        style={{ alignSelf: "center", marginTop:windowHeight/9 }}
+        style={{ alignSelf: "center", marginTop:windowHeight/20 }}
       />
     )}
     {showEnd&&

@@ -403,8 +403,8 @@ const SearchScreen = (props) => {
           <Stories
             props={props}
             screenName = "Search"
+            searchTitle = {label}
             recordId= {searchStory}
-            tem = {true}
           />}
         </>}
         {label==''&&<View>

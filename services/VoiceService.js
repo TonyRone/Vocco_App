@@ -73,20 +73,20 @@ class VoiceService {
         });
     }
 
-    async getStories(skip = 0, userId = '', category = '', recordId='',tem=false){
+    async getStories(skip = 0, userId = '', category = '', searchTitle='', recordId=''){
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
-        console.log(skip+" ############");
         return RNFetchBlob.config({ trusty: true }).
-        fetch('GET', `${API_URL}/records/stories?skip=${skip}&take=10&order=DESC&userId=${userId}&category=${category}&recordId=${recordId}&tem=${tem}`, {
+        fetch('GET', `${API_URL}/records/stories?skip=${skip}&take=10&order=DESC&userId=${userId}&category=${category}&search=${searchTitle}&recordId=${recordId}`, {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         });
     }
 
-    async getTemporaryList() {
+    async getTemporaryList(userId="") {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        console.log(userId+" ######################");
         return RNFetchBlob.config({ trusty: true }).
-        fetch('GET', `${API_URL}/records/temporary?skip=0&take=10&order=DESC`, {
+        fetch('GET', `${API_URL}/records/temporary?skip=0&take=10&order=DESC&userId=${userId}`, {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         });
@@ -94,7 +94,7 @@ class VoiceService {
     async getUserVoice(userId, skip) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
-        fetch('GET', `${API_URL}/records/me?skip=${skip}&take=10&order=DESC&userid=${userId}`, {
+        fetch('GET', `${API_URL}/records/me?skip=${skip}&take=10&order=DESC&userId=${userId}`, {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         });
