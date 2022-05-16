@@ -404,25 +404,12 @@ const AppNavigator = createStackNavigator({
 // }
 );
 
-
-const onRemoteNotification = (notification) => {
-  const isClicked = notification.getData().userInteraction === 1;
-
-  if (isClicked) {
-    NavigationService.navigate(notification.getData().nav,notification.params);
-  } else {
-    
-  }
-};
-
 const AppContainer = createAppContainer(AppNavigator);
 
 export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
     PushNotification.requestPermissions();
-    //PushNotificationIOS.addEventListener('notification', onRemoteNotification);
-    //return ()=>PushNotificationIOS.removeEventListener('notification');
   }, []);
   return (
     <Provider store = { store }>
