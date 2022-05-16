@@ -17,9 +17,11 @@ import { SvgXml } from 'react-native-svg';
 import plusSvg from '../../assets/Feed/plus.svg'
 import box_blankSvg from '../../assets/discover/box_blank.svg';
 import { windowHeight, windowWidth } from '../../config/config';
+import SwipeDownModal from 'react-native-swipe-down';
 import { useSelector } from 'react-redux';
 import VoiceService from '../../services/VoiceService';
 import { DescriptionText } from './DescriptionText';
+import { styles } from '../style/Common';
 
 export const TemporaryStories = ({
   props,
@@ -29,9 +31,10 @@ export const TemporaryStories = ({
   const scrollRef = useRef();
 
   const [stories, setStories] = useState([]);
-  const [temFlag, setTemFlag] = useState(0);
+  const [temFlag, setTemFlag] = useState(-1);
   const [LoadMore, setLoadMore] = useState(10);
   const [loading, setLoading] = useState(true);
+  const [confirmModal,setConfirmModal] = useState(false);
 
   let { user, refreshState } = useSelector((state) => {
     return (
@@ -47,11 +50,11 @@ export const TemporaryStories = ({
         if(userId == ''){
           let flag = -1;
           jsonRes.forEach((element,index) => {
-            if(element.temporary == true && element.user.id == user.id && flag ==-1){
+            if(element.user.id == user.id && flag ==-1){
               flag = index;
-              setTemFlag(flag);
             }
           });
+          setTemFlag(flag);
         }
       }
     })
@@ -65,12 +68,17 @@ export const TemporaryStories = ({
   }, [refreshState])
  
   return <View style={{flexDirection:'row', paddingHorizontal:16}}>
+    <ScrollView
+      horizontal={true}
+      showsHorizontalScrollIndicator={false}
+    >
     {userId==''&&<Pressable
       style={{
         width:temFlag>=0?58:56,
         marginRight:16
       }}
       onPress={() =>temFlag>=0?props.navigation.navigate('VoiceProfile', {info:stories[temFlag]}):props.navigation.navigate("HoldRecord", {isTemporary: true})}
+      onLongPress={()=>temFlag>=0?setConfirmModal(true):null}
     >
       <Image
         source={{uri:user.avatar.url}}
@@ -111,21 +119,53 @@ export const TemporaryStories = ({
           marginTop:8
         }}
       >
-        {t("You")}
+        {t("Your story")}
       </Text>
     </Pressable>}
-    <ScrollView
-      horizontal={true}
-      showsHorizontalScrollIndicator={false}
-    >
-      {useMemo(()=>stories.map((item,index)=>
-        (userId==''&&item.user.id == user.id)?null:
-        <FriendItem 
-          key={index+'friendItem_feed'}
-          props={props}
-          info = {item}
-          isUserName = {userId==''?true:false}
-      />),[stories])}
-    </ScrollView> 
+    {useMemo(()=>stories.map((item,index)=>
+      (userId==''&&item.user.id == user.id)?null:
+      <FriendItem 
+        key={index+'friendItem_feed'}
+        props={props}
+        info = {item}
+        isUserName = {userId==''?true:false}
+    />),[stories])}
+    </ScrollView>
+    <SwipeDownModal
+      modalVisible={confirmModal}
+      ContentModal={
+        <View style={{height:'100%',width:'100%'}}>
+          <View style={{position:'absolute', width:windowWidth-16, bottom:92, marginHorizontal:8,height:56,borderRadius:14,backgroundColor:'#E9EAEC'}}>
+            <Pressable onPress={()=>{props.navigation.navigate("HoldRecord", {isTemporary: true});setConfirmModal(false);}}>
+              <DescriptionText
+                  text = {t("Add new story")}
+                  fontSize = {20}
+                  lineHeight = {24}
+                  color = '#1E61EB'
+                  textAlign='center'
+                  marginTop={16}
+              />
+            </Pressable>
+          </View>
+          <View style={{position:'absolute', width:windowWidth-16, bottom:28, marginHorizontal:8,height:56,borderRadius:14,backgroundColor:'white'}}>
+            <Pressable onPress={()=>setConfirmModal(false)}>
+              <DescriptionText
+                  text = {t('Cancel')}
+                  fontSize = {20}
+                  lineHeight = {24}
+                  color = '#E41717'
+                  textAlign='center'
+                  marginTop={16}
+              />
+            </Pressable>
+          </View>
+        </View>
+      }
+      ContentModalStyle={styles.swipeModal}
+      onRequestClose={() => {setConfirmModal(false)}}
+      onClose={() => {
+          setConfirmModal(false);
+      }}
+    /> 
   </View>
 };

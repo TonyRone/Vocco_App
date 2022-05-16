@@ -126,9 +126,9 @@ const NotificationScreen = (props) => {
                 setActivities(tp);
                 setActiveNum(activeNum-1);
             }
-            if(tp[index].type == 'likeRecord' || tp[index].type == 'newAnswer'){
+            if(tp[index].type == 'likeRecord' || tp[index].type == 'newAnswer' ||tp[index].type == 'likeAnswer'){
                 setIsLoading(true);
-                VoiceService.getDiscoverVoices('',0, 'All', tp[index].record.id ).then(async res => {
+                VoiceService.getStories('','','','',tp[index].record.id).then(async res => {
                     if (res.respInfo.status === 200) {
                         const jsonRes = await res.json();
                         props.navigation.navigate("VoiceProfile",{info:jsonRes[0],answerId:tp[index].answer?.id})
@@ -364,7 +364,7 @@ const NotificationScreen = (props) => {
                         isNew = {!item.seen}
                         userImage = {item.fromUser.avatar.url}
                         userName = {item.fromUser.name}
-                        details = {item.type=='friendRequest'?'Request follow':'Appreciated your voice'}
+                        details = {item.type=='friendRequest'?t("Request follow"):'Appreciated your voice'}
                         notificationTime = {item.createdAt}
                         isActivity = {false}
                         accepted = {item.friend.status=='accepted'||allAccept}
@@ -405,7 +405,7 @@ const NotificationScreen = (props) => {
                     xml = {tickSquareSvg}
                 />
                 <CommenText
-                    text = {isActiveState?t("Mark all as read"):t("Accept all applications")}
+                    text = {isActiveState?t("Mark all as read"):t("Accept all requests")}
                     fontSize = {15}
                     lineHeight = {24}
                     color = '#8327D8'

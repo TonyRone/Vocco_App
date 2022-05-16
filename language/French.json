@@ -137,7 +137,7 @@
     "You have no notifications yet":"Tu n’as pas encore de notifications",
     "You have no request yet":"Tu n’as pas encore de demande",
     "Mark all as read":"Tout marquer comme lu",
-    "Accept all demands":"Accepter toutes les demandes",
+    "Accept all requests":"Accepter toutes les demandes",
     "Answer this story":"Réponds à cette histoire",
     "Appreciate":"Apprécier",
     "Report":"Signaler",
@@ -225,6 +225,9 @@
     "Successful upload":"Histoire publiée !",
     "new voices":"nouvelles histoires",
     "Change my story":"Changer mon histoire",
-    "Change your story":"Changez votre histoire"
+    "Change your story":"Changez votre histoire",
+    "Your story":"Votre story",
+    "Request follow":"Demande de suivi",
+    "Liked you story":"A aimé ton histoire"
   }
 }

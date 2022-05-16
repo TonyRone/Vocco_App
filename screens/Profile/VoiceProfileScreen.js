@@ -11,6 +11,7 @@ import {
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import * as Progress from "react-native-progress";
 import { NavigationActions, StackActions } from 'react-navigation';
 import {useTranslation} from 'react-i18next';
 import { HeartIcon } from '../component/HeartIcon';
@@ -48,13 +49,10 @@ const VoiceProfileScreen = (props) => {
     const [deleteModal,setDeleteModal] = useState(false);
     const [answerVoices,setAnswerVoices] = useState([]);
     const [refresh,setRefresh] = useState(false);
-    //const [reactions,setReactions] = useState(info.reactions);
-    //const [reactionsCount,setReactionsCount]= useState(info.reactionsCount)
-    //const [showEmoji,setShowEmojis] = useState(false);
     const [isLike, setIsLike] = useState(info.isLike);
     const [likeCount, setLikeCount] = useState(info.likesCount);
-    const [nowVoice,setNowVoice] = useState(null);
     const [showShareVoice, setShowShareVoice] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const dispatch = useDispatch();
 
@@ -85,30 +83,17 @@ const VoiceProfileScreen = (props) => {
     }
 
     const getAnswerVoices =()=> {
+      setLoading(true);
       VoiceService.getAnswerVoices(info.id,answerId).then(async res => {
         if (res.respInfo.status === 200) {
           const jsonRes = await res.json();
           setAnswerVoices(jsonRes);
+          setLoading(false);
         }
       })
       .catch(err => {
         console.log(err);
       });
-    }
-
-    const onStopPlay = () => {
-      setNowVoice(null);
-    };
-  
-    const pressPlayVoice = (index)=>{
-      if(nowVoice!=null){
-        onStopPlay();
-      }
-      if(nowVoice != index){
-        setTimeout(() => {
-          setNowVoice(index);
-        }, nowVoice!=null?400:0);
-      }
     }
 
     const editVoice = ()=>{
@@ -154,45 +139,6 @@ const VoiceProfileScreen = (props) => {
       else tp[index].likesCount --;
       setAnswerVoices(tp);
       setRefresh(!refresh);
-    }
-
-    const selectIcon = (icon)=>{
-      setShowEmojis(false);
-      VoiceService.addReaction({id:info.id,emoji:icon}).then(async res=>{
-        const jsonRes = await res.json();
-        if(res.respInfo.status==201){
-          setReactions(jsonRes.lastreactions);
-          setReactionsCount(jsonRes.reactioncount);
-          dispatch(setRefreshState(!refreshState));
-        }
-      })
-      .catch(err=>{
-        console.log(err)
-      })
-      let i, temp = reactions;
-      if(temp.length==0)
-        temp = [];
-      for( i=0 ; i < reactions.length; i++ ){
-        if(reactions[i].user.id == user.id){
-          temp[i].emoji = icon;
-          break;
-        }
-      }
-      if(i==temp.length){
-        for(i=2; i>0; i--) {
-          if(i>reactions.length) continue;
-          temp[i]=temp[i-1];
-        }
-        if(temp.length==0){
-          temp.push({emoji:icon,user:{id:user.id}});
-        }
-        else temp[0]={emoji:icon,user:{id:user.id}};
-        if(reactions.length<3)
-          setReactionsCount(reactionsCount+1);
-        setReactions(temp);
-      }
-      else
-        setReactions(temp);
     }
 
     const OnSetLike =()=>{
@@ -305,12 +251,12 @@ const VoiceProfileScreen = (props) => {
             </View>
           </View>
           <CommenText
-            text={t('Answers')+' ('+(answerVoices.length-(answerId==''?0:1))+')'}
+            text={t('Answers')+' ('+(loading?' ':(answerVoices.length-(answerId==''?0:1)))+')'}
             marginTop={19}
             marginLeft={16}
             marginBottom={15}
           />
-          <FlatList
+          {!loading?<FlatList
             data={answerVoices}
             renderItem={({item,index})=>
               (item&&!(index>0&&item.id==answerVoices[0].id))?
@@ -318,14 +264,18 @@ const VoiceProfileScreen = (props) => {
                 key={index+'answerVoice'}
                 props={props}
                 info = {item}
-                isPlaying = {index==nowVoice}
-                onPressPlay={() => pressPlayVoice(index)}
-                onStopPlay={()=>onStopPlay()}
                 onChangeIsLiked = {()=>setIsLiked(index)}
               />:null
             }
             keyExtractor={(item, index) => index.toString()}
+          />:
+          <Progress.Circle
+            indeterminate
+            size={30}
+            color="rgba(0, 0, 255, .7)"
+            style={{ alignSelf: "center", marginTop:windowHeight/20 }}
           />
+          }
         </View>
         <View
           style={{

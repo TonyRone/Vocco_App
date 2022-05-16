@@ -93,7 +93,7 @@ export const Stories = ({
         info = {item}
         onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}
       />}
-    )},[stories])
+    )},[stories,refreshState])
 
   useEffect(() => {
     getStories(loadKey == 0);

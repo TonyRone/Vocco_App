@@ -62,7 +62,7 @@ const PostingVoiceScreen = (props) => {
   const {t, i18n} = useTranslation();
 
   const [category, setCategory] = useState(initCategory);
-  const [visibleStatus, setVisibleStatus] = useState( param.info?param.info.privacy:isTemporary);
+  const [visibleStatus, setVisibleStatus] = useState( param.info?param.info.privacy:false);
   const [temporaryStatus, setTemporaryStatus] = useState(param.info?param.info.temporary:isTemporary);
   const [visibleReaction, setVisibleReaction] = useState(false);
   const [icon, setIcon] = useState(param.info?param.info.emoji:"😁");
@@ -171,7 +171,8 @@ const PostingVoiceScreen = (props) => {
 
   useEffect(() => {
     //  checkLogin();
-    dispatch(setVoiceState(voiceState+1));
+    if(param.info)
+      dispatch(setVoiceState(voiceState+1));
   }, [])
   return (
     <KeyboardAvoidingView

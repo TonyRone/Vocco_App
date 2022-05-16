@@ -152,10 +152,10 @@ const ShareFriendScreen = (props) => {
                     <TouchableOpacity onPress={async () => {
                         await singleShare({
                         title: "Share via message",
-                        message: "some awesome dangerous message",
+                        //message: "some awesome dangerous message",
                         url: referLink,
                         social: socialShare.Social.MESSENGER,
-                        whatsAppNumber: "9199999999",
+                     //   whatsAppNumber: "9199999999",
                         filename: referLink,
                         });
                     }}
@@ -167,7 +167,7 @@ const ShareFriendScreen = (props) => {
                         />
                     </TouchableOpacity>
                     <DescriptionText
-                        text = 'Messager'
+                        text = 'Messenger'
                         fontSize={11}
                         lineHeight={12}
                         color='#281E30'

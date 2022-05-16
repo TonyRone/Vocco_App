@@ -211,7 +211,7 @@ const EditProfileScreen = (props) => {
         </View>
         <ScrollView>
             <View style={{alignItems:'center',marginTop:18}}>
-                <TouchableOpacity onLongPress={()=>props.navigation.navigate('Photo',{imageUrl:userData.avatar.url,backPage:'Setting'})}>
+                <TouchableOpacity onPress={()=>props.navigation.navigate('Photo',{imageUrl:userData.avatar.url,backPage:'Setting'})}>
                     <Image
                         style={{
                             width:122,

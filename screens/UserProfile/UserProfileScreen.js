@@ -401,7 +401,7 @@ const UserProfileScreen = (props) => {
           marginHorizontal = {16}
           label = {followState=='none'?'Follow':'Sent Request...'}
           active={followState=='none'}
-          onPress={()=>changeFollowed()}
+          onPress={()=>followLoading?null:changeFollowed()}
           loading={followLoading}
         />}
         {(followState!='accepted'&&isPrivate)?<>

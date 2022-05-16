@@ -137,7 +137,7 @@
       "You have no notifications yet":"You have no notifications yet",
       "You have no request yet":"You have no request yet",
       "Mark all as read":"Mark all as read",
-      "Accept all applications":"Accept all applications",
+      "Accept all requests":"Accept all requests",
       "Answer on voice":"Answer on voice",
       "Appreciate":"Appreciate",
       "Report":"Report",
@@ -225,6 +225,9 @@
       "Successful upload":"Successful upload",
       "new voices":"new voices",
       "Change my story":"Change my story",
-      "Change your story":"Change your story"
+      "Change your story":"Change your story",
+      "Your story":"Your story",
+      "Request follow":"Request follow",
+      "Liked you story":"Liked you story"
     }
   }

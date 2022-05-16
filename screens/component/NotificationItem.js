@@ -48,7 +48,7 @@ export const NotificationItem = ({
     num = (num-minute)/60;
     let hour = num%24;
     let day = (num-hour)/24
-    let time = (day>0?(day.toString()+' '+t("days")+' '):'')+(hour>0?(hour.toString()+' '+t("hours")+' '):'')+(minute>0?(minute.toString()+' '+t("minutes")+' '):'')+(flag>0?t("ago"):'');
+    let time = (day>0?day.toString()+' '+t("days"):(hour>0?hour.toString()+' '+t("hours"):(minute>0?minute.toString()+' '+t("minutes"):'')))+(flag>0?t(" ago"):'');
     if(details == 'friendAccept')
         details = t("Followed you");
     if(details == 'friendDelete')
@@ -57,6 +57,9 @@ export const NotificationItem = ({
         details = t("Liked your story");
     if(details == 'newAnswer')
         details = t("Answered your story");
+    if(details == 'likeAnswer')
+        details = t("Liked you story");
+    
 
     return (
     !isDeleted?
@@ -83,7 +86,7 @@ export const NotificationItem = ({
             {isNew&&isActivity&&<View
                 style={{
                     position:'absolute',width:12,height:12,left:30,top:34,borderRadius:6,
-                    borderWidth:2,borderColor:'#FFF',backgroundColor:'#8327D8'}}>
+                    borderWidth:2,borderColor:'#FFF',backgroundColor:'#D82783'}}>
             </View>}
             <View style={{marginLeft:16}}>
             <CommenText
