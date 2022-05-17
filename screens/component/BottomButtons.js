@@ -69,13 +69,14 @@ export const BottomButtons = ({
       </TouchableOpacity>
       <TouchableOpacity
         onPress={()=>{Vibration.vibrate(100);props.navigation.navigate("HoldRecord");}}
+        style={{width:54,height:54}}
       >
         
-          <SvgXml
+          {/* <SvgXml
             width={54}
             height={54}
             xml={recordSvg}
-          />
+          /> */}
 
         
       </TouchableOpacity>

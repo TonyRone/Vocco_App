@@ -41,6 +41,7 @@ import { CommenText } from '../component/CommenText';
 import { AnswerVoiceItem } from '../component/AnswerVoiceItem';
 import '../../language/i18n';
 import EmojiPicker from 'rn-emoji-keyboard';
+import { RecordIcon } from '../component/RecordIcon';
 
 const VoiceProfileScreen = (props) => {
 
@@ -308,13 +309,13 @@ const VoiceProfileScreen = (props) => {
               marginTop:-35,
               zIndex:10
             }}>
-              <TouchableOpacity onPress={()=>props.navigation.navigate("HoldRecord",{info:info})}>
-                <SvgXml
+              <View style={{width:54,height:54}}>
+                {/* <SvgXml
                   width={54}
                   height={54}
                   xml={recordSvg}
-                />
-              </TouchableOpacity>
+                /> */}
+              </View>
               <CommenText
                 text = {t('Tap&Hold to answer')}
                 fontSize={12}
@@ -547,6 +548,11 @@ const VoiceProfileScreen = (props) => {
             onCloseModal={()=>setShowShareVoice(false) }
           />
         }
+        <RecordIcon
+          props={props}
+          bottom={50}
+          left = {windowWidth/2-27}
+        />
       </KeyboardAvoidingView>
     );
   };

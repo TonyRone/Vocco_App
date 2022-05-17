@@ -34,6 +34,7 @@ import { PostContext } from '../component/PostContext';
 import { windowHeight, windowWidth} from '../../config/config';
 import { Stories } from '../component/Stories';
 import { TemporaryStories } from '../component/TemporaryStories';
+import { RecordIcon } from '../component/RecordIcon';
 
 const ProfileScreen = (props) => {
 
@@ -317,6 +318,11 @@ const ProfileScreen = (props) => {
           onCloseModal = {()=>setShowContext(false)}
         />
       }
+      <RecordIcon
+        props={props}
+        bottom={15.5}
+        left = {windowWidth/2-27}
+      />
     </KeyboardAvoidingView>
   );
 };

@@ -35,6 +35,7 @@ import VoiceService from '../../services/VoiceService';
 import { DescriptionText } from '../component/DescriptionText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TemporaryStories } from '../component/TemporaryStories';
+import { RecordIcon } from '../component/RecordIcon';
 
 const FeedScreen = (props) => {
 
@@ -199,6 +200,11 @@ const FeedScreen = (props) => {
       <BottomButtons 
         active='home'
         props={props}
+      />
+      <RecordIcon
+        props={props}
+        bottom={15.5}
+        left = {windowWidth/2-27}
       />
     </KeyboardAvoidingView>
   );

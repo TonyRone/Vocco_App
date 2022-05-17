@@ -49,6 +49,7 @@ import { Categories, STORAGE_KEY, windowHeight, windowWidth } from '../../config
 import { styles } from '../style/Common';
 import { CommenText } from '../component/CommenText';
 import { Stories } from '../component/Stories';
+import { RecordIcon } from '../component/RecordIcon';
 
 const SearchScreen = (props) => {
 
@@ -509,6 +510,11 @@ const SearchScreen = (props) => {
             style={{ alignSelf: "center"}}
           />
         </View>}
+        <RecordIcon
+          props={props}
+          bottom={15.5}
+          left = {windowWidth/2-27}
+        />
       </KeyboardAvoidingView>
   );
 };

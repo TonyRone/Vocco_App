@@ -83,7 +83,7 @@ const HoldRecordScreen = (props) => {
   useEffect(() => {
     setFill(user.premium!='none'?180:60);
     setKey(prevKey => prevKey + 1);
-    //dispatch(setVoiceState(voiceState+1));
+    dispatch(setVoiceState(voiceState+1));
     return ()=>clearRecorder();
   }, [])
 
@@ -317,6 +317,7 @@ const HoldRecordScreen = (props) => {
           onReverse={() => {
 
           }}
+          
         >
           <View
             onTouchStart={()=>onChangeRecord( true )}

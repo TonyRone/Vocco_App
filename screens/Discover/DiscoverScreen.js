@@ -16,6 +16,7 @@ import { TitleText } from '../component/TitleText';
 import { FlatList } from 'react-native-gesture-handler';
 import SwipeDownModal from 'react-native-swipe-down';
 import { CategoryIcon } from '../component/CategoryIcon';
+import { RecordIcon } from '../component/RecordIcon';
 import { DescriptionText } from '../component/DescriptionText';
 import { BottomButtons } from '../component/BottomButtons';
 import { AllCategory } from '../component/AllCategory';
@@ -24,7 +25,7 @@ import { SvgXml } from 'react-native-svg';
 import notificationSvg from '../../assets/discover/notification.svg';
 import searchSvg from '../../assets/login/search.svg';
 
-import { Categories } from '../../config/config';
+import { Categories, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { Stories } from '../component/Stories';
 
@@ -208,6 +209,11 @@ const DiscoverScreen = (props) => {
         <BottomButtons 
           active='global'
           props = {props}
+        />
+        <RecordIcon
+          props={props}
+          bottom={15.5}
+          left = {windowWidth/2-27}
         />
       </KeyboardAvoidingView>
   );

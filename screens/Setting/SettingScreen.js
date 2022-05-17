@@ -37,6 +37,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 
 import { useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { RecordIcon } from '../component/RecordIcon';
 
 const SettingScreen =  (props) => {
 
@@ -320,6 +321,11 @@ const SettingScreen =  (props) => {
           onClose={() => {
               setShowLanguageModal(false);
           }}
+        />
+        <RecordIcon
+            props={props}
+            bottom={15.5}
+            left = {windowWidth/2-27}
         />
       </KeyboardAvoidingView>
     );
