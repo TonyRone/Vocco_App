@@ -39,7 +39,7 @@ export const AnswerVoiceItem = ({
       check = info.isLiked;
   let num = Math.ceil((new Date().getTime()-new Date(info.createdAt).getTime())/60000),minute = num%60;
   num = (num-minute)/60;
-  let hour = num%24,day = (num-hour)/24,time = day>0?(day.toString()+' '+t("days")+' '+t("ago")):'';
+  let hour = num%24,day = (num-hour)/24,time = day>0?(day.toString()+' '+(t("day")+(day>1?'s':''))):'';
   
   const DOUBLE_PRESS_DELAY = 400;
 

@@ -48,7 +48,7 @@ export const NotificationItem = ({
     num = (num-minute)/60;
     let hour = num%24;
     let day = (num-hour)/24
-    let time = (day>0?day.toString()+' '+t("days"):(hour>0?hour.toString()+' '+t("hours"):(minute>0?minute.toString()+' '+t("minutes"):'')))+(flag>0?t(" ago"):'');
+    let time = (day>0?(day.toString()+' '+t("day")+(day>1?'s':'')):(hour>0?(hour.toString()+' '+t("hour")+(hour>1?'s':'')):(minute>0?(minute.toString()+' '+t("minute")+(minute>1?'s':'')):'')))+(flag>0?(" "+t("ago")):'');
     if(details == 'friendAccept')
         details = t("Followed you");
     if(details == 'friendDelete')
@@ -58,7 +58,7 @@ export const NotificationItem = ({
     if(details == 'newAnswer')
         details = t("Answered your story");
     if(details == 'likeAnswer')
-        details = t("Liked you story");
+        details = t("Liked your answer");
     
 
     return (
@@ -105,14 +105,14 @@ export const NotificationItem = ({
         </View>
         {(!isActivity)?
         <View style = {styles.rowAlignItems}>
-            <TouchableOpacity onPress={()=>{isNew?onPressItem():null;onDeleteItem();setIsDeleted(true);}} style={[styles.contentCenter,{width:40,height:40,borderRadius:12,backgroundColor:'#FFE8E8'}]}>
+            <TouchableOpacity onPress={()=>{onDeleteItem();setIsDeleted(true);}} style={[styles.contentCenter,{width:40,height:40,borderRadius:12,backgroundColor:'#FFE8E8'}]}>
                 <SvgXml
                     width={24}
                     height={24}
                     xml ={redTrashSvg}
                 />
             </TouchableOpacity>
-            {!accepted&&<TouchableOpacity onPress={()=>{isNew?onPressItem():null;onAcceptUser();}} style={[styles.contentCenter,{width:99,height:40,borderRadius:12,backgroundColor:'#F8F0FF',marginLeft:8}]}>      
+            {!accepted&&<TouchableOpacity onPress={()=>onAcceptUser()} style={[styles.contentCenter,{width:99,height:40,borderRadius:12,backgroundColor:'#F8F0FF',marginLeft:8}]}>      
                 <CommenText
                     text='Accept'
                     fontSize = {15}

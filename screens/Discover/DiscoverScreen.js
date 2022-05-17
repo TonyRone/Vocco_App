@@ -20,6 +20,7 @@ import { RecordIcon } from '../component/RecordIcon';
 import { DescriptionText } from '../component/DescriptionText';
 import { BottomButtons } from '../component/BottomButtons';
 import { AllCategory } from '../component/AllCategory';
+import VoiceService from '../../services/VoiceService';
 
 import { SvgXml } from 'react-native-svg';
 import notificationSvg from '../../assets/discover/notification.svg';
@@ -35,6 +36,7 @@ const DiscoverScreen = (props) => {
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [showModal,setShowModal] = useState(false);
   const [loadKey, setLoadKey] = useState(0);
+  const [notify, setNotify] = useState(false);
 
   const scrollRef = useRef();
 
@@ -64,7 +66,35 @@ const DiscoverScreen = (props) => {
       contentSize.height - paddingToBottom;
   };
 
+  const getNewNotifyCount=()=>{
+    VoiceService.unreadActivityCount().then(async res => {
+        if (res.respInfo.status == 201) {
+            const jsonRes = await res.json();
+            if(jsonRes.count > 0)
+              setNotify(true);
+            else{
+              VoiceService.unreadRequestCount().then(async res => {
+                  if (res.respInfo.status == 201) {
+                      const jsonRes = await res.json();
+                      if(jsonRes.count > 0)
+                        setNotify(true);
+                      else
+                        setNotify(false);
+                  }
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+            }
+        }
+     })
+     .catch(err => {
+       console.log(err);
+     });
+  }
+
   useEffect(() => {
+    getNewNotifyCount();
   }, [refreshState])
 
   return (
@@ -97,6 +127,16 @@ const DiscoverScreen = (props) => {
               height="24" 
               xml={notificationSvg} 
             />
+            {notify==true&&<View
+              style={{
+                width:12,
+                height:12,
+                borderRadius:6,
+                marginLeft:6,borderWidth:2,
+                borderColor:'#FFF',
+                backgroundColor:'#D82783'}}
+              >
+            </View>}
           </TouchableOpacity>
 
         </View>

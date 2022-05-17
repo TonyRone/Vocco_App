@@ -107,7 +107,7 @@ export const Stories = ({
             xml={box_blankSvg}
         />
         <DescriptionText
-          text = 'No result found'
+          text = {t("No stories yet")}
           fontSize = {17}
           lineHeight = {28}
           marginTop = {22}

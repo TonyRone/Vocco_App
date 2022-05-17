@@ -84,13 +84,13 @@ const VoiceProfileScreen = (props) => {
     }
 
     const getAnswerVoices =()=> {
-      setLoading(true);
+      //setLoading(true);
       VoiceService.getAnswerVoices(info.id,answerId).then(async res => {
         if (res.respInfo.status === 200) {
           const jsonRes = await res.json();
           setAnswerVoices(jsonRes);
-          setLoading(false);
         }
+        setLoading(false);
       })
       .catch(err => {
         console.log(err);

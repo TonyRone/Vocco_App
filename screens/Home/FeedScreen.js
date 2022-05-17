@@ -51,7 +51,7 @@ const FeedScreen = (props) => {
   const [temporaryStories, setTemporaryStories] = useState([]);
   const [temFlag,setTemFlag] =  useState(-1);
   const [loadKey, setLoadKey] = useState(0);
-
+  const [notify, setNotify] = useState(false);
 
   const {t, i18n} = useTranslation();
 
@@ -92,10 +92,38 @@ const FeedScreen = (props) => {
       contentSize.height - paddingToBottom;
   };
 
+  const getNewNotifyCount=()=>{
+    VoiceService.unreadActivityCount().then(async res => {
+        if (res.respInfo.status == 201) {
+            const jsonRes = await res.json();
+            if(jsonRes.count > 0)
+              setNotify(true);
+            else{
+              VoiceService.unreadRequestCount().then(async res => {
+                  if (res.respInfo.status == 201) {
+                      const jsonRes = await res.json();
+                      if(jsonRes.count > 0)
+                        setNotify(true);
+                      else
+                        setNotify(false);
+                  }
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+            }
+        }
+     })
+     .catch(err => {
+       console.log(err);
+     });
+  }
+
   let socket = null;
 
   useEffect(() => {
     getTemporaryStories();
+    getNewNotifyCount();
     socketInstance.on("notice_Voice", (data) => {
       noticeDispatch("news");
     });
@@ -138,6 +166,16 @@ const FeedScreen = (props) => {
             height="24" 
             xml={notificationSvg} 
           />
+          {notify==true&&<View
+            style={{
+              width:12,
+              height:12,
+              borderRadius:6,
+              marginLeft:6,borderWidth:2,
+              borderColor:'#FFF',
+              backgroundColor:'#D82783'}}
+            >
+          </View>}
         </TouchableOpacity>
       </View>
       <TemporaryStories

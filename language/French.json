@@ -81,7 +81,7 @@
     "Top categories":"Meilleures catégories",
     "SEE ALL":"VOIR TOUT",
     "World stories":"Histoires du monde",
-    "No result found":"Aucun résultat trouvé",
+    "No stories yet":"Pas encore d'histoire",
     "All":"Tout",
     "Fun":"Amusement",
     "Education":"Éducation",
@@ -111,6 +111,7 @@
     "User voices":"Histoires",
     "Share":"Partager",
     "Unfollow":"Ne plus suivre",
+    "Follow":"Suivre",
     "Block this user":"Bloquer cet utilisateur",
     "Report User":"Reporter un utilisateur",
     "Answers":"Réponses",
@@ -118,9 +119,9 @@
     "Delete story":"Supprimer l'histoire",
     "Delete this story?":"Supprimer cette histoire ? ",
     "This action cannot be undone":"Cette action ne peut pas être annulée",
-    "days":"jours",
-    "hours":"heures",
-    "minutes":"minutes",
+    "day":"jour",
+    "hour":"heure",
+    "minute":"minute",
     "ago":"depuis",
     "Category":"Catégorie",
     "Recent":"Récente",
@@ -228,6 +229,8 @@
     "Change your story":"Changez votre histoire",
     "Your story":"Votre story",
     "Request follow":"Demande de suivi",
-    "Liked you story":"A aimé ton histoire"
+    "Liked your answer":"A aimé ta réponse",
+    "Add new story":"Ajouter une nouvelle histoire",
+    "Sent Request...":"Sent Request..."
   }
 }

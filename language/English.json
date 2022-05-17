@@ -81,7 +81,7 @@
       "Top categories":"Top categories",
       "SEE ALL":"SEE ALL",
       "World stories":"World stories",
-      "No result found":"No result found",
+      "No stories yet":"No stories yet",
       "All":"All",
       "Fun":"Fun",
       "Education":"Education",
@@ -111,6 +111,7 @@
       "User voices":"User voices",
       "Share":"Share",
       "Unfollow":"Unfollow",
+      "Follow":"Follow",
       "Block this user":"Block this user",
       "Report User":"Report User",
       "Answers":"Answers",
@@ -118,9 +119,9 @@
       "Delete Voice":"Delete Voice",
       "Delete this voice?":"Delete this voice?",
       "This action cannot be undone":"This action cannot be undone",
-      "days":"days",
-      "hours":"hours",
-      "minutes":"minutes",
+      "day":"day",
+      "hour":"hour",
+      "minute":"minute",
       "ago":"ago",
       "Category":"Category",
       "Recent":"Recent",
@@ -228,6 +229,8 @@
       "Change your story":"Change your story",
       "Your story":"Your story",
       "Request follow":"Request follow",
-      "Liked you story":"Liked you story"
+      "Liked your answer":"Liked your answer",
+      "Add new story":"Add new story",
+      "Sent Request...":"Sent Request..."
     }
   }

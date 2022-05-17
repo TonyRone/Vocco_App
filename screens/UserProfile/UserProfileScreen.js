@@ -399,7 +399,7 @@ const UserProfileScreen = (props) => {
           marginTop={20}
           marginBottom={4}
           marginHorizontal = {16}
-          label = {followState=='none'?'Follow':'Sent Request...'}
+          label = {followState=='none'?t("Follow"):t("Sent Request...")}
           active={followState=='none'}
           onPress={()=>followLoading?null:changeFollowed()}
           loading={followLoading}

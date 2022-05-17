@@ -22,7 +22,8 @@ import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { CommenText } from '../component/CommenText';
 import { NotificationItem } from '../component/NotificationItem';
 import VoiceService from '../../services/VoiceService';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setRefreshState } from '../../store/actions';
 
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
@@ -45,11 +46,13 @@ const NotificationScreen = (props) => {
     const [reqLoadMore, setReqLoadMore] = useState(10);
     const [isLoading, setIsLoading] = useState(false);
 
-    let { user } = useSelector((state) => {
+    let { user , refreshState} = useSelector((state) => {
         return (
             state.user
         )
     });
+
+    const dispatch = useDispatch();
 
     const scrollIndicator = useRef(new Animated.Value(0)).current;
 
@@ -86,7 +89,8 @@ const NotificationScreen = (props) => {
 
     const getActivities=()=>{
         if(actLoadMore < 10) return ;
-        setIsActLoading(true);
+        if(activities.length ==0)
+            setIsActLoading(true);
         VoiceService.getActivities(activities.length).then(async res => {
             if (res.respInfo.status == 200) {
                 const jsonRes = await res.json();
@@ -102,7 +106,8 @@ const NotificationScreen = (props) => {
     }
     const getRequests=()=>{
         if(reqLoadMore < 10) return ;
-        setIsReqLoading(true);
+        if(requests.length==0)
+            setIsReqLoading(true);
         VoiceService.getRequests(requests.length).then(async res => {
             if (res.respInfo.status == 200) {
                 const jsonRes = await res.json();
@@ -125,6 +130,8 @@ const NotificationScreen = (props) => {
                 tp[index].seen = true;
                 setActivities(tp);
                 setActiveNum(activeNum-1);
+                if(activeNum-1+requestNum ==0)
+                    dispatch(setRefreshState(!refreshState));
             }
             if(tp[index].type == 'likeRecord' || tp[index].type == 'newAnswer' ||tp[index].type == 'likeAnswer'){
                 setIsLoading(true);
@@ -154,11 +161,14 @@ const NotificationScreen = (props) => {
                 tp[index].seen = true;
                 setRequests(tp);
                 setRequestNum(requestNum-1);
+                if(activeNum+requestNum-1 ==0)
+                    dispatch(setRefreshState(!refreshState));
             }
             props.navigation.navigate('UserProfile',{userId:tp[index].fromUser.id});
         }
     }
     const onDeleteNotification=(id,index,isActive)=>{
+
         VoiceService.deleteNotification(id).then(async res => {
             // if(isActive){
             //     let tp = activities;
@@ -175,6 +185,23 @@ const NotificationScreen = (props) => {
          .catch(err => {
            console.log(err);
          });
+         let tp = requests;
+         if(tp[index].seen == false){
+             VoiceService.seenNotification(tp[index].id)
+             tp[index].seen = true;
+             if(isActive == true){
+                setActivities(tp);
+                setActiveNum(activeNum-1);
+                if(activeNum-1+requestNum ==0)
+                    dispatch(setRefreshState(!refreshState));
+             }
+             else{
+                setRequests(tp);
+                setRequestNum(requestNum-1);
+                if(activeNum+requestNum-1 ==0)
+                    dispatch(setRefreshState(!refreshState));
+             }
+         }
     }
 
     const onMarkAll=()=>{
@@ -184,10 +211,14 @@ const NotificationScreen = (props) => {
                 if(isActiveState){
                     setAllSeen(true);
                     setActiveNum(0);
+                    if(requestNum ==0)
+                        dispatch(setRefreshState(!refreshState));
                 }
                 else{
                     setAllAccept(true);
                     setRequestNum(0);
+                    if(activeNum==0)
+                        dispatch(setRefreshState(!refreshState));
                 }
             }
          })
@@ -208,6 +239,15 @@ const NotificationScreen = (props) => {
          .catch(err => {
            console.log(err);
          });
+         let tp = requests;
+         if(tp[index].seen == false){
+             VoiceService.seenNotification(tp[index].id)
+             tp[index].seen = true;
+             setRequests(tp);
+             setRequestNum(requestNum-1);
+             if(activeNum+requestNum-1 ==0)
+                 dispatch(setRefreshState(!refreshState));
+         }
     }
 
     useEffect(() => {
