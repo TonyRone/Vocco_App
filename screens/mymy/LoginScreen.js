@@ -122,10 +122,8 @@ const LoginScreen = (props) => {
       password
     };
     setLoading(true);
-    console.log("000000000000000");
     AuthService.login(payload).then(async res => {
       const jsonRes = await res.json();
-      console.log(res.respInfo.status);
       if (res.respInfo.status === 201) {
         _storeData(jsonRes.accessToken, jsonRes.refreshToken);
         onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
@@ -149,10 +147,8 @@ const LoginScreen = (props) => {
   }
 
   const onSetUserInfo =async(accessToken = null,refreshToken = null)=>{
-    console.log("111111111111");
     AuthService.getUserInfo(accessToken, 'reg').then(async res => {
       const jsonRes = await res.json();
-      console.log(res.respInfo.status);
       if(res.respInfo.status ==200){
         dispatch(setUser(jsonRes));
         let navigateScreen = 'Discover';

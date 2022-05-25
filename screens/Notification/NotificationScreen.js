@@ -94,7 +94,6 @@ const NotificationScreen = (props) => {
         VoiceService.getActivities(activities.length).then(async res => {
             if (res.respInfo.status == 200) {
                 const jsonRes = await res.json();
-                console.log(jsonRes[0]);
                 if(jsonRes.length > 0)
                     setActivities(activities.length==0?jsonRes:[...activities,...jsonRes]);
                 setActLoadMore(jsonRes.length);

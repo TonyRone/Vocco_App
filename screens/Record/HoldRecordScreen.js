@@ -126,7 +126,6 @@ const HoldRecordScreen = (props) => {
       await audioRecorderPlayer.startRecorder(path, audioSet);
       await audioRecorderPlayer.addRecordBackListener((e) => {
         wasteTime.current = e.currentPosition;
-        console.log(e.currentPosition);
       });
       setIsRecording(true);
       setIsPaused(false);

@@ -250,7 +250,6 @@ class VoicePlayer extends Component {
     });
     actions.setVoiceState(voiceState+1);
     const fileRemoteUrl = this.props.voiceUrl;
-    console.log(fileRemoteUrl);
     const fileExtension = Platform.select({
       ios: 'm4a',
       android: `mp3`,
@@ -267,7 +266,6 @@ class VoicePlayer extends Component {
     }).fetch('GET', fileRemoteUrl).then(res=>{
       if(this._isMounted&&res.respInfo.status==200){
         this._playerPath = `${Platform.OS === 'android' ? res.path() : 'ss.m4a'}`;
-        console.log(this._playerPath);
         return voiceState + 1 ;
       }
     })
