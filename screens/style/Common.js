@@ -97,7 +97,7 @@ export const styles = StyleSheet.create({
     },
     topProfileContainer:{
         width:windowWidth,
-        height:280,
+        height:350,
         borderBottomLeftRadius:45,
         marginBottom:15,
         borderColor:'#FEC613'

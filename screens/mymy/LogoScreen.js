@@ -9,7 +9,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUser, setSocketInstance } from '../../store/actions/index';
 
 import { styles } from '../style/Welcome';
@@ -20,6 +20,12 @@ const LogoScreen = (props) => {
     let socket = null;
 
     const {t, i18n} = useTranslation();
+
+    let { user } = useSelector((state) => {
+        return (
+            state.user
+        )
+    });
 
     const dispatch = useDispatch();
     const checkLogin = async () => {

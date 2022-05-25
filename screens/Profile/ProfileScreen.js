@@ -35,6 +35,7 @@ import { windowHeight, windowWidth} from '../../config/config';
 import { Stories } from '../component/Stories';
 import { TemporaryStories } from '../component/TemporaryStories';
 import { RecordIcon } from '../component/RecordIcon';
+import { FollowUsers } from '../component/FollowUsers';
 
 const ProfileScreen = (props) => {
 
@@ -59,6 +60,7 @@ const ProfileScreen = (props) => {
   const [showEnd,setShowEnd] = useState(false);
   const [loadKey, setLoadKey] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [allFollows, setAllFollows] = useState("");
 
   if(props.navigation.state.params)
     ()=>setRefresh(!refresh);
@@ -204,7 +206,7 @@ const ProfileScreen = (props) => {
               color="#FFFFFF"
             />
           </View>
-          <View style={{ alignItems: 'center' }}>
+          <TouchableOpacity onPress={()=>setAllFollows("Followers")} style={{ alignItems: 'center' }}>
             <DescriptionText
               text={t("Followers")}
               fontSize={12}
@@ -218,8 +220,8 @@ const ProfileScreen = (props) => {
               lineHeight={28}
               color="#FFFFFF"
             />
-          </View>
-          <View style={{ alignItems: 'center' }}>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>setAllFollows("Following")} style={{ alignItems: 'center' }}>
             <DescriptionText
               text={t("Following")}
               fontSize={12}
@@ -233,7 +235,7 @@ const ProfileScreen = (props) => {
               lineHeight={28}
               color="#FFFFFF"
             />
-          </View>
+          </TouchableOpacity>
         </LinearGradient>
       </Pressable>
       <TemporaryStories
@@ -316,6 +318,14 @@ const ProfileScreen = (props) => {
           props = {props}
           onChangeIsLike = {()=>setLiked()}
           onCloseModal = {()=>setShowContext(false)}
+        />
+      }
+      {allFollows!=''&&
+        <FollowUsers
+          props={props}
+          userId = {user.id}
+          followType={allFollows}
+          onCloseModal={()=>setAllFollows('')}
         />
       }
       <RecordIcon

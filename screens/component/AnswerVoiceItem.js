@@ -36,6 +36,7 @@ export const AnswerVoiceItem = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [replyAnswers, setReplyAnswers] = useState([]);
   const [allLikes, setAllLikes] = useState(false);
+  const [showMore, setShowMore] = useState(false);
 
   const {t, i18n} = useTranslation();
   const [lastTap,setLastTap] = useState(0);
@@ -164,7 +165,7 @@ export const AnswerVoiceItem = ({
               </TouchableOpacity>
               <TouchableOpacity onPress={()=>{setIsExpanded(false);holdToAnswer();}}>
                 <DescriptionText
-                  text= "Tap&Hold to answer"
+                  text= "Tap to answer"
                   color="#8327D8"
                   fontSize={12}
                   lineHeight={16}
@@ -217,6 +218,7 @@ export const AnswerVoiceItem = ({
           </View>
         }
       </TouchableOpacity>
+      {info.user.id == user.id&&
       <TouchableOpacity onPress={()=>onDeleteAnswer()} style={[styles.rowAlignItems,{
           width:windowWidth,
           paddingVertical:24,
@@ -236,17 +238,21 @@ export const AnswerVoiceItem = ({
               color = 'white'
               marginLeft= {16}
           />
-      </TouchableOpacity>
+      </TouchableOpacity>}
     </ScrollView>
     {allLikes&&
     <StoryLikes
+      props={props}
       storyId={info.id}
       storyType="answer"
       onCloseModal={()=>setAllLikes(false)}
     />}
-    {isExpanded&&replyAnswers.length>0&&<FlatList
+    {isExpanded&&replyAnswers.length>0&&
+      <>
+      <FlatList
       data={replyAnswers}
       renderItem={({item,index})=>
+        (showMore==false&&index>1)?null:
         <ReplyAnswerItem
           key={index+item.id+'replyAnswerItem'}
           info = {item}
@@ -255,6 +261,21 @@ export const AnswerVoiceItem = ({
         />
       }
       keyExtractor={(item, index) => index.toString()}
-    />}</>
+      />
+      {replyAnswers.length>2&&
+        <TouchableOpacity onPress={()=>setShowMore(!showMore)}>
+          <DescriptionText
+            text={showMore?t("View less answers"):t("View more answers")}
+            fontSize={13}
+            color="#281E30"
+            marginTop={6}
+            marginBottom={12}
+            marginLeft={82}
+          />
+        </TouchableOpacity>
+      }
+      </>
+    }
+  </>
   );
 };

@@ -64,12 +64,11 @@ export const VoiceItem = ({
       premium = info.user.premium;
 
       let num = Math.ceil((new Date().getTime()-new Date(info.createdAt).getTime())/60000);
-      let flag = num;
       let minute = num%60;
       num = (num-minute)/60;
       let hour = num%24;
       let day = (num-hour)/24
-      let time = (day>0?(day.toString()+' '+t("day")+(day>1?'s':'')):(hour>0?(hour.toString()+' '+t("hour")+(hour>1?'s':'')):(minute>0?(minute.toString()+' '+t("minute")+(minute>1?'s':'')):'')))+(flag>0?(" "+t("ago")):'');
+      let time = (day>0?(day.toString()+' '+t("day")+(day>1?'s':'')):(hour>0?(hour.toString()+' '+t("hour")+(hour>1?'s':'')):(minute>0?(minute.toString()+' '+t("minute")+(minute>1?'s':'')):'')));
 
   const [reactions,setReactions] = useState(info.reactions);
   const [reactionsCount,setReactionsCount] = useState(info.reactionsCount);
@@ -295,9 +294,9 @@ export const VoiceItem = ({
             </TouchableOpacity>
             <DescriptionText
               text = {time}
-              fontSize = {17}
-              lineHeight = {19}
-              marginLeft = {25}
+              fontSize = {13}
+              lineHeight = {15}
+              marginLeft = {30}
               color = 'rgba(54, 36, 68, 0.8)'
             />
           </View>
@@ -309,7 +308,7 @@ export const VoiceItem = ({
                 color:'#8327D8'
               }}
             >
-              {t("Tap&Hold to answer")}
+              {t("Tap to answer")}
             </Text> */}
             <SvgXml
               width={19}
@@ -338,6 +337,7 @@ export const VoiceItem = ({
       }
      {allLikes&&
       <StoryLikes
+        props={props}
         storyId={info.id}
         storyType="record"
         onCloseModal={()=>setAllLikes(false)}

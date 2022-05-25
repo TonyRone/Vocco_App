@@ -264,7 +264,7 @@ const VoiceProfileScreen = (props) => {
             />
           </View>
         </ImageBackground>
-        <View style={{marginTop:-120, width:'100%', height:windowHeight-380, backgroundColor:'white',borderTopLeftRadius:32,borderTopRightRadius:30}}>
+        <View style={{marginTop:-90, width:'100%', height:windowHeight-330, backgroundColor:'white',borderTopLeftRadius:32,borderTopRightRadius:30}}>
           <View style={{width:'100%',marginTop:8,alignItems:'center'}}>
             <View style={{width:48,height:4,borderRadius:2,backgroundColor:'#D4C9DE'}}>
             </View>
@@ -605,6 +605,7 @@ const VoiceProfileScreen = (props) => {
         }
         {allLikes&&
         <StoryLikes
+          props={props}
           storyId={info.id}
           storyType="record"
           onCloseModal={()=>setAllLikes(false)}

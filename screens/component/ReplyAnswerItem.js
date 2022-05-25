@@ -194,6 +194,7 @@ export const ReplyAnswerItem = ({
       </TouchableOpacity>
       {allLikes&&
       <StoryLikes
+        props={props}
         storyId={info.id}
         storyType="replyAnswer"
         onCloseModal={()=>setAllLikes(false)}

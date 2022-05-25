@@ -75,6 +75,7 @@ import { Stories } from '../component/Stories';
 import { t } from 'i18next';
 import { instanceOf } from 'prop-types';
 import { TemporaryStories } from '../component/TemporaryStories';
+import { FollowUsers } from '../component/FollowUsers';
 
 const UserProfileScreen = (props) => {
 
@@ -93,6 +94,7 @@ const UserProfileScreen = (props) => {
     const [loadMore, setLoadMore] = useState(10);
     const [showEnd,setShowEnd] = useState(false);
     const [loadKey, setLoadKey] = useState(0);
+    const [allFollows, setAllFollows] = useState("");
 
     let { user, refreshState } = useSelector((state) => {
       return (
@@ -298,7 +300,7 @@ const UserProfileScreen = (props) => {
             color="#FFFFFF"
           />
         </View>
-        <View style={{alignItems:'center'}}>
+        <TouchableOpacity onPress={()=>setAllFollows("Followers")} style={{alignItems:'center'}}>
           <DescriptionText
             text = {t('Followers')}
             fontSize={12}
@@ -312,8 +314,8 @@ const UserProfileScreen = (props) => {
             lineHeight={28}
             color="#FFFFFF"
           />
-        </View>
-        <View style={{alignItems:'center'}}>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>setAllFollows("Following")} style={{alignItems:'center'}}>
           <DescriptionText
             text = {t('Following')}
             fontSize={12}
@@ -327,7 +329,7 @@ const UserProfileScreen = (props) => {
             lineHeight={28}
             color="#FFFFFF"
           />
-        </View>
+        </TouchableOpacity>
       </LinearGradient>
       <TemporaryStories
         props={props}
@@ -400,7 +402,7 @@ const UserProfileScreen = (props) => {
           marginBottom={4}
           marginHorizontal = {16}
           label = {followState=='none'?t("Follow"):t("Sent Request...")}
-          active={followState=='none'}
+          //active={followState=='none'}
           onPress={()=>followLoading?null:changeFollowed()}
           loading={followLoading}
         />}
@@ -617,6 +619,14 @@ const UserProfileScreen = (props) => {
       <ShareVoice
         onCloseModal={()=>{setShowShareVoice(false);}}
       />}
+      {allFollows!=''&&
+        <FollowUsers
+          props={props}
+          userId = {userId}
+          followType={allFollows}
+          onCloseModal={()=>setAllFollows('')}
+        />
+      }
     </KeyboardAvoidingView>
   );
 };

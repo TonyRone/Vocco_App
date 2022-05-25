@@ -286,7 +286,8 @@ class VoicePlayer extends Component {
       if(this.state.isStarted == false)
         this.setState({
           isStarted:true,
-          isPlaying:true
+          isPlaying:true,
+          currentPositionSec:0
         });
       const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath);
       const volume = await this.audioRecorderPlayer.setVolume(1.0);

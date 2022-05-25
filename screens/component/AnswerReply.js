@@ -37,6 +37,7 @@ import VoiceService from '../../services/VoiceService';
 import { useDispatch, useSelector } from 'react-redux';
 import { setVoiceState, setRefreshState } from '../../store/actions';
 import {useTranslation} from 'react-i18next';
+import { styles } from '../style/Common';
 import '../../language/i18n';
 
 import recordSvg from '../../assets/common/bottomIcons/record.svg';
@@ -63,6 +64,7 @@ export const AnswerReply = ({
   const [touchPos, setTouchPos] = useState(0);
   const [isPublish, setIsPublish] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(true)
 
   const wasteTime = useRef(0);
 
@@ -79,6 +81,11 @@ export const AnswerReply = ({
     wasteTime.current = 0;
     await recorderPlayer.stopRecorder();
     recorderPlayer.removeRecordBackListener();
+  }
+
+  const closeModal = ()=>{
+    setShowModal(false);
+    onCancel();
   }
 
   useEffect(() => {
@@ -126,7 +133,7 @@ export const AnswerReply = ({
       }
     }
     if(publish == false){
-      onCancel();
+      closeModal();
     }
   };
  
@@ -165,7 +172,7 @@ export const AnswerReply = ({
         } else {
           Vibration.vibrate(100);
           dispatch(setRefreshState(!refreshState));
-          onCancel();
+          closeModal();
         }
         setIsLoading(false);
       })
@@ -176,153 +183,161 @@ export const AnswerReply = ({
   }
 
   return (
-   <View style={{
-      position:'absolute',
-      width:windowWidth,
-      height:windowHeight,
-      backgroundColor:'rgba(0, 0, 0, 0.1)',
-      alignItems:'center',
-   }}>{isPublish?
-      <View style={{
-        position:'absolute',
-        bottom:50,
-        flexDirection:'row',
-        alignItems:'center'
-      }}>
-        <View
-          style={{
-            flexDirection:'row',
-            alignItems:'center',
-            justifyContent:'space-between',
-            paddingRight: 12,
-            paddingVertical: 8,
-            backgroundColor: '#FFF',
-            shadowColor: 'rgba(176, 148, 235, 1)',
-            elevation:10,
-            shadowOffset:{width: 0, height: 2},
-            shadowOpacity:0.5,
-            shadowRadius:8,
-            borderRadius: 30,
-          }}
-        >
-          <VoicePlayer
-            playBtn = {true}
-            premium = {info.user.premium !='none'}
-            playing = {false}
-            stopPlay = {()=>{}}
-            tinWidth={windowWidth/300}
-            mrg={windowWidth/600}
-          />
-          <TouchableOpacity onPress={()=>onCancel()}>
-            <SvgXml
-                width={24}
-                height={24}
-                xml ={redTrashSvg}
-            />
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity disabled={isLoading} onPress={handleSubmit}>
-          <Image
-              style={{
-                height:56,
-                width:56,
-                marginLeft:4
-              }}
-              resizeMode="stretch"
-              source={require('../../assets/post/answerPublish.png')}
-          />
-        </TouchableOpacity>
-      </View>
-      :<>
-        <Image
-            style={{
-              position:'absolute',
-              bottom:50,
-              height:56,
-              width:281.22,
-            }}
-            resizeMode="stretch"
-            source={require('../../assets/post/answerReply.png')}
-        />
-        <View style={{position:'absolute',bottom:135,width:'100%',alignItems:'center'}}>
-          <Draggable 
-              x={windowWidth / 2 - 34} 
-              y={0}
-              shouldReverse={true}
-              minX={windowWidth / 2 - 110}
-              maxX={windowWidth / 2 + 110}
-              minY={0}
-              maxY={0}
-              touchableOpacityProps={{
-                activeOpactiy: 0.1,
-              }}
-              onDrag={(event, gestureState) => {
-            
-              }}
-              onDragRelease={(event, gestureState, bounds) => {
-              if(gestureState.dx>60)
-                onStopRecord(true)
-              else if(gestureState.dx<-60)
-                onStopRecord(false);
-              }}
-              onReverse={() => {
-
-              }}
-              
-            >
-              <View
-                onTouchStart={(e)=>onChangeRecord(e, true )}
-                onTouchEnd={(e)=>onChangeRecord( e, false )}
-              >
-                <SvgXml
-                  width={68}
-                  height={68}
-                  xml={recordSvg}
-                />
-              </View>
-          </Draggable>
-        </View>
+    <SwipeDownModal
+      modalVisible={showModal}
+      ContentModal={
         <View style={{
-          position:'absolute',
-          bottom:160,
-          width:110,
-          height:48,
-          backgroundColor:"#FFF",
-          borderRadius:16,
-          flexDirection:'row',
-          alignItems:'center',
-          paddingHorizontal:16,
-        }}>
-          <View
-            style={{
-              width:8,
-              height:8,
-              borderRadius:4,
-              backgroundColor:"#E41717"
-            }}
-          >
+          width:windowWidth,
+          height:windowHeight,
+          alignItems:'center'
+       }}>{isPublish?
+          <View style={{
+            position:'absolute',
+            bottom:50,
+            flexDirection:'row',
+            alignItems:'center'
+          }}>
+            <View
+              style={{
+                flexDirection:'row',
+                alignItems:'center',
+                justifyContent:'space-between',
+                paddingRight: 12,
+                paddingVertical: 8,
+                backgroundColor: '#FFF',
+                shadowColor: 'rgba(176, 148, 235, 1)',
+                elevation:10,
+                shadowOffset:{width: 0, height: 2},
+                shadowOpacity:0.5,
+                shadowRadius:8,
+                borderRadius: 30,
+              }}
+            >
+              <VoicePlayer
+                playBtn = {true}
+                premium = {info.user.premium !='none'}
+                playing = {false}
+                stopPlay = {()=>{}}
+                tinWidth={windowWidth/300}
+                mrg={windowWidth/600}
+              />
+              <TouchableOpacity onPress={()=>closeModal()}>
+                <SvgXml
+                    width={24}
+                    height={24}
+                    xml ={redTrashSvg}
+                />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity disabled={isLoading} onPress={handleSubmit}>
+              <Image
+                  style={{
+                    height:56,
+                    width:56,
+                    marginLeft:4
+                  }}
+                  resizeMode="stretch"
+                  source={require('../../assets/post/answerPublish.png')}
+              />
+            </TouchableOpacity>
           </View>
-          {/* <DescriptionText
-            text={new Date(wasteTime.current).toISOString().substr(14, 5)}
-            lineHeight={24}
-            fontSize={15}
-            marginLeft={12}
-          /> */}
-          <Stopwatch
-            //totalDuration={15000}
-            start={!isPaused}
-            options={options}
-          />
-        </View>
-      </>}
-      {isLoading&&
-      <Progress.Circle
-        indeterminate
-        size={30}
-        color="rgba(0, 0, 255, .7)"
-        style={{ alignSelf: "center", marginTop:windowHeight/2 }}
-      />}
-   </View>
+          :<>
+            <Image
+                style={{
+                  position:'absolute',
+                  bottom:50,
+                  height:56,
+                  width:281.22,
+                }}
+                resizeMode="stretch"
+                source={require('../../assets/post/answerReply.png')}
+            />
+            <View style={{position:'absolute',bottom:135,width:'100%',alignItems:'center'}}>
+              <Draggable 
+                  x={windowWidth / 2 - 34} 
+                  y={0}
+                  shouldReverse={true}
+                  minX={windowWidth / 2 - 110}
+                  maxX={windowWidth / 2 + 110}
+                  minY={0}
+                  maxY={0}
+                  touchableOpacityProps={{
+                    activeOpactiy: 0.1,
+                  }}
+                  onDrag={(event, gestureState) => {
+                
+                  }}
+                  onDragRelease={(event, gestureState, bounds) => {
+                  if(gestureState.dx>60)
+                    onStopRecord(true)
+                  else if(gestureState.dx<-60)
+                    onStopRecord(false);
+                  }}
+                  onReverse={() => {
+    
+                  }}
+                  
+                >
+                  <View
+                    onTouchStart={(e)=>onChangeRecord(e, true )}
+                    onTouchEnd={(e)=>onChangeRecord( e, false )}
+                  >
+                    <SvgXml
+                      width={68}
+                      height={68}
+                      xml={recordSvg}
+                    />
+                  </View>
+              </Draggable>
+            </View>
+            <View style={{
+              position:'absolute',
+              bottom:160,
+              width:120,
+              height:48,
+              backgroundColor:"#FFF",
+              borderRadius:16,
+              flexDirection:'row',
+              alignItems:'center',
+              paddingHorizontal:16,
+            }}>
+              <View
+                style={{
+                  width:8,
+                  height:8,
+                  borderRadius:4,
+                  backgroundColor:"#E41717"
+                }}
+              >
+              </View>
+              {/* <DescriptionText
+                text={new Date(wasteTime.current).toISOString().substr(14, 5)}
+                lineHeight={24}
+                fontSize={15}
+                marginLeft={12}
+              /> */}
+              <Stopwatch
+                //totalDuration={15000}
+                start={!isPaused}
+                options={options}
+              />
+            </View>
+          </>}
+          {isLoading&&
+          <Progress.Circle
+            indeterminate
+            size={30}
+            color="rgba(0, 0, 255, .7)"
+            style={{ alignSelf: "center", marginTop:windowHeight/2 }}
+          />}
+       </View>
+      }
+      ContentModalStyle={[styles.swipeModal,{backgroundColor: 'rgba(0, 0, 0, 0.1)'}]}
+      onRequestClose={() => closeModal()}
+      onClose={() => 
+          closeModal()
+      }
+    />
   );
 };
 

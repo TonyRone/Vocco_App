@@ -46,7 +46,7 @@ export const NotificationItem = ({
     num = (num-minute)/60;
     let hour = num%24;
     let day = (num-hour)/24
-    let time = (day>0?(day.toString()+' '+t("day")+(day>1?'s':'')):(hour>0?(hour.toString()+' '+t("hour")+(hour>1?'s':'')):(minute>0?(minute.toString()+' '+t("minute")+(minute>1?'s':'')):'')))+(flag>0?(" "+t("ago")):'');
+    let time = (day>0?(day.toString()+' '+t("day")+(day>1?'s':'')):(hour>0?(hour.toString()+' '+t("hour")+(hour>1?'s':'')):(minute>0?(minute.toString()+' '+t("minute")+(minute>1?'s':'')):'')));
     if(details == 'friendAccept')
         details = t("Followed you");
     if(details == 'friendDelete')

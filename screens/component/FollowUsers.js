@@ -24,17 +24,17 @@ import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
 import { ScrollView } from 'react-native-gesture-handler';
 
-export const StoryLikes = ({
+export const FollowUsers = ({
   props,
-  storyId,
-  storyType,
+  userId,
+  followType,
   onCloseModal=()=>{},
 }) => {
 
   const {t, i18n} = useTranslation();
 
   const [showModal,setShowModal] = useState(true);
-  const [likes, setLikes] = useState([]);
+  const [follows, setFollows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   
   let { user } = useSelector((state) => {
@@ -48,12 +48,12 @@ export const StoryLikes = ({
     onCloseModal();
   }
 
-  const getStoryLikes=()=>{
+  const getFollowUsers=()=>{
     setIsLoading(true);
-    VoiceService.getLikes(storyId, storyType).then(async res => {
+    VoiceService.getFollows(userId, followType).then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
-        setLikes(jsonRes);
+        setFollows(jsonRes);
       }
       setIsLoading(false);
     })
@@ -63,7 +63,7 @@ export const StoryLikes = ({
   }
 
   useEffect(() => {
-    getStoryLikes();
+    getFollowUsers();
   }, [])
   
   return (
@@ -73,7 +73,7 @@ export const StoryLikes = ({
         <View style={styles.swipeContainerContent}>
           <View style={[styles.rowSpaceBetween,{paddingLeft:16,paddingRight:14, paddingTop:14,paddingBottom:11,borderBottomWidth:1,borderBottomColor:'#F0F4FC'}]}>
             <TitleText
-              text={"All likes("+likes.length+")"}
+              text={followType+"("+follows.length+")"}
               fontFamily="SFProDisplay-Semibold"
               fontSize={15}
               lineHeight={24}
@@ -96,7 +96,7 @@ export const StoryLikes = ({
           />}
           <ScrollView>
           {
-            likes.map((item,index)=><TouchableOpacity onPress = {()=>{
+            follows.map((item,index)=><TouchableOpacity onPress = {()=>{
               if(item.user.id==user.id)
                 props.navigation.navigate('Profile');
               else

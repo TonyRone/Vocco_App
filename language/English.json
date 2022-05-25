@@ -76,7 +76,7 @@
       "You can now talk to the world. Tell your story, ask a quetion or simply share whatever you have in mind!":"You can now talk to the world. Tell your story, ask a quetion or simply share whatever you have in mind!",
       "Click & hold on the microphone to start recording your first story.":"Click & hold on the microphone to start recording your first story.",
       "You have 1:00 maximum":"You have 1:00 maximum",
-      "Tap&Hold to answer":"Tap&Hold to answer",
+      "Tap to answer":"Tap to answer",
       "Discover":"Discover",
       "Top categories":"Top categories",
       "SEE ALL":"SEE ALL",
@@ -231,6 +231,8 @@
       "Request follow":"Request follow",
       "Liked your answer":"Liked your answer",
       "Add new story":"Add new story",
-      "Sent Request...":"Sent Request..."
+      "Sent Request...":"Sent Request...",
+      "View more answers":"View more answers",
+      "View less answers":"View less answers"
     }
   }
