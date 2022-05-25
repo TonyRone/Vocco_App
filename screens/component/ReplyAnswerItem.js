@@ -1,44 +1,44 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text, Image } from "react-native";
+import { View, TouchableOpacity, Text, Image, ScrollView} from "react-native";
 import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
-
+import { SvgXml } from 'react-native-svg';
 import { useSelector } from 'react-redux';
-
 import { HeartIcon } from './HeartIcon';
 import { StoryLikes } from "./StoryLikes";
-import {useTranslation} from 'react-i18next';
-import '../../language/i18n';
-import { SvgXml } from 'react-native-svg';
-import { FlatList, ScrollView} from 'react-native-gesture-handler';
+import whiteTrashSvg from '../../assets/notification/white_trash.svg'
 import pauseSvg from '../../assets/common/pause.svg';
 import playSvg from '../../assets/common/play.svg';
-import whiteTrashSvg from '../../assets/notification/white_trash.svg'
 import blankHeartSvg from '../../assets/post/blankHeart.svg';
 import redHeartSvg from '../../assets/post/redHeart.svg';
+import notifySvg from '../../assets/common/notify.svg';
+import curveSvg from '../../assets/record/curve.svg';
 import { styles } from '../style/Common';
+import { CommenText } from "./CommenText";
+import { createIconSetFromFontello } from "react-native-vector-icons";
+import VoicePlayer from '../Home/VoicePlayer';
 import VoiceService from "../../services/VoiceService";
-import VoicePlayer from "../Home/VoicePlayer";
 import { windowWidth } from "../../config/config";
-import { ReplyAnswerItem } from "./ReplyAnswerItem";
 
-export const AnswerVoiceItem = ({
+import {useTranslation} from 'react-i18next';
+import '../../language/i18n';
+
+export const ReplyAnswerItem = ({
   info,
-  props,
   onChangeIsLiked = ()=>{},
-  onDeleteItem = ()=>{},
-  holdToAnswer = ()=>{}
+  onDeleteReplyItem =()=>{}
 }) => {
 
   const {user} = useSelector((state)=> state.user);
 
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [replyAnswers, setReplyAnswers] = useState([]);
+  const [lastTap,setLastTap] = useState(0);
   const [allLikes, setAllLikes] = useState(false);
 
   const {t, i18n} = useTranslation();
-  const [lastTap,setLastTap] = useState(0);
+
+  const DOUBLE_PRESS_DELAY = 400;
+
   let userImage = info.user.avatar.url,
       userName = info.user.name,
       heartNum = info.likesCount,
@@ -46,16 +46,13 @@ export const AnswerVoiceItem = ({
   let num = Math.ceil((new Date().getTime()-new Date(info.createdAt).getTime())/60000),minute = num%60;
   num = (num-minute)/60;
   let hour = num%24,day = (num-hour)/24,time = day>0?(day.toString()+'d'):(hour>0?(hour.toString()+'h'):(minute>0?(minute.toString()+'m'):''));
-  
-  const DOUBLE_PRESS_DELAY = 400;
-
 
   const onLikeVoice = ()=>{
     let rep;
     if(info.isLiked==false)
-      rep = VoiceService.answerAppreciate({id:info.id});
+      rep = VoiceService.replyAnswerAppreciate(info.id);
     else
-      rep = VoiceService.answerUnAppreciate(info.id);
+      rep = VoiceService.replyAnswerUnAppreciate(info.id);
     rep.then(async res=>{
   //    if(res.respInfo.status==201||res.respInfo.status==200)
         
@@ -78,57 +75,24 @@ export const AnswerVoiceItem = ({
     }
   };
 
-  const onExpand =()=>{
-    if(isExpanded){
-      setIsExpanded(false);
-    }
-    else{
-      setIsExpanded(true);
-      VoiceService.getReplyAnswerVoices(info.id).then(async res => {
-        if (res.respInfo.status === 200) {
-          const jsonRes = await res.json();
-          setReplyAnswers([...jsonRes]);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
-    }
-  }
-
-  const setIsLiked= (index)=>{
-    let tp = [...replyAnswers];
-    tp[index].isLiked = !tp[index].isLiked;
-    if(tp[index].isLiked) tp[index].likesCount ++;
-    else tp[index].likesCount --;
-    setReplyAnswers(tp);
-  }
-
-  const onDeleteAnswer=()=>{
+  const onDeleteReplyAnswer=()=>{
     if(info.user.id == user.id){
-      VoiceService.deleteAnswer(info.id);
-      onDeleteItem();
+      VoiceService.deleteReplyAnswer(info.id);
+      onDeleteReplyItem();
     }
   }
 
-  const onDeleteReplyAnswer=(index)=>{
-    let tp = [...replyAnswers];
-    tp.splice(index,1);
-    setReplyAnswers(tp);
-  }
-  
-  return (<>
+  return (
     <ScrollView  horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={{maxWidth:windowWidth,borderBottomColor:'#F2F0F5',borderBottomWidth:1}}>
       <TouchableOpacity
         style={{
-          marginBottom:3,
-          paddingHorizontal:30,
-          paddingTop:10,
+          paddingRight:30,
+          paddingLeft:80,
           width:windowWidth,
+          paddingTop:10,
           paddingBottom:10,
           backgroundColor:'#FFF',
         }}
-        onLongPress={()=>onExpand()}
         onPress={() => onClickDouble()}
       >
         <View
@@ -162,15 +126,6 @@ export const AnswerVoiceItem = ({
                   marginTop={2}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>{setIsExpanded(false);holdToAnswer();}}>
-                <DescriptionText
-                  text= "Tap&Hold to answer"
-                  color="#8327D8"
-                  fontSize={12}
-                  lineHeight={16}
-                  marginTop={5}
-                />
-              </TouchableOpacity>
             </View>
           </View>
           <View style={styles.rowAlignItems}>
@@ -202,7 +157,7 @@ export const AnswerVoiceItem = ({
         </View>
         {
           isPlaying&&
-          <View style={{marginTop:8,width:'100%'}}> 
+          <View style={{marginTop:8}}> 
             <VoicePlayer
               voiceUrl = {info.file.url}
               stopPlay ={()=>setIsPlaying(false)}
@@ -210,14 +165,14 @@ export const AnswerVoiceItem = ({
               playBtn = {false}
               replayBtn = {false}
               playing={true}
-              tinWidth={windowWidth/150}
+              tinWidth={windowWidth/200}
               mrg={windowWidth/600}
               height={30}
             />
           </View>
         }
       </TouchableOpacity>
-      <TouchableOpacity onPress={()=>onDeleteAnswer()} style={[styles.rowAlignItems,{
+      <TouchableOpacity onPress={()=>onDeleteReplyAnswer()} style={[styles.rowAlignItems,{
           width:windowWidth,
           paddingVertical:24,
           backgroundColor:'#E41717',
@@ -237,24 +192,12 @@ export const AnswerVoiceItem = ({
               marginLeft= {16}
           />
       </TouchableOpacity>
+      {allLikes&&
+      <StoryLikes
+        storyId={info.id}
+        storyType="replyAnswer"
+        onCloseModal={()=>setAllLikes(false)}
+      />}
     </ScrollView>
-    {allLikes&&
-    <StoryLikes
-      storyId={info.id}
-      storyType="answer"
-      onCloseModal={()=>setAllLikes(false)}
-    />}
-    {isExpanded&&replyAnswers.length>0&&<FlatList
-      data={replyAnswers}
-      renderItem={({item,index})=>
-        <ReplyAnswerItem
-          key={index+item.id+'replyAnswerItem'}
-          info = {item}
-          onChangeIsLiked = {()=>setIsLiked(index)}
-          onDeleteReplyItem={()=>onDeleteReplyAnswer(index)}
-        />
-      }
-      keyExtractor={(item, index) => index.toString()}
-    />}</>
   );
 };

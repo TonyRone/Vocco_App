@@ -52,6 +52,7 @@ const FeedScreen = (props) => {
   const [temFlag,setTemFlag] =  useState(-1);
   const [loadKey, setLoadKey] = useState(0);
   const [notify, setNotify] = useState(false);
+  const [expandKey, setExpandKey] = useState(0);
 
   const {t, i18n} = useTranslation();
 
@@ -180,6 +181,7 @@ const FeedScreen = (props) => {
       </View>
       <TemporaryStories
         props={props}
+        onSetExpandKey= {()=>setExpandKey(expandKey+1)}
       />
       <ScrollView
         style = {{marginBottom:Platform.OS=='ios'?65:75, marginTop:10}}
@@ -242,6 +244,7 @@ const FeedScreen = (props) => {
       <RecordIcon
         props={props}
         bottom={15.5}
+        expandKey={expandKey}
         left = {windowWidth/2-27}
       />
     </KeyboardAvoidingView>

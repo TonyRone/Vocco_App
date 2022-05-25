@@ -94,6 +94,7 @@ const NotificationScreen = (props) => {
         VoiceService.getActivities(activities.length).then(async res => {
             if (res.respInfo.status == 200) {
                 const jsonRes = await res.json();
+                console.log(jsonRes[0]);
                 if(jsonRes.length > 0)
                     setActivities(activities.length==0?jsonRes:[...activities,...jsonRes]);
                 setActLoadMore(jsonRes.length);
@@ -169,39 +170,27 @@ const NotificationScreen = (props) => {
     }
     const onDeleteNotification=(id,index,isActive)=>{
 
-        VoiceService.deleteNotification(id).then(async res => {
-            // if(isActive){
-            //     let tp = activities;
-            //     tp.splice(index,1);
-            //     setActivities(tp);  
-            // }
-            // else{
-            //     let tp = requests;
-            //     tp.splice(index,1);
-            //     setRequests(tp);
-            // }
-            // setRefresh(!refresh);
-        })
-         .catch(err => {
-           console.log(err);
-         });
-         let tp = requests;
-         if(tp[index].seen == false){
-             VoiceService.seenNotification(tp[index].id)
-             tp[index].seen = true;
-             if(isActive == true){
-                setActivities(tp);
+        VoiceService.deleteNotification(id);
+        if(isActive){
+            let tp = [...activities];
+            if(tp[index].seen == false){
                 setActiveNum(activeNum-1);
                 if(activeNum-1+requestNum ==0)
                     dispatch(setRefreshState(!refreshState));
-             }
-             else{
-                setRequests(tp);
+            }
+            tp.splice(index,1);
+            setActivities(tp);  
+        }
+        else{
+            let tp = [...requests];
+            if(tp[index].seen == false){
                 setRequestNum(requestNum-1);
                 if(activeNum+requestNum-1 ==0)
                     dispatch(setRefreshState(!refreshState));
-             }
-         }
+            }
+            tp.splice(index,1);
+            setRequests(tp);
+        }
     }
 
     const onMarkAll=()=>{
@@ -359,10 +348,11 @@ const NotificationScreen = (props) => {
                 <FlatList
                     data={activities}
                     renderItem={({item,index})=><NotificationItem
-                        key = {index+'notification'}
+                        key = {index+item.id+'activities'}
                         isNew = {!item.seen&&!allSeen}
                         userImage = {item.fromUser.avatar.url}
                         userName = {item.fromUser.name}
+                        userPremium = {item.fromUser.premium}
                         details = {item.type}
                         notificationTime = {item.createdAt}
                         isActivity = {true}
@@ -400,7 +390,7 @@ const NotificationScreen = (props) => {
                 <FlatList
                     data={requests}
                     renderItem={({item,index})=><NotificationItem
-                        key = {index+'notif'}
+                        key = {index+item.id+'requests'}
                         isNew = {!item.seen}
                         userImage = {item.fromUser.avatar.url}
                         userName = {item.fromUser.name}

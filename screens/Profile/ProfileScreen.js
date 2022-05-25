@@ -258,16 +258,16 @@ const ProfileScreen = (props) => {
                   fontFamily="SFProDisplay-Bold"
                   lineHeight={33}
                 />
-                {userData.premium!='none'&&
-                  <Image
-                    style={{
-                      width:100,
-                      height:33,
-                      marginLeft:16
-                    }}
-                    source={require('../../assets/common/premiumstar.png')}
-                  />
-                }
+                  <Pressable disabled={userData.premium!='none'} onPress={()=>props.navigation.navigate("Premium")}>
+                    <Image
+                      style={{
+                        width:100,
+                        height:33,
+                        marginLeft:16
+                      }}
+                      source={require('../../assets/common/premiumstar.png')}
+                    />
+                  </Pressable>
               </View>
               {/* <DescriptionText
                 text={renderName(userData.firstname,userData.lastname)}

@@ -53,6 +53,20 @@ class VoiceService {
             data
         );
     }
+
+    async postAnswerReply(data) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+        fetch(
+            'POST',
+            `${API_URL}/actions/answerReply`, {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
+            },
+            data
+        );
+    }
+
     async getDiscoverTitle(label, skip, category) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         if(category == 'All')
@@ -189,6 +203,31 @@ class VoiceService {
             JSON.stringify(data)
         );
     }
+
+    async replyAnswerAppreciate(id) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+        fetch(
+            'GET',
+            `${API_URL}/actions/replyAnswerLike?id=${id}`, {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        );
+    }
+
+    async replyAnswerUnAppreciate(id) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+        fetch(
+            'GET',
+            `${API_URL}/actions/replyAnswerUnlike?id=${id}`, {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        );
+    }
+
     async addReaction(data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
@@ -277,6 +316,28 @@ class VoiceService {
         );
     }
 
+    async deleteAnswer(id) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+        fetch(
+            'DELETE',
+            `${API_URL}/records/deleteAnswer?id=${id}`, {
+                'Authorization': `Bearer ${token}`
+            }
+        );
+    }
+
+    async deleteReplyAnswer(id) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+        fetch(
+            'DELETE',
+            `${API_URL}/records/deleteReplyAnswer?id=${id}`, {
+                'Authorization': `Bearer ${token}`
+            }
+        );
+    }
+
     async markAllactivitySeen() {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
@@ -313,6 +374,28 @@ class VoiceService {
         fetch(
            'GET', 
             `${API_URL}/records/answers?id=${id}&skip=0&take=10&order=DESC&answerId=${answerId}`, {
+                'Authorization': `Bearer ${token}`
+            }
+        );
+    }
+
+    async getReplyAnswerVoices(id) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+        fetch(
+           'GET', 
+            `${API_URL}/records/replyAnswers?id=${id}&skip=0&take=10&order=DESC`, {
+                'Authorization': `Bearer ${token}`
+            }
+        );
+    }
+
+    async getLikes(storyId, storyType) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+        fetch(
+           'GET', 
+            `${API_URL}/records/storyLikes?storyId=${storyId}&storyType=${storyType}`, {
                 'Authorization': `Bearer ${token}`
             }
         );

@@ -8,6 +8,7 @@ export const HeartIcon = ({
   height = 19,
   marginLeft = 0,
   marginRight = 0,
+  marginBottom = 0,
   OnSetLike = ()=>{}
 }) => {
 
@@ -31,7 +32,7 @@ export const HeartIcon = ({
     <TouchableOpacity
       activeOpacity={1}
       onPress={OnSetLike}
-      style={{height: height,marginLeft:marginLeft,marginRight:marginRight}}
+      style={{height: height,marginLeft:marginLeft,marginRight:marginRight,marginBottom:marginBottom}}
     >
       <AnimatedIcon
         ref={smallAnimatedIcon}

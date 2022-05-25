@@ -22,6 +22,7 @@ import { DescriptionText } from '../component/DescriptionText';
 import { FlatList } from 'react-native-gesture-handler';
 import VoiceService from '../../services/VoiceService';
 import { ShareVoice } from '../component/ShareVoice';
+import { AnswerReply } from '../component/AnswerReply';
 import Share from 'react-native-share';
 import VoicePlayer from '../Home/VoicePlayer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -33,7 +34,6 @@ import moreSvg from '../../assets/common/more.svg';
 import editSvg from '../../assets/common/edit.svg';
 import blueShareSvg from '../../assets/common/blue_share.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
-import shareSvg from '../../assets/post/share.svg';
 
 import { windowHeight, windowWidth , SHARE_CHECK } from '../../config/config';
 import { styles } from '../style/Common';
@@ -42,6 +42,7 @@ import { AnswerVoiceItem } from '../component/AnswerVoiceItem';
 import '../../language/i18n';
 import EmojiPicker from 'rn-emoji-keyboard';
 import { RecordIcon } from '../component/RecordIcon';
+import { StoryLikes } from '../component/StoryLikes';
 
 const VoiceProfileScreen = (props) => {
 
@@ -54,6 +55,8 @@ const VoiceProfileScreen = (props) => {
     const [likeCount, setLikeCount] = useState(info.likesCount);
     const [showShareVoice, setShowShareVoice] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [selectedAnswer, setSelectedAnswer] = useState(-1);
+    const [allLikes, setAllLikes] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -134,12 +137,17 @@ const VoiceProfileScreen = (props) => {
     }
 
     const setIsLiked= (index)=>{
-      let tp = answerVoices;
+      let tp = [...answerVoices];
       tp[index].isLiked = !tp[index].isLiked;
       if(tp[index].isLiked) tp[index].likesCount ++;
       else tp[index].likesCount --;
       setAnswerVoices(tp);
-      setRefresh(!refresh);
+    }
+
+    const onDeleteAnswer=(index)=>{
+      let tp = [...answerVoices];
+      tp.splice(index,1);
+      setAnswerVoices(tp);
     }
 
     const OnSetLike =()=>{
@@ -172,59 +180,67 @@ const VoiceProfileScreen = (props) => {
           resizeMode="stretch"
           style={{marginTop:-10,width:windowWidth,height:400}}
         >
-          <View style={{marginTop:Platform.OS=='ios'?55:25,paddingHorizontal:16, flexDirection:'row',justifyContent:'space-between',alignItems:'center',}}>
+          <View style={{marginTop:Platform.OS=='ios'?60:35,paddingHorizontal:16, flexDirection:'row',justifyContent:'space-between',alignItems:'center',}}>
             <TouchableOpacity onPress={()=>props.navigation.goBack()}>
               <SvgXml width="24" height="24" xml={closeBlackSvg} />  
             </TouchableOpacity>
-            {info?.isMine==true&&<TouchableOpacity onPress={()=>setShowModal(true)}>
-              <SvgXml width="24" height="24" xml={moreSvg} />  
-            </TouchableOpacity>}
+            <CommenText
+              text = {info?.title}
+              maxWidth = {windowWidth-122}
+            />
+            <View style={{height:24, width:24}}>
+              {info?.isMine==true&&<TouchableOpacity onPress={()=>setShowModal(true)}>
+                <SvgXml width="24" height="24" xml={moreSvg} />  
+              </TouchableOpacity>}
+            </View>
           </View>
-          <View style={[{marginTop:26,marginLeft:16},styles.rowAlignItems]}>
-            <View style={[{width:64,height:64,backgroundColor:'#FFFFFF',borderRadius:32,marginRight:20},styles.contentCenter]}>
-              <Text
+          <View style={{alignItems:'center', marginTop:22}}>
+            <TouchableOpacity onPress = {()=>{
+              if(info.user.id==user.id)
+                props.navigation.navigate('Profile');
+              else
+                props.navigation.navigate('UserProfile',{userId:info.user.id});
+            }}
+              style={{paddingRight:12}}
+            >
+              <Image 
                 style={{
-                  fontSize: 45,
-                  color: 'white',
+                  width:64,
+                  height:64,
+                  borderRadius:32,
+                  borderColor:'#FFA002',
+                  borderWidth:info.user.premium=='none'?0:2
                 }}
-              >
-                {info?.emoji}
-              </Text> 
-            </View>
-            <View>
-              <CommenText
-                text = {info?.title}
-                maxWidth = {windowWidth-122}
-                marginBottom={7}
+                source={{uri:info?.user.avatar.url}}
               />
-              <TouchableOpacity style={styles.rowAlignItems} onPress = {()=>{
-                if(info.user.id==user.id)
-                  props.navigation.navigate('Profile');
-                else
-                  props.navigation.navigate('UserProfile',{userId:info.user.id});
-              }}>
-                <Image 
+              <View style={[{position:'absolute', left:36, bottom:0, width:30,height:30,backgroundColor:'#FFFFFF',borderRadius:14},styles.contentCenter]}>
+                <Text
                   style={{
-                    width:24,
-                    height:24,
-                    borderRadius:7
+                    fontSize: 24,
+                    color: 'white',
                   }}
-                  source={{uri:info?.user.avatar.url}}
-                />
-                <DescriptionText
-                  fontSize={13}
-                  lineHeight={21}
-                  color={'rgba(54, 36, 68, 0.8)'}
-                  text = {info?.user.name}
-                  marginLeft={8}
-                />
-              </TouchableOpacity>
-            </View>
+                >
+                  {info?.emoji}
+                </Text> 
+              </View>
+              {/* <DescriptionText
+                fontSize={13}
+                lineHeight={21}
+                color={'rgba(54, 36, 68, 0.8)'}
+                text = {info?.user.name}
+                marginLeft={8}
+              /> */}
+            </TouchableOpacity>
+            <CommenText
+              text={info.user.name}
+              fontFamily="SFProDisplay-Semibold"
+              marginTop={8}
+              color = 'rgba(54, 36, 68, 0.8)'
+            />
           </View>
           <View
             style={{
-              marginTop: 24,
-              paddingHorizontal: 8,
+              paddingHorizontal: 6,
               paddingVertical: 16,
               backgroundColor: '#FFF',
               shadowColor: 'rgba(176, 148, 235, 1)',
@@ -233,20 +249,22 @@ const VoiceProfileScreen = (props) => {
               shadowOpacity:0.5,
               shadowRadius:8,
               borderRadius: 16,
+              marginTop:16,
               marginHorizontal: 16,
             }}
           >
             <VoicePlayer
               voiceUrl = {info?.file.url}
               playBtn = {true}
-              replayBtn = {true}
               premium = {info.user.premium !='none'}
               playing = {false}
               stopPlay = {()=>{}}
+              tinWidth={windowWidth/200}
+              mrg={windowWidth/530}
             />
           </View>
         </ImageBackground>
-        <View style={{marginTop:-105, width:'100%', height:windowHeight-400, backgroundColor:'white',borderTopLeftRadius:32,borderTopRightRadius:30}}>
+        <View style={{marginTop:-120, width:'100%', height:windowHeight-380, backgroundColor:'white',borderTopLeftRadius:32,borderTopRightRadius:30}}>
           <View style={{width:'100%',marginTop:8,alignItems:'center'}}>
             <View style={{width:48,height:4,borderRadius:2,backgroundColor:'#D4C9DE'}}>
             </View>
@@ -262,10 +280,12 @@ const VoiceProfileScreen = (props) => {
             renderItem={({item,index})=>
               (item&&!(index>0&&item.id==answerVoices[0].id))?
               <AnswerVoiceItem 
-                key={index+'answerVoice'}
+                key={index+item.id+'answerVoice'}
                 props={props}
                 info = {item}
                 onChangeIsLiked = {()=>setIsLiked(index)}
+                onDeleteItem = {()=>onDeleteAnswer(index)}
+                holdToAnswer={()=>setSelectedAnswer(index)}
               />:null
             }
             keyExtractor={(item, index) => index.toString()}
@@ -278,7 +298,7 @@ const VoiceProfileScreen = (props) => {
           />
           }
         </View>
-        <View
+        {selectedAnswer==-1&&<View
           style={{
             position:'absolute',
             bottom:25,
@@ -305,8 +325,8 @@ const VoiceProfileScreen = (props) => {
           }}>
             <View style={{
               alignItems:'center',
-              marginBottom:-39,
-              marginTop:-35,
+              marginBottom:-42,
+              marginTop:-37,
               zIndex:10
             }}>
               <View style={{width:54,height:54}}>
@@ -317,49 +337,30 @@ const VoiceProfileScreen = (props) => {
                 /> */}
               </View>
               <CommenText
-                text = {t('Tap&Hold to answer')}
+                text = {t('Tap&Hold')}
+                fontFamily="SFProDisplay-Semibold"
                 fontSize={12}
                 lineHeight={12}
-                marginTop={7}
+                marginTop={10}
                 color={'rgba(54, 36, 68, 0.8)'}
               />
             </View>
-            <View style={[{width:windowWidth-32},styles.rowSpaceBetween]}>
-              <View style={{alignItems:'center',marginLeft:31}}>
-                {/* <View style={[styles.row, {alignItems:'center'}]}>
-                {reactionsCount>0?
-                  reactions?.map((eLikes, index) => {
-                    return (
-                      <Text
-                        key = {index+'reactionProfile'}
-                        style={{
-                          fontSize: 20,
-                          color: 'white',
-                        }}
-                      >
-                        {eLikes.emoji}
-                      </Text>
-                    )
-                  })
-                  :
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      color: 'white',
-                      opacity:0.5
-                    }}
-                  >
-                    {"😂"}
-                  </Text>
-                }
-                </View> */}
-                <HeartIcon
-                  isLike = {isLike}
-                  height = {24}
-                  OnSetLike = {()=>OnSetLike()}
-                />
+            <View style={[{width:windowWidth-32,paddingHorizontal:16},styles.rowSpaceBetween]}>
+              <View style={{alignItems:'center'}}>
+                <TouchableOpacity onPress={()=>OnShareVoice()}>
+                  <View style={[styles.row, {alignItems:'center'}]}>
+                    <Image
+                      style={{
+                        width:24,
+                        height:24
+                      }}
+                      source={require('../../assets/post/tagFriends.png')}
+                    />
+                  </View>
+                </TouchableOpacity>
                 <CommenText
-                  text = {likeCount}
+                  text = {t("Tag friends")}
+                  fontFamily="SFProDisplay-Semibold"
                   fontSize = {12}
                   lineHeight = {12}
                   marginTop = {6}
@@ -367,17 +368,59 @@ const VoiceProfileScreen = (props) => {
                 />
               </View>
               <View style={{alignItems:'center',marginRight:20}}>
+                <HeartIcon
+                  isLike = {isLike}
+                  height = {24}
+                  OnSetLike = {()=>OnSetLike()}
+                />
+                <TouchableOpacity onPress={()=>setAllLikes(true)}>
+                  <CommenText
+                    text = {likeCount}
+                    fontFamily="SFProDisplay-Semibold"
+                    fontSize = {12}
+                    lineHeight = {12}
+                    marginTop = {6}
+                    color = {'rgba(54, 36, 68, 0.8)'}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View></View>
+              <View style={{alignItems:'center',marginLeft:20}}>
                 <TouchableOpacity onPress={()=>OnShareVoice()}>
                   <View style={[styles.row, {alignItems:'center'}]}>
-                    <SvgXml
-                      width={68}
-                      height={20}
-                      xml={shareSvg}
+                    <Image
+                      style={{
+                        width:24,
+                        height:24
+                      }}
+                      source={require('../../assets/post/chat.png')}
+                    />
+                  </View>
+                </TouchableOpacity>
+                <CommenText
+                  text = {t('To chat')}
+                  fontFamily="SFProDisplay-Semibold"
+                  fontSize = {12}
+                  lineHeight = {12}
+                  marginTop = {6}
+                  color = {'rgba(54, 36, 68, 0.8)'}
+                />
+              </View>
+              <View style={{alignItems:'center'}}>
+                <TouchableOpacity onPress={()=>OnShareVoice()}>
+                  <View style={[styles.row, {alignItems:'center'}]}>
+                    <Image
+                      style={{
+                        width:48,
+                        height:24
+                      }}
+                      source={require('../../assets/post/socialShare.png')}
                     />
                   </View>
                 </TouchableOpacity>
                 <CommenText
                   text = {t('Share')}
+                  fontFamily="SFProDisplay-Semibold"
                   fontSize = {12}
                   lineHeight = {12}
                   marginTop = {6}
@@ -386,7 +429,7 @@ const VoiceProfileScreen = (props) => {
               </View>
             </View>
           </View>
-        </View>
+        </View>}
         {/* {showEmoji&&
           <EmojiPicker
             onEmojiSelected={(icon)=>selectIcon(icon.emoji)}
@@ -548,11 +591,24 @@ const VoiceProfileScreen = (props) => {
             onCloseModal={()=>setShowShareVoice(false) }
           />
         }
-        <RecordIcon
+        {selectedAnswer==-1&&<RecordIcon
           props={props}
           bottom={50}
           left = {windowWidth/2-27}
-        />
+        />}
+        {selectedAnswer!=-1&&
+          <AnswerReply
+            props={props}
+            info={answerVoices[selectedAnswer]}
+            onCancel = {()=>setSelectedAnswer(-1)}
+          />
+        }
+        {allLikes&&
+        <StoryLikes
+          storyId={info.id}
+          storyType="record"
+          onCloseModal={()=>setAllLikes(false)}
+        />}
       </KeyboardAvoidingView>
     );
   };

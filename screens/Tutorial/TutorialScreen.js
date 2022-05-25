@@ -351,7 +351,7 @@ const TutorialScreen = (props) => {
                   fontSize={22}
                 />
                 <DescriptionText 
-                  text={t("You can now talk to the world. Tell your story, ask a quetion or simply share whatever you have in mind!")}
+                  text={t("You can now talk to the world. Tell your story, ask a questions or simply share whatever you have in mind!")}
                   fontSize={15}
                   color="#281E30"
                   marginTop={16}

@@ -69,6 +69,8 @@ export const styles = StyleSheet.create({
         bottom:0,
         width:'100%',
         marginTop:30,
+        minHeight:300,
+        maxHeight:windowHeight-200,
         //  paddingHorizontal: 16,
         backgroundColor: 'white',
         borderWidth:1,

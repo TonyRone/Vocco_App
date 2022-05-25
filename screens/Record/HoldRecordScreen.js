@@ -54,12 +54,13 @@ const HoldRecordScreen = (props) => {
   const [key, setKey] = useState(0);
   const [hoverState,setHoverState] = useState(0);
   const [isPaused, setIsPaused] = useState(true);
-  const [startTime, setStartTime] = useState(null);
-  const [recordTime,setRecordTime] = useState(0);
   const [isTime, setIsTime] = useState(true);
+  const [touchPos, setTouchPos] = useState(0); 
 
-  const audioRecorderPlayer = useRef(recorderPlayer).current;
-  audioRecorderPlayer.setSubscriptionDuration(1); // optional. Default is 0.1
+  const wasteTime = useRef(0);
+
+  const audioRecorderPlayer = recorderPlayer;
+  audioRecorderPlayer.setSubscriptionDuration(0.2); // optional. Default is 0.1
 
   const startAnimation = () => {
     setFill(50);
@@ -75,13 +76,13 @@ const HoldRecordScreen = (props) => {
     startAnimation();
   };
 
-  const clearRecorder = ()=>{
-    audioRecorderPlayer.stopRecorder();
+  const clearRecorder = async ()=>{
+    await audioRecorderPlayer.stopRecorder();
     audioRecorderPlayer.removeRecordBackListener();
   }
 
   useEffect(() => {
-    setFill(user.premium!='none'?180:60);
+    setFill(user.premium!='none'?180:20);
     setKey(prevKey => prevKey + 1);
     dispatch(setVoiceState(voiceState+1));
     return ()=>clearRecorder();
@@ -122,9 +123,11 @@ const HoldRecordScreen = (props) => {
         AVFormatIDKeyIOS: AVEncodingOption.aac,
       };
       dispatch(setVoiceState(voiceState+1));
-      audioRecorderPlayer.startRecorder(path, audioSet);
-      setStartTime(new Date());
-      setRecordTime(0);
+      await audioRecorderPlayer.startRecorder(path, audioSet);
+      await audioRecorderPlayer.addRecordBackListener((e) => {
+        wasteTime.current = e.currentPosition;
+        console.log(e.currentPosition);
+      });
       setIsRecording(true);
       setIsPaused(false);
     }
@@ -132,24 +135,19 @@ const HoldRecordScreen = (props) => {
 
   const onStopRecord = (publish) => {
     if(isRecording==true){
-      let rtime = recordTime;
-      if(startTime)
-        rtime += (new Date()-startTime);
-      rtime = Math.floor(rtime/1000);
-      if(rtime > fill)
-        rtime = fill;
       setIsRecording(false);
       setIsPaused(true);
       setKey(prevKey => prevKey + 1);
-      setStartTime(null);
-      setRecordTime(0);
       setIsTime(true);
       clearRecorder();
-      if(publish==true&&rtime>0){
-        if(info)
-          props.navigation.navigate('PostingAnswerVoice',{info:info,recordSecs:rtime})
-        else
-          props.navigation.navigate('PostingVoice',{recordSecs:rtime,isTemporary:isTemporary})
+      if(publish == true){
+        if(wasteTime.current>=1.0){
+          if(info)
+            props.navigation.navigate('PostingAnswerVoice',{info:info,recordSecs:Math.floor(wasteTime.current/1000)})
+          else
+            props.navigation.navigate('PostingVoice',{recordSecs:Math.floor(wasteTime.current/1000),isTemporary:isTemporary})
+          clearRecorder();
+        }
       }
     }
     if(publish == false){
@@ -157,23 +155,21 @@ const HoldRecordScreen = (props) => {
     }
   };
  
-  const onChangeRecord = ( v = false )=>{
+  const onChangeRecord =  async( e, v = false )=>{
     if(v == true && isRecording == false && isTime){
+      setTouchPos(e.nativeEvent.pageX);
       onStartRecord();
     }
     else {
       if(v == true && isPaused && isTime){
         audioRecorderPlayer.resumeRecorder();
         setIsPaused(false);
-        setStartTime(new Date());
       }
       else if( v== false && isRecording == true){
-        
-        audioRecorderPlayer.pauseRecorder();
-        setIsPaused(true);
-        if(startTime){
-          setRecordTime(recordTime+(new Date()-startTime));
-          setStartTime(null);
+        let delta = Math.abs(touchPos-e.nativeEvent.pageX);
+        if(delta < 80){
+          await audioRecorderPlayer.pauseRecorder();
+          setIsPaused(true);
         }
       }
     }
@@ -250,7 +246,7 @@ const HoldRecordScreen = (props) => {
                     end={{ x: 0, y: 1 }}
                   >
                     <Animated.Text style={{ color: animatedColor, fontFamily: "SFProDisplay-Semibold" }}>
-                      { remainingTime }
+                    { fill- Math.floor(wasteTime.current/1000) }
                     </Animated.Text>
                   </LinearTextGradient>
                 </ImageBackground>
@@ -320,8 +316,8 @@ const HoldRecordScreen = (props) => {
           
         >
           <View
-            onTouchStart={()=>onChangeRecord( true )}
-            onTouchEnd={()=>onChangeRecord( false )}
+            onTouchStart={(e)=>onChangeRecord(e, true )}
+            onTouchEnd={(e)=>onChangeRecord( e, false )}
           >
             <SvgXml
               width={76}

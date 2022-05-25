@@ -88,7 +88,7 @@ export const Stories = ({
   const storyItems = useMemo(()=>{
     return stories.map((item, index) =>{
       return <VoiceItem 
-        key={index+screenName}
+        key={index+item.id+screenName}
         props={props}
         info = {item}
         onChangeLike ={(isLiked)=>onChangeLike(index, isLiked)}

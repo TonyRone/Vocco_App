@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import { styles } from '../style/Common';
 import { recorderPlayer } from './AudioRecorderPlayer';
+import { DescriptionText } from '../component/DescriptionText';
 import React, {Component} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { SvgXml } from 'react-native-svg';
@@ -54,7 +55,7 @@ class VoicePlayer extends Component {
       swipe:{}
     };
     this.audioRecorderPlayer = recorderPlayer;
-    this.audioRecorderPlayer.setSubscriptionDuration(0.5); // optional. Default is 0.5
+    this.audioRecorderPlayer.setSubscriptionDuration(0.2); // optional. Default is 0.5
   }
   
   componentDidMount (){
@@ -141,8 +142,8 @@ class VoicePlayer extends Component {
 
   render() {
     let waveCom = [];
-    let waveWidth = this.props.tinWidth?this.props.tinWidth:1.5;
-    let mrg = this.props.mrg?this.props.mrg:0.4;
+    let waveWidth = this.props.tinWidth?this.props.tinWidth:1.55;
+    let mrg = this.props.mrg?this.props.mrg:0.45;
     this.waveHeight = this.props.height?this.props.height:39;
     for(let i = 0 ; i < 80 ; i++) {
       let h;
@@ -167,7 +168,7 @@ class VoicePlayer extends Component {
     }
     return (
       <View
-        style={styles.rowSpaceAround}
+        style={[styles.rowSpaceBetween,{paddingHorizontal:10}]}
       >
         {this.props.playBtn&&<TouchableOpacity onPress={()=>this.changePlayStatus()}>
           <SvgXml
@@ -176,18 +177,33 @@ class VoicePlayer extends Component {
             xml={this.state.isPlaying ? pauseSvg:playSvg}
           />
         </TouchableOpacity>}
-        <View
-          style = {{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            height:this.waveHeight+1,
-          }}
-          onTouchStart={this._onTouchStart}
-          onTouchEnd={this._onTouchEnd}
-        > 
-          {waveCom}
+        <View>
+          <View
+            style = {{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginLeft:8,
+              height:this.waveHeight+1,
+            }}
+            onTouchStart={this._onTouchStart}
+            onTouchEnd={this._onTouchEnd}
+          > 
+            {waveCom}
+          </View>
+          {this.state.isStarted&&<View style={[styles.rowSpaceBetween,{marginTop:10}]}>
+            <DescriptionText
+              text={new Date(this.state.currentPositionSec).toISOString().substr(14, 5)}
+              lineHeight={13}
+              fontSize={13}
+            />
+            <DescriptionText
+              text={new Date(this.state.currentDurationSec-this.state.currentPositionSec).toISOString().substr(14, 5)}
+              lineHeight={13}
+              fontSize={13}
+            />
+          </View>}
         </View>
         {this.props.replayBtn&&
         <TouchableOpacity onPress={()=>this.onReplay()}>
@@ -234,6 +250,7 @@ class VoicePlayer extends Component {
     });
     actions.setVoiceState(voiceState+1);
     const fileRemoteUrl = this.props.voiceUrl;
+    console.log(fileRemoteUrl);
     const fileExtension = Platform.select({
       ios: 'm4a',
       android: `mp3`,
@@ -250,6 +267,7 @@ class VoicePlayer extends Component {
     }).fetch('GET', fileRemoteUrl).then(res=>{
       if(this._isMounted&&res.respInfo.status==200){
         this._playerPath = `${Platform.OS === 'android' ? res.path() : 'ss.m4a'}`;
+        console.log(this._playerPath);
         return voiceState + 1 ;
       }
     })
@@ -313,7 +331,7 @@ class VoicePlayer extends Component {
 
   onStopPlay = async () => {
     if(this.state.isStarted == true){
-      this.setState({isPlaying:false,isStarted:false});
+      this.setState({isPlaying:false,isStarted:false, currentPositionSec:0, currentDurationSec:0});
       try{
         await this.audioRecorderPlayer.stopPlayer();
         this.audioRecorderPlayer.removePlayBackListener();}

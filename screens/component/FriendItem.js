@@ -19,7 +19,7 @@ export const FriendItem = ({
     )
   });
   let isGreen = false;
-  if(isUserName == true && info.isFriend == true)
+  if(isUserName == true && (info.isFriend == true||info.user.premium!='none'))
     isGreen = true;
   return (
     <TouchableOpacity
@@ -31,7 +31,7 @@ export const FriendItem = ({
     >
       <Image
         source={{uri:info.user.avatar.url}}
-        style={{width:isGreen?57:56,height:isGreen?57:56,borderRadius:isGreen?28.5:28,borderWidth:isGreen?1:0,borderColor:'#00FF00'}}
+        style={{width:isGreen?57:56,height:isGreen?57:56,borderRadius:isGreen?28.5:28,borderWidth:isGreen?1:0,borderColor:info.user.premium!='none'?'#FFA002':'#00FF00'}}
         resizeMode='cover'
       />
       <Text

@@ -80,7 +80,7 @@ const PostingAnswerVoiceScreen = (props) => {
     setIsLoading(true);
     if (path) {
       let voiceFile = [
-        { name:'duaration', data:String(displayDuration) },
+        { name:'duration', data:String(displayDuration) },
         { name:'record', data:info.id },
         { name:'emoji', data:String(icon) },
         {name: 'file', filename:Platform.OS==='android'?'answer.mp3':'answer.m4a', data: RNFetchBlob.wrap(String(path))},

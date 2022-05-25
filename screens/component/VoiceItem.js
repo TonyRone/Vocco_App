@@ -13,17 +13,15 @@ import '../../language/i18n';
 import { PostContext } from '../component/PostContext';
 import { TitleText } from "./TitleText";
 import { HeartIcon } from './HeartIcon';
+import { StoryLikes } from './StoryLikes';
 import { DescriptionText } from "./DescriptionText";
 import { AnswerSimpleItem } from './AnswerSimpleItem';
-import { FlatList} from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import { SvgXml } from 'react-native-svg';
 import pauseSvg from '../../assets/common/pause.svg';
 import playSvg from '../../assets/common/play.svg';
 import notifySvg from '../../assets/common/notify.svg';
 import yellow_starSvg from '../../assets/common/yellow_star.svg';
-import blankHeartSvg from '../../assets/post/blankHeart.svg';
-import redHeartSvg from '../../assets/post/redHeart.svg';
 
 import { styles } from '../style/Common';
 import VoiceService from '../../services/VoiceService';
@@ -47,6 +45,7 @@ export const VoiceItem = ({
   const [lastTap,setLastTap] = useState(0);
   const [delayTime,setDelayTime] = useState(null);  const {t, i18n} = useTranslation();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [allLikes, setAllLikes] = useState(false);
   
   let { user } = useSelector((state) => {
     return (
@@ -63,6 +62,14 @@ export const VoiceItem = ({
       erngSvg = info.emoji ? info.emoji : "😁",
       comments= info.answersCount,
       premium = info.user.premium;
+
+      let num = Math.ceil((new Date().getTime()-new Date(info.createdAt).getTime())/60000);
+      let flag = num;
+      let minute = num%60;
+      num = (num-minute)/60;
+      let hour = num%24;
+      let day = (num-hour)/24
+      let time = (day>0?(day.toString()+' '+t("day")+(day>1?'s':'')):(hour>0?(hour.toString()+' '+t("hour")+(hour>1?'s':'')):(minute>0?(minute.toString()+' '+t("minute")+(minute>1?'s':'')):'')))+(flag>0?(" "+t("ago")):'');
 
   const [reactions,setReactions] = useState(info.reactions);
   const [reactionsCount,setReactionsCount] = useState(info.reactionsCount);
@@ -189,7 +196,7 @@ export const VoiceItem = ({
             <View>
               <Image
                 source={{uri:userImage}}
-                style={{width:40,height:40,borderRadius:12,borderColor:'#FFA002',borderWidth:premium=='none'?0:2}}
+                style={{width:50,height:50,borderRadius:25,borderColor:'#FFA002',borderWidth:premium=='none'?0:2}}
                 resizeMode='cover'
               />
               <View
@@ -201,8 +208,8 @@ export const VoiceItem = ({
                   borderRadius:50,
                   justifyContent:'center',
                   alignItems:'center',
-                  right:-12,
-                  bottom:5
+                  right:-10,
+                  bottom:-2
                 }}
               >
                 <Text
@@ -271,48 +278,27 @@ export const VoiceItem = ({
           style={[styles.rowSpaceBetween,{marginTop:8}]}
         >
           <View style={[styles.row, {alignItems:'center'}]}>
-            {/* {reactionsCount>0?
-              reactions?.map((eLikes, index) => {
-                return (
-                  <Text
-                    key={index+info.id+'reactions'}
-                    style={{
-                      fontSize: 12,
-                      color: 'white',
-                    }}
-                  >
-                    {eLikes.emoji}
-                  </Text>
-                )
-              })
-            :
-            <Text
-              style={{
-                fontSize: 12,
-                color: 'white',
-                opacity:0.5
-              }}
-            >
-              {"😂"}
-            </Text>
-            } */}
-            {/* <SvgXml
-              width={16}
-              height={16}
-              xml={isLiked?redHeartSvg:blankHeartSvg}
-            /> */}
             <HeartIcon
               isLike = {info.isLike}
               OnSetLike = {()=>OnSetLike()}
               marginLeft={6}
-              marginRight={8}
+              marginRight={7}
             />
+            <TouchableOpacity onPress={()=>setAllLikes(true)}>
+              <DescriptionText
+                text={info.likesCount}
+                fontSize={17}
+                lineHeight={19}
+                fontFamily="SFProDisplay-Medium"
+                color="rgba(59, 31, 82, 0.6)"
+              />
+            </TouchableOpacity>
             <DescriptionText
-              text={info.likesCount}
-              fontSize={16}
-              lineHeight={19}
-              fontFamily="SFProDisplay-Medium"
-              color="rgba(59, 31, 82, 0.6)"
+              text = {time}
+              fontSize = {17}
+              lineHeight = {19}
+              marginLeft = {25}
+              color = 'rgba(54, 36, 68, 0.8)'
             />
           </View>
           <View style={{flexDirection:'row', alignItems:'center'}}>
@@ -350,27 +336,12 @@ export const VoiceItem = ({
           onCloseModal = {()=>setShowContext(false)}
         />
       }
-      {/* {showAnswers&&answerVoices.length>0&&<FlatList
-        style={{marginTop:5, marginLeft:15}}
-        data={answerVoices}
-        renderItem={({item,index})=>index<5?
-          <AnswerSimpleItem
-            key={index+info.id+'simpleItem'}
-            info = {answerVoices[answerVoices.length-index-1]}
-          //  isPlaying = {index==nowVoice}
-          //  onPressPlay={() => pressPlayVoice(index)}
-          //  onStopPlay={()=>onStopAnswerPlay()}
-          />:
-          null
-        }
-        keyExtractor={(item, index) => index.toString()}
-      />} */}
-      {/* {showEmojies&&
-        <EmojiPicker
-          onEmojiSelected={(icon)=>selectIcon(icon.emoji)}
-          open={showEmojies}
-          onClose={() => setShowEmojies(false)} />
-      } */}
+     {allLikes&&
+      <StoryLikes
+        storyId={info.id}
+        storyType="record"
+        onCloseModal={()=>setAllLikes(false)}
+      />}
     </>
   );
 };

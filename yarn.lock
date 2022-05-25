@@ -7697,6 +7697,13 @@
   "resolved" "https://registry.npmjs.org/react-native-splash-screen/-/react-native-splash-screen-3.2.0.tgz"
   "version" "3.2.0"
 
+"react-native-stopwatch-timer@^0.0.21":
+  "integrity" "sha512-qFFsD85NkBT1nxo32HMGq3XAtQyMC09p9ZDIEuOED2BOxgs0UpWg/FSTA0MmEoIKMyXUwSE5VxEzBaGP3z1HFw=="
+  "resolved" "https://registry.npmjs.org/react-native-stopwatch-timer/-/react-native-stopwatch-timer-0.0.21.tgz"
+  "version" "0.0.21"
+  dependencies:
+    "prop-types" "^15.7.2"
+
 "react-native-stories-view@^1.0.7":
   "integrity" "sha512-ONY+bsR/luqTFuwgfgRKGOL1xXBghUv2od6zACyw/LBq7In/wz4t9DEIwcJ5DnA3guKgC7jNMFBVe8avzcr/Kg=="
   "resolved" "https://registry.npmjs.org/react-native-stories-view/-/react-native-stories-view-1.0.7.tgz"

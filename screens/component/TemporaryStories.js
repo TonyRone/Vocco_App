@@ -26,6 +26,7 @@ import { styles } from '../style/Common';
 export const TemporaryStories = ({
   props,
   userId = "",
+  onSetExpandKey =()=>{},
 }) => {
   const {t, i18n} = useTranslation();
   const scrollRef = useRef();
@@ -77,7 +78,7 @@ export const TemporaryStories = ({
         width:temFlag>=0?58:56,
         marginRight:16
       }}
-      onPress={() =>temFlag>=0?props.navigation.navigate('VoiceProfile', {info:stories[temFlag]}):props.navigation.navigate("HoldRecord", {isTemporary: true})}
+      onPress={() =>temFlag>=0?props.navigation.navigate('VoiceProfile', {info:stories[temFlag]}):onSetExpandKey()}
       onLongPress={()=>temFlag>=0?setConfirmModal(true):null}
     >
       <Image
@@ -125,7 +126,7 @@ export const TemporaryStories = ({
     {useMemo(()=>stories.map((item,index)=>
       (userId==''&&item.user.id == user.id)?null:
       <FriendItem 
-        key={index+'friendItem_feed'}
+        key={index+item.id+'friendItem_feed'}
         props={props}
         info = {item}
         isUserName = {userId==''?true:false}

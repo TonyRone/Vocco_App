@@ -6,7 +6,6 @@ import NavigationService from '../services/NavigationService';
 
 PushNotification.configure({
   onRegister: async ({token, os}) => {
-    //dispatch(setNotificationId(token, os));
     await AsyncStorage.setItem(
       DEVICE_TOKEN,
       token

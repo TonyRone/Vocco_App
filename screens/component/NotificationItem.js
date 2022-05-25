@@ -10,14 +10,11 @@ import {
 
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n'
-import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
 
 import { SvgXml } from 'react-native-svg';
-import pauseSvg from '../../assets/common/pause.svg';
-import playSvg from '../../assets/common/play.svg';
-import notifySvg from '../../assets/common/notify.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
+import yellow_starSvg from '../../assets/common/yellow_star.svg';
 
 import whiteTrashSvg from '../../assets/notification/white_trash.svg'
 
@@ -29,6 +26,7 @@ import { produceWithPatches } from 'immer';
 export const NotificationItem = ({
   userImage,
   userName,
+  userPremium = false,
   details,
   isNew = false,
   notificationTime,
@@ -79,7 +77,9 @@ export const NotificationItem = ({
                 style={{
                     width:40,
                     height:40,
-                    borderRadius:12
+                    borderRadius:12,
+                    borderColor:'#FFA002',
+                    borderWidth:userPremium=='none'?0:2
                 }}
                 source={{uri:userImage}}
             />
@@ -89,17 +89,26 @@ export const NotificationItem = ({
                     borderWidth:2,borderColor:'#FFF',backgroundColor:'#D82783'}}>
             </View>}
             <View style={{marginLeft:16}}>
-            <CommenText
-                text = {userName}
-                fontSize = {15}
-                lineHeight = {24}  
-            />
-            <DescriptionText
-                text = {details}
-                fontSize = {13}
-                lineHeight = {21}
-                color = 'rgba(54, 36, 68, 0.8)'
-                marginTop = {2}
+                <View style={styles.rowAlignItems}>
+                    {userPremium!='none'&&
+                        <SvgXml
+                            width={30}
+                            height={30}
+                            xml={yellow_starSvg}
+                        />
+                    }
+                    <CommenText
+                        text = {userName}
+                        fontSize = {15}
+                        lineHeight = {24}  
+                    />
+                </View>
+                <DescriptionText
+                    text = {details}
+                    fontSize = {13}
+                    lineHeight = {21}
+                    color = 'rgba(54, 36, 68, 0.8)'
+                    marginTop = {2}
             />
             </View>
         </View>
