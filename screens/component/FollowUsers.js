@@ -101,6 +101,7 @@ export const FollowUsers = ({
                 props.navigation.navigate('Profile');
               else
                 props.navigation.navigate('UserProfile',{userId:item.user.id});
+              closeModal();
               }} 
               key = {index+item.user.id+"likes"}
               style={{flexDirection:'row', alignItems:'center', marginLeft:16, marginTop:10, marginBottom:10}}

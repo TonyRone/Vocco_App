@@ -248,7 +248,7 @@ const UserProfileScreen = (props) => {
     //  checkLogin();
     getUserInfo()
     getUserVoices();
-  }, [refreshState])
+  }, [refreshState, userId])
   return (
     <KeyboardAvoidingView 
       style={{
