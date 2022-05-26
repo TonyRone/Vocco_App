@@ -55,7 +55,7 @@ const VoiceProfileScreen = (props) => {
     const [likeCount, setLikeCount] = useState(info.likesCount);
     const [showShareVoice, setShowShareVoice] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [selectedAnswer, setSelectedAnswer] = useState(-1);
+    const [isHolding, setIsHolding] = useState(false);
     const [allLikes, setAllLikes] = useState(false);
 
     const dispatch = useDispatch();
@@ -264,7 +264,7 @@ const VoiceProfileScreen = (props) => {
             />
           </View>
         </ImageBackground>
-        <View style={{marginTop:-90, width:'100%', height:windowHeight-330, backgroundColor:'white',borderTopLeftRadius:32,borderTopRightRadius:30}}>
+        <View style={{marginTop:Platform.OS=='ios'?-60:-100, width:'100%', height:windowHeight-390, backgroundColor:'white',borderTopLeftRadius:32,borderTopRightRadius:30}}>
           <View style={{width:'100%',marginTop:8,alignItems:'center'}}>
             <View style={{width:48,height:4,borderRadius:2,backgroundColor:'#D4C9DE'}}>
             </View>
@@ -285,7 +285,7 @@ const VoiceProfileScreen = (props) => {
                 info = {item}
                 onChangeIsLiked = {()=>setIsLiked(index)}
                 onDeleteItem = {()=>onDeleteAnswer(index)}
-                holdToAnswer={()=>setSelectedAnswer(index)}
+                holdToAnswer={(v)=>setIsHolding(v)}
               />:null
             }
             keyExtractor={(item, index) => index.toString()}
@@ -298,7 +298,7 @@ const VoiceProfileScreen = (props) => {
           />
           }
         </View>
-        {selectedAnswer==-1&&<View
+        {isHolding==false&&<View
           style={{
             position:'absolute',
             bottom:25,
@@ -337,7 +337,7 @@ const VoiceProfileScreen = (props) => {
                 /> */}
               </View>
               <CommenText
-                text = {t('Tap&Hold')}
+                text = ""
                 fontFamily="SFProDisplay-Semibold"
                 fontSize={12}
                 lineHeight={12}
@@ -398,7 +398,7 @@ const VoiceProfileScreen = (props) => {
                   </View>
                 </TouchableOpacity>
                 <CommenText
-                  text = {t('To chat')}
+                  text = {t("To chat")}
                   fontFamily="SFProDisplay-Semibold"
                   fontSize = {12}
                   lineHeight = {12}
@@ -591,18 +591,11 @@ const VoiceProfileScreen = (props) => {
             onCloseModal={()=>setShowShareVoice(false) }
           />
         }
-        {selectedAnswer==-1&&<RecordIcon
+        {isHolding==false&&<RecordIcon
           props={props}
           bottom={50}
           left = {windowWidth/2-27}
         />}
-        {selectedAnswer!=-1&&
-          <AnswerReply
-            props={props}
-            info={answerVoices[selectedAnswer]}
-            onCancel = {()=>setSelectedAnswer(-1)}
-          />
-        }
         {allLikes&&
         <StoryLikes
           props={props}

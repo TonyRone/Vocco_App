@@ -12,9 +12,10 @@ import { SvgXml } from 'react-native-svg';
 import readedSvg from '../../assets/setting/readed.svg';
 import circleCheckSvg from '../../assets/setting/circle_check.svg';
 import circleUnCheckSvg from '../../assets/setting/circle_uncheck.svg';
+import closeBlackSvg from '../../assets/record/closeBlack.svg';
 
 import { useSelector , useDispatch } from 'react-redux';
-import { setUser } from '../../store/actions';
+import { setUser, setRefreshState } from '../../store/actions';
 
 import { windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
@@ -33,7 +34,7 @@ const  PremiumScreen = (props) => {
 
   const [identify, setIdentify] = useState('');
 
-  const user = useSelector((state)=>state.user.user);
+  const {user, refreshState} = useSelector((state)=>state.user);
   const dispatch = useDispatch();
 
   const changePremiumState =()=>{
@@ -43,6 +44,7 @@ const  PremiumScreen = (props) => {
           let userData = {...user}
           userData.premium = premiumState
           dispatch(setUser(userData));
+          dispatch(setRefreshState(!refreshState));
           props.navigation.goBack();
       }
       setLoading(false);
@@ -68,6 +70,16 @@ const  PremiumScreen = (props) => {
           resizeMode="stretch"
           style={styles.background}
         >
+          <View style={{marginTop:Platform.OS=='ios'?60:35,paddingHorizontal:16, flexDirection:'row',justifyContent:'space-between',alignItems:'center',}}>
+            <TouchableOpacity onPress={()=>props.navigation.goBack()}>
+              <SvgXml width="24" height="24" xml={closeBlackSvg} />  
+            </TouchableOpacity>
+            <CommenText
+              text = {t("Go to Premium")}
+            />
+            <View style={{height:24, width:24}}>
+            </View>
+          </View>
           <View style={{position:'absolute', width:'100%',bottom:108,paddingHorizontal:16}}>
             <View style={{ flexDirection:'row',alignItems:'center',marginLeft:15}}>
               <SvgXml

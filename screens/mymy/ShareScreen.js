@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   View, 
   ImageBackground, 
-  KeyboardAvoidingView, 
+  KeyboardAvoidingView,
+  TouchableOpacity 
 } from 'react-native';
 
 import {useTranslation} from 'react-i18next';
@@ -12,6 +13,7 @@ import { MyButton } from '../component/MyButton';
 import { ShareVoice } from '../component/ShareVoice';
 import { SvgXml } from 'react-native-svg';
 import shareTextSvg from '../../assets/post/ShareText.svg';
+import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SHARE_CHECK } from '../../config/config';
 import { styles } from '../style/Login';
@@ -48,6 +50,11 @@ const ShareScreen = (props) => {
           resizeMode="stretch"
           style={styles.background}
         >
+          <View style={{marginTop:Platform.OS=='ios'?60:35,paddingHorizontal:16, flexDirection:'row',justifyContent:'space-between',alignItems:'center',}}>
+            <TouchableOpacity onPress={()=>props.navigation.goBack()}>
+              <SvgXml width="24" height="24" xml={closeBlackSvg} />  
+            </TouchableOpacity>
+          </View>
           <View style={{position:'absolute', width:'100%',bottom:68,flex:1,alignItems:'center'}}>
             <SvgXml
               xml= {shareTextSvg}

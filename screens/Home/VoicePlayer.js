@@ -45,8 +45,8 @@ class VoicePlayer extends Component {
       isLoggingIn: false,
       recordSecs: 0,
       recordTime: '00:00:00',
-      currentPositionSec: 0,
-      currentDurationSec: 0,
+      currentPositionSec: 1,
+      currentDurationSec: 2,
       playTime: '00:00:00',
       duration: '00:00:00',
       isPlaying:false,
@@ -187,12 +187,12 @@ class VoicePlayer extends Component {
               marginLeft:8,
               height:this.waveHeight+1,
             }}
-            onTouchStart={this._onTouchStart}
-            onTouchEnd={this._onTouchEnd}
+            // onTouchStart={this._onTouchStart}
+            // onTouchEnd={this._onTouchEnd}
           > 
             {waveCom}
           </View>
-          {this.state.isStarted&&<View style={[styles.rowSpaceBetween,{marginTop:10}]}>
+          {this.state.isStarted==true&&<View style={[styles.rowSpaceBetween,{marginTop:10}]}>
             <DescriptionText
               text={new Date(this.state.currentPositionSec).toISOString().substr(14, 5)}
               lineHeight={13}
@@ -287,7 +287,7 @@ class VoicePlayer extends Component {
         this.setState({
           isStarted:true,
           isPlaying:true,
-          currentPositionSec:0
+          currentPositionSec:1
         });
       const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath);
       const volume = await this.audioRecorderPlayer.setVolume(1.0);
@@ -330,7 +330,7 @@ class VoicePlayer extends Component {
 
   onStopPlay = async () => {
     if(this.state.isStarted == true){
-      this.setState({isPlaying:false,isStarted:false, currentPositionSec:0, currentDurationSec:0});
+      this.setState({isPlaying:false,isStarted:false, currentPositionSec:1, currentDurationSec:2});
       try{
         await this.audioRecorderPlayer.stopPlayer();
         this.audioRecorderPlayer.removePlayBackListener();}

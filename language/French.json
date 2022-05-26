@@ -76,7 +76,7 @@
     "You can now talk to the world. Tell your story, ask a quetion or simply share whatever you have in mind!":"Tu peux maintenant parler au monde entier. Raconter tes histoires, poser une question ou partager tout simplement ce que tu as en tête !",
     "Click & hold on the microphone to start recording your first story.":"Clique sur le microphone puis maintient le pour enregistrer ta première histoire.",
     "You have 1:00 maximum":"Tu as 1:00 maximum",
-    "Tap to answer":"Appuies pour répondre",
+    "Tap here to answer":"Appuyer ici pour répondre",
     "Discover":"Découvrir",
     "Top categories":"Meilleures catégories",
     "SEE ALL":"VOIR TOUT",
@@ -232,7 +232,12 @@
     "Liked your answer":"A aimé ta réponse",
     "Add new story":"Ajouter une nouvelle histoire",
     "Sent Request...":"Demande envoyée...",
-    "View more answers":"Voir plus de réponses",
-    "View less answers":"Voir moins de réponses"
+    "See more replies":"Voir plus de réponses",
+    "See less replies":"Voir moins de réponses",
+    "Go to Premium":"Devenir Premium",
+    "answer":"réponse",
+    "Click to reply":"Clique pour répondre",
+    "Tag friends":"Tag tes amis",
+    "To chat":"Par message"
   }
 }

@@ -73,7 +73,7 @@ export const FollowUsers = ({
         <View style={styles.swipeContainerContent}>
           <View style={[styles.rowSpaceBetween,{paddingLeft:16,paddingRight:14, paddingTop:14,paddingBottom:11,borderBottomWidth:1,borderBottomColor:'#F0F4FC'}]}>
             <TitleText
-              text={followType+"("+follows.length+")"}
+              text={t(followType)+"("+follows.length+")"}
               fontFamily="SFProDisplay-Semibold"
               fontSize={15}
               lineHeight={24}

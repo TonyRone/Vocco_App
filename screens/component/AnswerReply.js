@@ -9,6 +9,7 @@ import {
   Platform,
   Animated,
   PermissionsAndroid,
+  TouchableOpacity,
   Vibration
 } from 'react-native';
 
@@ -22,6 +23,7 @@ import AudioRecorderPlayer, {
 import * as Progress from "react-native-progress";
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
 import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import RNFetchBlob from 'rn-fetch-blob';
 import SwipeDownModal from 'react-native-swipe-down';
 import Draggable from 'react-native-draggable';
@@ -44,12 +46,13 @@ import recordSvg from '../../assets/common/bottomIcons/record.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
 import { SvgXml } from 'react-native-svg';
 import { setUseProxies } from 'immer';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+//import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export const AnswerReply = ({
     props,
     info,
-    onCancel =()=>{}
+    onCancel =()=>{},
+    onPushReply=()=>{}
 }) => {
 
   let { user , voiceState , refreshState } = useSelector((state) => state.user) ;
@@ -65,6 +68,7 @@ export const AnswerReply = ({
   const [isPublish, setIsPublish] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(true)
+  const [key, setKey] = useState(0);
 
   const wasteTime = useRef(0);
 
@@ -89,7 +93,8 @@ export const AnswerReply = ({
   }
 
   useEffect(() => {
-    setFill(user.premium!='none'?18:6);
+    setFill(user.premium!='none'?180:60);
+    setKey(prevKey => prevKey + 1);
     return ()=>clearRecorder();
   }, [])
 
@@ -125,6 +130,7 @@ export const AnswerReply = ({
       setIsRecording(false);
       setIsPaused(true);
       setIsTime(true);
+      setKey(prevKey => prevKey + 1);
       if(publish == true){
         if(wasteTime.current>=1.0){
           clearRecorder();
@@ -171,7 +177,7 @@ export const AnswerReply = ({
         if (res.respInfo.status !== 201) {
         } else {
           Vibration.vibrate(100);
-          dispatch(setRefreshState(!refreshState));
+          onPushReply();
           closeModal();
         }
         setIsLoading(false);
@@ -293,7 +299,7 @@ export const AnswerReply = ({
             <View style={{
               position:'absolute',
               bottom:160,
-              width:120,
+              width:105,
               height:48,
               backgroundColor:"#FFF",
               borderRadius:16,
@@ -316,11 +322,32 @@ export const AnswerReply = ({
                 fontSize={15}
                 marginLeft={12}
               /> */}
-              <Stopwatch
-                //totalDuration={15000}
-                start={!isPaused}
-                options={options}
-              />
+              <CountdownCircleTimer
+                key={key}
+                isPlaying={!isPaused}
+                duration={fill}
+                size={70}
+                strokeWidth={0}
+                trailColor="#D4C9DE"
+                trailStrokeWidth={0}
+                onComplete = {()=>onStopRecord(true)}
+                colors={[
+                  ['#B35CF8', 0.4],
+                  ['#8229F4', 0.4],
+                  ['#8229F4', 0.2],
+                ]}
+              >
+                {({ remainingTime, animatedColor }) => {
+                  return (
+                    <DescriptionText
+                      text={new Date(wasteTime.current).toISOString().substr(14, 5)}
+                      lineHeight={24}
+                      color="rgba(54, 36, 68, 0.8)"
+                      fontSize={15}
+                    />
+                  )
+                }}
+              </CountdownCircleTimer>
             </View>
           </>}
           {isLoading&&
@@ -339,17 +366,4 @@ export const AnswerReply = ({
       }
     />
   );
-};
-
-const options = {
-  container: {
-    backgroundColor: '#FFF',
-    padding: 5,
-    width: 80,
-  },
-  text: {
-    fontSize: 15,
-    color: '#000',
-    marginLeft: 7,
-  }
 };

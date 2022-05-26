@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, TouchableOpacity, Text, Image } from "react-native";
 import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
@@ -6,6 +6,7 @@ import { DescriptionText } from "./DescriptionText";
 import { useSelector } from 'react-redux';
 
 import { HeartIcon } from './HeartIcon';
+import { AnswerReply } from "./AnswerReply";
 import { StoryLikes } from "./StoryLikes";
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
@@ -21,6 +22,7 @@ import VoiceService from "../../services/VoiceService";
 import VoicePlayer from "../Home/VoicePlayer";
 import { windowWidth } from "../../config/config";
 import { ReplyAnswerItem } from "./ReplyAnswerItem";
+import { set } from "immer/dist/internal";
 
 export const AnswerVoiceItem = ({
   info,
@@ -37,6 +39,7 @@ export const AnswerVoiceItem = ({
   const [replyAnswers, setReplyAnswers] = useState([]);
   const [allLikes, setAllLikes] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const [hold, setHold] = useState(false);
 
   const {t, i18n} = useTranslation();
   const [lastTap,setLastTap] = useState(0);
@@ -79,12 +82,12 @@ export const AnswerVoiceItem = ({
     }
   };
 
-  const onExpand =()=>{
-    if(isExpanded){
-      setIsExpanded(false);
-    }
-    else{
-      setIsExpanded(true);
+  const getReplies =()=>{
+    // if(isExpanded){
+    //   setIsExpanded(false);
+    // }
+    // else{
+    //   setIsExpanded(true);
       VoiceService.getReplyAnswerVoices(info.id).then(async res => {
         if (res.respInfo.status === 200) {
           const jsonRes = await res.json();
@@ -94,7 +97,7 @@ export const AnswerVoiceItem = ({
       .catch(err => {
         console.log(err);
       });
-    }
+    // }
   }
 
   const setIsLiked= (index)=>{
@@ -117,19 +120,28 @@ export const AnswerVoiceItem = ({
     tp.splice(index,1);
     setReplyAnswers(tp);
   }
+
+  const holdAnswer =(v)=>{
+    setHold(v);
+    holdToAnswer(v);
+  }
+
+  useEffect(() => {
+    getReplies();
+  }, [])
   
   return (<>
-    <ScrollView  horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={{maxWidth:windowWidth,borderBottomColor:'#F2F0F5',borderBottomWidth:1}}>
+    <ScrollView  horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={{maxWidth:windowWidth}}>
       <TouchableOpacity
         style={{
           marginBottom:3,
-          paddingHorizontal:30,
+          paddingHorizontal:24,
           paddingTop:10,
           width:windowWidth,
           paddingBottom:10,
           backgroundColor:'#FFF',
         }}
-        onLongPress={()=>onExpand()}
+       // onLongPress={()=>onExpand()}
         onPress={() => onClickDouble()}
       >
         <View
@@ -163,9 +175,9 @@ export const AnswerVoiceItem = ({
                   marginTop={2}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>{setIsExpanded(false);holdToAnswer();}}>
+              <TouchableOpacity onPress={()=>holdAnswer(true)}>
                 <DescriptionText
-                  text= "Tap to answer"
+                  text= {t("Tap here to answer")}
                   color="#8327D8"
                   fontSize={12}
                   lineHeight={16}
@@ -177,7 +189,6 @@ export const AnswerVoiceItem = ({
           <View style={styles.rowAlignItems}>
             <HeartIcon
               isLike = {check}
-              height = {windowWidth/25}
               marginRight={22}
               marginBottom={22}
               OnSetLike = {()=>onLikeVoice()}
@@ -203,7 +214,18 @@ export const AnswerVoiceItem = ({
         </View>
         {
           isPlaying&&
-          <View style={{marginTop:8,width:'100%'}}> 
+          <View style={{
+            marginTop:8,
+            width:'100%',
+            backgroundColor:'#F8F0FF',
+            borderTopLeftRadius:4,
+            borderTopRightRadius:16,
+            borderBottomLeftRadius:16,
+            borderBottomRightRadius:16,
+            paddingVertical:8,
+            paddingLeft:4,
+            paddingRight:12
+          }}> 
             <VoicePlayer
               voiceUrl = {info.file.url}
               stopPlay ={()=>setIsPlaying(false)}
@@ -211,8 +233,8 @@ export const AnswerVoiceItem = ({
               playBtn = {false}
               replayBtn = {false}
               playing={true}
-              tinWidth={windowWidth/150}
-              mrg={windowWidth/600}
+              tinWidth={windowWidth/160}
+              mrg={windowWidth/650}
               height={30}
             />
           </View>
@@ -247,7 +269,7 @@ export const AnswerVoiceItem = ({
       storyType="answer"
       onCloseModal={()=>setAllLikes(false)}
     />}
-    {isExpanded&&replyAnswers.length>0&&
+    {replyAnswers.length>0&&
       <>
       <FlatList
       data={replyAnswers}
@@ -258,22 +280,47 @@ export const AnswerVoiceItem = ({
           info = {item}
           onChangeIsLiked = {()=>setIsLiked(index)}
           onDeleteReplyItem={()=>onDeleteReplyAnswer(index)}
+          isEnd = {(replyAnswers.length<3&&index==replyAnswers.length-1)?true:false}
         />
       }
       keyExtractor={(item, index) => index.toString()}
       />
       {replyAnswers.length>2&&
-        <TouchableOpacity onPress={()=>setShowMore(!showMore)}>
-          <DescriptionText
-            text={showMore?t("View less answers"):t("View more answers")}
-            fontSize={13}
-            color="#281E30"
-            marginTop={6}
-            marginBottom={12}
-            marginLeft={82}
-          />
-        </TouchableOpacity>
+        <View style={{flexDirection:'row'}}>
+          <View style={{marginLeft:43}}>
+            <View style={{
+              width:1,
+              height:21,
+              backgroundColor:"#D4C9DE"
+            }}>
+            </View>
+            <View style={{
+              width:16,
+              height:1,
+              backgroundColor:"#D4C9DE"
+            }}>
+            </View>
+          </View>
+          <TouchableOpacity onPress={()=>setShowMore(!showMore)}>
+            <DescriptionText
+              text={showMore?t("See less replies"):t("See more replies")}
+              fontSize={13}
+              color="#281E30"
+              marginTop={8}
+              marginBottom={8}
+              marginLeft={23}
+            />
+          </TouchableOpacity>
+        </View>
       }
+      {hold == true&&
+          <AnswerReply
+            props={props}
+            info={info}
+            onCancel = {()=>holdAnswer(false)}
+            onPushReply={()=>getReplies()}
+          />
+        }
       </>
     }
   </>

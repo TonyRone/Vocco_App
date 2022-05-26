@@ -399,9 +399,9 @@ const AppNavigator = createStackNavigator({
     }
   },
 },
-// {
-//   initialRouteName:'Logo'
-// }
+{
+  initialRouteName:'Logo'
+}
 );
 
 const AppContainer = createAppContainer(AppNavigator);

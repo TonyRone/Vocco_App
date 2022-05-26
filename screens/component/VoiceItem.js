@@ -308,7 +308,7 @@ export const VoiceItem = ({
                 color:'#8327D8'
               }}
             >
-              {t("Tap to answer")}
+              {t("Tap here to answer")}
             </Text> */}
             <SvgXml
               width={19}
