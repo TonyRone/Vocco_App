@@ -313,15 +313,15 @@ export const AnswerVoiceItem = ({
           </TouchableOpacity>
         </View>
       }
-      {hold == true&&
-          <AnswerReply
-            props={props}
-            info={info}
-            onCancel = {()=>holdAnswer(false)}
-            onPushReply={()=>getReplies()}
-          />
-        }
       </>
+    }
+    {hold == true&&
+      <AnswerReply
+        props={props}
+        info={info}
+        onCancel = {()=>holdAnswer(false)}
+        onPushReply={()=>getReplies()}
+      />
     }
   </>
   );

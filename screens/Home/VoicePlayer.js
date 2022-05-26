@@ -45,8 +45,8 @@ class VoicePlayer extends Component {
       isLoggingIn: false,
       recordSecs: 0,
       recordTime: '00:00:00',
-      currentPositionSec: 1,
-      currentDurationSec: 2,
+      currentPositionSec: 0,
+      currentDurationSec: 0,
       playTime: '00:00:00',
       duration: '00:00:00',
       isPlaying:false,
@@ -194,7 +194,7 @@ class VoicePlayer extends Component {
           </View>
           {this.state.isStarted==true&&<View style={[styles.rowSpaceBetween,{marginTop:10}]}>
             <DescriptionText
-              text={new Date(this.state.currentPositionSec).toISOString().substr(14, 5)}
+              text={new Date(Math.max(this.state.currentPositionSec,0)).toISOString().substr(14, 5)}
               lineHeight={13}
               fontSize={13}
             />
@@ -225,21 +225,21 @@ class VoicePlayer extends Component {
     );
   }
 
-  onStatusPress = (e) => {
-    const touchX = e.nativeEvent.locationX;
-    const playWidth =
-      (this.state.currentPositionSec / this.state.currentDurationSec) *
-      (screenWidth - 56);
-    const currentPosition = Math.round(this.state.currentPositionSec);
+  // onStatusPress = (e) => {
+  //   const touchX = e.nativeEvent.locationX;
+  //   const playWidth =
+  //     (this.state.currentPositionSec / this.state.currentDurationSec) *
+  //     (screenWidth - 56);
+  //   const currentPosition = Math.round(this.state.currentPositionSec);
 
-    if (playWidth && playWidth < touchX) {
-      const addSecs = Math.round(currentPosition + 1000);
-      this.audioRecorderPlayer.seekToPlayer(addSecs);
-    } else {
-      const subSecs = Math.round(currentPosition - 1000);
-      this.audioRecorderPlayer.seekToPlayer(subSecs);
-    }
-  };
+  //   if (playWidth && playWidth < touchX) {
+  //     const addSecs = Math.round(currentPosition + 1000);
+  //     this.audioRecorderPlayer.seekToPlayer(addSecs);
+  //   } else {
+  //     const subSecs = Math.round(currentPosition - 1000);
+  //     this.audioRecorderPlayer.seekToPlayer(subSecs);
+  //   }
+  // };
   
   getPlayLink= async()=>{
     let { voiceState, actions } = this.props;
@@ -287,7 +287,7 @@ class VoicePlayer extends Component {
         this.setState({
           isStarted:true,
           isPlaying:true,
-          currentPositionSec:1
+          currentPositionSec:0
         });
       const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath);
       const volume = await this.audioRecorderPlayer.setVolume(1.0);
@@ -330,7 +330,7 @@ class VoicePlayer extends Component {
 
   onStopPlay = async () => {
     if(this.state.isStarted == true){
-      this.setState({isPlaying:false,isStarted:false, currentPositionSec:1, currentDurationSec:2});
+      this.setState({isPlaying:false,isStarted:false, currentPositionSec:0, currentDurationSec:0});
       try{
         await this.audioRecorderPlayer.stopPlayer();
         this.audioRecorderPlayer.removePlayBackListener();}

@@ -93,7 +93,7 @@ export const AnswerReply = ({
   }
 
   useEffect(() => {
-    setFill(user.premium!='none'?180:60);
+    setFill(user.premium=='none'?60:180);
     setKey(prevKey => prevKey + 1);
     return ()=>clearRecorder();
   }, [])

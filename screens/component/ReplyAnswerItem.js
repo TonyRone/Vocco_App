@@ -202,7 +202,7 @@ export const ReplyAnswerItem = ({
             </View>
           }
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>onDeleteReplyAnswer()} style={[styles.rowAlignItems,{
+        {user.id==info.user.id&& <TouchableOpacity onPress={()=>onDeleteReplyAnswer()} style={[styles.rowAlignItems,{
             width:windowWidth-80,
             paddingVertical:24,
             backgroundColor:'#E41717',
@@ -221,7 +221,7 @@ export const ReplyAnswerItem = ({
                 color = 'white'
                 marginLeft= {16}
             />
-        </TouchableOpacity>
+        </TouchableOpacity>}
         {allLikes&&
         <StoryLikes
           props={props}

@@ -274,9 +274,12 @@ const UserProfileScreen = (props) => {
             flexDirection:'row',
             justifyContent:'space-around',
             alignItems:'flex-end',
-            borderBottomWidth: userInfo.user&&userInfo.user.premium!="none"?3:0,
-            borderLeftWidth: userInfo.user&&userInfo.user.premium!="none"?3:0,
-            marginLeft:userInfo.user&&userInfo.user.premium!="none"?-3:0,
+            borderBottomLeftRadius:45+((userInfo.user&&userInfo.user.premium=="none")?0:3),
+            width:windowWidth+((userInfo.user&&userInfo.user.premium=="none")?0:3),
+            height:350+((userInfo.user&&userInfo.user.premium=="none")?0:3),
+            borderBottomWidth: (userInfo.user&&userInfo.user.premium=="none")?0:3,
+            borderLeftWidth: (userInfo.user&&userInfo.user.premium=="none")?0:3,
+            marginLeft:(userInfo.user&&userInfo.user.premium=="none")?0:-3,
           }
         ]}
       >
