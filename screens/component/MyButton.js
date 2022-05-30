@@ -27,7 +27,7 @@ export const MyButton = ({
     }}>
       <TouchableOpacity
         onPress={onPress}
-        disabled={!active}
+        disabled={!active||loading}
       >
         <LinearGradient
           style={

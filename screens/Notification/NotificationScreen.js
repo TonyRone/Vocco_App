@@ -134,18 +134,7 @@ const NotificationScreen = (props) => {
                     dispatch(setRefreshState(!refreshState));
             }
             if(tp[index].type == 'likeRecord' || tp[index].type == 'newAnswer' ||tp[index].type == 'likeAnswer'){
-                setIsLoading(true);
-                VoiceService.getStories('','','','',tp[index].record.id).then(async res => {
-                    if (res.respInfo.status === 200) {
-                        const jsonRes = await res.json();
-                        props.navigation.navigate("VoiceProfile",{info:jsonRes[0],answerId:tp[index].answer?.id})
-                        setIsLoading(false);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                    setIsLoading(false);
-                });
+                props.navigation.navigate("VoiceProfile",{id:tp[index].record.id,answerId:tp[index].answer?.id})
             }
             else{
                 if(tp[index].fromUser.id == user.id)

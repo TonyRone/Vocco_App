@@ -27,7 +27,7 @@ export const FriendItem = ({
         width:56,
         marginRight:16,
       }}
-      onPress = {()=>props.navigation.navigate('VoiceProfile', {info:info})}
+      onPress = {()=>props.navigation.navigate('VoiceProfile', {id:info.id})}
     >
       <Image
         source={{uri:info.user.avatar.url}}

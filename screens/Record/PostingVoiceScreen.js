@@ -160,7 +160,7 @@ const PostingVoiceScreen = (props) => {
         info.category = Categories[category].label;
         info.privacy = visibleStatus;
         info.temporary = temporaryStatus;
-        props.navigation.navigate("VoiceProfile",{info:info});
+        props.navigation.navigate("VoiceProfile",{id:info.id});
       }
       setIsLoading(false);
     })

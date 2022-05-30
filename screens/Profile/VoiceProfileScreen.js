@@ -43,20 +43,22 @@ import '../../language/i18n';
 import EmojiPicker from 'rn-emoji-keyboard';
 import { RecordIcon } from '../component/RecordIcon';
 import { StoryLikes } from '../component/StoryLikes';
+import { TagFriends } from '../component/TagFriends';
 
 const VoiceProfileScreen = (props) => {
 
-    let info = props.navigation.state.params.info, answerId=props.navigation.state.params.answerId?props.navigation.state.params.answerId:'';
+    let recordId = props.navigation.state.params.id, answerId=props.navigation.state.params.answerId?props.navigation.state.params.answerId:'';
     const [showModal,setShowModal] = useState(false);
     const [deleteModal,setDeleteModal] = useState(false);
     const [answerVoices,setAnswerVoices] = useState([]);
-    const [refresh,setRefresh] = useState(false);
-    const [isLike, setIsLike] = useState(info.isLike);
-    const [likeCount, setLikeCount] = useState(info.likesCount);
+    const [isLike, setIsLike] = useState(false);
+    const [likeCount, setLikeCount] = useState(0);
+    const [info, setInfo] = useState();
     const [showShareVoice, setShowShareVoice] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isHolding, setIsHolding] = useState(false);
     const [allLikes, setAllLikes] = useState(false);
+    const [showTagFriends, setShowTagFriends] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -86,9 +88,23 @@ const VoiceProfileScreen = (props) => {
       props.navigation.dispatch(resetActionTrue);
     }
 
+    const getUserInfo =()=>{
+      VoiceService.getStories(0, '', '', '', recordId).then(async res => {
+        if (res.respInfo.status === 200) {
+          const jsonRes = await res.json();
+          setIsLike(jsonRes[0].isLike);
+          setLikeCount(jsonRes[0].likesCount);
+          setInfo(jsonRes[0]);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    }
+
     const getAnswerVoices =()=> {
       //setLoading(true);
-      VoiceService.getAnswerVoices(info.id,answerId).then(async res => {
+      VoiceService.getAnswerVoices(recordId,answerId).then(async res => {
         if (res.respInfo.status === 200) {
           const jsonRes = await res.json();
           setAnswerVoices(jsonRes);
@@ -165,6 +181,7 @@ const VoiceProfileScreen = (props) => {
     }
 
     useEffect(() => {
+      getUserInfo();
       getAnswerVoices();
       dispatch(setVoiceState(voiceState+1));
     }, [refreshState])
@@ -209,7 +226,7 @@ const VoiceProfileScreen = (props) => {
                   height:64,
                   borderRadius:32,
                   borderColor:'#FFA002',
-                  borderWidth:info.user.premium=='none'?0:2
+                  borderWidth:(info&&info.user.premium!='none')?2:0
                 }}
                 source={{uri:info?.user.avatar.url}}
               />
@@ -232,7 +249,7 @@ const VoiceProfileScreen = (props) => {
               /> */}
             </TouchableOpacity>
             <CommenText
-              text={info.user.name}
+              text={info?.user.name}
               fontFamily="SFProDisplay-Semibold"
               marginTop={8}
               color = 'rgba(54, 36, 68, 0.8)'
@@ -256,7 +273,7 @@ const VoiceProfileScreen = (props) => {
             <VoicePlayer
               voiceUrl = {info?.file.url}
               playBtn = {true}
-              premium = {info.user.premium !='none'}
+              premium = {info?.user.premium !='none'}
               playing = {false}
               stopPlay = {()=>{}}
               tinWidth={windowWidth/200}
@@ -347,7 +364,7 @@ const VoiceProfileScreen = (props) => {
             </View>
             <View style={[{width:windowWidth-32,paddingHorizontal:16},styles.rowSpaceBetween]}>
               <View style={{alignItems:'center'}}>
-                <TouchableOpacity onPress={()=>OnShareVoice()}>
+                <TouchableOpacity onPress={()=>setShowTagFriends(true)}>
                   <View style={[styles.row, {alignItems:'center'}]}>
                     <Image
                       style={{
@@ -451,7 +468,7 @@ const VoiceProfileScreen = (props) => {
                   /> 
                   <View style={{marginLeft:18}}>
                     <CommenText
-                      text = {info.title}
+                      text = {info?.title}
                       fontSize = {17}
                       lineHeight = {28}
                     />
@@ -459,7 +476,7 @@ const VoiceProfileScreen = (props) => {
                       fontSize={13}
                       lineHeight={21}
                       color={'rgba(54, 36, 68, 0.8)'}
-                      text = {info.user.name}
+                      text = {info?.user.name}
                     />
                   </View>
                 </View>
@@ -599,10 +616,16 @@ const VoiceProfileScreen = (props) => {
         {allLikes&&
         <StoryLikes
           props={props}
-          storyId={info.id}
+          storyId={info?.id}
           storyType="record"
           onCloseModal={()=>setAllLikes(false)}
         />}
+        {showTagFriends&&
+          <TagFriends
+            info = {info}
+            onCloseModal = {()=>setShowTagFriends(false)}
+          />
+        }
       </KeyboardAvoidingView>
     );
   };

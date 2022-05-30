@@ -7,6 +7,7 @@ import appleAuth, { appleAuthAndroid , AppleAuthRequestOperation, AppleAuthReque
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
 import { v4 as uuid } from 'uuid'
+import io from "socket.io-client";
 import { NavigationActions, StackActions } from 'react-navigation';
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
@@ -21,9 +22,9 @@ import googleSvg from '../../assets/login/google.svg';
 import AuthService from '../../services/AuthService';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ACCESSTOKEN_KEY, REFRESHTOKEN_KEY, TUTORIAL_CHECK } from '../../config/config';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../../store/actions';
+import { ACCESSTOKEN_KEY, REFRESHTOKEN_KEY, TUTORIAL_CHECK, SOCKET_URL } from '../../config/config';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser, setSocketInstance } from '../../store/actions';
 import { styles } from '../style/Login';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -42,6 +43,12 @@ const LoginScreen = (props) => {
   const {t, i18n} = useTranslation();
 
   const dispatch = useDispatch();
+
+  let { socketInstance } = useSelector((state) => {
+    return (
+        state.user
+    )
+  });
 
   const showEye = () => {
     setSecureTextEntry(!secureTextEntry); 
@@ -151,6 +158,11 @@ const LoginScreen = (props) => {
       const jsonRes = await res.json();
       if(res.respInfo.status ==200){
         dispatch(setUser(jsonRes));
+        let socket = io(SOCKET_URL);
+        dispatch(setSocketInstance(socket));
+        socket.on("connect", () => {
+            socket.emit("login", {uid:jsonRes.id, email:jsonRes.email});
+        });
         let navigateScreen = 'Discover';
         if (!jsonRes.isEmailVerified) {
           navigateScreen = 'Verify';

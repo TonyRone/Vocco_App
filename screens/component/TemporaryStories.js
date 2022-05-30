@@ -78,7 +78,7 @@ export const TemporaryStories = ({
         width:temFlag>=0?58:56,
         marginRight:16
       }}
-      onPress={() =>temFlag>=0?props.navigation.navigate('VoiceProfile', {info:stories[temFlag]}):onSetExpandKey()}
+      onPress={() =>temFlag>=0?props.navigation.navigate('VoiceProfile', {id:stories[temFlag].id}):onSetExpandKey()}
       onLongPress={()=>temFlag>=0?setConfirmModal(true):null}
     >
       <Image

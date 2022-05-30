@@ -17,10 +17,8 @@ PushNotification.configure({
   },
 
   onNotification: (notification) => {
-    setTimeout(() => {
-      NavigationService.navigate(notification.data.nav,notification.data.params);
-    }, 1000);
-    //notification.finish(PushNotificationIOS.FetchResult.NoData);
+    NavigationService.navigate(notification.data.nav,notification.data.params);
+    notification.finish(PushNotificationIOS.FetchResult.NoData);
   }
 
 });

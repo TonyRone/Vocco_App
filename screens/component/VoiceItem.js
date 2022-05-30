@@ -156,7 +156,7 @@ export const VoiceItem = ({
       setLastTap(timeNow);
       setDelayTime(setTimeout(() => {
       //  if(voiceState==false){
-          props.navigation.navigate('VoiceProfile', {info:info});
+          props.navigation.navigate('VoiceProfile', {id:info.id});
        // }
       }, DOUBLE_PRESS_DELAY));
     }

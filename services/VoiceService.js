@@ -54,6 +54,20 @@ class VoiceService {
         );
     }
 
+    async postTag(data) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob
+            .config({ trusty: true })
+            .fetch(
+                'POST',
+                `${API_URL}/actions/tagFriends`, {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                JSON.stringify(data)
+            );
+    }
+
     async postAnswerReply(data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).

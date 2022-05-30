@@ -33,6 +33,7 @@ import { SvgXml } from 'react-native-svg';
 import box_blankSvg from '../../assets/discover/box_blank.svg';
 import image_shadowSvg from '../../assets/discover/image_shadow.svg';
 import searchSvg from '../../assets/login/search.svg';
+import closeCircleSvg from '../../assets/common/close-circle.svg';
 import erngSvg from '../../assets/common/erng.svg';
 import erng2Svg from '../../assets/common/erng2.svg';
 import closeSvg from '../../assets/discover/close.svg'
@@ -41,8 +42,6 @@ import closeSvg from '../../assets/discover/close.svg'
 import heartSvg from '../../assets/common/icons/heart.svg';
 import smileSvg from '../../assets/common/icons/smile.svg';
 import shineSvg from '../../assets/common/icons/shine.svg';
-
-import closeCircleSvg from '../../assets/common/close-circle.svg';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Categories, STORAGE_KEY, windowHeight, windowWidth } from '../../config/config';
@@ -71,7 +70,6 @@ const SearchScreen = (props) => {
 
   const {t, i18n} = useTranslation();
 
-  const inputRef = useRef(null);
   const scrollRef = useRef();
 
   let {user, refreshState} = useSelector((state) => {
@@ -223,7 +221,6 @@ const SearchScreen = (props) => {
               </View>}
               <TextInput
                 style={[styles.searchInput,{paddingLeft:12,width:windowWidth-(category==0?175:265)}]}
-                ref = {inputRef}
                 value={label}
                 color = '#281E30'
                 autoFocus={true}

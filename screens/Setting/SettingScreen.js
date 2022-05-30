@@ -35,13 +35,21 @@ import { CommenText } from '../component/CommenText';
 import { SettingList } from '../component/SettingList';
 import { NavigationActions, StackActions } from 'react-navigation';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RecordIcon } from '../component/RecordIcon';
+import { setSocketInstance } from '../../store/actions';
 
 const SettingScreen =  (props) => {
 
-    const user = useSelector((state)=>state.user.user);
+    let { user, socketInstance } = useSelector((state) => {
+        return (
+            state.user
+        )
+      });
+
+    const dispatch = useDispatch();
+
     let userData = {...user};
 
     const [showModal, setShowModal] = useState(false);
@@ -86,6 +94,8 @@ const SettingScreen =  (props) => {
         const isSignedIn = await GoogleSignin.isSignedIn();
         if(isSignedIn)
             await GoogleSignin.signOut();
+        socketInstance.disconnect();
+        dispatch(setSocketInstance(null));
         onNavigate("Welcome")
     }
 

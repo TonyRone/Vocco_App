@@ -192,16 +192,15 @@ export const AnswerReply = ({
     <SwipeDownModal
       modalVisible={showModal}
       ContentModal={
-        <View style={{
-          width:windowWidth,
-          height:windowHeight,
-          alignItems:'center'
-       }}>{isPublish?
+        <>
+        {isPublish?
           <View style={{
             position:'absolute',
+            width:windowWidth,
             bottom:50,
             flexDirection:'row',
-            alignItems:'center'
+            alignItems:'center',
+            justifyContent:'center'
           }}>
             <View
               style={{
@@ -254,6 +253,7 @@ export const AnswerReply = ({
                   bottom:50,
                   height:56,
                   width:281.22,
+                  right:(windowWidth-281.22)/2
                 }}
                 resizeMode="stretch"
                 source={require('../../assets/post/answerReply.png')}
@@ -299,6 +299,7 @@ export const AnswerReply = ({
             <View style={{
               position:'absolute',
               bottom:160,
+              right:(windowWidth-105)/2,
               width:105,
               height:48,
               backgroundColor:"#FFF",
@@ -357,7 +358,7 @@ export const AnswerReply = ({
             color="rgba(0, 0, 255, .7)"
             style={{ alignSelf: "center", marginTop:windowHeight/2 }}
           />}
-       </View>
+       </>
       }
       ContentModalStyle={[styles.swipeModal,{backgroundColor: 'rgba(0, 0, 0, 0.1)'}]}
       onRequestClose={() => closeModal()}

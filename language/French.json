@@ -238,6 +238,8 @@
     "answer":"réponse",
     "Click to reply":"Clique pour répondre",
     "Tag friends":"Tag tes amis",
-    "To chat":"Par message"
+    "To chat":"Par message",
+    "friend":"ami",
+    "online":"en ligne"
   }
 }

@@ -259,7 +259,15 @@ const UserProfileScreen = (props) => {
       <Image
         source={{uri:userInfo.user?.avatar.url}}
         resizeMode="cover"
-        style={styles.topProfileContainer}
+        style={[styles.topProfileContainer,{
+          borderBottomLeftRadius:45+((userInfo.user&&userInfo.user.premium=="none")?0:3),
+          width:windowWidth+((userInfo.user&&userInfo.user.premium=="none")?0:6),
+          height:350+((userInfo.user&&userInfo.user.premium=="none")?0:6),
+          borderWidth: (userInfo.user&&userInfo.user.premium=="none")?0:3,
+          borderLeftWidth: (userInfo.user&&userInfo.user.premium=="none")?0:3,
+          marginLeft:(userInfo.user&&userInfo.user.premium=="none")?0:-3,
+          marginTop:(userInfo.user&&userInfo.user.premium=="none")?0:-3,
+        }]}
       />
       <LinearGradient
         colors={['rgba(52, 50, 56, 0)', 'rgba(42, 39, 47, 0)', 'rgba(39, 36, 44, 0.65)','rgba(34, 32, 38, 0.9)']}
@@ -273,13 +281,7 @@ const UserProfileScreen = (props) => {
             paddingBottom:17,
             flexDirection:'row',
             justifyContent:'space-around',
-            alignItems:'flex-end',
-            borderBottomLeftRadius:45+((userInfo.user&&userInfo.user.premium=="none")?0:3),
-            width:windowWidth+((userInfo.user&&userInfo.user.premium=="none")?0:3),
-            height:350+((userInfo.user&&userInfo.user.premium=="none")?0:3),
-            borderBottomWidth: (userInfo.user&&userInfo.user.premium=="none")?0:3,
-            borderLeftWidth: (userInfo.user&&userInfo.user.premium=="none")?0:3,
-            marginLeft:(userInfo.user&&userInfo.user.premium=="none")?0:-3,
+            alignItems:'flex-end'
           }
         ]}
       >

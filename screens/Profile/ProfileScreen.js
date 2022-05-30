@@ -166,7 +166,15 @@ const ProfileScreen = (props) => {
       <Image
         source={{uri:userData.avatar.url}}
         resizeMode="cover"
-        style={styles.topProfileContainer}
+        style={[styles.topProfileContainer,{
+          width:windowWidth+(userData.premium=="none"?0:6),
+          height:350+(userData.premium=="none"?0:6),
+          borderBottomLeftRadius:45+(userData.premium=="none"?0:3),
+          borderWidth: userData.premium=="none"?0:3,
+          marginLeft:userData.premium=="none"?0:-3,
+          marginTop:userData.premium=="none"?0:-3,
+          borderColor:'#FEC613'
+        }]}
       />
       <Pressable style={{position: 'absolute',top: 0}} onLongPress={()=>props.navigation.navigate('Photo',{imageUrl:userData.avatar.url,backPage:'Profile'})}>
         <LinearGradient
@@ -180,12 +188,7 @@ const ProfileScreen = (props) => {
               flexDirection: 'row',
               justifyContent: 'space-around',
               alignItems: 'flex-end',
-              width:windowWidth+(userData.premium=="none"?0:3),
-              height:350+(userData.premium=="none"?0:3),
-              borderBottomLeftRadius:45+(userData.premium=="none"?0:3),
-              borderBottomWidth: userData.premium=="none"?0:3,
-              borderLeftWidth: userData.premium=="none"?0:3,
-              marginLeft:userData.premium=="none"?0:-3,
+             
             }
           ]}
         >

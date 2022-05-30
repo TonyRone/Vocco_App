@@ -108,7 +108,7 @@ export const PostContext = ({
           >
             <TouchableOpacity
               style={styles.contextMenu}
-              onPress={() => {props.navigation.navigate('VoiceProfile', {info:postInfo});closeModal();}}
+              onPress={() => {props.navigation.navigate('VoiceProfile', {id:postInfo.id});closeModal();}}
             >
               <TitleText
                 text={t("Answer on voice")}

@@ -13,6 +13,7 @@ import {
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
+import io from "socket.io-client";
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
 import { MyButton } from '../component/MyButton';
@@ -22,8 +23,9 @@ import RNFetchBlob from 'rn-fetch-blob';
 
 import { SvgXml } from 'react-native-svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../../store/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser, setSocketInstance } from '../../store/actions';
+import { SOCKET_URL } from '../../config/config';
 
 import { styles } from '../style/Login';
 import AuthService from '../../services/AuthService';
@@ -42,6 +44,12 @@ const  PhotoScreen = (props) => {
   const [errorText, setErrorText] = useState(null);
 
   const {t, i18n} = useTranslation();
+
+  let { socketInstance } = useSelector((state) => {
+    return (
+        state.user
+    )
+  });
 
   const dispatch = useDispatch();
 
@@ -153,6 +161,13 @@ const  PhotoScreen = (props) => {
                   const jsonRes = await res.json();
                   if(res.respInfo.status ==200){
                     dispatch(setUser(jsonRes));
+                    if(backPage==''){
+                      let socket = io(SOCKET_URL);
+                      dispatch(setSocketInstance(socket));
+                      socket.on("connect", () => {
+                          socket.emit("login", {uid:jsonRes.id, email:jsonRes.email});
+                      });
+                    }
                     props.navigation.navigate(backPage==''?"Tutorial":backPage,{info:jsonRes});
                   }
                   else{

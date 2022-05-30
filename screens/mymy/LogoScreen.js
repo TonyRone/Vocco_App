@@ -17,8 +17,6 @@ import AuthService from '../../services/AuthService';
 
 const LogoScreen = (props) => {
 
-    let socket = null;
-
     const {t, i18n} = useTranslation();
 
     let { user } = useSelector((state) => {
@@ -39,8 +37,6 @@ const LogoScreen = (props) => {
         }
         i18n.changeLanguage(mainLanguage).then(async() => {
             const aToken = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
-            socket = io(SOCKET_URL);
-            dispatch(setSocketInstance(socket));
             if(aToken != null){
                 AuthService.getUserInfo()
                 .then(async res => {
@@ -48,6 +44,11 @@ const LogoScreen = (props) => {
                         const jsonRes = await res.json();
                         if (res.respInfo.status ==200 && jsonRes != null){
                             dispatch(setUser(jsonRes));
+                            let socket = io(SOCKET_URL);
+                            dispatch(setSocketInstance(socket));
+                            socket.on("connect", () => {
+                                socket.emit("login", {uid:jsonRes.id, email:jsonRes.email});
+                            });
                             let navigateScreen = 'Discover';
                             if(!jsonRes.id){
                                 return ;
