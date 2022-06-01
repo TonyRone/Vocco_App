@@ -76,6 +76,9 @@ class VoicePlayer extends Component {
   }
   componentDidUpdate(prevProp){
     if(this.props.voiceState != this.state.voiceKey){
+      if(this.state.isStarted==true && this.state.isPlaying == false){
+        this.onResumePlay();
+      }
       this.onStopPlay();
     }
   }
@@ -168,12 +171,15 @@ class VoicePlayer extends Component {
     }
     return (
       <View
-        style={[styles.rowSpaceBetween,{paddingHorizontal:10}]}
+        style={[styles.rowSpaceBetween,{paddingHorizontal:8}]}
       >
         {this.props.playBtn&&<TouchableOpacity onPress={()=>this.changePlayStatus()}>
           <SvgXml
             width={windowWidth/10}
             height={windowWidth/10}
+            style={{
+              marginRight:8
+            }}
             xml={this.state.isPlaying ? pauseSvg:playSvg}
           />
         </TouchableOpacity>}
@@ -184,7 +190,6 @@ class VoicePlayer extends Component {
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
-              marginLeft:8,
               height:this.waveHeight+1,
             }}
             // onTouchStart={this._onTouchStart}
@@ -210,6 +215,9 @@ class VoicePlayer extends Component {
           <SvgXml
             width={windowWidth/10}
             height={windowWidth/10}
+            style={{
+              marginLeft:8
+            }}
             xml={replaySvg}
           />
         </TouchableOpacity>}
@@ -244,8 +252,6 @@ class VoicePlayer extends Component {
   getPlayLink= async()=>{
     let { voiceState, actions } = this.props;
     this.setState({
-      isStarted:true,
-      isPlaying:true,
       voiceKey:voiceState+1,
     });
     actions.setVoiceState(voiceState+1);
@@ -270,7 +276,6 @@ class VoicePlayer extends Component {
       }
     })
     .catch(err=>{
-      console.log(err);
       this.onStopPlay();
     })
   }
@@ -309,7 +314,6 @@ class VoicePlayer extends Component {
       });
     }
     catch(err){
-      console.log(err);
       this.onStopPlay();
     }
   };

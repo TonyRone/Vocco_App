@@ -267,7 +267,7 @@ export const VoiceItem = ({
               replayBtn = {false}
               premium = {premium!='none'}
               playing={true}
-              tinWidth={windowWidth/150}
+              tinWidth={windowWidth/160}
               mrg={windowWidth/600}
             />
           </View>

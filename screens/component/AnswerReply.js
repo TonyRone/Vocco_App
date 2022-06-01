@@ -63,14 +63,13 @@ export const AnswerReply = ({
   const [fill, setFill] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(true);
-  const [isTime, setIsTime] = useState(true);
-  const [touchPos, setTouchPos] = useState(0);
   const [isPublish, setIsPublish] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(true)
   const [key, setKey] = useState(0);
 
   const wasteTime = useRef(0);
+  const dragPos = useRef(0);
 
   recorderPlayer.setSubscriptionDuration(0.2); // optional. Default is 0.1
 
@@ -82,9 +81,10 @@ export const AnswerReply = ({
   });
 
   const clearRecorder = async ()=>{
-    wasteTime.current = 0;
-    await recorderPlayer.stopRecorder();
-    recorderPlayer.removeRecordBackListener();
+      wasteTime.current = 0;
+      await recorderPlayer.resumeRecorder();
+      await recorderPlayer.stopRecorder();
+      recorderPlayer.removeRecordBackListener();
   }
 
   const closeModal = ()=>{
@@ -100,6 +100,9 @@ export const AnswerReply = ({
 
   const onStartRecord = async () => {
     if(isRecording==false){
+      setIsRecording(true);
+      setIsPaused(false);
+      dragPos.current = 0;
       const dirs = RNFetchBlob.fs.dirs;
       const path = Platform.select({
         ios: `hello.m4a`,
@@ -114,29 +117,21 @@ export const AnswerReply = ({
       };
       dispatch(setVoiceState(voiceState+1));
       await recorderPlayer.startRecorder(path, audioSet);
-      await recorderPlayer.addRecordBackListener((e) => {
+      recorderPlayer.addRecordBackListener((e) => {
         wasteTime.current = e.currentPosition;
         if(e.currentPosition >= fill*1000){
           onStopRecord(true);
         }
       });
-      setIsRecording(true);
-      setIsPaused(false);
     }
   };
 
   const onStopRecord = async (publish) => {
-    if(isRecording==true){
-      setIsRecording(false);
-      setIsPaused(true);
-      setIsTime(true);
-      setKey(prevKey => prevKey + 1);
-      if(publish == true){
-        if(wasteTime.current>=1.0){
-          clearRecorder();
-          setIsPublish(true);
-        }
-      }
+    setIsRecording(false);
+    setIsPaused(true);
+    if(publish == true){
+        clearRecorder();
+        setIsPublish(true);
     }
     if(publish == false){
       closeModal();
@@ -144,19 +139,16 @@ export const AnswerReply = ({
   };
  
   const onChangeRecord = async (e, v = false )=>{
-    if(v == true && isRecording == false && isTime){
-      setTouchPos(e.nativeEvent.pageX);
+    if(v == true && isRecording == false){
       onStartRecord();
     }
     else {
-      if(v == true && isPaused && isTime){
+      if(v == true && isPaused){
         await recorderPlayer.resumeRecorder();
         setIsPaused(false);
-        //setStartTime(new Date());
       }
       else if( v== false && isRecording == true){
-        let delta = Math.abs(touchPos-e.nativeEvent.pageX);
-        if(delta < 60){
+        if(Math.abs(dragPos.current) < 80){
           await recorderPlayer.pauseRecorder();
           setIsPaused(true);
         }
@@ -167,8 +159,9 @@ export const AnswerReply = ({
   const handleSubmit = async () => {
     setIsLoading(true);
     if (path) {
+      let tp = Math.max(wasteTime.current,1);
       let voiceFile = [
-        { name:'duration', data:String(Math.floor(wasteTime.current/1000)) },
+        { name:'duration', data:String(Math.ceil(tp/1000.0)) },
         { name:'record', data:info.id },
         { name: 'file', filename:Platform.OS==='android'?'answer.mp3':'answer.m4a', data: RNFetchBlob.wrap(String(path))},
       ] ;
@@ -260,6 +253,7 @@ export const AnswerReply = ({
             />
             <View style={{position:'absolute',bottom:135,width:'100%',alignItems:'center'}}>
               <Draggable 
+                  key={key}
                   x={windowWidth / 2 - 34} 
                   y={0}
                   shouldReverse={true}
@@ -271,13 +265,13 @@ export const AnswerReply = ({
                     activeOpactiy: 0.1,
                   }}
                   onDrag={(event, gestureState) => {
-                
                   }}
                   onDragRelease={(event, gestureState, bounds) => {
-                  if(gestureState.dx>60)
-                    onStopRecord(true)
-                  else if(gestureState.dx<-60)
-                    onStopRecord(false);
+                    dragPos.current = gestureState.dx;
+                    if(gestureState.dx>80)
+                      onStopRecord(true)
+                    else if(gestureState.dx<-80)
+                      onStopRecord(false);
                   }}
                   onReverse={() => {
     

@@ -29,7 +29,7 @@ import { useSelector , useDispatch} from 'react-redux';
 
 const PostingAnswerVoiceScreen = (props) => {
 
-  let info = props.navigation.state.params.info;
+  let recordId = props.navigation.state.params.id;
 
   let { user , refreshState } = useSelector((state) => {
     return (
@@ -81,7 +81,7 @@ const PostingAnswerVoiceScreen = (props) => {
     if (path) {
       let voiceFile = [
         { name:'duration', data:String(displayDuration) },
-        { name:'record', data:info.id },
+        { name:'record', data:recordId },
         { name:'emoji', data:String(icon) },
         {name: 'file', filename:Platform.OS==='android'?'answer.mp3':'answer.m4a', data: RNFetchBlob.wrap(String(path))},
       ] ;
@@ -207,7 +207,7 @@ const PostingAnswerVoiceScreen = (props) => {
       {showShareVoice&&
       <ShareVoice
         info = {{file:{url:showShareVoice.file.url}, title:'answer voice'}}
-        onCloseModal={()=>{setShowShareVoice(false);props.navigation.navigate("VoiceProfile",{id:info.id});}}
+        onCloseModal={()=>{setShowShareVoice(false);props.navigation.navigate("VoiceProfile",{id:recordId});}}
       />}
     </KeyboardAvoidingView>
   );

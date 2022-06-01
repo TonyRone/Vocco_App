@@ -33,7 +33,7 @@ export const TagFriends = ({
 
   let { user, socketInstance } = useSelector((state) => {
     return (
-        state.user
+      state.user
     )
   });
 
@@ -46,10 +46,17 @@ export const TagFriends = ({
   const [isSearch, setIsSearch] = useState(false);
   const [label, setLabel] = useState('');
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [filterCount, setFilterCount] = useState(0);
 
   const closeModal = () => {
     setShowModal(false);
     onCloseModal();
+  }
+
+  const onSetLabel = (v) => {
+    let tp = friends.filter(item => (item.user.name.toLowerCase().indexOf(label.toLowerCase()) != -1));
+    setFilterCount(tp.length);
+    setLabel(v);
   }
 
   const getFriends = () => {
@@ -57,7 +64,7 @@ export const TagFriends = ({
     VoiceService.getFollows(user.id, "Following").then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
-        const userIds = jsonRes.map((item,index)=>item.user.id);
+        const userIds = jsonRes.map((item, index) => item.user.id);
         socketInstance.emit("getFriendStates", userIds, (res)=>{
           let tp = jsonRes.map((item,index)=>{
             let temp = item;
@@ -70,9 +77,9 @@ export const TagFriends = ({
       }
       setIsLoading(false);
     })
-    .catch(err => {
-      console.log(err);
-    });
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   const onSelectFriend = (id, add = false) => {
@@ -98,17 +105,17 @@ export const TagFriends = ({
     return (fullname == '' ? '' : "@") + fullname
   }
 
-  const renderState =( lastSeen )=>{
-    if(lastSeen == null){
+  const renderState = (lastSeen) => {
+    if (lastSeen == null) {
       return t("online")
     }
-    let num = Math.ceil((new Date().getTime()-new Date(lastSeen).getTime())/60000);
-    num = Math.max(1,num);
-    let minute = num%60;
-    num = (num-minute)/60;
-    let hour = num%24;
-    let day = (num-hour)/24
-    return (day>0?(day.toString()+' '+t("day")+(day>1?'s':'')):(hour>0?(hour.toString()+' '+t("hour")+(hour>1?'s':'')):(minute>0?(minute.toString()+' '+t("minute")+(minute>1?'s':'')):'')))+" "+t("ago");
+    let num = Math.ceil((new Date().getTime() - new Date(lastSeen).getTime()) / 60000);
+    num = Math.max(1, num);
+    let minute = num % 60;
+    num = (num - minute) / 60;
+    let hour = num % 24;
+    let day = (num - hour) / 24
+    return (day > 0 ? (day.toString() + ' ' + t("day") + (day > 1 ? 's' : '')) : (hour > 0 ? (hour.toString() + ' ' + t("hour") + (hour > 1 ? 's' : '')) : (minute > 0 ? (minute.toString() + ' ' + t("minute") + (minute > 1 ? 's' : '')) : ''))) + " " + t("ago");
   }
 
   const handleSubmit = () => {
@@ -231,13 +238,13 @@ export const TagFriends = ({
                     color='#281E30'
                     autoFocus={true}
                     placeholder={t("Search")}
-                    onChangeText={(v) => setLabel(v)}
+                    onChangeText={(v) => onSetLabel(v)}
                     placeholderTextColor="rgba(59, 31, 82, 0.6)"
                   />
                 </View>
                 {label != '' &&
                   <TouchableOpacity
-                    onPress={() => setLabel('')}
+                    onPress={() => onSetLabel('')}
                   >
                     <SvgXml
                       width="30"
@@ -246,7 +253,7 @@ export const TagFriends = ({
                     />
                   </TouchableOpacity>}
               </View>
-              <TouchableOpacity onPress={() => { setIsSearch(false); setLabel('') }}>
+              <TouchableOpacity onPress={() => { setIsSearch(false); onSetLabel('') }}>
                 <TitleText
                   text={t('Cancel')}
                   fontSize={17}
@@ -257,66 +264,97 @@ export const TagFriends = ({
             </View>
           }
           <View style={{ paddingHorizontal: 16, marginTop: 16, marginBottom: (!isSearch && selectedIds.length > 0) ? 100 : 0, flex: 1 }}>
-            <FlatList
-              data={friends}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item, index }) => <>
-                {(label == '' && (index == 0 || item.user.name.charAt(0) != friends[index - 1].user.name.charAt(0))) &&
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      height: 44
-                    }}
-                  >
-                    <Text
+            {(filterCount == 0 && isLoading == false && label != '') ?
+              <View style={{ marginTop: windowHeight / 7, alignItems: 'center', width: windowWidth }}>
+                <Image
+                  style={{
+                    width: 135,
+                    height: 135,
+                  }}
+                  source={require("../../assets/common/memojiGirl.png")}
+                />
+                <DescriptionText
+                  text={t("No users found")}
+                  fontSize={17}
+                  lineHeight={28}
+                  marginTop={23}
+                  color="#281E30"
+                />
+                <DescriptionText
+                  text={t("Try check spelling or enter")}
+                  fontSize={17}
+                  lineHeight={28}
+                  marginTop={8}
+                  color="rgba(54, 36, 68, 0.8)"
+                />
+                <DescriptionText
+                  text={t("another request")}
+                  fontSize={17}
+                  lineHeight={28}
+                  color="rgba(54, 36, 68, 0.8)"
+                />
+              </View> :
+              <FlatList
+                data={friends}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item, index }) => <>
+                  {(label == '' && (index == 0 || item.user.name.toLowerCase().charAt(0) != friends[index - 1].user.name.toLowerCase().charAt(0))) &&
+                    <View
                       style={{
-                        fontFamily: "SFProDisplay-Semibold",
-                        fontSize: 20,
-                        lineHeight: 24,
-                        color: '#281E30'
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        height: 44
                       }}
                     >
-                      {item.user.name.toUpperCase().charAt(0)}
-                    </Text>
-                  </View>
-                }
-                {(item.user.name.toLowerCase().indexOf(label.toLowerCase()) != -1) &&
-                  <TouchableOpacity
-                    onPress={() => {
-                      onSelectFriend(index, true);
-                      setLabel('');
-                      setIsSearch(false);
-                    }}
-                    key={index + item.user.id + "friends"}
-                    style={{ flexDirection: 'row', alignItems: 'center', marginLeft: isSearch ? 0 : 16, marginTop: 10, marginBottom: 10 }}
-                  >
-                    <Image
-                      source={{ uri: item.user.avatar.url }}
-                      style={{ width: 48, height: 48, borderRadius: 24, borderColor: '#FFA002', borderWidth: item.user.premium == 'none' ? 0 : 2 }}
-                      resizeMode='cover'
-                    />
-                    <View style={{
-                      marginLeft: 16
-                    }}>
-                      <TitleText
-                        text={item.user.name}
-                        fontSize={15}
-                        lineHeight={24}
-                        color='#281E30'
-                      />
-                      <DescriptionText
-                        text={label==''?renderState(item.lastSeen):renderName(item.user.firstname, item.user.lastname)}
-                        fontSize={13}
-                        lineHeight={21}
-                        color={(label==''&&item.lastSeen==null)?'#8327D8':'rgba(54, 36, 68, 0.8)'}
-                      />
+                      <Text
+                        style={{
+                          fontFamily: "SFProDisplay-Semibold",
+                          fontSize: 20,
+                          lineHeight: 24,
+                          color: '#281E30'
+                        }}
+                      >
+                        {item.user.name.toUpperCase().charAt(0)}
+                      </Text>
                     </View>
-                  </TouchableOpacity>}
-              </>
-              }
-            />
+                  }
+                  {(item.user.name.toLowerCase().indexOf(label.toLowerCase()) != -1) &&
+                    <TouchableOpacity
+                      onPress={() => {
+                        onSelectFriend(index, true);
+                        onSetLabel('');
+                        setIsSearch(false);
+                      }}
+                      key={index + item.user.id + "friends"}
+                      style={{ flexDirection: 'row', alignItems: 'center', marginLeft: isSearch ? 0 : 16, marginTop: 10, marginBottom: 10 }}
+                    >
+                      <Image
+                        source={{ uri: item.user.avatar.url }}
+                        style={{ width: 48, height: 48, borderRadius: 24, borderColor: '#FFA002', borderWidth: item.user.premium == 'none' ? 0 : 2 }}
+                        resizeMode='cover'
+                      />
+                      <View style={{
+                        marginLeft: 16
+                      }}>
+                        <TitleText
+                          text={item.user.name}
+                          fontSize={15}
+                          lineHeight={24}
+                          color='#281E30'
+                        />
+                        <DescriptionText
+                          text={label == '' ? renderState(item.lastSeen) : renderName(item.user.firstname, item.user.lastname)}
+                          fontSize={13}
+                          lineHeight={21}
+                          color={(label == '' && item.lastSeen == null) ? '#8327D8' : 'rgba(54, 36, 68, 0.8)'}
+                        />
+                      </View>
+                    </TouchableOpacity>}
+                </>
+                }
+              />
+            }
           </View>
           {(!isSearch && selectedIds.length > 0) && <LinearGradient
             colors={['#FFFFFF', 'rgba(255,255,255, 0)']}

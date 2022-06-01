@@ -55,7 +55,7 @@ export const RecordIcon = ({
   const dispatch = useDispatch();
   const {t, i18n} = useTranslation();
 
-  let info = props.navigation.state.params?.info;
+  let recordId = props.navigation.state.params?.id;
   const [fill, setFill] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [key, setKey] = useState(0);
@@ -63,14 +63,15 @@ export const RecordIcon = ({
   const [isPaused, setIsPaused] = useState(true);
   const [isTime, setIsTime] = useState(true);
   const [IsExpanded, setIsExpanded] = useState(false);
-  const [touchPos, setTouchPos] = useState(0);
   const [expand, setExpand] = useState(0);
   const [temporary, setTemporary] = useState(isTemporary);
 
   const wasteTime = useRef(0);
+  const dragPos = useRef(0);
 
-  const audioRecorderPlayer = recorderPlayer;
-  audioRecorderPlayer.setSubscriptionDuration(0.5); // optional. Default is 0.1
+  //const recorderPlayer = new AudioRecorderPlayer();
+
+  recorderPlayer.setSubscriptionDuration(0.5); // optional. Default is 0.1
 
   const startAnimation = () => {
     setFill(50);
@@ -80,8 +81,9 @@ export const RecordIcon = ({
   const clearRecorder = async ()=>{
     wasteTime.current = 0;
     setTemporary(false);
-    await audioRecorderPlayer.stopRecorder();
-    audioRecorderPlayer.removeRecordBackListener();
+    await recorderPlayer.resumeRecorder();
+    await recorderPlayer.stopRecorder()
+    recorderPlayer.removeRecordBackListener();
   }
 
   useEffect(() => {
@@ -93,7 +95,7 @@ export const RecordIcon = ({
       setTemporary(true);
     }
     //dispatch(setVoiceState(voiceState+1));
-    return ()=>clearRecorder();
+    return clearRecorder();
   }, [expandKey])
 
   const [disableCBButton, setDisableCBButton] = useState(false)
@@ -118,6 +120,9 @@ export const RecordIcon = ({
 
   const onStartRecord = async () => {
     if(isRecording==false){
+      dragPos.current = 0;
+      setIsRecording(true);
+      setIsPaused(false);
       const dirs = RNFetchBlob.fs.dirs;
       const path = Platform.select({
         ios: `hello.m4a`,
@@ -131,12 +136,12 @@ export const RecordIcon = ({
         AVFormatIDKeyIOS: AVEncodingOption.aac,
       };
       dispatch(setVoiceState(voiceState+1));
-      await audioRecorderPlayer.startRecorder(path, audioSet);
-      await audioRecorderPlayer.addRecordBackListener((e) => {
-        wasteTime.current = e.currentPosition;
+      clearRecorder().then(async res=>{
+        await recorderPlayer.startRecorder(path, audioSet);
+        recorderPlayer.addRecordBackListener((e) => {
+          wasteTime.current = e.currentPosition;
+        });
       });
-      setIsRecording(true);
-      setIsPaused(false);
     }
   };
 
@@ -147,14 +152,13 @@ export const RecordIcon = ({
       setKey(prevKey => prevKey + 1);
       setIsTime(true);
       if(publish == true){
-        if(wasteTime.current>=1.0){
-          if(info)
-            props.navigation.navigate('PostingAnswerVoice',{info:info,recordSecs:Math.floor(wasteTime.current/1000)})
-          else
-            props.navigation.navigate('PostingVoice',{recordSecs:Math.floor(wasteTime.current/1000),isTemporary:temporary})
-          clearRecorder();
-          setIsExpanded(false);   
-        }
+        let tp = Math.max(wasteTime.current,1);
+        if(recordId)
+          props.navigation.navigate('PostingAnswerVoice',{id:recordId,recordSecs:Math.ceil(tp/1000.0)})
+        else
+          props.navigation.navigate('PostingVoice',{recordSecs:Math.ceil(tp/1000.0),isTemporary:temporary})
+        clearRecorder();
+        setIsExpanded(false);   
       }
       else{
         clearRecorder();
@@ -166,19 +170,18 @@ export const RecordIcon = ({
   const onChangeRecord = async (e, v = false )=>{
     if(v == true && isRecording == false && isTime){
       setIsExpanded(true);
-      setTouchPos(e.nativeEvent.pageX);
       onStartRecord();
     }
     else {
       if(v == true && isPaused && isTime){
-        await audioRecorderPlayer.resumeRecorder();
+        await recorderPlayer.resumeRecorder();
         setIsPaused(false);
         //setStartTime(new Date());
       }
       else if( v== false && isRecording == true){
-        let delta = Math.abs(touchPos-e.nativeEvent.pageX);
+        let delta = Math.abs(dragPos.current);
         if(delta < 80){
-          await audioRecorderPlayer.pauseRecorder();
+          await recorderPlayer.pauseRecorder();
           setIsPaused(true);
         }
       }
@@ -316,6 +319,7 @@ export const RecordIcon = ({
       </View>}
       <View style={{position:IsExpanded?'absolute':'relative',bottom:'6%',width:IsExpanded?'100%':54,height:IsExpanded?76:54}}>
         <Draggable 
+        key={key}
         x={IsExpanded?windowWidth / 2 - 38:0} 
         y={0}
         shouldReverse={true}
@@ -328,12 +332,10 @@ export const RecordIcon = ({
         }}
         //onShortPressRelease={onChangeRecord}
         onDrag={(event, gestureState) => {
-          r = Math.trunc(gestureState.dx/80);
-          if(hoverState!=r){
-          //  setHoverState(r);
-          } 
+          
         }}
         onDragRelease={(event, gestureState, bounds) => {
+          dragPos.current = gestureState.dx;
           if(gestureState.dx>80)
             onStopRecord(true)
           else if(gestureState.dx<-80)

@@ -216,7 +216,6 @@ export const AnswerVoiceItem = ({
           isPlaying&&
           <View style={{
             marginTop:8,
-            width:'100%',
             backgroundColor:'#F8F0FF',
             borderTopLeftRadius:4,
             borderTopRightRadius:16,
@@ -224,7 +223,8 @@ export const AnswerVoiceItem = ({
             borderBottomRightRadius:16,
             paddingVertical:8,
             paddingLeft:4,
-            paddingRight:12
+            paddingRight:12,
+            alignItems:'center'
           }}> 
             <VoicePlayer
               voiceUrl = {info.file.url}
@@ -276,6 +276,7 @@ export const AnswerVoiceItem = ({
       renderItem={({item,index})=>
         (showMore==false&&index>1)?null:
         <ReplyAnswerItem
+          props={props}
           key={index+item.id+'replyAnswerItem'}
           info = {item}
           onChangeIsLiked = {()=>setIsLiked(index)}

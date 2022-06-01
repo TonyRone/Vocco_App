@@ -212,7 +212,7 @@ const VoiceProfileScreen = (props) => {
             </View>
           </View>
           <View style={{alignItems:'center', marginTop:22}}>
-            <TouchableOpacity onPress = {()=>{
+            {info&&<TouchableOpacity onPress = {()=>{
               if(info.user.id==user.id)
                 props.navigation.navigate('Profile');
               else
@@ -247,7 +247,7 @@ const VoiceProfileScreen = (props) => {
                 text = {info?.user.name}
                 marginLeft={8}
               /> */}
-            </TouchableOpacity>
+            </TouchableOpacity>}
             <CommenText
               text={info?.user.name}
               fontFamily="SFProDisplay-Semibold"
@@ -255,7 +255,7 @@ const VoiceProfileScreen = (props) => {
               color = 'rgba(54, 36, 68, 0.8)'
             />
           </View>
-          <View
+          {info&& <View
             style={{
               paddingHorizontal: 6,
               paddingVertical: 16,
@@ -270,7 +270,7 @@ const VoiceProfileScreen = (props) => {
               marginHorizontal: 16,
             }}
           >
-            <VoicePlayer
+           <VoicePlayer
               voiceUrl = {info?.file.url}
               playBtn = {true}
               premium = {info?.user.premium !='none'}
@@ -279,7 +279,7 @@ const VoiceProfileScreen = (props) => {
               tinWidth={windowWidth/200}
               mrg={windowWidth/530}
             />
-          </View>
+          </View>}
         </ImageBackground>
         <View style={{marginTop:Platform.OS=='ios'?-60:-100, width:'100%', height:windowHeight-390, backgroundColor:'white',borderTopLeftRadius:32,borderTopRightRadius:30}}>
           <View style={{width:'100%',marginTop:8,alignItems:'center'}}>
@@ -315,7 +315,7 @@ const VoiceProfileScreen = (props) => {
           />
           }
         </View>
-        {isHolding==false&&<View
+        {(info&&isHolding==false)&&<View
           style={{
             position:'absolute',
             bottom:25,
@@ -608,7 +608,7 @@ const VoiceProfileScreen = (props) => {
             onCloseModal={()=>setShowShareVoice(false) }
           />
         }
-        {isHolding==false&&<RecordIcon
+        {info&&isHolding==false&&<RecordIcon
           props={props}
           bottom={50}
           left = {windowWidth/2-27}

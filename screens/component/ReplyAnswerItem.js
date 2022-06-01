@@ -24,6 +24,7 @@ import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
 
 export const ReplyAnswerItem = ({
+  props,
   info,
   isEnd = false,
   onChangeIsLiked = ()=>{},
@@ -186,7 +187,8 @@ export const ReplyAnswerItem = ({
               borderBottomRightRadius:16,
               paddingVertical:8,
               paddingLeft:4,
-              paddingRight:12
+              paddingRight:12,
+              alignItems:'center'
             }}> 
               <VoicePlayer
                 voiceUrl = {info.file.url}
