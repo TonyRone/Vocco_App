@@ -279,7 +279,6 @@ const LoginScreen = (props) => {
       AuthService.googleLogin({token:tokens.accessToken}).then(async res=>{
         const jRes = await res.json();
         const jsonRes = jRes.data;
-        console.log(jsonRes);
         if (res.respInfo.status === 201) {
           _storeData(jsonRes.accessToken, jsonRes.refreshToken);
           onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);

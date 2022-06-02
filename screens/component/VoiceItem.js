@@ -43,10 +43,12 @@ export const VoiceItem = ({
   const [refresh,setRefresh] = useState(false);
   const [nowVoice, setNowVoice] = useState(null);
   const [lastTap,setLastTap] = useState(0);
-  const [delayTime,setDelayTime] = useState(null);  const {t, i18n} = useTranslation();
+  const [delayTime,setDelayTime] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [allLikes, setAllLikes] = useState(false);
   
+  const {t, i18n} = useTranslation();
+
   let { user } = useSelector((state) => {
     return (
         state.user
@@ -147,17 +149,13 @@ export const VoiceItem = ({
 
   const onClickDouble = () => {
     const timeNow = Date.now();
-    var timeout;
-    clearTimeout(timeout);
     if (lastTap && timeNow - lastTap < DOUBLE_PRESS_DELAY) {
       clearTimeout(delayTime);
       OnSetLike();
     } else {
       setLastTap(timeNow);
       setDelayTime(setTimeout(() => {
-      //  if(voiceState==false){
           props.navigation.navigate('VoiceProfile', {id:info.id});
-       // }
       }, DOUBLE_PRESS_DELAY));
     }
   };

@@ -35,7 +35,7 @@ export const AnswerVoiceItem = ({
   const {user} = useSelector((state)=> state.user);
 
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [delayTime,setDelayTime] = useState(null);
   const [replyAnswers, setReplyAnswers] = useState([]);
   const [allLikes, setAllLikes] = useState(false);
   const [showMore, setShowMore] = useState(false);
@@ -53,32 +53,26 @@ export const AnswerVoiceItem = ({
   
   const DOUBLE_PRESS_DELAY = 400;
 
-
   const onLikeVoice = ()=>{
     let rep;
     if(info.isLiked==false)
-      rep = VoiceService.answerAppreciate({id:info.id});
+      VoiceService.answerAppreciate({id:info.id});
     else
-      rep = VoiceService.answerUnAppreciate(info.id);
-    rep.then(async res=>{
-  //    if(res.respInfo.status==201||res.respInfo.status==200)
-        
-    })
-    .catch(err=>{
-      console.log(err);
-    });
+      VoiceService.answerUnAppreciate(info.id);
     onChangeIsLiked();
   }
 
   const onClickDouble = () => {
     const timeNow = Date.now();
     if (lastTap && timeNow - lastTap < DOUBLE_PRESS_DELAY) {
+      clearTimeout(delayTime);
       onLikeVoice();
     } else {
       setLastTap(timeNow);
-      const timeout = setTimeout(() => {
+      setDelayTime(setTimeout(() => {
+        holdAnswer(true);
         setLastTap(0);
-      }, DOUBLE_PRESS_DELAY);
+      }, DOUBLE_PRESS_DELAY));
     }
   };
 

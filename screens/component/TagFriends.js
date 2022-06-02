@@ -13,6 +13,7 @@ import VoiceService from '../../services/VoiceService';
 import Clipboard from '@react-native-community/clipboard';
 import socialShare from 'react-native-share';
 import { MyButton } from '../component/MyButton';
+import { setRefreshState } from '../../store/actions';
 import { styles } from '../style/Common';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import searchSvg from '../../assets/login/search.svg';
@@ -20,7 +21,7 @@ import closeCircleSvg from '../../assets/common/close-circle.svg';
 import copySvg from '../../assets/post/copy.svg';
 import { CommenText } from "./CommenText";
 import { DescriptionText } from "./DescriptionText";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -28,14 +29,19 @@ import { set } from "immer/dist/internal";
 
 export const TagFriends = ({
   info,
+  storyType = 'record',
+  recordId = '',
+  answerId = '',
   onCloseModal = () => { },
 }) => {
 
-  let { user, socketInstance } = useSelector((state) => {
+  let { user, refreshState , socketInstance } = useSelector((state) => {
     return (
       state.user
     )
   });
+
+  const dispatch = useDispatch();
 
   const { t, i18n } = useTranslation();
 
@@ -73,7 +79,7 @@ export const TagFriends = ({
           })
           setFriends([...tp]);
         })
-        //setFriends(jsonRes);
+        setFriends(jsonRes);
       }
       setIsLoading(false);
     })
@@ -119,10 +125,13 @@ export const TagFriends = ({
   }
 
   const handleSubmit = () => {
-    let ids = selectedIds.map((item, index) => friends[item].user.id);
+    let userIds = selectedIds.map((item) =>friends[item].user.id);
     let payload = {
-      recordId: info.id,
-      userIds: ids
+      storyId: info.id,
+      storyType: storyType,
+      tagUserIds: userIds,
+      recordId: recordId,
+      answerId: answerId,
     };
     setSubmitLoading(true);
     VoiceService.postTag(payload).then(async res => {
@@ -130,6 +139,7 @@ export const TagFriends = ({
       if (res.respInfo.status !== 201) {
       } else {
         Vibration.vibrate(100);
+        dispatch(setRefreshState(!refreshState));
         closeModal();
       }
       setSubmitLoading(false);

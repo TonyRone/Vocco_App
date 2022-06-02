@@ -26,7 +26,7 @@ export const DescriptionText = ({
         marginTop: marginTop,
         marginLeft:marginLeft,
         marginRight:marginRight,
-        lineHeight:lineHeight
+        lineHeight:lineHeight,
       }}
     >
       {text}

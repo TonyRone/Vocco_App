@@ -230,6 +230,18 @@ class VoiceService {
         );
     }
 
+    async likeTag(id, isLike) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+        fetch(
+            'GET',
+            `${API_URL}/actions/tagLike?id=${id}&isLike=${isLike}`, {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        );
+    }
+
     async replyAnswerUnAppreciate(id) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
@@ -392,12 +404,35 @@ class VoiceService {
             }
         );
     }
+
     async getAnswerVoices(id,answerId = '') {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
         fetch(
            'GET', 
             `${API_URL}/records/answers?id=${id}&skip=0&take=10&order=DESC&answerId=${answerId}`, {
+                'Authorization': `Bearer ${token}`
+            }
+        );
+    }
+
+    async getTagUsers(id) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+        fetch(
+           'GET', 
+            `${API_URL}/actions/getTagUsers?tagId=${id}`, {
+                'Authorization': `Bearer ${token}`
+            }
+        );
+    }
+
+    async getTags(storyId, storyType) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+        fetch(
+           'GET', 
+            `${API_URL}/actions/getTags?storyId=${storyId}&storyType=${storyType}`, {
                 'Authorization': `Bearer ${token}`
             }
         );

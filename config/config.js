@@ -4,7 +4,6 @@ export const windowHeight = Dimensions.get('window').height;
 
 export const API_URL = Platform.OS === 'ios' ? 'https://api.vocco.ai' : 'https://api.vocco.ai';
 //export const API_URL = Platform.OS === 'ios' ? 'http://192.168.111.196:80' : 'http://192.168.111.196:80';
-//export const API_URL = Platform.OS === 'ios' ? '' : 'https://ec2-18-117-55-156.us-east-2.compute.amazonaws.com:80';
 export const SOCKET_URL = 'https://voccosocket-i2tsf4hvaq-od.a.run.app';
 //export const SOCKET_URL = 'http://192.168.111.196:3000';
 export const ACCESSTOKEN_KEY = "@VoccoAT:2021";
@@ -39,6 +38,10 @@ export const Categories =
         uri:require('../assets/categories/horror.png')
     },
     {
+        label:'Dreams',
+        uri:require('../assets/categories/dreams.png')
+    },
+    {
         label:'Feminism',
         uri:require('../assets/categories/feminism.png')
     },
@@ -57,10 +60,6 @@ export const Categories =
     {
         label:'Astrology',
         uri:require('../assets/categories/astrology.png')
-    },
-    {
-        label:'Transport',
-        uri:require('../assets/categories/transport.png')
     },
     {
         label:'Fashion',
