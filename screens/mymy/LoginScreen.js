@@ -130,8 +130,7 @@ const LoginScreen = (props) => {
     };
     setLoading(true);
     AuthService.login(payload).then(async res => {
-      const jRes = await res.json();
-      const jsonRes = jRes.data;
+      const jsonRes = await res.json();
       if (res.respInfo.status === 201) {
         _storeData(jsonRes.accessToken, jsonRes.refreshToken);
         onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
@@ -216,8 +215,7 @@ const LoginScreen = (props) => {
         ],
       });
       AuthService.appleLogin({email, fullName, identityToken}).then(async res=>{
-        const jRes = await res.json();
-        const jsonRes = jRes.data;
+        const jsonRes = await res.json();
         if (res.respInfo.status === 201) {
           _storeData(jsonRes.accessToken, jsonRes.refreshToken);
           onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
@@ -277,8 +275,7 @@ const LoginScreen = (props) => {
       const tokens = await GoogleSignin.getTokens()
       setLoading(true);
       AuthService.googleLogin({token:tokens.accessToken}).then(async res=>{
-        const jRes = await res.json();
-        const jsonRes = jRes.data;
+        const jsonRes = await res.json();
         if (res.respInfo.status === 201) {
           _storeData(jsonRes.accessToken, jsonRes.refreshToken);
           onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
