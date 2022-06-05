@@ -173,7 +173,7 @@ const ProfileScreen = (props) => {
           borderWidth: userData.premium=="none"?0:3,
           marginLeft:userData.premium=="none"?0:-3,
           marginTop:userData.premium=="none"?0:-3,
-          borderColor:'#FEC613'
+          borderColor:'#FFA002'
         }]}
       />
       <Pressable style={{position: 'absolute',top: 0}} onLongPress={()=>props.navigation.navigate('Photo',{imageUrl:userData.avatar.url,backPage:'Profile'})}>

@@ -46,9 +46,7 @@ const LogoScreen = (props) => {
                             dispatch(setUser(jsonRes));
                             let socket = io(SOCKET_URL);
                             dispatch(setSocketInstance(socket));
-                            socket.on("connect", () => {
-                                socket.emit("login", {uid:jsonRes.id, email:jsonRes.email});
-                            });
+                            socket.emit("login", {uid:jsonRes.id, email:jsonRes.email});
                             let navigateScreen = 'Discover';
                             if(!jsonRes.id){
                                 return ;

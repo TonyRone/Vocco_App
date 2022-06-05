@@ -79,7 +79,7 @@ export const TagFriends = ({
           })
           setFriends([...tp]);
         })
-        setFriends(jsonRes);
+      //  setFriends(jsonRes);
       }
       setIsLoading(false);
     })
@@ -112,8 +112,11 @@ export const TagFriends = ({
   }
 
   const renderState = (lastSeen) => {
-    if (lastSeen == null) {
+    if (lastSeen == "onSession") {
       return t("online")
+    }
+    else if(lastSeen == null){
+      return ''
     }
     let num = Math.ceil((new Date().getTime() - new Date(lastSeen).getTime()) / 60000);
     num = Math.max(1, num);

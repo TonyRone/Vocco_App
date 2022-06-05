@@ -193,6 +193,7 @@ export const ReplyAnswerItem = ({
               <VoicePlayer
                 voiceUrl = {info.file.url}
                 stopPlay ={()=>setIsPlaying(false)}
+                startPlay={() => {VoiceService.listenStory(info.id, 'replyAnswer')}}
                 premium = {info.user.premium!='none'}
                 playBtn = {false}
                 replayBtn = {false}

@@ -16,6 +16,7 @@ import { DescriptionText } from "./DescriptionText";
 
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
+import VoiceService from "../../services/VoiceService";
 
 export const ShareVoice = ({
   onCloseModal=()=>{},
@@ -98,6 +99,7 @@ export const ShareVoice = ({
                     social: socialShare.Social.SNAPCHAT,
                     filename: info.title,
                     });
+                    VoiceService.shareStory(info.id, 'record');
                 }}>
                   <Image
                     style={{
@@ -115,7 +117,9 @@ export const ShareVoice = ({
                 />
               </View>
               <View style={{alignItems:'center'}}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=>{
+                   VoiceService.shareStory(info.id, 'record');
+                }}>
                   <Image
                     style={{
                       width:58,
@@ -141,6 +145,7 @@ export const ShareVoice = ({
                     social: socialShare.Social.INSTAGRAM_STORIES,
                     filename: info.title,
                     });
+                    VoiceService.shareStory(info.id, 'record');
                 }}>
                     <Image
                       style={{
@@ -166,6 +171,7 @@ export const ShareVoice = ({
                     social: socialShare.Social.WHATSAPP,
                     filename: info.title,
                     });
+                    VoiceService.shareStory(info.id, 'record');
                 }}>
                   <Image
                     style={{

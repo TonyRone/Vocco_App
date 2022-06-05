@@ -106,10 +106,10 @@ const VoiceProfileScreen = (props) => {
   }
 
   const onCompare = ( a,b )=>{
-    if( a.createAt < b.createAt)
-      return -1;
-    if( a.createAt > b.createAt)
+    if( a.createdAt < b.createdAt)
       return 1;
+    if( a.createdAt > b.createdAt)
+      return -1;
     return 0;
   }
 
@@ -124,6 +124,7 @@ const VoiceProfileScreen = (props) => {
     VoiceService.getAnswerVoices(recordId, answerId).then(async res => {
       if (res.respInfo.status === 200) {
         let answers = await res.json(), tags;
+        console.log(answers[0]);
         for(var i=1; i < answers.length; i ++){
           if(answers[i].id == answers[0].id){
             answers.splice(i,1);
@@ -315,7 +316,8 @@ const VoiceProfileScreen = (props) => {
             playBtn={true}
             premium={info?.user.premium != 'none'}
             playing={false}
-            stopPlay={() => { }}
+            startPlay={() => {VoiceService.listenStory(recordId, 'record')}}
+            stopPlay={()=>{}}
             tinWidth={windowWidth / 200}
             mrg={windowWidth / 530}
           />

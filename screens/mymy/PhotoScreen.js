@@ -164,9 +164,7 @@ const  PhotoScreen = (props) => {
                     if(backPage==''){
                       let socket = io(SOCKET_URL);
                       dispatch(setSocketInstance(socket));
-                      socket.on("connect", () => {
-                          socket.emit("login", {uid:jsonRes.id, email:jsonRes.email});
-                      });
+                      socket.emit("login", {uid:jsonRes.id, email:jsonRes.email});
                     }
                     props.navigation.navigate(backPage==''?"Tutorial":backPage,{info:jsonRes});
                   }

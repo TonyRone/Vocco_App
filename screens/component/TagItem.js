@@ -118,7 +118,7 @@ export const TagItem = ({
               fontSize={15}
               lineHeight={24}
             />
-            <View style={{ marginTop: 2, marginLeft: 7, height: 16, flexDirection: 'row' }}>
+            <View style={{ marginTop: 2, height: 16, flexDirection: 'row' }}>
               {tagUsers.map((item, index) => {
                 return (index < 2) ?
                   <View key={item.id + "tagUser"} style={styles.rowAlignItems}>
@@ -126,7 +126,6 @@ export const TagItem = ({
                       style={{
                         width: 16,
                         height: 16,
-                        marginLeft: 12,
                         borderRadius: 8,
                         borderColor: '#FFA002',
                         borderWidth: item.premium == 'none' ? 0 : 1
@@ -137,7 +136,8 @@ export const TagItem = ({
                       text={'@' + onLimit(item.name)}
                       fontSize={12}
                       lineHeight={16}
-                      marginLeft={4}
+                      marginLeft={8}
+                      marginRight={20}
                     //    color='rgba(59, 31, 82, 0.6)'
                     />
                   </View> : null
@@ -145,8 +145,13 @@ export const TagItem = ({
             </View>
           </View>
         </View>
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ marginRight: 33, marginTop: 24 }}>
+        <View style={{ flexDirection: 'row', alignItems:'center' }}>
+          <HeartIcon
+            isLike={check}
+            marginRight={33}
+            OnSetLike={() => onLikeTag()}
+          />
+          <View style={{ marginRight: 11 }}>
             {tagUsers.length > 0 && <TouchableOpacity onPress={()=>setShowList(true)} style={{ alignItems: 'center', justifyContent: 'center', width: 19, height: 19, borderRadius: 9.5, backgroundColor: '#7F27D3' }}>
               <DescriptionText
                 text={tagUsers.length}
@@ -156,11 +161,6 @@ export const TagItem = ({
               />
             </TouchableOpacity>}
           </View>
-          <HeartIcon
-            isLike={check}
-            marginRight={11}
-            OnSetLike={() => onLikeTag()}
-          />
         </View>
       </View>
     </TouchableOpacity>

@@ -459,6 +459,39 @@ class VoiceService {
             }
         );
     }
+
+    async listenStory(id, storyType) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        RNFetchBlob.config({ trusty: true }).
+        fetch(
+            'GET',
+            `${API_URL}/records/listenStory?id=${id}&storyType=${storyType}`, {
+                'Authorization': `Bearer ${token}`,
+            }
+        );
+    }
+
+    async shareStory(id, storyType) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        RNFetchBlob.config({ trusty: true }).
+        fetch(
+            'GET',
+            `${API_URL}/records/shareStory?id=${id}&storyType=${storyType}`, {
+                'Authorization': `Bearer ${token}`,
+            }
+        );
+    }
+
+    async shareLink() {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        RNFetchBlob.config({ trusty: true }).
+        fetch(
+            'GET',
+            `${API_URL}/actions/shareLink`, {
+                'Authorization': `Bearer ${token}`,
+            }
+        );
+    }
 }
 
 export default new VoiceService();

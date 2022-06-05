@@ -24,8 +24,16 @@ import { CommenText } from '../component/CommenText';
 
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
+import VoiceService from '../../services/VoiceService';
+import { useSelector } from 'react-redux';
 
 const ShareFriendScreen = (props) => {
+
+    let { user } = useSelector((state) => {
+        return (
+            state.user
+        )
+      });
 
     const {t, i18n} = useTranslation();
 
@@ -48,6 +56,7 @@ const ShareFriendScreen = (props) => {
             message: "hello world"
         };
         const respose = await Share.share(options);
+        VoiceService.shareLink();
     }
 
     const singleShare = async (customOptions) => {
@@ -56,6 +65,7 @@ const ShareFriendScreen = (props) => {
         } catch (err) {
           console.log(err);
         }
+        VoiceService.shareLink();
     };
     const onCopyLink = ()=>{
         Clipboard.setString(referLink)

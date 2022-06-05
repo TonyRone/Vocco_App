@@ -294,6 +294,7 @@ class VoicePlayer extends Component {
           isPlaying:true,
           currentPositionSec:0
         });
+      this.props.startPlay();
       const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath);
       const volume = await this.audioRecorderPlayer.setVolume(1.0);
       this.audioRecorderPlayer.addPlayBackListener((e) => {
