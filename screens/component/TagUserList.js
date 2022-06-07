@@ -79,6 +79,7 @@ export const TagUserList = ({
                 props.navigation.navigate('Profile');
               else
                 props.navigation.navigate('UserProfile',{userId:item.id});
+              closeModal();
               }} 
               key = {index+item.id+"likes"}
               style={{flexDirection:'row', alignItems:'center', marginLeft:16, marginTop:10, marginBottom:10}}

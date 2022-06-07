@@ -47,7 +47,7 @@ const LogoScreen = (props) => {
                             let socket = io(SOCKET_URL);
                             dispatch(setSocketInstance(socket));
                             socket.emit("login", {uid:jsonRes.id, email:jsonRes.email});
-                            let navigateScreen = 'Discover';
+                            let navigateScreen = 'Home';
                             if(!jsonRes.id){
                                 return ;
                             }
@@ -67,7 +67,7 @@ const LogoScreen = (props) => {
                             } else {
                             const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
                             if (tutorial_check)
-                                navigateScreen = 'Discover';
+                                navigateScreen = 'Home';
                             else
                                 navigateScreen = 'Tutorial';
                             }

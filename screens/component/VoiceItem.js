@@ -268,6 +268,7 @@ export const VoiceItem = ({
               playing={true}
               tinWidth={windowWidth / 160}
               mrg={windowWidth / 600}
+              duration={info.duration*1000}
             />
           </View>
         }

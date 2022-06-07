@@ -201,6 +201,7 @@ export const ReplyAnswerItem = ({
                 tinWidth={windowWidth/220}
                 mrg={windowWidth/650}
                 height={30}
+                duration={info.duration*1000}
               />
             </View>
           }

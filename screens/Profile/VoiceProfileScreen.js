@@ -9,7 +9,7 @@ import {
   ImageBackground
 } from 'react-native';
 
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 import * as Progress from "react-native-progress";
 import { NavigationActions, StackActions } from 'react-navigation';
@@ -57,11 +57,11 @@ const VoiceProfileScreen = (props) => {
   const [likeCount, setLikeCount] = useState(0);
   const [info, setInfo] = useState();
   const [showShareVoice, setShowShareVoice] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [isHolding, setIsHolding] = useState(false);
   const [allLikes, setAllLikes] = useState(false);
   const [showTagFriends, setShowTagFriends] = useState(false);
-  const [combines, setCombines] = useState(0);
+  const [combines, setCombines] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -105,17 +105,17 @@ const VoiceProfileScreen = (props) => {
       });
   }
 
-  const onCompare = ( a,b )=>{
-    if( a.createdAt < b.createdAt)
+  const onCompare = (a, b) => {
+    if (a.createdAt < b.createdAt)
       return 1;
-    if( a.createdAt > b.createdAt)
+    if (a.createdAt > b.createdAt)
       return -1;
     return 0;
   }
 
   const onCombine = (ar0, ar1) => {
-    let ar = [...ar0,...ar1];
-    ar.sort( onCompare );
+    let ar = [...ar0, ...ar1];
+    ar.sort(onCompare);
     setCombines(ar);
   }
 
@@ -124,14 +124,18 @@ const VoiceProfileScreen = (props) => {
     VoiceService.getAnswerVoices(recordId, answerId).then(async res => {
       if (res.respInfo.status === 200) {
         let answers = await res.json(), tags;
-        console.log(answers[0]);
-        for(var i=1; i < answers.length; i ++){
-          if(answers[i].id == answers[0].id){
-            answers.splice(i,1);
+        for (var i = 1; i < answers.length; i++) {
+          if (answers[i].id == answers[0].id) {
+            answers.splice(i, 1);
             answers[0].createAt = new Date();
             break;
           }
         }
+        console.log(answers[0]);
+        console.log(answers[1]);
+        console.log(answers[2]);
+        console.log(answers[3]);
+        console.log(answers[4]);
         setAnswerVoices(answers);
         VoiceService.getTags(recordId, 'record').then(async res => {
           if (res.respInfo.status === 200) {
@@ -203,7 +207,7 @@ const VoiceProfileScreen = (props) => {
     let tp = [...answerVoices];
     tp.splice(index, 1);
     setAnswerVoices(tp);
-    onCombine(tp,tags);
+    onCombine(tp, tags);
   }
 
   const OnSetLike = () => {
@@ -224,7 +228,6 @@ const VoiceProfileScreen = (props) => {
     getUserInfo();
     getAnswerVoices();
     dispatch(setVoiceState(voiceState + 1));
-    setLoading(true);
   }, [refreshState])
   return (
     <KeyboardAvoidingView
@@ -316,14 +319,15 @@ const VoiceProfileScreen = (props) => {
             playBtn={true}
             premium={info?.user.premium != 'none'}
             playing={false}
-            startPlay={() => {VoiceService.listenStory(recordId, 'record')}}
-            stopPlay={()=>{}}
+            startPlay={() => { VoiceService.listenStory(recordId, 'record') }}
+            stopPlay={() => { }}
             tinWidth={windowWidth / 200}
             mrg={windowWidth / 530}
+            duration={info.duration*1000}
           />
         </View>}
       </ImageBackground>
-      <View style={{ marginTop: Platform.OS == 'ios' ? -60 : -100, width: '100%', height: windowHeight - 390, backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 30 }}>
+      <View style={{ marginTop: Platform.OS == 'ios' ? -60 : -100, width: '100%', flex: 1, backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 30, marginBottom:50 }}>
         <View style={{ width: '100%', marginTop: 8, alignItems: 'center' }}>
           <View style={{ width: 48, height: 4, borderRadius: 2, backgroundColor: '#D4C9DE' }}>
           </View>
@@ -334,10 +338,9 @@ const VoiceProfileScreen = (props) => {
           marginLeft={16}
           marginBottom={15}
         />
-        {!loading ? <FlatList
-          data={combines}
-          renderItem={({ item, index }) =>
-              item.file?
+        <ScrollView>
+          {!loading ? combines.map((item, index) =>
+            item.file ?
               <AnswerVoiceItem
                 key={index + item.id + 'answerVoice'}
                 props={props}
@@ -345,23 +348,23 @@ const VoiceProfileScreen = (props) => {
                 onChangeIsLiked={() => setIsLiked(index)}
                 onDeleteItem={() => onDeleteAnswer(index)}
                 holdToAnswer={(v) => setIsHolding(v)}
-              />:
+              /> :
               <TagItem
+                key={index + item.id + 'tagFriend'}
                 props={props}
                 info={item}
-                onChangeIsLiked={()=> setIsLiked(index)}
-              />
+                onChangeIsLiked={() => setIsLiked(index)}
+              />)
+            :
+            <Progress.Circle
+              indeterminate
+              size={30}
+              color="rgba(0, 0, 255, .7)"
+              style={{ alignSelf: "center", marginTop: windowHeight / 20 }}
+            />
           }
-          keyExtractor={(item, index) => index.toString()}
-        /> :
-          <Progress.Circle
-            indeterminate
-            size={30}
-            color="rgba(0, 0, 255, .7)"
-            style={{ alignSelf: "center", marginTop: windowHeight / 20 }}
-          />
-        }
-        <View style={{height:20}}></View>
+          <View style={{ height: 50 }}></View>
+        </ScrollView>
       </View>
       {(info && isHolding == false) && <View
         style={{

@@ -139,7 +139,7 @@ export const NotificationItem = ({
         />} 
         </TouchableOpacity>
         {isActivity&&
-        <TouchableOpacity onPress={()=>{isNew?onPressItem():null;onDeleteItem();setIsDeleted(true);}} style={[styles.rowAlignItems,{
+        <TouchableOpacity onPress={()=>{onDeleteItem();setIsDeleted(true);}} style={[styles.rowAlignItems,{
             width:windowWidth,
             paddingVertical:24,
             backgroundColor:'#E41717',

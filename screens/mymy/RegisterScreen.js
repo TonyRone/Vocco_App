@@ -211,7 +211,7 @@ const RegisterScreen = (props) => {
       const jsonRes = await res.json();
       if(res.respInfo.status ==200){
         dispatch(setUser(jsonRes));
-        let navigateScreen = 'Discover';
+        let navigateScreen = 'Home';
         if (!jsonRes.isEmailVerified) {
           navigateScreen = 'Verify';
         } else if (!jsonRes.name) {
@@ -228,7 +228,7 @@ const RegisterScreen = (props) => {
         } else {
           const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
           if (tutorial_check)
-            navigateScreen = 'Discover';
+            navigateScreen = 'Home';
           else
             navigateScreen = 'Tutorial';
         }

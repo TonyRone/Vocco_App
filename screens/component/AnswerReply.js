@@ -65,7 +65,8 @@ export const AnswerReply = ({
   const [isPaused, setIsPaused] = useState(true);
   const [isPublish, setIsPublish] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [showModal, setShowModal] = useState(true)
+  const [showModal, setShowModal] = useState(true);
+  const [duration, setDuration] = useState(0);
   const [key, setKey] = useState(0);
 
   const wasteTime = useRef(0);
@@ -130,6 +131,7 @@ export const AnswerReply = ({
     setIsRecording(false);
     setIsPaused(true);
     if(publish == true){
+        setDuration(wasteTime.current);
         clearRecorder();
         setIsPublish(true);
     }
@@ -216,8 +218,10 @@ export const AnswerReply = ({
                 premium = {info.user.premium !='none'}
                 playing = {false}
                 stopPlay = {()=>{}}
+                startPlay = {()=>{}}
                 tinWidth={windowWidth/300}
                 mrg={windowWidth/600}
+                duration = {duration}
               />
               <TouchableOpacity onPress={()=>closeModal()}>
                 <SvgXml

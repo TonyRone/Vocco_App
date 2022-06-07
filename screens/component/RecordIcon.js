@@ -61,7 +61,6 @@ export const RecordIcon = ({
   const [key, setKey] = useState(0);
   const [hoverState,setHoverState] = useState(0);
   const [isPaused, setIsPaused] = useState(true);
-  const [isTime, setIsTime] = useState(true);
   const [IsExpanded, setIsExpanded] = useState(false);
   const [expand, setExpand] = useState(0);
   const [temporary, setTemporary] = useState(isTemporary);
@@ -150,7 +149,6 @@ export const RecordIcon = ({
       setIsRecording(false);
       setIsPaused(true);
       setKey(prevKey => prevKey + 1);
-      setIsTime(true);
       if(publish == true){
         let tp = Math.max(wasteTime.current,1);
         if(recordId)
@@ -168,12 +166,12 @@ export const RecordIcon = ({
   };
  
   const onChangeRecord = async (e, v = false )=>{
-    if(v == true && isRecording == false && isTime){
+    if(v == true && isRecording == false){
       setIsExpanded(true);
       onStartRecord();
     }
     else {
-      if(v == true && isPaused && isTime){
+      if(v == true && isPaused){
         await recorderPlayer.resumeRecorder();
         setIsPaused(false);
         //setStartTime(new Date());

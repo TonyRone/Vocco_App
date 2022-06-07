@@ -46,7 +46,7 @@ class VoicePlayer extends Component {
       recordSecs: 0,
       recordTime: '00:00:00',
       currentPositionSec: 0,
-      currentDurationSec: 0,
+      currentDurationSec: props.duration,
       playTime: '00:00:00',
       duration: '00:00:00',
       isPlaying:false,
@@ -253,6 +253,9 @@ class VoicePlayer extends Component {
     let { voiceState, actions } = this.props;
     this.setState({
       voiceKey:voiceState+1,
+      isStarted:true,
+      isPlaying:true,
+      currentPositionSec:0
     });
     actions.setVoiceState(voiceState+1);
     const fileRemoteUrl = this.props.voiceUrl;

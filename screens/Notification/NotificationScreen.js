@@ -240,7 +240,7 @@ const NotificationScreen = (props) => {
           flex:1
         }}
       >
-        <View style={[styles.rowSpaceBetween,{marginTop:10,paddingHorizontal:16}]}>
+        <View style={[styles.rowSpaceBetween,{marginTop:20,paddingHorizontal:16}]}>
             <TouchableOpacity onPress={()=>props.navigation.goBack()}>
                 <SvgXml
                     width={24}

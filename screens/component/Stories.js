@@ -57,7 +57,7 @@ export const Stories = ({
       return ;
     }
 
-    VoiceService.getStories(isNew?0:stories.length, userId, category, searchTitle, recordId).then(async res => {
+    VoiceService.getStories(isNew?0:stories.length, userId, category, searchTitle, recordId, screenName=='Feed'?'friend':'').then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
         setStories((stories.length==0||isNew)?[...jsonRes]:[...stories,...jsonRes]);

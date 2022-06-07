@@ -60,6 +60,7 @@ export const TagItem = ({
     } else {
       setLastTap(timeNow);
       setDelayTime(setTimeout(() => {
+        setShowList(true);
         setLastTap(0);
       }, DOUBLE_PRESS_DELAY));
     }
@@ -151,7 +152,7 @@ export const TagItem = ({
             marginRight={33}
             OnSetLike={() => onLikeTag()}
           />
-          <View style={{ marginRight: 11 }}>
+          <View style={{ marginRight: 11 ,width: 19, height: 19}}>
             {tagUsers.length > 0 && <TouchableOpacity onPress={()=>setShowList(true)} style={{ alignItems: 'center', justifyContent: 'center', width: 19, height: 19, borderRadius: 9.5, backgroundColor: '#7F27D3' }}>
               <DescriptionText
                 text={tagUsers.length}

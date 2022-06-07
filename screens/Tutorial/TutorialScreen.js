@@ -64,7 +64,7 @@ const TutorialScreen = (props) => {
       );
       const resetActionTrue = StackActions.reset({
         index: 0,
-        actions: [NavigationActions.navigate({ routeName: "Discover" })],
+        actions: [NavigationActions.navigate({ routeName: "Home" })],
       });
       props.navigation.dispatch(resetActionTrue);
     } catch (err) {

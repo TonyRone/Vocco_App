@@ -169,7 +169,7 @@ const UserProfileScreen = (props) => {
         const jsonRes = await res.json();
         if(res.respInfo.status==201){ 
           dispatch(setRefreshState(!refreshState));
-          props.navigation.navigate('Discover');
+          props.navigation.navigate('Home');
         }
       })
       .catch(err => {
@@ -267,6 +267,7 @@ const UserProfileScreen = (props) => {
           borderLeftWidth: (userInfo.user&&userInfo.user.premium=="none")?0:3,
           marginLeft:(userInfo.user&&userInfo.user.premium=="none")?0:-3,
           marginTop:(userInfo.user&&userInfo.user.premium=="none")?0:-3,
+          borderColor:'#FFA002'
         }]}
       />
       <LinearGradient

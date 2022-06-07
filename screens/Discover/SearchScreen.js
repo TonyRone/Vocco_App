@@ -197,8 +197,8 @@ const SearchScreen = (props) => {
           }}>
             <View style={{flexDirection:'row',alignItems:'center'}}>
               <SvgXml
-                width="20"
-                height="20"
+                width="24"
+                height="24"
                 xml={searchSvg}
               />
               {category>0&&

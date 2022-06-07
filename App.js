@@ -56,6 +56,9 @@ import { Provider } from 'react-redux';
 import configureStore from './store/configureStore';
 import PostingAnswerVoiceScreen from './screens/Record/PostingAnswerVoiceScreen';
 import VoicePlayer from './screens/Home/VoicePlayer';
+import HomeScreen from './screens/Home/HomeScreen';
+import ChatScreen from './screens/Chat/ChatScreen';
+import FriendsScreen from './screens/Friends/FriendsScreen';
 
 
 const slideAnimation2 = (bottomToTop) => {
@@ -227,6 +230,17 @@ const AppNavigator = createStackNavigator({
     }
   },
 
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: {
+      headerShown:false,
+      headerStyle:{
+        elevation: 0, // remove shadow on Android
+        shadowOpacity: 0, // remove shadow on iOS
+      },
+    }
+  },
+
   //Record
   HoldRecord: {
     screen: HoldRecordScreen,
@@ -388,6 +402,26 @@ const AppNavigator = createStackNavigator({
       }
     }
   },
+  Chat: {
+    screen: ChatScreen,
+    navigationOptions: {
+      headerShown:false,
+      headerStyle:{
+        elevation: 0, // remove shadow on Android
+        shadowOpacity: 0, // remove shadow on iOS
+      }
+    }
+  },
+  Friends: {
+    screen: FriendsScreen,
+    navigationOptions: {
+      headerShown:false,
+      headerStyle:{
+        elevation: 0, // remove shadow on Android
+        shadowOpacity: 0, // remove shadow on iOS
+      }
+    }
+  },
   Test: {
     screen: VoicePlayer,
     navigationOptions: {
@@ -400,7 +434,7 @@ const AppNavigator = createStackNavigator({
   },
 },
 {
-  initialRouteName:'Logo'
+  //initialRouteName:'Home'
 }
 );
 

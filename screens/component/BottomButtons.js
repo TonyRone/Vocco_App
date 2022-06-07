@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { View, TouchableOpacity, Text, Platform, StatusBar , Vibration } from "react-native";
+import { View, TouchableOpacity, Text, Platform, StatusBar , Vibration, Image } from "react-native";
 import { NavigationActions, StackActions } from 'react-navigation';
 import { SvgXml } from 'react-native-svg';
 //Bottom Icons
@@ -11,7 +11,12 @@ import recordSvg from '../../assets/common/bottomIcons/record.svg';
 import profileSvg from '../../assets/common/bottomIcons/profile.svg';
 import profileActiveSvg from '../../assets/common/bottomIcons/profileActive.svg';
 import settingSvg from '../../assets/common/bottomIcons/settings.svg';
-import settingsActiveSvg from '../../assets/common/bottomIcons/settingsActive.svg';
+import settingActiveSvg from '../../assets/common/bottomIcons/settings.svg';
+import chatSvg from '../../assets/common/bottomIcons/chat.svg';
+import chatActiveSvg from '../../assets/common/bottomIcons/chatActive.svg';
+import friendSvg from '../../assets/common/bottomIcons/friend.svg';
+import friendActiveSvg from '../../assets/common/bottomIcons/friendActive.svg';
+import { useSelector } from "react-redux";
 import { baseProps } from "react-native-gesture-handler/lib/typescript/handlers/gestureHandlers";
 
 
@@ -19,6 +24,12 @@ export const BottomButtons = ({
   active = 'home',
   props,
 }) => {
+
+  let { user } = useSelector((state) => {
+    return (
+        state.user
+    )
+  });
 
   const onNavigate = (des, par = null) =>{
     //props.navigation.navigate(navigateScreen,{info:jsonRes})
@@ -50,7 +61,7 @@ export const BottomButtons = ({
       }}
     >
       <TouchableOpacity
-        onPress={()=>onNavigate('Feed')}
+        onPress={()=>onNavigate('Home')}
       >
         <SvgXml
           width={30}
@@ -59,12 +70,12 @@ export const BottomButtons = ({
         />
       </TouchableOpacity>          
       <TouchableOpacity
-        onPress={()=>onNavigate('Discover')}
+        onPress={()=>onNavigate('Friends')}
       >
         <SvgXml
           width={30}
           height={30}
-          xml={active == 'global' ? globalActiveSvg : globalSvg}
+          xml={active == 'friends' ? friendActiveSvg : friendSvg}
         />
       </TouchableOpacity>
       <TouchableOpacity
@@ -81,21 +92,21 @@ export const BottomButtons = ({
         
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={()=>props.navigation.navigate("Profile")}
+        onPress={()=>props.navigation.navigate("Chat")}
       >
         <SvgXml
           width={30}
           height={30}
-          xml={active == 'profile' ? profileActiveSvg : profileSvg}
+          xml={active == 'chat' ? chatActiveSvg : chatSvg}
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={()=>props.navigation.navigate("Setting")}
+        onPress={()=>props.navigation.navigate("Profile")}
       >
-        <SvgXml
-          width={30}
-          height={30}
-          xml={active == 'settings' ? settingsActiveSvg : settingSvg}
+        <Image
+          source={{ uri: user.avatar.url }}
+          style={{ width: 30, height: 30, borderRadius: 15 }}
+          resizeMode='cover'
         />
       </TouchableOpacity>
     </View>

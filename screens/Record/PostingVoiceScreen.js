@@ -264,6 +264,8 @@ const PostingVoiceScreen = (props) => {
             premium = {user.premium!='none'}
             playing = {false}
             stopPlay = {()=>{}}
+            startPlay = {()=>{}}
+            duration = {displayDuration*1000}
           />
         </View>
         <View style={{flexDirection:'row', justifyContent:'space-between'}}>
