@@ -3,7 +3,7 @@ import { Text } from "react-native";
 
 export const CommenText = ({
   text,
-  fontFamily = "SFProDisplay-Bold",
+  fontFamily = "SFProDisplay-Semibold",
   textAlign = "left",
   color = "#281E30",
   numberOfLines,

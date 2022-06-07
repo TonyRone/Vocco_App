@@ -11,6 +11,10 @@ export const FriendItem = ({
   isUserName = false
 }) => {
 
+  let isGreen = false;
+  if(isUserName == true && (info.isFriend == true||info.user.premium!='none'))
+    isGreen = true;
+
   const {t, i18n} = useTranslation();
 
   const user = useSelector((state) => {
@@ -18,14 +22,18 @@ export const FriendItem = ({
         state.user.user
     )
   });
-  let isGreen = false;
-  if(isUserName == true && (info.isFriend == true||info.user.premium!='none'))
-    isGreen = true;
+
+  const onLimit = (v) => {
+    return ((v).length > 8) ?
+      (((v).substring(0, 5)) + '...') :
+      v;
+  }
+
   return (
     <TouchableOpacity
       style={{
         width:56,
-        marginRight:16,
+        marginLeft:16,
       }}
       onPress = {()=>props.navigation.navigate('VoiceProfile', {id:info.id})}
     >
@@ -42,10 +50,10 @@ export const FriendItem = ({
           letterSpacing:0.066,
           color: 'rgba(54, 36, 68, 0.8)',
           textAlign:"center",
-          marginTop:8
+          marginTop:4
         }}
       >
-        {isUserName?info.user.name:info.title}
+        {isUserName?onLimit(info.user.name):onLimit(info.title)}
       </Text>
     </TouchableOpacity>
   );

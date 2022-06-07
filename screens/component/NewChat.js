@@ -12,7 +12,7 @@ import { FlatList } from "react-native-gesture-handler";
 import VoiceService from '../../services/VoiceService';
 import Clipboard from '@react-native-community/clipboard';
 import socialShare from 'react-native-share';
-import { MyButton } from '../component/MyButton';
+import { MyButton } from './MyButton';
 import { setRefreshState } from '../../store/actions';
 import { styles } from '../style/Common';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
@@ -27,11 +27,8 @@ import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { set } from "immer/dist/internal";
 
-export const TagFriends = ({
-  info,
-  storyType = 'record',
-  recordId = '',
-  answerId = '',
+export const NewChat = ({
+  props,
   onCloseModal = () => { },
 }) => {
 
@@ -48,7 +45,6 @@ export const TagFriends = ({
   const [showModal, setShowModal] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [friends, setFriends] = useState([]);
-  const [selectedIds, setSelectedIds] = useState([]);
   const [isSearch, setIsSearch] = useState(false);
   const [label, setLabel] = useState('');
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -79,7 +75,6 @@ export const TagFriends = ({
           })
           setFriends([...tp]);
         })
-        //  setFriends(jsonRes);
       }
       setIsLoading(false);
     })
@@ -89,15 +84,7 @@ export const TagFriends = ({
   }
 
   const onSelectFriend = (id, add = false) => {
-    let tp = selectedIds;
-    let idx = selectedIds.indexOf(id);
-    if (idx == -1) {
-      tp.push(id);
-    }
-    else if (add == false) {
-      tp.splice(idx, 1);
-    }
-    setSelectedIds([...tp]);
+
   }
 
   const renderName = (fname, lname) => {
@@ -127,32 +114,6 @@ export const TagFriends = ({
     return (day > 0 ? (day.toString() + ' ' + t("day") + (day > 1 ? 's' : '')) : (hour > 0 ? (hour.toString() + ' ' + t("hour") + (hour > 1 ? 's' : '')) : (minute > 0 ? (minute.toString() + ' ' + t("minute") + (minute > 1 ? 's' : '')) : ''))) + " " + t("ago");
   }
 
-  const handleSubmit = () => {
-    let userIds = selectedIds.map((item) => friends[item].user.id);
-    let payload = {
-      storyId: info.id,
-      storyType: storyType,
-      tagUserIds: userIds,
-      recordId: recordId,
-      answerId: answerId,
-    };
-    setSubmitLoading(true);
-    VoiceService.postTag(payload).then(async res => {
-      // const jsonRes = await res.json();
-      if (res.respInfo.status !== 201) {
-      } else {
-        Vibration.vibrate(100);
-        dispatch(setRefreshState(!refreshState));
-        closeModal();
-      }
-      setSubmitLoading(false);
-    })
-      .catch(err => {
-        console.log(err);
-      });
-    closeModal();
-  }
-
   useEffect(() => {
     getFriends();
   }, [])
@@ -167,7 +128,7 @@ export const TagFriends = ({
               <View style={[styles.rowSpaceBetween, { paddingHorizontal: 14, paddingVertical: 12 }]}>
                 <View></View>
                 <CommenText
-                  text={t("Tag friends")}
+                  text={t("New Message")}
                   fontSize={17}
                   lineHeight={28}
                   color='#263449'
@@ -199,31 +160,9 @@ export const TagFriends = ({
                         fontSize: 17,
                         color: 'grey'
                       }}
-                    >{t("Enter @username")}</Text>
+                    >{t("Search") + '...'}</Text>
                   </Pressable>
                 </View>
-              </View>
-              <View style={{ paddingHorizontal: 8, flexDirection: 'row', flexWrap: 'wrap' }}>
-                {selectedIds.map((id, index) => <View key={index.toString() + "friendId" + id.toString()} style={{ flexDirection: 'row', marginLeft: 8, marginTop: 12, alignItems: 'center', height: 32, borderRadius: 16, backgroundColor: '#D4C9DE' }}>
-                  <View style={{ marginLeft: 16 }}>
-                    <DescriptionText
-                      text={friends[id].user.name}
-                      fontSize={17}
-                      lineHeight={28}
-                      color='#281E30'
-                    />
-                  </View>
-                  <TouchableOpacity onPress={() => onSelectFriend(id)} style={{
-                    marginLeft: 8,
-                    marginRight: 4
-                  }}>
-                    <SvgXml
-                      width={24}
-                      height={24}
-                      xml={closeCircleSvg}
-                    />
-                  </TouchableOpacity>
-                </View>)}
               </View>
             </> :
             <View style={[styles.paddingH16, { marginTop: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
@@ -276,7 +215,7 @@ export const TagFriends = ({
               </TouchableOpacity>
             </View>
           }
-          <View style={{ paddingHorizontal: 16, marginTop: 16, marginBottom: (!isSearch && selectedIds.length > 0) ? 100 : 0, flex: 1 }}>
+          <View style={{ paddingHorizontal: 16, marginTop: 16, marginBottom: 0, flex: 1 }}>
             {(filterCount == 0 && isLoading == false && label != '') ?
               <View style={{ marginTop: windowHeight / 7, alignItems: 'center', width: windowWidth }}>
                 <Image
@@ -336,7 +275,6 @@ export const TagFriends = ({
                   {(item.user.name.toLowerCase().indexOf(label.toLowerCase()) != -1) &&
                     <TouchableOpacity
                       onPress={() => {
-                        onSelectFriend(index, true);
                         onSetLabel('');
                         setIsSearch(false);
                       }}
@@ -370,21 +308,6 @@ export const TagFriends = ({
               />
             }
           </View>
-          {(!isSearch && selectedIds.length > 0) && <LinearGradient
-            colors={['#FFFFFF', 'rgba(255,255,255, 0)']}
-            locations={[0.7, 1]}
-            start={{ x: 0, y: 1 }} end={{ x: 0, y: 0 }}
-            style={{ position: 'absolute', paddingHorizontal: 16, bottom: 0, width: windowWidth }}
-          >
-            <MyButton
-              label={"Tag " + selectedIds.length + " " + t("friend") + (selectedIds.length > 1 ? 's' : '')}
-              //marginTop={90}
-              onPress={handleSubmit}
-              loading={submitLoading}
-              active={true}
-              marginBottom={40}
-            />
-          </LinearGradient>}
           {isLoading && <View style={{ position: 'absolute', width: '100%', top: windowHeight / 2.8 }}>
             <Progress.Circle
               indeterminate

@@ -131,11 +131,6 @@ const VoiceProfileScreen = (props) => {
             break;
           }
         }
-        console.log(answers[0]);
-        console.log(answers[1]);
-        console.log(answers[2]);
-        console.log(answers[3]);
-        console.log(answers[4]);
         setAnswerVoices(answers);
         VoiceService.getTags(recordId, 'record').then(async res => {
           if (res.respInfo.status === 200) {
