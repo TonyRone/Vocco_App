@@ -107,8 +107,6 @@ const ConversationScreen = (props) => {
     const getMessages = async () => {
         VoiceService.getVoiceMessages(info.user.id).then(async res => {
             const jsonRes = await res.json();
-            console.log(jsonRes[0]);
-            console.log(res.respInfo.status);
             if (res.respInfo.status == 200) {
                 setMessages([...jsonRes]);
             }
@@ -130,12 +128,10 @@ const ConversationScreen = (props) => {
             ];
             VoiceService.postVoiceMessage(voiceFile).then(async res => {
                 const jsonRes = await res.json();
-                console.log(res.respInfo.status);
                 if (res.respInfo.status !== 201) {
                 } else {
                     Vibration.vibrate(100);
                     setIsPublish(false);
-                    console.log(jsonRes);
                     let tp = messages;
                     tp.push(jsonRes);
                     tp.sort(onCompare);
