@@ -31,7 +31,7 @@ import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-goog
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ACCESSTOKEN_KEY, MAIN_LANGUAGE, windowHeight } from '../../config/config';
 import { styles } from '../style/Common';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/CommenText';
 import { SettingList } from '../component/SettingList';
 import { NavigationActions, StackActions } from 'react-navigation';
 
@@ -113,7 +113,7 @@ const SettingScreen =  (props) => {
           flex:1
         }}
       >
-        <CommenText
+        <SemiBoldText
             text={t("Settings")}
             fontSize={20}
             lineHeight={24}
@@ -133,7 +133,7 @@ const SettingScreen =  (props) => {
                         source={{uri:userData.avatar.url}}
                     />
                     <View>
-                        <CommenText
+                        <SemiBoldText
                             text={userData.name}
                             fontSize={17}
                             lineHeight={28}
@@ -160,7 +160,7 @@ const SettingScreen =  (props) => {
                             height:40
                         }}
                     />
-                    <CommenText
+                    <SemiBoldText
                         text={t("Upgrade to Premium")}
                         fontSize={17}
                         lineHeight={28}
@@ -233,7 +233,7 @@ const SettingScreen =  (props) => {
                 shadowRadius:8,
               elevation:1
             }}>
-                <CommenText
+                <SemiBoldText
                     text={t("Log out?")}
                     fontSize={20}
                     lineHeight={24}
@@ -250,7 +250,7 @@ const SettingScreen =  (props) => {
                 />
                 <View style={{flexDirection:'row',marginTop:27,marginLeft:windowWidth/2-38}}>
                     <TouchableOpacity onPress={()=>setShowModal(false)}>
-                        <CommenText
+                        <SemiBoldText
                             text={t("Cancel")}
                             fontSize={15}
                             lineHeight={24}
@@ -258,7 +258,7 @@ const SettingScreen =  (props) => {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>sendLogOut()}>
-                        <CommenText
+                        <SemiBoldText
                             text={t("Send")}
                             fontSize={15}
                             lineHeight={24}
@@ -289,7 +289,7 @@ const SettingScreen =  (props) => {
                                 />
                         </View>
                     </TouchableOpacity>
-                    <CommenText
+                    <SemiBoldText
                         text={t("Select your language")}
                         fontSize={17}
                         lineHeight={28}

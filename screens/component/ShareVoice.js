@@ -11,7 +11,7 @@ import socialShare from 'react-native-share';
 import { styles } from '../style/Common';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import copySvg from '../../assets/post/copy.svg';
-import { CommenText } from "./CommenText";
+import { SemiBoldText } from "./CommenText";
 import { DescriptionText } from "./DescriptionText";
 
 import {useTranslation} from 'react-i18next';

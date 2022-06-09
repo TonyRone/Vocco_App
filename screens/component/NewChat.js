@@ -19,7 +19,7 @@ import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import searchSvg from '../../assets/login/search.svg';
 import closeCircleSvg from '../../assets/common/close-circle.svg';
 import copySvg from '../../assets/post/copy.svg';
-import { CommenText } from "./CommenText";
+import { SemiBoldText } from "./CommenText";
 import { DescriptionText } from "./DescriptionText";
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -127,7 +127,7 @@ export const NewChat = ({
             <>
               <View style={[styles.rowSpaceBetween, { paddingHorizontal: 14, paddingVertical: 12 }]}>
                 <View></View>
-                <CommenText
+                <SemiBoldText
                   text={t("New Message")}
                   fontSize={17}
                   lineHeight={28}
@@ -275,8 +275,8 @@ export const NewChat = ({
                   {(item.user.name.toLowerCase().indexOf(label.toLowerCase()) != -1) &&
                     <TouchableOpacity
                       onPress={() => {
-                        onSetLabel('');
-                        setIsSearch(false);
+                        props.navigation.navigate("Conversation",{info:item});
+                        closeModal();
                       }}
                       key={index + item.user.id + "friends"}
                       style={{ flexDirection: 'row', alignItems: 'center', marginLeft: isSearch ? 0 : 16, marginTop: 10, marginBottom: 10 }}

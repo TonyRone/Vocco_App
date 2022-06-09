@@ -37,7 +37,7 @@ import redTrashSvg from '../../assets/common/red_trash.svg';
 
 import { windowHeight, windowWidth, SHARE_CHECK } from '../../config/config';
 import { styles } from '../style/Common';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/CommenText';
 import { AnswerVoiceItem } from '../component/AnswerVoiceItem';
 import '../../language/i18n';
 import EmojiPicker from 'rn-emoji-keyboard';
@@ -240,7 +240,7 @@ const VoiceProfileScreen = (props) => {
           <TouchableOpacity onPress={() => props.navigation.goBack()}>
             <SvgXml width="24" height="24" xml={closeBlackSvg} />
           </TouchableOpacity>
-          <CommenText
+          <SemiBoldText
             text={info?.title}
             maxWidth={windowWidth - 122}
           />
@@ -287,7 +287,7 @@ const VoiceProfileScreen = (props) => {
                 marginLeft={8}
               /> */}
           </TouchableOpacity>}
-          <CommenText
+          <SemiBoldText
             text={info?.user.name}
             fontFamily="SFProDisplay-Semibold"
             marginTop={8}
@@ -312,7 +312,7 @@ const VoiceProfileScreen = (props) => {
           <VoicePlayer
             voiceUrl={info?.file.url}
             playBtn={true}
-            premium={info?.user.premium != 'none'}
+            waveColor={info.user.premium != 'none'?['#FFC701','#A901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
             playing={false}
             startPlay={() => { VoiceService.listenStory(recordId, 'record') }}
             stopPlay={() => { }}
@@ -327,7 +327,7 @@ const VoiceProfileScreen = (props) => {
           <View style={{ width: 48, height: 4, borderRadius: 2, backgroundColor: '#D4C9DE' }}>
           </View>
         </View>
-        <CommenText
+        <SemiBoldText
           text={t('Answers') + ' (' + (loading ? ' ' : (answerVoices.length - (answerId == '' ? 0 : 1))) + ')'}
           marginTop={19}
           marginLeft={16}
@@ -399,7 +399,7 @@ const VoiceProfileScreen = (props) => {
                   xml={recordSvg}
                 /> */}
             </View>
-            <CommenText
+            <SemiBoldText
               text=""
               fontFamily="SFProDisplay-Semibold"
               fontSize={12}
@@ -421,7 +421,7 @@ const VoiceProfileScreen = (props) => {
                   />
                 </View>
               </TouchableOpacity>
-              <CommenText
+              <SemiBoldText
                 text={t("Tag friends")}
                 fontFamily="SFProDisplay-Semibold"
                 fontSize={12}
@@ -437,7 +437,7 @@ const VoiceProfileScreen = (props) => {
                 OnSetLike={() => OnSetLike()}
               />
               <TouchableOpacity onPress={() => setAllLikes(true)}>
-                <CommenText
+                <SemiBoldText
                   text={likeCount}
                   fontFamily="SFProDisplay-Semibold"
                   fontSize={12}
@@ -460,7 +460,7 @@ const VoiceProfileScreen = (props) => {
                   />
                 </View>
               </TouchableOpacity>
-              <CommenText
+              <SemiBoldText
                 text={t("To chat")}
                 fontFamily="SFProDisplay-Semibold"
                 fontSize={12}
@@ -481,7 +481,7 @@ const VoiceProfileScreen = (props) => {
                   />
                 </View>
               </TouchableOpacity>
-              <CommenText
+              <SemiBoldText
                 text={t('Share')}
                 fontFamily="SFProDisplay-Semibold"
                 fontSize={12}
@@ -513,7 +513,7 @@ const VoiceProfileScreen = (props) => {
                   source={require('../../assets/emotican/frequently/image_' + 2 + '.png')}
                 />
                 <View style={{ marginLeft: 18 }}>
-                  <CommenText
+                  <SemiBoldText
                     text={info?.title}
                     fontSize={17}
                     lineHeight={28}
@@ -604,13 +604,13 @@ const VoiceProfileScreen = (props) => {
           <View style={{ height: '100%', width: '100%' }}>
             <View style={{ position: 'absolute', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, height: 122, borderRadius: 14, backgroundColor: '#E9EAEC' }}>
               <View style={{ paddingTop: 14, height: 65.5, width: '100%', borderBottomWidth: 1, borderBottomColor: '#B6C2DB', alignItems: 'center' }}>
-                <CommenText
+                <SemiBoldText
                   text={t("Delete this voice?")}
                   fontSize={13}
                   lineHeight={21}
                   color='rgba(38, 52, 73, 0.7)'
                 />
-                <CommenText
+                <SemiBoldText
                   text={t("This action cannot be undone")}
                   fontSize={13}
                   lineHeight={21}

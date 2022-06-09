@@ -38,7 +38,7 @@ import privacySvg from '../../assets/setting/privacy.svg';
 import {  windowHeight, windowWidth } from '../../config/config';
 
 import { styles } from '../style/Common';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/CommenText';
 import EditService from '../../services/EditService';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -352,7 +352,7 @@ const EditProfileScreen = (props) => {
                                     color='#1E61EB'
                                 />
                             </TouchableOpacity>
-                            <CommenText
+                            <SemiBoldText
                                 text={t('Date of Birth')}
                                 fontSize={17}
                                 lineHeight={28}
@@ -388,7 +388,7 @@ const EditProfileScreen = (props) => {
                                     />
                             </View>
                         </TouchableOpacity>
-                        <CommenText
+                        <SemiBoldText
                             text={t('Your gender')}
                             fontSize={17}
                             lineHeight={28}
@@ -459,7 +459,7 @@ const EditProfileScreen = (props) => {
                                         />
                                 </View>
                             </TouchableOpacity>
-                            <CommenText
+                            <SemiBoldText
                                 text={t("Select your country")}
                                 fontSize={17}
                                 lineHeight={28}
@@ -505,7 +505,7 @@ const EditProfileScreen = (props) => {
                                         />
                                 </View>
                             </TouchableOpacity>
-                            <CommenText
+                            <SemiBoldText
                                 text={t("Delete account")}
                                 fontSize={17}
                                 lineHeight={28}

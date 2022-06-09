@@ -20,7 +20,7 @@ import { setUser, setRefreshState } from '../../store/actions';
 import { windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import EditService from '../../services/EditService';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/CommenText';
 
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
@@ -74,7 +74,7 @@ const  PremiumScreen = (props) => {
             <TouchableOpacity onPress={()=>props.navigation.goBack()}>
               <SvgXml width="24" height="24" xml={closeBlackSvg} />  
             </TouchableOpacity>
-            <CommenText
+            <SemiBoldText
               text = {t("Go to Premium")}
             />
             <View style={{height:24, width:24}}>
@@ -186,7 +186,7 @@ const  PremiumScreen = (props) => {
                     color='rgba(59, 31, 82, 0.6)'
                   />
                   <View style={{borderRadius:4,backgroundColor:'#F8F0FF',paddingHorizontal:8,paddingVertical:4,marginLeft:20}}>
-                    <CommenText
+                    <SemiBoldText
                       text = {t("Get 40% off")}
                       fontSize={12}
                       lineHeight={16}

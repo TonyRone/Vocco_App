@@ -20,7 +20,7 @@ import addSvg from '../../assets/setting/add.svg';
 
 import { windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/CommenText';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState } from '../../store/actions';

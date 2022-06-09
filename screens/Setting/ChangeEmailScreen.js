@@ -14,7 +14,7 @@ import { SvgXml } from 'react-native-svg';
 
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import { styles } from '../style/Common';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/CommenText';
 import EditService from '../../services/EditService';
 import * as bcrypt from 'bcryptjs';
 
@@ -126,7 +126,7 @@ const ChangeEmailScreen = (props) => {
                     xml={closeBlackSvg}
                 />
             </TouchableOpacity>
-            <CommenText
+            <SemiBoldText
                 text={t("Change email")}
                 fontSize={20}
                 lineHeight={24}

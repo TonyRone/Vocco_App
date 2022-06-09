@@ -14,7 +14,7 @@ import redHeartSvg from '../../assets/post/redHeart.svg';
 import notifySvg from '../../assets/common/notify.svg';
 import curveSvg from '../../assets/record/curve.svg';
 import { styles } from '../style/Common';
-import { CommenText } from "./CommenText";
+import { SemiBoldText } from "./CommenText";
 import { createIconSetFromFontello } from "react-native-vector-icons";
 import VoicePlayer from '../Home/VoicePlayer';
 import VoiceService from "../../services/VoiceService";
@@ -194,7 +194,7 @@ export const ReplyAnswerItem = ({
                 voiceUrl = {info.file.url}
                 stopPlay ={()=>setIsPlaying(false)}
                 startPlay={() => {VoiceService.listenStory(info.id, 'replyAnswer')}}
-                premium = {info.user.premium!='none'}
+                waveColor={info.user.premium != 'none'?['#FFC701','#A901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
                 playBtn = {false}
                 replayBtn = {false}
                 playing={true}

@@ -19,7 +19,7 @@ import noRequestSvg from '../../assets/notification/noRequest.svg';
 import { STORAGE_KEY, windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/CommenText';
 import { NotificationItem } from '../component/NotificationItem';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
@@ -248,7 +248,7 @@ const NotificationScreen = (props) => {
                     xml={arrowBendUpLeft}
                 />
             </TouchableOpacity>
-            <CommenText
+            <SemiBoldText
                 text = {t("Notifications")}
                 fontSize = {20}
                 lineHeight = {24}
@@ -263,7 +263,7 @@ const NotificationScreen = (props) => {
         </View>
         <View style={[styles.rowSpaceBetween,{paddingHorizontal:36,marginTop:30}]}>
             <TouchableOpacity onPress={()=>{scrollRef.current?.scrollTo({x:0,animated:true});setIsActiveState(true);}} style={styles.rowAlignItems}>
-                <CommenText
+                <SemiBoldText
                     text = {t("Activities")}
                     fontFamily = {isActiveState?'SFProDisplay-Semibold':'SFProDisplay-Regular'}
                     color = {isActiveState?'#281E30':'rgba(59, 31, 82, 0.6)'}
@@ -271,7 +271,7 @@ const NotificationScreen = (props) => {
                     lineHeight = {24}
                 />
                 <View style={[styles.numberContainer,{backgroundColor:isActiveState?'#8327D8':'#F8F0FF',marginLeft:8}]}>
-                    <CommenText
+                    <SemiBoldText
                         text = {activeNum}
                         fontSize = {15}
                         lineHeight = {24}
@@ -280,7 +280,7 @@ const NotificationScreen = (props) => {
                 </View>
             </TouchableOpacity>
             <TouchableOpacity  onPress={()=>{scrollRef.current?.scrollTo({x:windowWidth,animated:true});setIsActiveState(false);}} style={styles.rowAlignItems}>
-                <CommenText
+                <SemiBoldText
                     text = {t("Requests")}
                     fontFamily = {!isActiveState?'SFProDisplay-Semibold':'SFProDisplay-Regular'}
                     color = {!isActiveState?'#281E30':'rgba(59, 31, 82, 0.6)'}
@@ -288,7 +288,7 @@ const NotificationScreen = (props) => {
                     lineHeight = {24}
                 />
                 <View style={[styles.numberContainer,{backgroundColor:!isActiveState?'#8327D8':'#F8F0FF',marginLeft:8}]}>
-                    <CommenText
+                    <SemiBoldText
                         text = {requestNum}
                         fontSize = {15}
                         lineHeight = {24}
@@ -422,7 +422,7 @@ const NotificationScreen = (props) => {
                     height = {24}
                     xml = {tickSquareSvg}
                 />
-                <CommenText
+                <SemiBoldText
                     text = {isActiveState?t("Mark all as read"):t("Accept all requests")}
                     fontSize = {15}
                     lineHeight = {24}

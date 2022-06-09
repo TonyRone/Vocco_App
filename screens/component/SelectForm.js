@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { View, TouchableOpacity, Text, Platform, StatusBar } from "react-native";
 import { SvgXml } from 'react-native-svg';
-import { CommenText } from './CommenText';
+import { SemiBoldText } from './CommenText';
 import { styles } from '../style/Common';
 
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';

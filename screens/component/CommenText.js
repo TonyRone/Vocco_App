@@ -1,7 +1,7 @@
 import React from "react";
 import { Text } from "react-native";
 
-export const CommenText = ({
+export const SemiBoldText = ({
   text,
   fontFamily = "SFProDisplay-Semibold",
   textAlign = "left",

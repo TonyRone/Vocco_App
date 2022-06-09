@@ -19,7 +19,7 @@ import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import searchSvg from '../../assets/login/search.svg';
 import closeCircleSvg from '../../assets/common/close-circle.svg';
 import copySvg from '../../assets/post/copy.svg';
-import { CommenText } from "./CommenText";
+import { SemiBoldText } from "./CommenText";
 import { DescriptionText } from "./DescriptionText";
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -166,7 +166,7 @@ export const TagFriends = ({
             <>
               <View style={[styles.rowSpaceBetween, { paddingHorizontal: 14, paddingVertical: 12 }]}>
                 <View></View>
-                <CommenText
+                <SemiBoldText
                   text={t("Tag friends")}
                   fontSize={17}
                   lineHeight={28}
@@ -361,7 +361,7 @@ export const TagFriends = ({
                           text={label == '' ? renderState(item.lastSeen) : renderName(item.user.firstname, item.user.lastname)}
                           fontSize={13}
                           lineHeight={21}
-                          color={(label == '' && item.lastSeen == null) ? '#8327D8' : 'rgba(54, 36, 68, 0.8)'}
+                          color={(label == '' && item.lastSeen == 'onSession') ? '#8327D8' : 'rgba(54, 36, 68, 0.8)'}
                         />
                       </View>
                     </TouchableOpacity>}

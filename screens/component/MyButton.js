@@ -2,12 +2,14 @@ import React from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import LinearGradient from 'react-native-linear-gradient';
 import * as Progress from "react-native-progress";
+import { windowWidth } from "../../config/config";
 
 export const MyButton = ({
   label,
   onPress,
   marginTop = 20,
   marginBottom = 0 ,
+  width = windowWidth-32,
   loading = false,
   marginHorizontal = 0,
   active = true,
@@ -16,6 +18,7 @@ export const MyButton = ({
     <View style={{
       marginTop,
       marginBottom,
+      width:width,
       borderRadius: 16,
       shadowColor: '#8327D8',
       shadowOffset:{width: 0, height: 2},

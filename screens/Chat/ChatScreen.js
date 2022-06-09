@@ -23,7 +23,7 @@ import new_messageSvg from '../../assets/chat/new_message.svg';
 
 import { windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/CommenText';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState } from '../../store/actions';
@@ -158,7 +158,7 @@ const ChatScreen = (props) => {
                             height={24}
                             xml={new_messageSvg}
                         />
-                        <CommenText
+                        <SemiBoldText
                             text={t("New message")}
                             fontSize={15}
                             lineHeight={24}

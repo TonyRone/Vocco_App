@@ -17,7 +17,7 @@ import notificationSvg from '../../assets/discover/notification.svg';
 
 import { windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/CommenText';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState } from '../../store/actions';
@@ -121,7 +121,7 @@ const HomeScreen = (props) => {
                 </TouchableOpacity>
                 <View style={styles.rowSpaceBetween}>
                     <TouchableOpacity onPress={() => { scrollRef.current?.scrollTo({ x: 0, animated: true }); setIsActiveState(true); }} style={[styles.contentCenter, { width: 97, height: 44 }]}>
-                        <CommenText
+                        <SemiBoldText
                             text={t("Friends")}
                             fontFamily={isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
                             color={isActiveState ? '#281E30' : 'rgba(59, 31, 82, 0.6)'}
@@ -130,7 +130,7 @@ const HomeScreen = (props) => {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => { scrollRef.current?.scrollTo({ x: windowWidth, animated: true }); setIsActiveState(false); }} style={[styles.contentCenter, { width: 97, height: 44, marginLeft: 16 }]}>
-                        <CommenText
+                        <SemiBoldText
                             text={t("Discover")}
                             fontFamily={!isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
                             color={!isActiveState ? '#281E30' : 'rgba(59, 31, 82, 0.6)'}

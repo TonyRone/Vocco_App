@@ -264,7 +264,7 @@ export const VoiceItem = ({
               startPlay={() => {VoiceService.listenStory(info.id, 'record')}}
               playBtn={false}
               replayBtn={false}
-              premium={premium != 'none'}
+              waveColor={info.user.premium != 'none'?['#FFC701','#A901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
               playing={true}
               tinWidth={windowWidth / 160}
               mrg={windowWidth / 600}
@@ -293,7 +293,7 @@ export const VoiceItem = ({
               />
             </TouchableOpacity>
             <DescriptionText
-              text={time}
+              text={info.listenCount+" "+t("lectures")+(time!=''?" - ":'')+time}
               fontSize={13}
               lineHeight={15}
               marginLeft={30}

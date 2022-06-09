@@ -46,7 +46,7 @@ import shineSvg from '../../assets/common/icons/shine.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Categories, STORAGE_KEY, windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/CommenText';
 import { Stories } from '../component/Stories';
 import { RecordIcon } from '../component/RecordIcon';
 

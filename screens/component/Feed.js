@@ -36,6 +36,7 @@ import { DescriptionText } from './DescriptionText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TemporaryStories } from './TemporaryStories';
 import { RecordIcon } from './RecordIcon';
+import { MyButton } from './MyButton';
 
 export const Feed = ({
   props,

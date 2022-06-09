@@ -81,6 +81,19 @@ class VoiceService {
         );
     }
 
+    async postVoiceMessage(data) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+        fetch(
+            'POST',
+            `${API_URL}/actions/voiceMessage`, {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
+            },
+            data
+        );
+    }
+
     async getDiscoverTitle(label, skip, category) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         if(category == 'All')
@@ -422,6 +435,17 @@ class VoiceService {
         fetch(
            'GET', 
             `${API_URL}/actions/getTagUsers?tagId=${id}`, {
+                'Authorization': `Bearer ${token}`
+            }
+        );
+    }
+
+    async getVoiceMessages(toUserId) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+        fetch(
+           'GET', 
+            `${API_URL}/actions/getVoiceMessages?toUserId=${toUserId}`, {
                 'Authorization': `Bearer ${token}`
             }
         );

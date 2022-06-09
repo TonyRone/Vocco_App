@@ -19,7 +19,7 @@ import yellow_starSvg from '../../assets/common/yellow_star.svg';
 import whiteTrashSvg from '../../assets/notification/white_trash.svg'
 
 import { styles } from '../style/Common';
-import { CommenText } from "./CommenText";
+import { SemiBoldText } from "./CommenText";
 import { windowWidth } from "../../config/config";
 import { produceWithPatches } from 'immer';
 
@@ -97,7 +97,7 @@ export const NotificationItem = ({
                             xml={yellow_starSvg}
                         />
                     }
-                    <CommenText
+                    <SemiBoldText
                         text = {userName}
                         fontSize = {15}
                         lineHeight = {24}  
@@ -122,7 +122,7 @@ export const NotificationItem = ({
                 />
             </TouchableOpacity>
             {!accepted&&<TouchableOpacity onPress={()=>onAcceptUser()} style={[styles.contentCenter,{width:99,height:40,borderRadius:12,backgroundColor:'#F8F0FF',marginLeft:8}]}>      
-                <CommenText
+                <SemiBoldText
                     text='Accept'
                     fontSize = {15}
                     lineHeight = {24}

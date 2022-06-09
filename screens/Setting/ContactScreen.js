@@ -15,7 +15,7 @@ import contactsSvg from '../../assets/setting/contacts.svg';
 import mailSvg from '../../assets/setting/mail.svg';
 import { windowHeight } from '../../config/config';
 import { styles } from '../style/Common';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/CommenText';
 
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
@@ -56,7 +56,7 @@ const ContactScreen = (props) => {
                     xml={arrowBendUpLeft}
                 />
             </TouchableOpacity>
-            <CommenText
+            <SemiBoldText
                 text={t('Contacts')}
                 fontSize={20}
                 lineHeight={24}

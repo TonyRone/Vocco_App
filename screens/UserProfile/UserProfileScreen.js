@@ -68,7 +68,7 @@ import { styles } from '../style/Common';
 import { FlatList } from 'react-native-gesture-handler';
 import { BottomSheet } from 'react-native-elements/dist/bottomSheet/BottomSheet';
 import { isTemplateElement } from '@babel/types';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/CommenText';
 import VoiceService from '../../services/VoiceService';
 import { PostContext } from '../component/PostContext'
 import { Stories } from '../component/Stories';
@@ -464,7 +464,7 @@ const UserProfileScreen = (props) => {
                   source={{uri:userInfo.user?.avatar.url}}
                 /> 
                 <View style={{marginLeft:18}}>
-                  <CommenText     
+                  <SemiBoldText     
                     text={userInfo.user?.name}
                     fontSize = {17}
                     lineHeight = {28}
@@ -576,7 +576,7 @@ const UserProfileScreen = (props) => {
           <View style={{height:'100%',width:'100%'}}>
             <View style={{position:'absolute', width:windowWidth-16, bottom:112, marginHorizontal:8,borderRadius:14,backgroundColor:'#E9EAEC'}}>
               <View style={{paddingTop:14,paddingBottom:8.5, width:'100%',borderBottomWidth:1,borderBottomColor:'#B6C2DB',alignItems:'center'}}>
-                <CommenText
+                <SemiBoldText
                   text = {userInfo.user?.name}
                   fontSize = {13}
                   lineHeight = {21}

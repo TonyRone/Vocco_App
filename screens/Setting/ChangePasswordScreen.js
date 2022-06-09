@@ -14,7 +14,7 @@ import { MyTextField } from '../component/MyTextField';
 import { SvgXml } from 'react-native-svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import { styles } from '../style/Common';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/CommenText';
 import * as bcrypt from 'bcryptjs';
 import EditService from '../../services/EditService';
 
@@ -124,7 +124,7 @@ const ChangePasswordScreen = (props) => {
                 />
             </TouchableOpacity>
         </View>
-        <CommenText
+        <SemiBoldText
             text = {t('Confirm change')}
             fontSize = {22}
             lineHeight = {28}

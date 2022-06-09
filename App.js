@@ -59,6 +59,7 @@ import VoicePlayer from './screens/Home/VoicePlayer';
 import HomeScreen from './screens/Home/HomeScreen';
 import ChatScreen from './screens/Chat/ChatScreen';
 import FriendsScreen from './screens/Friends/FriendsScreen';
+import ConversationScreen from './screens/Chat/ConversationScreen';
 
 
 const slideAnimation2 = (bottomToTop) => {
@@ -422,8 +423,8 @@ const AppNavigator = createStackNavigator({
       }
     }
   },
-  Test: {
-    screen: VoicePlayer,
+  Conversation: {
+    screen: ConversationScreen,
     navigationOptions: {
       headerShown:false,
       headerStyle:{

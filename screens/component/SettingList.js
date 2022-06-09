@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { View, Image, TouchableOpacity, Text, Platform, StatusBar } from "react-native";
 import { SvgXml } from 'react-native-svg';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/CommenText';
 //Bottom Icons
 
 import { styles } from '../style/Common';
@@ -23,7 +23,7 @@ export const SettingList = ({
                   xml = {svgRoute}
                 />
             </View>
-            <CommenText
+            <SemiBoldText
                 text={titleContent}
                 fontSize={17}
                 lineHeight={28}

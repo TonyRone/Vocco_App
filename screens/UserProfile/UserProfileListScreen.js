@@ -60,7 +60,7 @@ import { styles } from '../style/Common';
 import { FlatList } from 'react-native-gesture-handler';
 import { BottomSheet } from 'react-native-elements/dist/bottomSheet/BottomSheet';
 import { isTemplateElement } from '@babel/types';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/CommenText';
 
 const UserProfileListScreen = (props) => {
 
@@ -104,7 +104,7 @@ const UserProfileListScreen = (props) => {
                     xml={arrowBendUpLeft}
                 />
             </TouchableOpacity>
-            <CommenText
+            <SemiBoldText
                 text='@deny_prank'
                 fontSize={20}
                 lineHeight={24}
