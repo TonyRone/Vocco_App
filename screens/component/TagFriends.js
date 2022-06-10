@@ -155,6 +155,16 @@ export const TagFriends = ({
 
   useEffect(() => {
     getFriends();
+    socketInstance.on("user_login", ({ user_id, v }) => {
+      let idx=0;
+      for(;idx<friends.length;idx++)
+        if(friends[idx].user.id == user_id) break;
+      if(idx != friends.length){
+        let tp = friends;
+        tp[idx].lastSeen = v;
+        setFriends([...tp]);
+      }
+    });
   }, [])
 
   return (
