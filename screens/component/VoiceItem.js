@@ -264,7 +264,7 @@ export const VoiceItem = ({
               startPlay={() => {VoiceService.listenStory(info.id, 'record')}}
               playBtn={false}
               replayBtn={false}
-              waveColor={info.user.premium != 'none'?['#FFC701','#A901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
+              waveColor={info.user.premium != 'none'?['#FFC701','#FFA901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
               playing={true}
               tinWidth={windowWidth / 160}
               mrg={windowWidth / 600}

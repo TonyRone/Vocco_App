@@ -194,7 +194,7 @@ export const ReplyAnswerItem = ({
                 voiceUrl = {info.file.url}
                 stopPlay ={()=>setIsPlaying(false)}
                 startPlay={() => {VoiceService.listenStory(info.id, 'replyAnswer')}}
-                waveColor={info.user.premium != 'none'?['#FFC701','#A901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
+                waveColor={info.user.premium != 'none'?['#FFC701','#FFA901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
                 playBtn = {false}
                 replayBtn = {false}
                 playing={true}

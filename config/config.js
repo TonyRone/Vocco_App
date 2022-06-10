@@ -12,6 +12,7 @@ export const TUTORIAL_CHECK = "tutorial";
 export const POST_CHECK = "firstpost";
 export const SHARE_CHECK = "firstshare";
 export const DEVICE_TOKEN = "devicetoken";
+export const APP_NAV = "appnav";
 export const DEVICE_OS = "deviceos";
 export const MAIN_LANGUAGE = 'main_language';
 

@@ -241,7 +241,7 @@ const NotificationScreen = (props) => {
         }}
       >
         <View style={[styles.rowSpaceBetween,{marginTop:20,paddingHorizontal:16}]}>
-            <TouchableOpacity onPress={()=>props.navigation.goBack()}>
+            <TouchableOpacity onPress={()=>props.navigation.navigate('Home')}>
                 <SvgXml
                     width={24}
                     height={24}

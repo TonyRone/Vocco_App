@@ -3,8 +3,8 @@ import { View, Platform, KeyboardAvoidingView, ImageBackground, Text, TouchableO
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { GoogleSignin, statusCodes } from 'react-native-google-signin';
-import appleAuth, { appleAuthAndroid , AppleAuthRequestOperation, AppleAuthRequestScope} from '@invertase/react-native-apple-authentication';
-import {useTranslation} from 'react-i18next';
+import appleAuth, { appleAuthAndroid, AppleAuthRequestOperation, AppleAuthRequestScope } from '@invertase/react-native-apple-authentication';
+import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { v4 as uuid } from 'uuid'
 import io from "socket.io-client";
@@ -40,18 +40,18 @@ const LoginScreen = (props) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [emailCheck, setEmailCheck] = useState(false);
 
-  const {t, i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const dispatch = useDispatch();
 
   let { socketInstance } = useSelector((state) => {
     return (
-        state.user
+      state.user
     )
   });
 
   const showEye = () => {
-    setSecureTextEntry(!secureTextEntry); 
+    setSecureTextEntry(!secureTextEntry);
   }
 
   const _storeData = async (aToken, rToken) => {
@@ -85,14 +85,14 @@ const LoginScreen = (props) => {
     }
   }
 
-  const onSetEmail = (newVal) =>{
+  const onSetEmail = (newVal) => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     setEmailCheck(reg.test(email));
     setEmail(newVal);
     setError({});
   }
 
-  const OnCheckEmailValidation = (val) =>{
+  const OnCheckEmailValidation = (val) => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (reg.test(email) === false) {
       setError({ email: t("invalid email address") })
@@ -135,132 +135,155 @@ const LoginScreen = (props) => {
         _storeData(jsonRes.accessToken, jsonRes.refreshToken);
         onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
       }
-      else{
-        if(jsonRes.message=='Wrong password'){
-          setError({password: jsonRes.message})
+      else {
+        if (jsonRes.message == 'Wrong password') {
+          setError({ password: jsonRes.message })
         }
-        else{
-          setError({email: jsonRes.message,})
+        else {
+          setError({ email: jsonRes.message, })
         }
       }
       setLoading(false);
     })
-    .catch(err => {
-      console.log(err);
-      setError({
-        email: err,
+      .catch(err => {
+        console.log(err);
+        setError({
+          email: err,
+        });
       });
-    });
   }
 
-  const onSetUserInfo =async(accessToken = null,refreshToken = null)=>{
+  const onGoScreen = async (jsonRes) => {
+    dispatch(setUser(jsonRes));
+    let navigateScreen = 'Home';
+    if (!jsonRes.id) {
+      return;
+    }
+    if (!jsonRes.isEmailVerified) {
+      navigateScreen = 'Verify';
+    } else if (!jsonRes.name) {
+      navigateScreen = 'Username';
+    } else if (!jsonRes.dob) {
+      props.navigation.navigate('');
+      navigateScreen = 'Birthday';
+    } else if (!jsonRes.gender) {
+      navigateScreen = 'Identify';
+    } else if (!jsonRes.country) {
+      navigateScreen = 'Country';
+    } else if (!jsonRes.avatar) {
+      navigateScreen = 'Photo';
+    } else {
+      const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
+      if (tutorial_check)
+        navigateScreen = 'Home';
+      else
+        navigateScreen = 'Tutorial';
+    }
+    const resetActionTrue = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: navigateScreen })],
+    });
+    props.navigation.dispatch(resetActionTrue);
+  }
+
+  const onCreateSocket = (jsonRes) => {
+    if (socketInstance == null) {
+      let socket = io(SOCKET_URL);
+      socket.emit("login", { uid: jsonRes.id, email: jsonRes.email }, (res) => {
+        if (res == "Success") {
+          dispatch(setSocketInstance(socket));
+          onGoScreen(jsonRes);
+        }
+        else {
+          setError({
+            email: "User with current email already login"
+          });
+        }
+      });
+    }
+    else
+      onGoScreen(jsonRes);
+  }
+
+  const onSetUserInfo = async (accessToken = null, refreshToken = null) => {
     AuthService.getUserInfo(accessToken, 'reg').then(async res => {
       const jsonRes = await res.json();
-      if(res.respInfo.status ==200){
-        dispatch(setUser(jsonRes));
-        let socket = io(SOCKET_URL);
-        dispatch(setSocketInstance(socket));
-        socket.emit("login", {uid:jsonRes.id, email:jsonRes.email});
-        let navigateScreen = 'Home';
-        if (!jsonRes.isEmailVerified) {
-          navigateScreen = 'Verify';
-        } else if (!jsonRes.name) {
-          navigateScreen = 'Username';
-        } else if (!jsonRes.dob) {
-          props.navigation.navigate('');
-          navigateScreen = 'Birthday';
-        } else if (!jsonRes.gender) {
-          navigateScreen = 'Identify';
-        } else if (!jsonRes.country){
-          navigateScreen = 'Country';
-        } else if (!jsonRes.avatar) {
-          navigateScreen = 'Photo';
-        } else {
-          const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
-          if (tutorial_check)
-            navigateScreen = 'Home';
-          else
-            navigateScreen = 'Tutorial';
-        }
-        const resetActionTrue = StackActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: navigateScreen })],
-        });
-        props.navigation.dispatch(resetActionTrue);
+      if (res.respInfo.status == 200) {
+        onCreateSocket(jsonRes);
       }
-      else{
+      else {
         setError({
           email: jsonRes.message,
         });
       }
     })
-    .catch(err => {
-      setError({
-        email: err,
+      .catch(err => {
+        setError({
+          email: err,
+        });
+        console.log(err);
       });
-      console.log(err);
-    });
   }
 
-  const OnIosAppleLogin = async()=> {
+  const OnIosAppleLogin = async () => {
     try {
       // performs login request
-      const {email, fullName, identityToken} = await appleAuth.performRequest({
-        requestedOperation:1,
+      const { email, fullName, identityToken } = await appleAuth.performRequest({
+        requestedOperation: 1,
         requestedScopes: [
           0,
           1
         ],
       });
-      AuthService.appleLogin({email, fullName, identityToken}).then(async res=>{
+      AuthService.appleLogin({ email, fullName, identityToken }).then(async res => {
         const jsonRes = await res.json();
         if (res.respInfo.status === 201) {
           _storeData(jsonRes.accessToken, jsonRes.refreshToken);
           onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
         }
-        else{
+        else {
           setError({
             email: jsonRes.message,
           });
         }
         setLoading(false);
       })
-      .catch(err=>{
-        console.log(err);
-      })
-      
+        .catch(err => {
+          console.log(err);
+        })
+
     } catch (error) {
-      
+
     }
   }
 
-  const onAppleButtonPress = async()=> {
+  const onAppleButtonPress = async () => {
     // Generate secure, random values for state and nonce
     const rawNonce = uuid();
     const state = uuid();
-  
+
     // Configure the request
     appleAuthAndroid.configure({
       // The Service ID you registered with Apple
       clientId: '8VYUDK97R2.org.RaiseYourVoice',
-  
+
       // Return URL added to your Apple dev console. We intercept this redirect, but it must still match
       // the URL you provided to Apple. It can be an empty route on your backend as it's never called.
       redirectUri: 'https://example.com/path/to/endpoint',
-  
+
       // The type of response requested - code, id_token, or both.
       responseType: appleAuthAndroid.ResponseType.ALL,
-  
+
       // The amount of user information requested from Apple.
       scope: appleAuthAndroid.Scope.ALL,
-  
+
       // Random nonce value that will be SHA256 hashed before sending to Apple.
       nonce: rawNonce,
-  
+
       // Unique state value used to prevent CSRF attacks. A UUID will be generated if nothing is provided.
       state,
     });
-  
+
     // Open the browser window for user sign in
     const response = await appleAuthAndroid.signIn();
     // Send the authorization code to your backend for verification
@@ -269,25 +292,25 @@ const LoginScreen = (props) => {
   const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      const {idToken} = await GoogleSignin.signIn();
+      const { idToken } = await GoogleSignin.signIn();
       const tokens = await GoogleSignin.getTokens()
       setLoading(true);
-      AuthService.googleLogin({token:tokens.accessToken}).then(async res=>{
+      AuthService.googleLogin({ token: tokens.accessToken }).then(async res => {
         const jsonRes = await res.json();
         if (res.respInfo.status === 201) {
           _storeData(jsonRes.accessToken, jsonRes.refreshToken);
           onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
         }
-        else{
+        else {
           setError({
             email: jsonRes.message,
           });
         }
         setLoading(false);
       })
-      .catch(err=>{
-        console.log(err);
-      })
+        .catch(err => {
+          console.log(err);
+        })
       //log in is success!
     } catch (error) {
       console.log(error, statusCodes, error.code);
@@ -308,15 +331,15 @@ const LoginScreen = (props) => {
     if (!!isSignedIn) {
       getCurrentUserInfo()
     } else {
-        console.log('Please Login')
+      console.log('Please Login')
     }
   };
 
   const getCurrentUserInfo = async () => {
     try {
-      const {idToken} = await GoogleSignin.signIn()
+      const { idToken } = await GoogleSignin.signIn()
       const tokens = await GoogleSignin.getTokens()
-      
+
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_REQUIRED) {
         alert(t("User has not signed in yet"));
@@ -341,7 +364,7 @@ const LoginScreen = (props) => {
 
     GoogleSignin.configure({
       androidClientId: '411872622691-jtn0id6ql8ugta4i8qo962tngerf79vl.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-      iosClientId:'1034099036541-va0ioishaoaueb7elaogc2ra1h4u1if3.apps.googleusercontent.com'
+      iosClientId: '1034099036541-va0ioishaoaueb7elaogc2ra1h4u1if3.apps.googleusercontent.com'
     });
 
     // isSignedIn()
@@ -357,7 +380,7 @@ const LoginScreen = (props) => {
         >
           <View
             style={[
-              { marginTop: Platform.OS=='ios'?60:20, paddingHorizontal: 20, height: 30 },
+              { marginTop: Platform.OS == 'ios' ? 60 : 20, paddingHorizontal: 20, height: 30 },
               styles.rowJustifyCenter
             ]}
           >
@@ -431,12 +454,12 @@ const LoginScreen = (props) => {
               <MyTextField
                 label={t("Your password")}
                 refer={passwordRef}
-                secureTextEntry = {secureTextEntry}
+                secureTextEntry={secureTextEntry}
                 color='#281E30'
                 placeholderText={t("Enter your password")}
                 value={password}
-                onChangeText={(newVal) => {setPassword(newVal),setError({})}}
-                showEye={()=>showEye()}
+                onChangeText={(newVal) => { setPassword(newVal), setError({}) }}
+                showEye={() => showEye()}
                 isPassword={true}
                 errorText={error.password}
               />
@@ -457,7 +480,7 @@ const LoginScreen = (props) => {
               </View> */}
               <MyButton
                 label={t("Log In")}
-                marginTop = {40}
+                marginTop={40}
                 onPress={handleSubmit}
                 loading={loading}
               />
@@ -465,7 +488,7 @@ const LoginScreen = (props) => {
               <View style={[styles.rowSpaceBetween, { marginTop: 20 }]}>
                 <TouchableOpacity
                   style={styles.externalButton}
-                  onPress={()=>Platform.OS=='ios'?OnIosAppleLogin():onAppleButtonPress()}
+                  onPress={() => Platform.OS == 'ios' ? OnIosAppleLogin() : onAppleButtonPress()}
                 >
                   <SvgXml width="24" height="24" xml={appleSvg} />
                   <Text style={styles.externalButtonText}>Apple</Text>
@@ -478,7 +501,7 @@ const LoginScreen = (props) => {
                   <Text style={styles.externalButtonText}>Google</Text>
                 </TouchableOpacity>
               </View>
-              <View style={[styles.rowJustifyCenter, { marginBottom: 30, marginTop: 32, alignItems:'center'}]}>
+              <View style={[styles.rowJustifyCenter, { marginBottom: 30, marginTop: 32, alignItems: 'center' }]}>
                 <DescriptionText
                   text={t("Don't have an account?")}
                   color="#281E30"

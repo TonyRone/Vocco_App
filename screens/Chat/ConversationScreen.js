@@ -215,12 +215,15 @@ const ConversationScreen = (props) => {
         setKey(prevKey => prevKey + 1);
         setFill(user.premium == 'none' ? 60 : 180);
         socketInstance.on("receiveMessage", ({ info }) => {
+            console.log("RECEIVEMESSAGE");
             let tp = messages;
             tp.push(info);
             tp.sort(onCompare);
             setMessages([...tp]);
         });
         socketInstance.on("user_login", ({ user_id, v }) => {
+            console.log("USERLOGIN++++++++++++++++++");
+            console.log(user_id+" * "+v);
             if (user_id == info.user.id)
                 setIsOnline(v)
         });
@@ -325,7 +328,7 @@ const ConversationScreen = (props) => {
             </View>}
             <ScrollView style={{ paddingHorizontal: 16 }} ref={scrollRef} onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}>
                 {messages.map((item, index) =>
-                    <>
+                    <View key={"voiceMessage" + item.id}>
                         {(index == 0 || !onDateCompare(item.createdAt, messages[index - 1].createdAt)) &&
                         <View style={{flexDirection:'row',justifyContent:'center', marginTop:16,marginBottom:8}}>
                             <View style={{ paddingVertical:6, paddingHorizontal: 12, borderRadius: 12, backgroundColor: 'rgba(59, 31, 82, 0.6)' }}>
@@ -354,11 +357,10 @@ const ConversationScreen = (props) => {
                             </View>
                         }
                         <VoiceMessageItem
-                            key={"voiceMessage" + item.id}
                             props={props}
                             info={item}
                         />
-                    </>
+                    </View>
                 )}
                 <View style={{height:110}}></View>
             </ScrollView>

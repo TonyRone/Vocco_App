@@ -67,7 +67,7 @@ export const NewChat = ({
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
         const userIds = jsonRes.map((item, index) => item.user.id);
-        socketInstance.emit("getFriendStates", userIds, (res) => {
+        socketInstance.emit("getUsersState", userIds, (res) => {
           let tp = jsonRes.map((item, index) => {
             let temp = item;
             temp.lastSeen = res[index];
@@ -260,7 +260,7 @@ export const NewChat = ({
               <FlatList
                 data={friends}
                 keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item, index }) => <>
+                renderItem={({ item, index }) => <View key={'newMessageSearch'+index.toString()}>
                   {(label == '' && (index == 0 || item.user.name.toLowerCase().charAt(0) != friends[index - 1].user.name.toLowerCase().charAt(0))) &&
                     <View
                       style={{
@@ -313,7 +313,7 @@ export const NewChat = ({
                         />
                       </View>
                     </TouchableOpacity>}
-                </>
+                </View>
                 }
               />
             }

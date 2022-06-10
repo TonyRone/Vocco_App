@@ -183,7 +183,7 @@ const VoiceProfileScreen = (props) => {
     setDeleteModal(false);
     VoiceService.deleteVoice(info.id).then(async res => {
       dispatch(setRefreshState(!refreshState));
-      props.navigation.goBack();
+      props.navigation.navigate('Home');
     })
       .catch(err => {
         console.log(err)
@@ -237,7 +237,7 @@ const VoiceProfileScreen = (props) => {
         style={{ marginTop: -10, width: windowWidth, height: 400 }}
       >
         <View style={{ marginTop: Platform.OS == 'ios' ? 60 : 35, paddingHorizontal: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
-          <TouchableOpacity onPress={() => props.navigation.goBack()}>
+          <TouchableOpacity onPress={() => props.navigation.navigate('Home')}>
             <SvgXml width="24" height="24" xml={closeBlackSvg} />
           </TouchableOpacity>
           <SemiBoldText
@@ -312,7 +312,7 @@ const VoiceProfileScreen = (props) => {
           <VoicePlayer
             voiceUrl={info?.file.url}
             playBtn={true}
-            waveColor={info.user.premium != 'none'?['#FFC701','#A901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
+            waveColor={info.user.premium != 'none'?['#FFC701','#FFA901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
             playing={false}
             startPlay={() => { VoiceService.listenStory(recordId, 'record') }}
             stopPlay={() => { }}

@@ -215,7 +215,7 @@ export const AnswerReply = ({
             >
               <VoicePlayer
                 playBtn = {true}
-                waveColor={info.user.premium != 'none'?['#FFC701','#A901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
+                waveColor={info.user.premium != 'none'?['#FFC701','#FFA901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
                 playing = {false}
                 stopPlay = {()=>{}}
                 startPlay = {()=>{}}

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, key, ImageBackground, Text, TouchableOpacity, Platform } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
-import {useTranslation} from 'react-i18next';
+import io from "socket.io-client";
+import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
@@ -15,15 +16,15 @@ import appleSvg from '../../assets/login/apple.svg';
 import googleSvg from '../../assets/login/google.svg';
 import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
 import { v4 as uuid } from 'uuid'
-import appleAuth, { appleAuthAndroid , AppleAuthRequestOperation, AppleAuthRequestScope} from '@invertase/react-native-apple-authentication';
+import appleAuth, { appleAuthAndroid, AppleAuthRequestOperation, AppleAuthRequestScope } from '@invertase/react-native-apple-authentication';
 
 import AuthService from '../../services/AuthService';
 
-import { useSelector , useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../../store/actions';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ACCESSTOKEN_KEY, REFRESHTOKEN_KEY , TUTORIAL_CHECK } from '../../config/config';
+import { ACCESSTOKEN_KEY, REFRESHTOKEN_KEY, TUTORIAL_CHECK } from '../../config/config';
 import { styles } from '../style/Login';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -39,9 +40,9 @@ const RegisterScreen = (props) => {
   const [loading, setLoading] = useState(false);
   const [showHeaderTitle, setShowHeaderTitle] = useState(false);
 
-  const {t, i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const user = useSelector((state) => state.user.user);
+  const {user, socketInstance} = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const scrollRef = useRef(ScrollView);
@@ -67,7 +68,7 @@ const RegisterScreen = (props) => {
   };
 
   const scrollPage = (sp) => {
-    if(sp.nativeEvent.contentOffset.y > 30){
+    if (sp.nativeEvent.contentOffset.y > 30) {
       setShowHeaderTitle(true);
     } else {
       setShowHeaderTitle(false);
@@ -76,7 +77,7 @@ const RegisterScreen = (props) => {
 
   const handleSubmit = () => {
     setError({});
-    if(email == ''){
+    if (email == '') {
       setError({
         email: t("required field"),
       });
@@ -84,15 +85,15 @@ const RegisterScreen = (props) => {
     }
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (reg.test(email) === false) {
-      setError({email: t("invalid email address")})
+      setError({ email: t("invalid email address") })
       return;
     }
-    if(password == ''){
-      setError({password:t("required field")});
+    if (password == '') {
+      setError({ password: t("required field") });
       return;
     }
 
-    if(password.length < 3){
+    if (password.length < 3) {
       setError({
         password: t("at least 3 characters"),
       });
@@ -103,28 +104,25 @@ const RegisterScreen = (props) => {
       password
     };
     setLoading(true);
-    AuthService.register(payload).then(async res => { 
-        try {
-            const jsonRes = await res.json();
-            if (res.respInfo.status === 201) {
-              _storeData(jsonRes.accessToken);
-              let userData = {...user};
-              userData.email = email;
-              dispatch(setUser(userData));
-              props.navigation.navigate('Verify');
-            } else {
-              setError({
-                email: jsonRes.message,
-              });
-            }
-        } catch (err) {
-            console.log(err);
-        };
-        setLoading(false);
-    })
-    .catch(err => {
+    AuthService.register(payload).then(async res => {
+      try {
+        const jsonRes = await res.json();
+        if (res.respInfo.status === 201) {
+          _storeData(jsonRes.accessToken, jsonRes.refreshToken);
+          onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
+        } else {
+          setError({
+            email: jsonRes.message,
+          });
+        }
+      } catch (err) {
         console.log(err);
-    });
+      };
+      setLoading(false);
+    })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   const checkEmail = (cEmail) => {
@@ -138,135 +136,160 @@ const RegisterScreen = (props) => {
   }
 
   const showEye = () => {
-    setSecureTextEntry(!secureTextEntry); 
+    setSecureTextEntry(!secureTextEntry);
   }
 
-  const OnIosAppleLogin = async()=> {
+  const OnIosAppleLogin = async () => {
     try {
       // performs login request
-      const {email, fullName, identityToken} = await appleAuth.performRequest({
-        requestedOperation:1,
+      const { email, fullName, identityToken } = await appleAuth.performRequest({
+        requestedOperation: 1,
         requestedScopes: [
           0,
           1
         ],
       });
-      AuthService.appleLogin({email, fullName, identityToken}).then(async res=>{
+      AuthService.appleLogin({ email, fullName, identityToken }).then(async res => {
         const jsonRes = await res.json();
         if (res.respInfo.status === 201) {
           _storeData(jsonRes.accessToken, jsonRes.refreshToken);
           onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
         }
-        else{
+        else {
           setError({
             email: jsonRes.message,
           });
         }
         setLoading(false);
       })
-      .catch(err=>{
-        console.log(err);
-      })
-      
+        .catch(err => {
+          console.log(err);
+        })
+
     } catch (error) {
-      
+
     }
   }
 
-  const onAppleButtonPress = async()=> {
+  const onAppleButtonPress = async () => {
     // Generate secure, random values for state and nonce
     const rawNonce = uuid();
     const state = uuid();
-  
+
     // Configure the request
     appleAuthAndroid.configure({
       // The Service ID you registered with Apple
       clientId: 'com.example.client-android',
-  
+
       // Return URL added to your Apple dev console. We intercept this redirect, but it must still match
       // the URL you provided to Apple. It can be an empty route on your backend as it's never called.
       redirectUri: 'https://example.com/auth/callback',
-  
+
       // The type of response requested - code, id_token, or both.
       responseType: appleAuthAndroid.ResponseType.ALL,
-  
+
       // The amount of user information requested from Apple.
       scope: appleAuthAndroid.Scope.ALL,
-  
+
       // Random nonce value that will be SHA256 hashed before sending to Apple.
       nonce: rawNonce,
-  
+
       // Unique state value used to prevent CSRF attacks. A UUID will be generated if nothing is provided.
       state,
     });
-  
+
     // Open the browser window for user sign in
     const response = await appleAuthAndroid.signIn();
-  
+
     // Send the authorization code to your backend for verification
   }
 
-  const onSetUserInfo =async(accessToken,refreshToken)=>{
+  const onGoScreen = async (jsonRes) => {
+    dispatch(setUser(jsonRes));
+    let navigateScreen = 'Home';
+    if (!jsonRes.id) {
+      return;
+    }
+    if (!jsonRes.isEmailVerified) {
+      navigateScreen = 'Verify';
+    } else if (!jsonRes.name) {
+      navigateScreen = 'Username';
+    } else if (!jsonRes.dob) {
+      props.navigation.navigate('');
+      navigateScreen = 'Birthday';
+    } else if (!jsonRes.gender) {
+      navigateScreen = 'Identify';
+    } else if (!jsonRes.country) {
+      navigateScreen = 'Country';
+    } else if (!jsonRes.avatar) {
+      navigateScreen = 'Photo';
+    } else {
+      const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
+      if (tutorial_check)
+        navigateScreen = 'Home';
+      else
+        navigateScreen = 'Tutorial';
+    }
+    const resetActionTrue = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: navigateScreen })],
+    });
+    props.navigation.dispatch(resetActionTrue);
+  }
+
+  const onCreateSocket = (jsonRes) => {
+    if (socketInstance == null) {
+      let socket = io(SOCKET_URL);
+      socket.emit("login", { uid: jsonRes.id, email: jsonRes.email }, (res) => {
+        if (res == "Success") {
+          dispatch(setSocketInstance(socket));
+          onGoScreen(jsonRes);
+        }
+        else{
+          setError({
+            email: "User with current email already login"
+          });
+        }
+      });
+    }
+    else
+      onGoScreen(jsonRes);
+  }
+
+  const onSetUserInfo = async (accessToken, refreshToken) => {
     AuthService.getUserInfo(accessToken, 'reg').then(async res => {
       const jsonRes = await res.json();
-      if(res.respInfo.status ==200){
-        dispatch(setUser(jsonRes));
-        let navigateScreen = 'Home';
-        if (!jsonRes.isEmailVerified) {
-          navigateScreen = 'Verify';
-        } else if (!jsonRes.name) {
-          navigateScreen = 'Username';
-        } else if (!jsonRes.dob) {
-          props.navigation.navigate('');
-          navigateScreen = 'Birthday';
-        } else if (!jsonRes.gender) {
-          navigateScreen = 'Identify';
-        } else if (!jsonRes.country) {
-          navigateScreen = 'Country';
-        } else if (!jsonRes.avatar) {
-          navigateScreen = 'Photo';
-        } else {
-          const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
-          if (tutorial_check)
-            navigateScreen = 'Home';
-          else
-            navigateScreen = 'Tutorial';
-        }
-       // props.navigation.navigate(navigateScreen,{info:jsonRes})
-        const resetActionTrue = StackActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: navigateScreen })],
-        });
-        props.navigation.dispatch(resetActionTrue);
+      if (res.respInfo.status == 200) {
+        onCreateSocket(jsonRes);
       }
     })
-    .catch(err => {
-      console.log(err);
-    });
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      const {idToken} = await GoogleSignin.signIn();
+      const { idToken } = await GoogleSignin.signIn();
       const tokens = await GoogleSignin.getTokens()
       setLoading(true);
-      AuthService.googleLogin({token:tokens.accessToken}).then(async res=>{
+      AuthService.googleLogin({ token: tokens.accessToken }).then(async res => {
         const jsonRes = await res.json();
         if (res.respInfo.status === 201) {
           _storeData(jsonRes.accessToken, jsonRes.refreshToken);
           onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
         }
-        else{
+        else {
           setError({
             email: jsonRes.message,
           });
         }
         setLoading(false);
       })
-      .catch(err=>{
-        console.log(err);
-      })
+        .catch(err => {
+          console.log(err);
+        })
       //log in is success!
     } catch (error) {
       console.log(error, statusCodes, error.code);
@@ -285,51 +308,51 @@ const RegisterScreen = (props) => {
   useEffect(() => {
     GoogleSignin.configure({
       androidClientId: '411872622691-jtn0id6ql8ugta4i8qo962tngerf79vl.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-      iosClientId:'1034099036541-va0ioishaoaueb7elaogc2ra1h4u1if3.apps.googleusercontent.com'
+      iosClientId: '1034099036541-va0ioishaoaueb7elaogc2ra1h4u1if3.apps.googleusercontent.com'
     });
   }, [])
 
   return (
-      <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
-        <View style={styles.LoginContainer}>
-          <ImageBackground
-            source={require('../../assets/login/background.png')}
-            resizeMode="stretch"
-            style={styles.background}
+    <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
+      <View style={styles.LoginContainer}>
+        <ImageBackground
+          source={require('../../assets/login/background.png')}
+          resizeMode="stretch"
+          style={styles.background}
+        >
+          <View
+            style={[
+              { marginTop: Platform.OS == 'ios' ? 60 : 20, paddingHorizontal: 20, marginBottom: 20, height: 30 },
+              styles.rowJustifyCenter
+            ]}
           >
-            <View
-              style={[
-                { marginTop: Platform.OS=='ios'?60:20, paddingHorizontal: 20, marginBottom:20, height:30 }, 
-                styles.rowJustifyCenter
-              ]}
+            <TouchableOpacity
+              onPress={() => props.navigation.goBack()}
+              style={{
+                position: 'absolute',
+                left: 20
+              }}
             >
-              <TouchableOpacity
-                onPress={() => props.navigation.goBack()}
-                style={{
-                  position:'absolute',
-                  left:20
-                }}
-              >
-                <SvgXml 
-                  width="24" 
-                  height="24" 
-                  xml={arrowBendUpLeft} 
-                />
-              </TouchableOpacity>
-              {
-                !showHeaderTitle || 
-                <TitleText 
-                  text={t("Let's start")} 
-                  fontSize={20}
-                  color="#281E30"
-                />
-              }
-            </View>
-            <ScrollView
-              ref={scrollRef}
-              onScroll={scrollPage}
-            >
-              
+              <SvgXml
+                width="24"
+                height="24"
+                xml={arrowBendUpLeft}
+              />
+            </TouchableOpacity>
+            {
+              !showHeaderTitle ||
+              <TitleText
+                text={t("Let's start")}
+                fontSize={20}
+                color="#281E30"
+              />
+            }
+          </View>
+          <ScrollView
+            ref={scrollRef}
+            onScroll={scrollPage}
+          >
+
             <View
               style={{ marginTop: 0, paddingHorizontal: 20 }}
             >
@@ -374,7 +397,7 @@ const RegisterScreen = (props) => {
               <MyTextField
                 label={t("Your password")}
                 refer={passwordRef}
-                secureTextEntry = {secureTextEntry}
+                secureTextEntry={secureTextEntry}
                 color='#281E30'
                 placeholderText={t("Enter your password")}
                 value={password}
@@ -388,26 +411,26 @@ const RegisterScreen = (props) => {
                 loading={loading}
                 onPress={handleSubmit}
               />
-              <DescriptionText text={t("or continue with")} fontSize={12} color="#281E30" textAlign="center" marginTop={20}/>
-              <View style={[styles.rowSpaceBetween, {marginTop:20}]}>
-                  <TouchableOpacity 
-                      style={styles.externalButton}
-                      onPress={()=>Platform.OS=='ios'?OnIosAppleLogin():onAppleButtonPress()}
-                  >
-                    <SvgXml width="24" height="24" xml={appleSvg} />
-                    <Text style={styles.externalButtonText}>Apple</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity 
-                      style={styles.externalButton}
-                      onPress={() => signIn()}
-                  >
-                    <SvgXml width="24" height="24" xml={googleSvg} />
-                      <Text style={styles.externalButtonText}>Google</Text>
-                  </TouchableOpacity>
+              <DescriptionText text={t("or continue with")} fontSize={12} color="#281E30" textAlign="center" marginTop={20} />
+              <View style={[styles.rowSpaceBetween, { marginTop: 20 }]}>
+                <TouchableOpacity
+                  style={styles.externalButton}
+                  onPress={() => Platform.OS == 'ios' ? OnIosAppleLogin() : onAppleButtonPress()}
+                >
+                  <SvgXml width="24" height="24" xml={appleSvg} />
+                  <Text style={styles.externalButtonText}>Apple</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.externalButton}
+                  onPress={() => signIn()}
+                >
+                  <SvgXml width="24" height="24" xml={googleSvg} />
+                  <Text style={styles.externalButtonText}>Google</Text>
+                </TouchableOpacity>
               </View>
-              <View style={[styles.rowJustifyCenter, {marginBottom:30, marginTop:32}]}>
-                <DescriptionText 
-                  text={t("Already have an account?")} 
+              <View style={[styles.rowJustifyCenter, { marginBottom: 30, marginTop: 32 }]}>
+                <DescriptionText
+                  text={t("Already have an account?")}
                   color="#281E30"
                   fontSize={15}
                 />
@@ -418,10 +441,10 @@ const RegisterScreen = (props) => {
                 </TouchableOpacity>
               </View>
             </View>
-            </ScrollView>
-          </ImageBackground>
-        </View>
-      </KeyboardAwareScrollView>
+          </ScrollView>
+        </ImageBackground>
+      </View>
+    </KeyboardAwareScrollView>
   );
 };
 

@@ -71,7 +71,7 @@ export const TagFriends = ({
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
         const userIds = jsonRes.map((item, index) => item.user.id);
-        socketInstance.emit("getFriendStates", userIds, (res) => {
+        socketInstance.emit("getUsersState", userIds, (res) => {
           let tp = jsonRes.map((item, index) => {
             let temp = item;
             temp.lastSeen = res[index];

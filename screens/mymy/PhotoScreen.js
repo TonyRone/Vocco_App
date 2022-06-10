@@ -161,11 +161,6 @@ const  PhotoScreen = (props) => {
                   const jsonRes = await res.json();
                   if(res.respInfo.status ==200){
                     dispatch(setUser(jsonRes));
-                    if(backPage==''){
-                      let socket = io(SOCKET_URL);
-                      dispatch(setSocketInstance(socket));
-                      socket.emit("login", {uid:jsonRes.id, email:jsonRes.email});
-                    }
                     props.navigation.navigate(backPage==''?"Tutorial":backPage,{info:jsonRes});
                   }
                   else{

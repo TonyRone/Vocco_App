@@ -115,7 +115,7 @@ const ChatScreen = (props) => {
                 >
                     {friends.map((item, index) =>
                         <FriendItem
-                            key={index + item.id + 'friendItem_chat'}
+                            key={index + 'friendItem_chat'}
                             props={props}
                             info={item}
                             isUserName={true}
@@ -131,7 +131,7 @@ const ChatScreen = (props) => {
                     flex: 1,
                     backgroundColor: "#FFF",
                     borderTopRightRadius: 30,
-                    alignItems:'center'
+                    alignItems: 'center'
                 }}>
                     <Image
                         source={require('../../assets/chat/illustration.png')}
@@ -146,13 +146,13 @@ const ChatScreen = (props) => {
                             color: '#281E30',
                             textAlign: 'center',
                             lineHeight: 28,
-                            width:182,
-                            marginTop:22
+                            width: 182,
+                            marginTop: 22
                         }}
                     >
                         {t("You have no conversations yet")}
                     </Text>
-                    <TouchableOpacity onPress={()=>setShowFriendsList(true)} style={[styles.rowAlignItems,{marginTop:18}]}>
+                    <TouchableOpacity onPress={() => setShowFriendsList(true)} style={[styles.rowAlignItems, { marginTop: 18 }]}>
                         <SvgXml
                             width={24}
                             height={24}
@@ -183,9 +183,9 @@ const ChatScreen = (props) => {
                 bottom={15.5}
                 left={windowWidth / 2 - 27}
             />
-            {showFriendsList&&<NewChat
+            {showFriendsList && <NewChat
                 props={props}
-                onCloseModal={()=>setShowFriendsList(false)}
+                onCloseModal={() => setShowFriendsList(false)}
             />}
         </KeyboardAvoidingView>
     )
