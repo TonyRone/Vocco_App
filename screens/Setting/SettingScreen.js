@@ -130,7 +130,7 @@ const SettingScreen =  (props) => {
                            borderRadius:28,
                            marginRight:16
                         }}
-                        source={{uri:userData.avatar.url}}
+                        source={{uri:userData.avatar?.url}}
                     />
                     <View>
                         <SemiBoldText

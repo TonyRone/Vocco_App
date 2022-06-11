@@ -257,7 +257,7 @@ const UserProfileScreen = (props) => {
       }}
     >
       <Image
-        source={{uri:userInfo.user?.avatar.url}}
+        source={{uri:userInfo.user?.avatar?.url}}
         resizeMode="cover"
         style={[styles.topProfileContainer,{
           borderBottomLeftRadius:45+((userInfo.user&&userInfo.user.premium=="none")?0:3),
@@ -461,7 +461,7 @@ const UserProfileScreen = (props) => {
                     width:38,
                     height:38
                   }}
-                  source={{uri:userInfo.user?.avatar.url}}
+                  source={{uri:userInfo.user?.avatar?.url}}
                 /> 
                 <View style={{marginLeft:18}}>
                   <SemiBoldText     

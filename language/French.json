@@ -243,6 +243,7 @@
     "friend":"ami",
     "online":"en ligne",
     "Friends":"Amies",
-    "Chat":"Discuter"
+    "Chat":"Discuter",
+    "offline":"hors ligne"
   }
 }

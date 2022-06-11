@@ -57,7 +57,7 @@ export const VoiceItem = ({
 
   const DOUBLE_PRESS_DELAY = 400;
 
-  let userImage = info.user.avatar.url,
+  let userImage = info.user.avatar?.url,
     voiceTitle = info.title,
     details = info.user.name,
     voiceTime = info.duration,

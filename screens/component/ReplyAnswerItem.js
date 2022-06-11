@@ -41,7 +41,7 @@ export const ReplyAnswerItem = ({
 
   const DOUBLE_PRESS_DELAY = 400;
 
-  let userImage = info.user.avatar.url,
+  let userImage = info.user.avatar?.url,
       userName = info.user.name,
       heartNum = info.likesCount,
       check = info.isLiked;

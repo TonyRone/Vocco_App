@@ -104,7 +104,7 @@ export const BottomButtons = ({
         onPress={()=>props.navigation.navigate("Profile")}
       >
         <Image
-          source={{ uri: user.avatar.url }}
+          source={{ uri: user.avatar?.url }}
           style={{ width: 30, height: 30, borderRadius: 15 }}
           resizeMode='cover'
         />

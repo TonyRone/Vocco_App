@@ -75,9 +75,9 @@ export const NotificationItem = ({
         <View style={styles.rowAlignItems}>     
             <Image
                 style={{
-                    width:40,
-                    height:40,
-                    borderRadius:12,
+                    width:48,
+                    height:48,
+                    borderRadius:24,
                     borderColor:'#FFA002',
                     borderWidth:userPremium=='none'?0:2
                 }}
@@ -85,7 +85,7 @@ export const NotificationItem = ({
             />
             {isNew&&isActivity&&<View
                 style={{
-                    position:'absolute',width:12,height:12,left:30,top:34,borderRadius:6,
+                    position:'absolute',width:12,height:12,left:36,top:36,borderRadius:6,
                     borderWidth:2,borderColor:'#FFF',backgroundColor:'#D82783'}}>
             </View>}
             <View style={{marginLeft:16}}>

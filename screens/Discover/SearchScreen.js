@@ -94,6 +94,7 @@ const SearchScreen = (props) => {
       VoiceService.getDiscoverTitle(v,0,Categories[category].label).then(async res => {
         if (res.respInfo.status === 200) {
           const jsonRes = await res.json();
+          console.log(jsonRes.user[0]);
           setFilterTitles(jsonRes);
           setIsEmpty(jsonRes.length==0);
         }
@@ -303,7 +304,7 @@ const SearchScreen = (props) => {
                   style={{marginBottom:20,flexDirection:'row',alignItems:'center'}} key = {index+'loadusers'}
                 >
                   <Image
-                    source={{uri:item.avatar.url}}
+                    source={{uri:item.avatar?.url}}
                     style={{width:24,height:24,borderRadius:7.2}}
                     resizeMode='cover'
                   />

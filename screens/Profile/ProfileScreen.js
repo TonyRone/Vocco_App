@@ -164,7 +164,7 @@ const ProfileScreen = (props) => {
       }}
     >
       <Image
-        source={{uri:userData.avatar.url}}
+        source={{uri:userData.avatar?.url}}
         resizeMode="cover"
         style={[styles.topProfileContainer,{
           width:windowWidth+(userData.premium=="none"?0:6),
@@ -176,7 +176,7 @@ const ProfileScreen = (props) => {
           borderColor:'#FFA002'
         }]}
       />
-      <Pressable style={{position: 'absolute',top: 0}} onLongPress={()=>props.navigation.navigate('Photo',{imageUrl:userData.avatar.url,backPage:'Profile'})}>
+      <Pressable style={{position: 'absolute',top: 0}} onLongPress={()=>props.navigation.navigate('Photo',{imageUrl:userData.avatar?.url,backPage:'Profile'})}>
         <LinearGradient
           colors={['rgba(52, 50, 56, 0)', 'rgba(42, 39, 47, 0)', 'rgba(39, 36, 44, 0.65)', 'rgba(34, 32, 38, 0.9)']}
           locations={[0, 0.63, 0.83, 1]}

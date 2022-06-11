@@ -85,7 +85,7 @@ export const TagUserList = ({
               style={{flexDirection:'row', alignItems:'center', marginLeft:16, marginTop:10, marginBottom:10}}
             >
               <Image
-                source={{uri:item.avatar.url}}
+                source={{uri:item.avatar?.url}}
                 style={{width:50,height:50,borderRadius:25,borderColor:'#FFA002',borderWidth:item.premium=='none'?0:2}}
                 resizeMode='cover'
               />

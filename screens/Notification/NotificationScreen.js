@@ -338,7 +338,7 @@ const NotificationScreen = (props) => {
                     renderItem={({item,index})=><NotificationItem
                         key = {index+item.id+'activities'}
                         isNew = {!item.seen&&!allSeen}
-                        userImage = {item.fromUser.avatar.url}
+                        userImage = {item.fromUser.avatar?.url}
                         userName = {item.fromUser.name}
                         userPremium = {item.fromUser.premium}
                         details = {item.type}
@@ -380,7 +380,7 @@ const NotificationScreen = (props) => {
                     renderItem={({item,index})=><NotificationItem
                         key = {index+item.id+'requests'}
                         isNew = {!item.seen}
-                        userImage = {item.fromUser.avatar.url}
+                        userImage = {item.fromUser.avatar?.url}
                         userName = {item.fromUser.name}
                         details = {item.type=='friendRequest'?t("Request follow"):'Appreciated your voice'}
                         notificationTime = {item.createdAt}

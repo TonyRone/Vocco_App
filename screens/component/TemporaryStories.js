@@ -84,7 +84,7 @@ export const TemporaryStories = ({
         onLongPress={() => temFlag >= 0 ? setConfirmModal(true) : null}
       >
         <Image
-          source={{ uri: user.avatar.url }}
+          source={{ uri: user.avatar?.url }}
           style={{ width: temFlag >= 0 ? 58 : 56, height: temFlag >= 0 ? 58 : 56, borderRadius: temFlag >= 0 ? 29 : 28, }}
           resizeMode='cover'
         />

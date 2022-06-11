@@ -41,7 +41,7 @@ export const TagItem = ({
 
   const { t, i18n } = useTranslation();
   const [lastTap, setLastTap] = useState(0);
-  let userImage = info.user.avatar.url,
+  let userImage = info.user.avatar?.url,
     userName = info.user.name,
     check = info.isLiked;
 
@@ -131,7 +131,7 @@ export const TagItem = ({
                         borderColor: '#FFA002',
                         borderWidth: item.premium == 'none' ? 0 : 1
                       }}
-                      source={{ uri: item.avatar.url }}
+                      source={{ uri: item.avatar?.url }}
                     />
                     <DescriptionText
                       text={'@' + onLimit(item.name)}

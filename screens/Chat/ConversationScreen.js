@@ -94,8 +94,12 @@ const ConversationScreen = (props) => {
         android: `${dirs.CacheDir}/hello.mp3`,
     });
 
+    let days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
     const renderState = (lastSeen) => {
+        console.log("$$$$$$$$$$$$$$$$$$ "+lastSeen);
         if (lastSeen == "onSession") {
+            console.log("wowowowoowowo");
             return t("online")
         }
         else if (lastSeen == null) {
@@ -104,11 +108,31 @@ const ConversationScreen = (props) => {
         return t("offline");
     }
 
+    const renderTime = (v) => {
+        const updatedTime = new Date(v);
+        const nowTime = new Date();
+        if (updatedTime.getFullYear() != nowTime.getFullYear()) {
+            return updatedTime.toDateString().substring(4);
+        }
+        else if (nowTime.getDate() - updatedTime.getDate() > nowTime.getDay()) {
+            return updatedTime.toDateString().substring(4, 10);
+        }
+        else if (nowTime.getDate()-1 > updatedTime.getDate()) {
+            return days[updatedTime.getDay()];
+        }
+        else if(nowTime.getDate()-1 == updatedTime.getDate()){
+            return 'Yesterday'
+        }
+        else {
+            return 'Today'
+        }
+    }
+
     const getMessages = async () => {
         VoiceService.getVoiceMessages(info.user.id).then(async res => {
             const jsonRes = await res.json();
             if (res.respInfo.status == 200) {
-                setMessages([...jsonRes]);
+                setMessages(jsonRes);
             }
             setIsLoading(false);
         })
@@ -144,6 +168,10 @@ const ConversationScreen = (props) => {
                     console.log(err);
                 });
         }
+    }
+
+    const onConfirmMessage = ()=>{
+        VoiceService.confirmMessage(info.user.id);
     }
 
     const clearRecorder = async () => {
@@ -215,19 +243,24 @@ const ConversationScreen = (props) => {
         setKey(prevKey => prevKey + 1);
         setFill(user.premium == 'none' ? 60 : 180);
         socketInstance.on("receiveMessage", ({ info }) => {
-            console.log("RECEIVEMESSAGE");
-            let tp = messages;
-            tp.push(info);
-            tp.sort(onCompare);
-            setMessages([...tp]);
+            setMessages((prev)=>{
+                console.log(prev.length);
+                prev.push(info);
+                prev.sort(onCompare);
+                return [...prev];
+            });
+            onConfirmMessage();
         });
         socketInstance.on("user_login", ({ user_id, v }) => {
-            console.log("USERLOGIN++++++++++++++++++");
-            console.log(user_id+" * "+v);
             if (user_id == info.user.id)
                 setIsOnline(v)
         });
-        return () => clearRecorder(), socketInstance.off("receiveMessage");
+        return () => {
+            clearRecorder();
+            socketInstance.off('receiveMessage');
+            socketInstance.off('user_login');
+            dispatch(setRefreshState(!refreshState));
+        };
     }, [])
 
     return (
@@ -254,7 +287,7 @@ const ConversationScreen = (props) => {
                             />
                         </TouchableOpacity>
                         <Image
-                            source={{ uri: info.user.avatar.url }}
+                            source={{ uri: info.user.avatar?.url }}
                             style={{ width: 40, height: 40, marginLeft: 25, borderRadius: 24, borderColor: '#FFA002', borderWidth: info.user.premium == 'none' ? 0 : 2 }}
                             resizeMode='cover'
                         />
@@ -270,7 +303,7 @@ const ConversationScreen = (props) => {
                                 text={renderState(isOnline)}
                                 fontSize={13}
                                 lineHeight={21}
-                                color={(info.lastSeen == 'onSession') ? '#8327D8' : 'rgba(54, 36, 68, 0.8)'}
+                                color={(isOnline == 'onSession') ? '#8327D8' : 'rgba(54, 36, 68, 0.8)'}
                             />
                         </View>
                     </View>
@@ -342,15 +375,7 @@ const ConversationScreen = (props) => {
                                     }}
                                 >
                                     {
-                                        new Date(item.createdAt).getDate() == new Date().getDate() &&
-                                            new Date(item.createdAt).getMonth() == new Date().getMonth() ? 'Today' :(
-                                            new Date(item.createdAt).getDate() == new Date().getDate()-1 &&
-                                                new Date(item.createdAt).getMonth() == new Date().getMonth() ? 'Yesterday' :
-                                                <>
-                                                    {new Date(item.createdAt).getFullYear() + ' . '}
-                                                    {new Date(item.createdAt).getMonth() + 1 + ' . '}
-                                                    {new Date(item.createdAt).getDate()}
-                                                </>)
+                                        renderTime(item.createdAt)
                                     }
                                 </Text>
                             </View>

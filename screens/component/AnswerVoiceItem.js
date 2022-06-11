@@ -43,7 +43,7 @@ export const AnswerVoiceItem = ({
 
   const { t, i18n } = useTranslation();
   const [lastTap, setLastTap] = useState(0);
-  let userImage = info.user.avatar.url,
+  let userImage = info.user.avatar?.url,
     userName = info.user.name,
     heartNum = info.likesCount,
     check = info.isLiked;

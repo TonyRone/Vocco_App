@@ -267,7 +267,7 @@ const VoiceProfileScreen = (props) => {
                 borderColor: '#FFA002',
                 borderWidth: (info && info.user.premium != 'none') ? 2 : 0
               }}
-              source={{ uri: info?.user.avatar.url }}
+              source={{ uri: info?.user.avatar?.url }}
             />
             <View style={[{ position: 'absolute', left: 36, bottom: 0, width: 30, height: 30, backgroundColor: '#FFFFFF', borderRadius: 14 }, styles.contentCenter]}>
               <Text

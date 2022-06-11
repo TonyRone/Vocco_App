@@ -156,15 +156,18 @@ export const TagFriends = ({
   useEffect(() => {
     getFriends();
     socketInstance.on("user_login", ({ user_id, v }) => {
-      let idx=0;
-      for(;idx<friends.length;idx++)
-        if(friends[idx].user.id == user_id) break;
-      if(idx != friends.length){
-        let tp = friends;
-        tp[idx].lastSeen = v;
-        setFriends([...tp]);
-      }
+      setFriends(prev => {
+        let idx = 0;
+        for (; idx < prev.length; idx++)
+          if (prev[idx].user.id == user_id) break;
+        if (idx != prev.length) {
+          prev[idx].lastSeen = v;
+          return [...prev];
+        }
+        return prev;
+      })
     });
+    return socketInstance.off("user_login");
   }, [])
 
   return (
@@ -354,7 +357,7 @@ export const TagFriends = ({
                       style={{ flexDirection: 'row', alignItems: 'center', marginLeft: isSearch ? 0 : 16, marginTop: 10, marginBottom: 10 }}
                     >
                       <Image
-                        source={{ uri: item.user.avatar.url }}
+                        source={{ uri: item.user.avatar?.url }}
                         style={{ width: 48, height: 48, borderRadius: 24, borderColor: '#FFA002', borderWidth: item.user.premium == 'none' ? 0 : 2 }}
                         resizeMode='cover'
                       />
