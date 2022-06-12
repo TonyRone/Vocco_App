@@ -2,13 +2,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
-  SafeAreaView,
-  Text,
-  ImageBackground,
   Image,
   Platform,
-  Animated,
-  PermissionsAndroid,
   TouchableOpacity,
   Vibration
 } from 'react-native';
@@ -22,22 +17,16 @@ import AudioRecorderPlayer, {
 
 import * as Progress from "react-native-progress";
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
-import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import RNFetchBlob from 'rn-fetch-blob';
 import SwipeDownModal from 'react-native-swipe-down';
 import Draggable from 'react-native-draggable';
-import { LinearTextGradient } from "react-native-text-gradient";
-import { TitleText } from './TitleText';
-import { Warning } from './Warning';
 import { windowHeight, windowWidth } from '../../config/config';
-import cancelSvg from '../../assets/record/cancel.svg';
-import publicSvg from '../../assets/record/public.svg';
 import { DescriptionText } from './DescriptionText';
 import VoicePlayer from '../Home/VoicePlayer';
 import VoiceService from '../../services/VoiceService';
 import { useDispatch, useSelector } from 'react-redux';
-import { setVoiceState, setRefreshState } from '../../store/actions';
+import { setVoiceState } from '../../store/actions';
 import {useTranslation} from 'react-i18next';
 import { styles } from '../style/Common';
 import '../../language/i18n';
@@ -45,7 +34,6 @@ import '../../language/i18n';
 import recordSvg from '../../assets/common/bottomIcons/record.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
 import { SvgXml } from 'react-native-svg';
-import { setUseProxies } from 'immer';
 //import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export const AnswerReply = ({
@@ -55,7 +43,7 @@ export const AnswerReply = ({
     onPushReply=()=>{}
 }) => {
 
-  let { user , voiceState , refreshState } = useSelector((state) => state.user) ;
+  let { user , voiceState } = useSelector((state) => state.user) ;
 
   const dispatch = useDispatch();
   const {t, i18n} = useTranslation();

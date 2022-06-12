@@ -114,21 +114,23 @@ export const NewChat = ({
     return (day > 0 ? (day.toString() + ' ' + t("day") + (day > 1 ? 's' : '')) : (hour > 0 ? (hour.toString() + ' ' + t("hour") + (hour > 1 ? 's' : '')) : (minute > 0 ? (minute.toString() + ' ' + t("minute") + (minute > 1 ? 's' : '')) : ''))) + " " + t("ago");
   }
 
+  const listener = ({ user_id, v }) => {
+    setFriends(prev => {
+      let idx = 0;
+      for (; idx < prev.length; idx++)
+        if (prev[idx].user.id == user_id) break;
+      if (idx != prev.length) {
+        prev[idx].lastSeen = v;
+        return [...prev];
+      }
+      return prev;
+    })
+  }
+
   useEffect(() => {
     getFriends();
-    socketInstance.on("user_login", ({ user_id, v }) => {
-      setFriends(prev => {
-        let idx = 0;
-        for (; idx < prev.length; idx++)
-          if (prev[idx].user.id == user_id) break;
-        if (idx != prev.length) {
-          prev[idx].lastSeen = v;
-          return [...prev];
-        }
-        return prev;
-      })
-    });
-    return socketInstance.off("user_login");
+    socketInstance.on("user_login", listener );
+    return ()=>socketInstance.off("user_login", listener);
   }, [])
 
   return (
@@ -312,7 +314,7 @@ export const NewChat = ({
                           text={label == '' ? renderState(item.lastSeen) : renderName(item.user.firstname, item.user.lastname)}
                           fontSize={13}
                           lineHeight={21}
-                          color={(label == '' && item.lastSeen == null) ? '#8327D8' : 'rgba(54, 36, 68, 0.8)'}
+                          color={(label == '' && item.lastSeen == 'onSession') ? '#8327D8' : 'rgba(54, 36, 68, 0.8)'}
                         />
                       </View>
                     </TouchableOpacity>}

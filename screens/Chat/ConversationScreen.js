@@ -3,10 +3,7 @@ import {
     View,
     TouchableOpacity,
     ScrollView,
-    Animated,
-    SafeAreaView,
     Vibration,
-    KeyboardAvoidingView,
     Image,
     Text,
     ImageBackground,
@@ -30,11 +27,6 @@ import { SvgXml } from 'react-native-svg';
 import arrowSvg from '../../assets/chat/Arrow.svg';
 import photoSvg from '../../assets/chat/photo.svg';
 import recordSvg from '../../assets/common/bottomIcons/record.svg';
-import { BottomButtons } from '../component/BottomButtons';
-import black_settingsSvg from '../../assets/notification/black_settings.svg';
-import notificationSvg from '../../assets/discover/notification.svg';
-import searchSvg from '../../assets/login/search.svg';
-import new_messageSvg from '../../assets/chat/new_message.svg';
 
 import { windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
@@ -42,16 +34,10 @@ import { SemiBoldText } from '../component/CommenText';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState, setVoiceState } from '../../store/actions';
-import { RecordIcon } from '../component/RecordIcon';
 import moreSvg from '../../assets/common/more.svg';
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
-import { Feed } from '../component/Feed';
-import { Discover } from '../component/Discover';
-import { TitleText } from '../component/TitleText';
-import { FriendItem } from '../component/FriendItem';
-import { NewChat } from '../component/NewChat';
 import Draggable from 'react-native-draggable';
 import { use } from 'i18next';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
@@ -94,12 +80,10 @@ const ConversationScreen = (props) => {
         android: `${dirs.CacheDir}/hello.mp3`,
     });
 
-    let days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
     const renderState = (lastSeen) => {
-        console.log("$$$$$$$$$$$$$$$$$$ "+lastSeen);
         if (lastSeen == "onSession") {
-            console.log("wowowowoowowo");
             return t("online")
         }
         else if (lastSeen == null) {
@@ -117,10 +101,10 @@ const ConversationScreen = (props) => {
         else if (nowTime.getDate() - updatedTime.getDate() > nowTime.getDay()) {
             return updatedTime.toDateString().substring(4, 10);
         }
-        else if (nowTime.getDate()-1 > updatedTime.getDate()) {
+        else if (nowTime.getDate() - 1 > updatedTime.getDate()) {
             return days[updatedTime.getDay()];
         }
-        else if(nowTime.getDate()-1 == updatedTime.getDate()){
+        else if (nowTime.getDate() - 1 == updatedTime.getDate()) {
             return 'Yesterday'
         }
         else {
@@ -170,7 +154,7 @@ const ConversationScreen = (props) => {
         }
     }
 
-    const onConfirmMessage = ()=>{
+    const onConfirmMessage = () => {
         VoiceService.confirmMessage(info.user.id);
     }
 
@@ -238,27 +222,28 @@ const ConversationScreen = (props) => {
         return 0;
     }
 
+    const listener = ({ user_id, v }) => {
+        if (user_id == info.user.id)
+            setIsOnline(v)
+    }
+
     useEffect(() => {
         getMessages();
         setKey(prevKey => prevKey + 1);
         setFill(user.premium == 'none' ? 60 : 180);
         socketInstance.on("receiveMessage", ({ info }) => {
-            setMessages((prev)=>{
-                console.log(prev.length);
+            setMessages((prev) => {
                 prev.push(info);
                 prev.sort(onCompare);
                 return [...prev];
             });
             onConfirmMessage();
         });
-        socketInstance.on("user_login", ({ user_id, v }) => {
-            if (user_id == info.user.id)
-                setIsOnline(v)
-        });
+        socketInstance.on("user_login", listener);
         return () => {
             clearRecorder();
             socketInstance.off('receiveMessage');
-            socketInstance.off('user_login');
+            socketInstance.off('user_login', listener);
             dispatch(setRefreshState(!refreshState));
         };
     }, [])
@@ -363,22 +348,22 @@ const ConversationScreen = (props) => {
                 {messages.map((item, index) =>
                     <View key={"voiceMessage" + item.id}>
                         {(index == 0 || !onDateCompare(item.createdAt, messages[index - 1].createdAt)) &&
-                        <View style={{flexDirection:'row',justifyContent:'center', marginTop:16,marginBottom:8}}>
-                            <View style={{ paddingVertical:6, paddingHorizontal: 12, borderRadius: 12, backgroundColor: 'rgba(59, 31, 82, 0.6)' }}>
-                                <Text
-                                    style={{
-                                        fontFamily: "SFProDisplay-Regular",
-                                        fontSize: 11,
-                                        lineHeight: 12,
-                                        color: '#F6EFFF',
-                                        //textAlign: 'center',
-                                    }}
-                                >
-                                    {
-                                        renderTime(item.createdAt)
-                                    }
-                                </Text>
-                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 16, marginBottom: 8 }}>
+                                <View style={{ paddingVertical: 6, paddingHorizontal: 12, borderRadius: 12, backgroundColor: 'rgba(59, 31, 82, 0.6)' }}>
+                                    <Text
+                                        style={{
+                                            fontFamily: "SFProDisplay-Regular",
+                                            fontSize: 11,
+                                            lineHeight: 12,
+                                            color: '#F6EFFF',
+                                            //textAlign: 'center',
+                                        }}
+                                    >
+                                        {
+                                            renderTime(item.createdAt)
+                                        }
+                                    </Text>
+                                </View>
                             </View>
                         }
                         <VoiceMessageItem
@@ -387,7 +372,7 @@ const ConversationScreen = (props) => {
                         />
                     </View>
                 )}
-                <View style={{height:110}}></View>
+                <View style={{ height: 110 }}></View>
             </ScrollView>
             {!isPublish ?
                 <>

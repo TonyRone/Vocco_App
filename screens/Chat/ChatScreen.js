@@ -3,21 +3,15 @@ import {
     View,
     TouchableOpacity,
     ScrollView,
-    Animated,
-    SafeAreaView,
-    Vibration,
     KeyboardAvoidingView,
     Image,
     Text
 } from 'react-native';
 
 import * as Progress from "react-native-progress";
-import { DescriptionText } from '../component/DescriptionText';
 import { SvgXml } from 'react-native-svg';
-import closeSvg from '../../assets/common/close.svg';
 import { BottomButtons } from '../component/BottomButtons';
 import black_settingsSvg from '../../assets/notification/black_settings.svg';
-import notificationSvg from '../../assets/discover/notification.svg';
 import searchSvg from '../../assets/login/search.svg';
 import new_messageSvg from '../../assets/chat/new_message.svg';
 
@@ -25,14 +19,11 @@ import { windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/CommenText';
 import VoiceService from '../../services/VoiceService';
-import { useSelector, useDispatch } from 'react-redux';
-import { setRefreshState } from '../../store/actions';
+import { useSelector } from 'react-redux';
 import { RecordIcon } from '../component/RecordIcon';
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
-import { Feed } from '../component/Feed';
-import { Discover } from '../component/Discover';
 import { TitleText } from '../component/TitleText';
 import { FriendItem } from '../component/FriendItem';
 import { NewChat } from '../component/NewChat';
@@ -92,22 +83,25 @@ const ChatScreen = (props) => {
             });
     }
 
+    const listener =  ({ user_id, v }) => {
+        console.log(user_id+" * "+v);
+        setConversations(prev => {
+            let idx = 0;
+            for (; idx < prev.length; idx++)
+                if (prev[idx].sender.id == user_id || prev[idx].receiver.id == user_id) break;
+            if (idx != prev.length) {
+                prev[idx].lastSeen = v;
+                return [...prev];
+            }
+            return prev;
+        })
+    }
+
     useEffect(() => {
         getFollowUsers();
         getConversations();
-        socketInstance.on("user_login", ({ user_id, v }) => {
-            setConversations(prev => {
-                let idx = 0;
-                for (; idx < prev.length; idx++)
-                    if (prev[idx].sender.id == user_id || prev[idx].receiver.id == user_id) break;
-                if (idx != prev.length) {
-                    prev[idx].lastSeen = v;
-                    return [...prev];
-                }
-                return prev;
-            })
-        });
-        return socketInstance.off("user_login")
+        socketInstance.on("user_login", listener);
+       return ()=>socketInstance.off("user_login", listener);
     }, [refreshState])
 
     return (
@@ -160,6 +154,7 @@ const ChatScreen = (props) => {
                             key={index + 'friendItem_chat'}
                             props={props}
                             info={item}
+                            type = 'user'
                             isUserName={true}
                         />)
                     }

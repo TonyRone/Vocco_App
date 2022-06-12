@@ -94,7 +94,7 @@ export const RecordIcon = ({
       setTemporary(true);
     }
     //dispatch(setVoiceState(voiceState+1));
-    return clearRecorder();
+    return ()=>clearRecorder();
   }, [expandKey])
 
   const [disableCBButton, setDisableCBButton] = useState(false)

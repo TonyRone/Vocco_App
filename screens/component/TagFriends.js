@@ -153,21 +153,23 @@ export const TagFriends = ({
     closeModal();
   }
 
+  const listener = ({ user_id, v }) => {
+    setFriends(prev => {
+      let idx = 0;
+      for (; idx < prev.length; idx++)
+        if (prev[idx].user.id == user_id) break;
+      if (idx != prev.length) {
+        prev[idx].lastSeen = v;
+        return [...prev];
+      }
+      return prev;
+    })
+  }
+
   useEffect(() => {
     getFriends();
-    socketInstance.on("user_login", ({ user_id, v }) => {
-      setFriends(prev => {
-        let idx = 0;
-        for (; idx < prev.length; idx++)
-          if (prev[idx].user.id == user_id) break;
-        if (idx != prev.length) {
-          prev[idx].lastSeen = v;
-          return [...prev];
-        }
-        return prev;
-      })
-    });
-    return socketInstance.off("user_login");
+    socketInstance.on("user_login", listener );
+    return ()=>socketInstance.off("user_login", listener);
   }, [])
 
   return (

@@ -159,6 +159,7 @@ export const ChatListItem = ({
                             text={t("voice message")}
                             fontSize={13}
                             lineHeight={21}
+                            marginLeft={4}
                             color='rgba(54, 36, 68, 0.8)'
                         />
                     </View>

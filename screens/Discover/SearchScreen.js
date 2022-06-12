@@ -94,7 +94,6 @@ const SearchScreen = (props) => {
       VoiceService.getDiscoverTitle(v,0,Categories[category].label).then(async res => {
         if (res.respInfo.status === 200) {
           const jsonRes = await res.json();
-          console.log(jsonRes.user[0]);
           setFilterTitles(jsonRes);
           setIsEmpty(jsonRes.length==0);
         }
