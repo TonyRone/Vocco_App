@@ -747,6 +747,11 @@
     "@babel/helper-validator-identifier" "^7.15.7"
     "to-fast-properties" "^2.0.0"
 
+"@baronha/react-native-multiple-image-picker@^0.4.10":
+  "integrity" "sha512-bd6TFlCX5kkb4q7RkmWHYRqY1XCXjHyjc2uyf9sMeM5bFO4dvxLVHHV0EM1+WB0Iw6x3YVuJDfKa/xg97cYUVg=="
+  "resolved" "https://registry.npmjs.org/@baronha/react-native-multiple-image-picker/-/react-native-multiple-image-picker-0.4.10.tgz"
+  "version" "0.4.10"
+
 "@bcoe/v8-coverage@^0.2.3":
   "integrity" "sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw=="
   "resolved" "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
@@ -7610,6 +7615,11 @@
   "integrity" "sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg=="
   "resolved" "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz"
   "version" "2.5.6"
+
+"react-native-material-menu@^2.0.0":
+  "integrity" "sha512-SmO9PLE3E469EPbVWZqvdu6JGPPZIm7YjqDcWs2PPoY0k7w2V9tFo3BmmLXNzNZDCVCAi+PPSsL7h/5WkfHcSg=="
+  "resolved" "https://registry.npmjs.org/react-native-material-menu/-/react-native-material-menu-2.0.0.tgz"
+  "version" "2.0.0"
 
 "react-native-modal-dropdown@^1.0.1":
   "integrity" "sha512-X13RbwoQdaOb9Ffi7fjRVwh9OXauXIJhum0uXGzYZLMyoCQ5yt5cxf27P/YZbdh80Fb7bdPx6vTA4PTpUK2WDQ=="

@@ -7,7 +7,9 @@ import {
     Image,
     Text,
     ImageBackground,
-    Platform
+    PermissionsAndroid,
+    Platform,
+    Pressable
 } from 'react-native';
 
 import AudioRecorderPlayer, {
@@ -18,14 +20,19 @@ import AudioRecorderPlayer, {
 } from 'react-native-audio-recorder-player';
 
 import * as Progress from "react-native-progress";
+import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 import RNFetchBlob from 'rn-fetch-blob';
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
+import MultipleImagePicker from '@baronha/react-native-multiple-image-picker';
 import { DescriptionText } from '../component/DescriptionText';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
+import trashSvg from '../../assets/chat/trash.svg';
+import selectSvg from '../../assets/chat/select.svg';
 import { SvgXml } from 'react-native-svg';
 import arrowSvg from '../../assets/chat/Arrow.svg';
 import photoSvg from '../../assets/chat/photo.svg';
+import disableNotificationSvg from '../../assets/chat/disable_notification.svg';
 import recordSvg from '../../assets/common/bottomIcons/record.svg';
 
 import { windowHeight, windowWidth } from '../../config/config';
@@ -42,7 +49,8 @@ import Draggable from 'react-native-draggable';
 import { use } from 'i18next';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import VoicePlayer from '../Home/VoicePlayer';
-import { VoiceMessageItem } from '../component/VoiceMessageItem';
+import { MessageItem } from '../component/MessageItem';
+import { TitleText } from '../component/TitleText';
 
 const ConversationScreen = (props) => {
 
@@ -66,6 +74,12 @@ const ConversationScreen = (props) => {
     const [fill, setFill] = useState(0);
     const [isPublish, setIsPublish] = useState(false);
     const [isOnline, setIsOnline] = useState(info.lastSeen);
+
+    const [visible, setVisible] = useState(false);
+
+    const hideMenu = () => setVisible(false);
+
+    const showMenu = () => setVisible(true);
 
     const dragPos = useRef(0);
     const wasteTime = useRef(0);
@@ -138,6 +152,7 @@ const ConversationScreen = (props) => {
                 const jsonRes = await res.json();
                 if (res.respInfo.status !== 201) {
                 } else {
+                    console.log(jsonRes);
                     Vibration.vibrate(100);
                     setIsPublish(false);
                     let tp = messages;
@@ -209,6 +224,73 @@ const ConversationScreen = (props) => {
         }
     };
 
+    const requestCameraPermission = async () => {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.CAMERA,
+                {
+                    title: t("App Camera Permission"),
+                    message: t("App needs access to your camera "),
+                    buttonNeutral: t("Ask Me Later"),
+                    buttonNegative: t("Cancel"),
+                    buttonPositive: t("OK")
+                }
+            );
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                console.log("Camera permission given");
+            } else {
+                console.log("Camera permission denied");
+            }
+        } catch (err) {
+            console.warn(err);
+        }
+    };
+
+    const onSelectPhotos = async () => {
+        let defaultOptions = {
+            //**iOS**//
+            usedPrefetch: false,
+            allowedAlbumCloudShared: false,
+            muteAudio: true,
+            autoPlay: true,
+            //resize thumbnail
+            haveThumbnail: true,
+            thumbnailWidth: Math.round(windowWidth / 2),
+            thumbnailHeight: Math.round(windowWidth / 2),
+            allowedLivePhotos: true,
+            preventAutomaticLimitedAccessAlert: true, // newest iOS 14
+            emptyMessage: 'No albums',
+            selectedColor: '#30475e',
+            maximumMessageTitle: 'Notification',
+            maximumMessage: 'You have selected the maximum number of media allowed',
+            messageTitleButton: 'OK',
+            cancelTitle: 'Cancel',
+            tapHereToChange: 'Tap here to change',
+            //****//
+            //**Android**//
+            //****//
+            //**Both**//
+            usedCameraButton: true,
+            allowedVideo: false,
+            allowedPhotograph: true, // for camera : allow this option when you want to take a photos
+            allowedVideoRecording: false, //for camera : allow this option when you want to recording video.
+            maxVideoDuration: 60, //for camera : max video recording duration
+            numberOfColumn: 3,
+            maxSelectedAssets: 20,
+            singleSelectedMode: false,
+            doneTitle: 'Done',
+            isPreview: true,
+            mediaType: 'all',
+            isExportThumbnail: false,
+            //****//
+            // fetchOption: Object,
+            // fetchCollectionOption: Object,
+            // emptyImage: Image,
+        };
+        const response = await MultipleImagePicker.openPicker(defaultOptions);
+        console.log(response);
+    }
+
     const onDateCompare = (a, b) => {
         return new Date(a).getDate() == new Date(b).getDate() && new Date(a).getMonth() == new Date(b).getMonth()
             && new Date(a).getFullYear == new Date(b).getFullYear
@@ -240,6 +322,8 @@ const ConversationScreen = (props) => {
             onConfirmMessage();
         });
         socketInstance.on("user_login", listener);
+        if (Platform.OS === 'android')
+            requestCameraPermission();
         return () => {
             clearRecorder();
             socketInstance.off('receiveMessage');
@@ -292,9 +376,66 @@ const ConversationScreen = (props) => {
                             />
                         </View>
                     </View>
-                    <TouchableOpacity onPress={() => { }}>
-                        <SvgXml width="24" height="24" xml={moreSvg} />
-                    </TouchableOpacity>
+
+                    <Menu
+                        visible={visible}
+                        anchor={
+                            <Pressable onPress={showMenu}>
+                                <SvgXml width="24" height="24" xml={moreSvg} />
+                            </Pressable>
+                        }
+                        style={{
+                            width: 250,
+                            height:129,
+                            borderRadius: 16,
+                            backgroundColor: '#FFF'
+                        }}
+                        onRequestClose={hideMenu}
+                    >
+                        <TouchableOpacity
+                            style={styles.contextMenu}
+                        >
+                            <TitleText
+                                text={t("Select")}
+                                fontSize={17}
+                                fontFamily="SFProDisplay-Regular"
+                            />
+                            <SvgXml
+                                width={20}
+                                height={20}
+                                xml={selectSvg}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.contextMenu}
+                        >
+                            <TitleText
+                                text={t("Disable Notification")}
+                                fontSize={17}
+                                fontFamily="SFProDisplay-Regular"
+                            />
+                            <SvgXml
+                                width={20}
+                                height={20}
+                                xml={disableNotificationSvg}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.contextMenu}
+                        >
+                            <TitleText
+                                text={t("Clear chat")}
+                                fontSize={17}
+                                color='#E41717'
+                                fontFamily="SFProDisplay-Regular"
+                            />
+                            <SvgXml
+                                width={20}
+                                height={20}
+                                xml={trashSvg}
+                            />
+                        </TouchableOpacity>
+                    </Menu>
                 </View>
             </View>
             {(!isLoading && messages.length == 0) && <View style={{ position: 'absolute', bottom: 109 }}>
@@ -366,7 +507,7 @@ const ConversationScreen = (props) => {
                                 </View>
                             </View>
                         }
-                        <VoiceMessageItem
+                        <MessageItem
                             props={props}
                             info={item}
                         />
@@ -386,7 +527,7 @@ const ConversationScreen = (props) => {
                         backgroundColor: '#FFF',
                         justifyContent: 'center'
                     }}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => onSelectPhotos()}>
                             <SvgXml
                                 width={24}
                                 height={24}
