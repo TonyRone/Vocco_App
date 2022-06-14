@@ -23,7 +23,6 @@ import * as Progress from "react-native-progress";
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 import RNFetchBlob from 'rn-fetch-blob';
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
-import MultipleImagePicker from '@baronha/react-native-multiple-image-picker';
 import { DescriptionText } from '../component/DescriptionText';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
@@ -246,50 +245,50 @@ const ConversationScreen = (props) => {
         }
     };
 
-    const onSelectPhotos = async () => {
-        let defaultOptions = {
-            //**iOS**//
-            usedPrefetch: false,
-            allowedAlbumCloudShared: false,
-            muteAudio: true,
-            autoPlay: true,
-            //resize thumbnail
-            haveThumbnail: true,
-            thumbnailWidth: Math.round(windowWidth / 2),
-            thumbnailHeight: Math.round(windowWidth / 2),
-            allowedLivePhotos: true,
-            preventAutomaticLimitedAccessAlert: true, // newest iOS 14
-            emptyMessage: 'No albums',
-            selectedColor: '#30475e',
-            maximumMessageTitle: 'Notification',
-            maximumMessage: 'You have selected the maximum number of media allowed',
-            messageTitleButton: 'OK',
-            cancelTitle: 'Cancel',
-            tapHereToChange: 'Tap here to change',
-            //****//
-            //**Android**//
-            //****//
-            //**Both**//
-            usedCameraButton: true,
-            allowedVideo: false,
-            allowedPhotograph: true, // for camera : allow this option when you want to take a photos
-            allowedVideoRecording: false, //for camera : allow this option when you want to recording video.
-            maxVideoDuration: 60, //for camera : max video recording duration
-            numberOfColumn: 3,
-            maxSelectedAssets: 20,
-            singleSelectedMode: false,
-            doneTitle: 'Done',
-            isPreview: true,
-            mediaType: 'all',
-            isExportThumbnail: false,
-            //****//
-            // fetchOption: Object,
-            // fetchCollectionOption: Object,
-            // emptyImage: Image,
-        };
-        const response = await MultipleImagePicker.openPicker(defaultOptions);
-        console.log(response);
-    }
+    // const onSelectPhotos = async () => {
+    //     let defaultOptions = {
+    //         //**iOS**//
+    //         usedPrefetch: false,
+    //         allowedAlbumCloudShared: false,
+    //         muteAudio: true,
+    //         autoPlay: true,
+    //         //resize thumbnail
+    //         haveThumbnail: true,
+    //         thumbnailWidth: Math.round(windowWidth / 2),
+    //         thumbnailHeight: Math.round(windowWidth / 2),
+    //         allowedLivePhotos: true,
+    //         preventAutomaticLimitedAccessAlert: true, // newest iOS 14
+    //         emptyMessage: 'No albums',
+    //         selectedColor: '#30475e',
+    //         maximumMessageTitle: 'Notification',
+    //         maximumMessage: 'You have selected the maximum number of media allowed',
+    //         messageTitleButton: 'OK',
+    //         cancelTitle: 'Cancel',
+    //         tapHereToChange: 'Tap here to change',
+    //         //****//
+    //         //**Android**//
+    //         //****//
+    //         //**Both**//
+    //         usedCameraButton: true,
+    //         allowedVideo: false,
+    //         allowedPhotograph: true, // for camera : allow this option when you want to take a photos
+    //         allowedVideoRecording: false, //for camera : allow this option when you want to recording video.
+    //         maxVideoDuration: 60, //for camera : max video recording duration
+    //         numberOfColumn: 3,
+    //         maxSelectedAssets: 20,
+    //         singleSelectedMode: false,
+    //         doneTitle: 'Done',
+    //         isPreview: true,
+    //         mediaType: 'all',
+    //         isExportThumbnail: false,
+    //         //****//
+    //         // fetchOption: Object,
+    //         // fetchCollectionOption: Object,
+    //         // emptyImage: Image,
+    //     };
+    //     const response = await MultipleImagePicker.openPicker(defaultOptions);
+    //     console.log(response);
+    // }
 
     const onDateCompare = (a, b) => {
         return new Date(a).getDate() == new Date(b).getDate() && new Date(a).getMonth() == new Date(b).getMonth()
@@ -527,7 +526,7 @@ const ConversationScreen = (props) => {
                         backgroundColor: '#FFF',
                         justifyContent: 'center'
                     }}>
-                        <TouchableOpacity onPress={() => onSelectPhotos()}>
+                        <TouchableOpacity>
                             <SvgXml
                                 width={24}
                                 height={24}
