@@ -175,8 +175,8 @@ class VoicePlayer extends Component {
       >
         {this.props.playBtn&&<TouchableOpacity onPress={()=>this.changePlayStatus()}>
           <SvgXml
-            width={windowWidth/10}
-            height={windowWidth/10}
+            width={windowWidth/(this.props.playBtnSize?this.props.playBtnSize:10)}
+            height={windowWidth/(this.props.playBtnSize?this.props.playBtnSize:10)}
             style={{
               marginRight:8
             }}

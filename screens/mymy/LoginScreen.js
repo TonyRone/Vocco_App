@@ -133,7 +133,7 @@ const LoginScreen = (props) => {
       const jsonRes = await res.json();
       if (res.respInfo.status === 201) {
         _storeData(jsonRes.accessToken, jsonRes.refreshToken);
-        onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
+        onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken, false);
       }
       else {
         if (jsonRes.message == 'Wrong password') {
@@ -186,30 +186,32 @@ const LoginScreen = (props) => {
     props.navigation.dispatch(resetActionTrue);
   }
 
-  const onCreateSocket = (jsonRes) => {
+  const onCreateSocket = (jsonRes,isRegister) => {
     if (socketInstance == null) {
       let socket = io(SOCKET_URL);
-      socket.emit("login", { uid: jsonRes.id, email: jsonRes.email }, (res) => {
-        if (res == "Success") {
-          dispatch(setSocketInstance(socket));
-          onGoScreen(jsonRes);
-        }
-        else {
-          setError({
-            email: "User with current email already login"
-          });
-        }
-      });
+      dispatch(setSocketInstance(socket));
+      socket.on("connect", () => {
+        socket.emit("login", { uid: jsonRes.id, email: jsonRes.email, isNew:isRegister }, (res) => {
+          if (res == "Success") {
+            onGoScreen(jsonRes);
+          }
+          else {
+            setError({
+              email: "User with current email already login"
+            });
+          }
+        });
+      })
     }
     else
       onGoScreen(jsonRes);
   }
 
-  const onSetUserInfo = async (accessToken = null, refreshToken = null) => {
+  const onSetUserInfo = async (accessToken = null, refreshToken = null, isRegister) => {
     AuthService.getUserInfo(accessToken, 'reg').then(async res => {
       const jsonRes = await res.json();
       if (res.respInfo.status == 200) {
-        onCreateSocket(jsonRes);
+        onCreateSocket(jsonRes, isRegister);
       }
       else {
         setError({
@@ -239,7 +241,7 @@ const LoginScreen = (props) => {
         const jsonRes = await res.json();
         if (res.respInfo.status === 201) {
           _storeData(jsonRes.accessToken, jsonRes.refreshToken);
-          onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
+          onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken, jsonRes.isRegister);
         }
         else {
           setError({
@@ -299,7 +301,7 @@ const LoginScreen = (props) => {
         const jsonRes = await res.json();
         if (res.respInfo.status === 201) {
           _storeData(jsonRes.accessToken, jsonRes.refreshToken);
-          onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
+          onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken, jsonRes.isRegister);
         }
         else {
           setError({

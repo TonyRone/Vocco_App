@@ -63,15 +63,17 @@ const LogoScreen = (props) => {
     const onCreateSocket = (jsonRes) => {
         if (socketInstance == null) {
             let socket = io(SOCKET_URL);
-            socket.emit("login", { uid: jsonRes.id, email: jsonRes.email }, (res) => {
-                if (res == "Success") {
-                    dispatch(setSocketInstance(socket));
-                    onGoScreen(jsonRes);
-                }
-                else {
-                    props.navigation.navigate('Welcome');
-                }
-            });
+            dispatch(setSocketInstance(socket));
+            socket.on("connect", ()=>{
+                socket.emit("login", { uid: jsonRes.id, email: jsonRes.email, isNew:false }, (res) => {
+                    if (res == "Success") {
+                        onGoScreen(jsonRes);
+                    }
+                    else {
+                        props.navigation.navigate('Welcome');
+                    }
+                });
+            } )
         }
         else
             onGoScreen(jsonRes);

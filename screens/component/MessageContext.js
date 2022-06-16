@@ -33,6 +33,9 @@ import { MessageItem } from './MessageItem';
 export const MessageContext = ({
   info,
   props,
+  onDeleteItem=()=>{},
+  onSelectItem=()=>{},
+  onReplyMsg = () => { },
   onCloseModal = () => { },
 }) => {
 
@@ -58,7 +61,7 @@ export const MessageContext = ({
       modalVisible={showModal}
       ContentModal={
         <View
-          style={[styles.paddingH16, { marginTop: "25%" }]}
+          style={{ marginTop: "25%" , paddingHorizontal:8}}
         >
           <MessageItem
             props={props}
@@ -69,11 +72,12 @@ export const MessageContext = ({
               width: "65%",
               marginTop: 20,
               borderRadius: 16,
-              backgroundColor:'#FFF'
+              backgroundColor: '#FFF'
             }}
           >
             <TouchableOpacity
               style={styles.contextMenu}
+              onPress={() => {onReplyMsg();closeModal();}}
             >
               <TitleText
                 text={t("Reply")}
@@ -115,7 +119,8 @@ export const MessageContext = ({
               />
             </TouchableOpacity>
             <Pressable
-              style={[styles.contextMenu,{borderBottomWidth:8}]}
+              onPress={()=>onDeleteItem()}
+              style={[styles.contextMenu, { borderBottomWidth: 8 }]}
             >
               <TitleText
                 text={t("Delete")}
@@ -130,6 +135,7 @@ export const MessageContext = ({
               />
             </Pressable>
             <TouchableOpacity
+              onPress={() => {onSelectItem();closeModal();}}
               style={{
                 paddingVertical: 10,
                 paddingHorizontal: 16,

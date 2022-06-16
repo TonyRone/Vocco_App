@@ -76,7 +76,6 @@ const PhotoScreen = (props) => {
       } else {
         let source = res;
         setPhotoResourcePath(source);
-        console.log(source.assets[0].uri);
       }
     });
   }
@@ -131,7 +130,6 @@ const PhotoScreen = (props) => {
       } else {
         let source = res;
         setPhotoResourcePath(source);
-        console.log(source.assets[0].uri);
       }
     });
   };

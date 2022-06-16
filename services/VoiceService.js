@@ -81,12 +81,12 @@ class VoiceService {
             );
     }
 
-    async postVoiceMessage(data) {
+    async postMessage(data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(
                 'POST',
-                `${API_URL}/actions/voiceMessage`, {
+                `${API_URL}/actions/addMessage`, {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
             },
@@ -458,12 +458,12 @@ class VoiceService {
             );
     }
 
-    async getVoiceMessages(toUserId) {
+    async getMessages(toUserId) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(
                 'GET',
-                `${API_URL}/actions/getVoiceMessages?toUserId=${toUserId}`, {
+                `${API_URL}/actions/getMessages?toUserId=${toUserId}`, {
                 'Authorization': `Bearer ${token}`
             }
             );
@@ -477,6 +477,20 @@ class VoiceService {
                 `${API_URL}/actions/getTags?storyId=${storyId}&storyType=${storyType}`, {
                 'Authorization': `Bearer ${token}`
             }
+            );
+    }
+
+    async deleteMessages(data) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob
+            .config({ trusty: true })
+            .fetch(
+                'POST',
+                `${API_URL}/actions/deleteMessages`, {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+                JSON.stringify(data)
             );
     }
 

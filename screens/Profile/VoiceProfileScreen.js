@@ -49,7 +49,6 @@ import { TagItem } from '../component/TagItem';
 const VoiceProfileScreen = (props) => {
 
   let recordId = props.navigation.state.params.id, answerId = props.navigation.state.params.answerId ? props.navigation.state.params.answerId : '';
-  console.log(recordId+" **** "+answerId);
   const [showModal, setShowModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [answerVoices, setAnswerVoices] = useState([]);

@@ -27,7 +27,7 @@ import logoutSvg from '../../assets/setting/logout.svg';
 import websiteSvg from '../../assets/setting/website.svg';
 
 import {  windowWidth } from '../../config/config';
-import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
+import { GoogleSignin } from 'react-native-google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ACCESSTOKEN_KEY, MAIN_LANGUAGE, windowHeight } from '../../config/config';
 import { styles } from '../style/Common';

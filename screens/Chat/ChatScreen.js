@@ -84,7 +84,6 @@ const ChatScreen = (props) => {
     }
 
     const listener =  ({ user_id, v }) => {
-        console.log(user_id+" * "+v);
         setConversations(prev => {
             let idx = 0;
             for (; idx < prev.length; idx++)
@@ -174,7 +173,6 @@ const ChatScreen = (props) => {
                         <Image
                             source={require('../../assets/chat/illustration.png')}
                             style={{ width: windowWidth, height: windowWidth / 2, marginTop: 50 }}
-                            resizeMode='cover'
                         />
                         <Text
                             numberOfLines={2}

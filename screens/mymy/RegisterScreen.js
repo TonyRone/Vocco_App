@@ -21,10 +21,10 @@ import appleAuth, { appleAuthAndroid, AppleAuthRequestOperation, AppleAuthReques
 import AuthService from '../../services/AuthService';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setUser } from '../../store/actions';
+import { setSocketInstance, setUser } from '../../store/actions';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ACCESSTOKEN_KEY, REFRESHTOKEN_KEY, TUTORIAL_CHECK } from '../../config/config';
+import { ACCESSTOKEN_KEY, REFRESHTOKEN_KEY, TUTORIAL_CHECK, SOCKET_URL } from '../../config/config';
 import { styles } from '../style/Login';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -42,7 +42,7 @@ const RegisterScreen = (props) => {
 
   const { t, i18n } = useTranslation();
 
-  const {user, socketInstance} = useSelector((state) => state.user);
+  const { user, socketInstance } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const scrollRef = useRef(ScrollView);
@@ -109,7 +109,7 @@ const RegisterScreen = (props) => {
         const jsonRes = await res.json();
         if (res.respInfo.status === 201) {
           _storeData(jsonRes.accessToken, jsonRes.refreshToken);
-          onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
+          onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken, true);
         } else {
           setError({
             email: jsonRes.message,
@@ -153,7 +153,7 @@ const RegisterScreen = (props) => {
         const jsonRes = await res.json();
         if (res.respInfo.status === 201) {
           _storeData(jsonRes.accessToken, jsonRes.refreshToken);
-          onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
+          onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken, jsonRes.isRegister);
         }
         else {
           setError({
@@ -237,30 +237,32 @@ const RegisterScreen = (props) => {
     props.navigation.dispatch(resetActionTrue);
   }
 
-  const onCreateSocket = (jsonRes) => {
+  const onCreateSocket = (jsonRes, isRegister) => {
     if (socketInstance == null) {
       let socket = io(SOCKET_URL);
-      socket.emit("login", { uid: jsonRes.id, email: jsonRes.email }, (res) => {
-        if (res == "Success") {
-          dispatch(setSocketInstance(socket));
-          onGoScreen(jsonRes);
-        }
-        else{
-          setError({
-            email: "User with current email already login"
-          });
-        }
-      });
+      dispatch(setSocketInstance(socket));
+      socket.on("connect", () => {
+        socket.emit("login", { uid: jsonRes.id, email: jsonRes.email, isNew:isRegister }, (res) => {
+          if (res == "Success") {
+            onGoScreen(jsonRes);
+          }
+          else {
+            setError({
+              email: "User with current email already login"
+            });
+          }
+        });
+      })
     }
     else
       onGoScreen(jsonRes);
   }
 
-  const onSetUserInfo = async (accessToken, refreshToken) => {
+  const onSetUserInfo = async (accessToken, refreshToken, isRegister = false) => {
     AuthService.getUserInfo(accessToken, 'reg').then(async res => {
       const jsonRes = await res.json();
       if (res.respInfo.status == 200) {
-        onCreateSocket(jsonRes);
+        onCreateSocket(jsonRes,isRegister);
       }
     })
       .catch(err => {
@@ -278,7 +280,7 @@ const RegisterScreen = (props) => {
         const jsonRes = await res.json();
         if (res.respInfo.status === 201) {
           _storeData(jsonRes.accessToken, jsonRes.refreshToken);
-          onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken);
+          onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken, jsonRes.isRegister);
         }
         else {
           setError({

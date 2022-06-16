@@ -27,7 +27,9 @@ import { DescriptionText } from '../component/DescriptionText';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
 import trashSvg from '../../assets/chat/trash.svg';
+import replySvg from '../../assets/chat/reply.svg';
 import selectSvg from '../../assets/chat/select.svg';
+import closeSvg from '../../assets/chat/close.svg';
 import { SvgXml } from 'react-native-svg';
 import arrowSvg from '../../assets/chat/Arrow.svg';
 import photoSvg from '../../assets/chat/photo.svg';
@@ -50,6 +52,7 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import VoicePlayer from '../Home/VoicePlayer';
 import { MessageItem } from '../component/MessageItem';
 import { TitleText } from '../component/TitleText';
+import { PhotoSelector } from '../component/PhotoSelector';
 
 const ConversationScreen = (props) => {
 
@@ -70,11 +73,15 @@ const ConversationScreen = (props) => {
     const [duration, setDuration] = useState(0);
     const [key, setKey] = useState(0);
     const [isRecording, setIsRecording] = useState(false);
+    const [replyIdx, setReplyIdx] = useState(-1);
     const [fill, setFill] = useState(0);
     const [isPublish, setIsPublish] = useState(false);
     const [isOnline, setIsOnline] = useState(info.lastSeen);
-
     const [visible, setVisible] = useState(false);
+    const [isSelectingPhoto, setIsSelectingPhoto] = useState(false);
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [isSelecting, setIsSelecting] = useState(false);
+    const [otherState, setOtherState] = useState('');
 
     const hideMenu = () => setVisible(false);
 
@@ -97,6 +104,8 @@ const ConversationScreen = (props) => {
 
     const renderState = (lastSeen) => {
         if (lastSeen == "onSession") {
+            if (otherState == 'startRecording')
+                return t("Recording...");
             return t("online")
         }
         else if (lastSeen == null) {
@@ -126,7 +135,7 @@ const ConversationScreen = (props) => {
     }
 
     const getMessages = async () => {
-        VoiceService.getVoiceMessages(info.user.id).then(async res => {
+        VoiceService.getMessages(info.user.id).then(async res => {
             const jsonRes = await res.json();
             if (res.respInfo.status == 200) {
                 setMessages(jsonRes);
@@ -138,34 +147,44 @@ const ConversationScreen = (props) => {
             })
     }
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (fileType, v) => {
         setIsLoading(true);
-        if (path) {
-            let tp = Math.max(duration, 1);
-            let voiceFile = [
-                { name: 'duration', data: String(Math.ceil(tp / 1000.0)) },
-                { name: 'user', data: info.user.id },
-                { name: 'file', filename: Platform.OS === 'android' ? 'message.mp3' : 'message.m4a', data: RNFetchBlob.wrap(String(path)) },
-            ];
-            VoiceService.postVoiceMessage(voiceFile).then(async res => {
-                const jsonRes = await res.json();
-                if (res.respInfo.status !== 201) {
-                } else {
-                    console.log(jsonRes);
-                    Vibration.vibrate(100);
-                    setIsPublish(false);
-                    let tp = messages;
-                    tp.push(jsonRes);
-                    tp.sort(onCompare);
-                    setMessages([...tp]);
-                    socketInstance.emit("newMessage", { info: jsonRes });
-                }
-                setIsLoading(false);
-            })
-                .catch(err => {
-                    console.log(err);
-                });
+        let fileName = '', filePath = '';
+        if (fileType == 'voice') {
+            fileName = Platform.OS === 'android' ? 'message.mp3' : 'message.m4a';
+            filePath = RNFetchBlob.wrap(String(path));
         }
+        else if (fileType == 'photo') {
+            fileName = v.fileName;
+            let fileUri = Platform.OS == 'android' ? v.uri : decodeURIComponent(v.uri.replace('file://', ''));
+            filePath = RNFetchBlob.wrap(fileUri);
+        }
+        let tp = Math.max(duration, 1);
+        let sendFile = [
+            { name: 'duration', data: String(Math.ceil(tp / 1000.0)) },
+            { name: 'user', data: info.user.id },
+            { name: 'type', data: fileType },
+            { name: 'ancestor', data: (replyIdx >= 0 ? messages[replyIdx].id : null) },
+            { name: 'file', filename: fileName, data: filePath },
+        ];
+        VoiceService.postMessage(sendFile).then(async res => {
+            const jsonRes = await res.json();
+            if (res.respInfo.status !== 201) {
+            } else {
+                Vibration.vibrate(100);
+                setIsPublish(false);
+                let tp = messages;
+                tp.push(jsonRes);
+                tp.sort(onCompare);
+                setMessages([...tp]);
+                socketInstance.emit("newMessage", { info: jsonRes });
+            }
+            setIsLoading(false);
+        })
+            .catch(err => {
+                console.log(err);
+            });
+        setReplyIdx(-1);
     }
 
     const onConfirmMessage = () => {
@@ -193,6 +212,9 @@ const ConversationScreen = (props) => {
             setDuration(wasteTime.current);
             setIsPublish(true);
         }
+        else
+            setReplyIdx(-1);
+        socketInstance.emit("chatState", {toUserId:info.user.id, state:'stopRecording'});
         clearRecorder();
     };
 
@@ -213,6 +235,7 @@ const ConversationScreen = (props) => {
                 AVFormatIDKeyIOS: AVEncodingOption.aac,
             };
             dispatch(setVoiceState(voiceState + 1));
+            socketInstance.emit("chatState", {toUserId:info.user.id, state:'startRecording'});
             await recorderPlayer.startRecorder(path, audioSet);
             recorderPlayer.addRecordBackListener((e) => {
                 wasteTime.current = e.currentPosition;
@@ -220,28 +243,6 @@ const ConversationScreen = (props) => {
                     onStopRecord(true);
                 }
             });
-        }
-    };
-
-    const requestCameraPermission = async () => {
-        try {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.CAMERA,
-                {
-                    title: t("App Camera Permission"),
-                    message: t("App needs access to your camera "),
-                    buttonNeutral: t("Ask Me Later"),
-                    buttonNegative: t("Cancel"),
-                    buttonPositive: t("OK")
-                }
-            );
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                console.log("Camera permission given");
-            } else {
-                console.log("Camera permission denied");
-            }
-        } catch (err) {
-            console.warn(err);
         }
     };
 
@@ -287,7 +288,6 @@ const ConversationScreen = (props) => {
     //         // emptyImage: Image,
     //     };
     //     const response = await MultipleImagePicker.openPicker(defaultOptions);
-    //     console.log(response);
     // }
 
     const onDateCompare = (a, b) => {
@@ -308,6 +308,48 @@ const ConversationScreen = (props) => {
             setIsOnline(v)
     }
 
+    const onClearChat = () => {
+        let chatIds = selectedItems.map((e) => messages[e].id);
+        VoiceService.deleteMessages({ messageIds: chatIds }).then(async res => {
+        })
+            .catch(err => {
+                console.log(err);
+            })
+        setMessages(prev => {
+            prev = prev.filter((e, index) => selectedItems.indexOf(index) == -1);
+            return [...prev]
+        })
+        setSelectedItems([]);
+        setIsSelecting(false);
+    }
+
+    const onDeleteItem = (idx) => {
+        let ids = [];
+        ids.push(messages[idx].id);
+        VoiceService.deleteMessages({ messageIds: ids }).then(async res => {
+        })
+            .catch(err => {
+                console.log(err);
+            });
+        setMessages(prev => {
+            prev.splice(idx, 1);
+            return [...prev]
+        })
+    }
+
+    const onSelectItem = (idx) => {
+        if (isSelecting == false)
+            setIsSelecting(true);
+        setSelectedItems(prev => {
+            let selectedIdx = prev.indexOf(idx);
+            if (selectedIdx == -1)
+                prev.push(idx);
+            else
+                prev.splice(selectedIdx, 1);
+            return [...prev];
+        })
+    }
+
     useEffect(() => {
         getMessages();
         setKey(prevKey => prevKey + 1);
@@ -320,13 +362,17 @@ const ConversationScreen = (props) => {
             });
             onConfirmMessage();
         });
+        socketInstance.on("chatState", (v) => {
+            setOtherState(v);
+        });
         socketInstance.on("user_login", listener);
-        if (Platform.OS === 'android')
-            requestCameraPermission();
+        // if (Platform.OS === 'android')
+        //     requestCameraPermission();
         return () => {
             clearRecorder();
             socketInstance.off('receiveMessage');
             socketInstance.off('user_login', listener);
+            socketInstance.off('chatState');
             dispatch(setRefreshState(!refreshState));
         };
     }, [])
@@ -340,102 +386,135 @@ const ConversationScreen = (props) => {
             <View style={{
                 backgroundColor: "rgba(255, 255, 255, 0.6)",
             }}>
-                <View
-                    style={[
-                        { marginTop: Platform.OS == 'ios' ? 50 : 20, paddingHorizontal: 16, marginBottom: 8 },
-                        styles.rowSpaceBetween
-                    ]}
-                >
-                    <View style={styles.rowAlignItems}>
-                        <TouchableOpacity onPress={() => props.navigation.goBack()}>
-                            <SvgXml
-                                width={24}
-                                height={24}
-                                xml={arrowBendUpLeft}
-                            />
-                        </TouchableOpacity>
-                        <Image
-                            source={{ uri: info.user.avatar?.url }}
-                            style={{ width: 40, height: 40, marginLeft: 25, borderRadius: 24, borderColor: '#FFA002', borderWidth: info.user.premium == 'none' ? 0 : 2 }}
-                            resizeMode='cover'
-                        />
-                        <View style={{
-                            marginLeft: 16
-                        }}>
-                            <SemiBoldText
-                                text={info.user.name}
-                                fontSize={20}
-                                lineHeight={24}
-                            />
-                            <DescriptionText
-                                text={renderState(isOnline)}
-                                fontSize={13}
-                                lineHeight={21}
-                                color={(isOnline == 'onSession') ? '#8327D8' : 'rgba(54, 36, 68, 0.8)'}
-                            />
-                        </View>
-                    </View>
-
-                    <Menu
-                        visible={visible}
-                        anchor={
-                            <Pressable onPress={showMenu}>
-                                <SvgXml width="24" height="24" xml={moreSvg} />
-                            </Pressable>
-                        }
-                        style={{
-                            width: 250,
-                            height:129,
-                            borderRadius: 16,
-                            backgroundColor: '#FFF'
-                        }}
-                        onRequestClose={hideMenu}
+                {!isSelecting ?
+                    <View
+                        style={[
+                            { marginTop: Platform.OS == 'ios' ? 50 : 20, paddingHorizontal: 16, marginBottom: 8 },
+                            styles.rowSpaceBetween
+                        ]}
                     >
-                        <TouchableOpacity
-                            style={styles.contextMenu}
+                        <View style={styles.rowAlignItems}>
+                            <TouchableOpacity onPress={() => props.navigation.goBack()}>
+                                <SvgXml
+                                    width={24}
+                                    height={24}
+                                    xml={arrowBendUpLeft}
+                                />
+                            </TouchableOpacity>
+                            <Image
+                                source={{ uri: info.user.avatar?.url }}
+                                style={{ width: 40, height: 40, marginLeft: 25, borderRadius: 24, borderColor: '#FFA002', borderWidth: info.user.premium == 'none' ? 0 : 2 }}
+                                resizeMode='cover'
+                            />
+                            <View style={{
+                                marginLeft: 16
+                            }}>
+                                <SemiBoldText
+                                    text={info.user.name}
+                                    fontSize={20}
+                                    lineHeight={24}
+                                />
+                                <DescriptionText
+                                    text={renderState(isOnline)}
+                                    fontSize={13}
+                                    lineHeight={21}
+                                    color={(isOnline == 'onSession') ? '#8327D8' : 'rgba(54, 36, 68, 0.8)'}
+                                />
+                            </View>
+                        </View>
+                        <Menu
+                            visible={visible}
+                            anchor={
+                                <Pressable onPress={showMenu}>
+                                    <SvgXml width="24" height="24" xml={moreSvg} />
+                                </Pressable>
+                            }
+                            style={{
+                                width: 250,
+                                height: 129,
+                                borderRadius: 16,
+                                backgroundColor: '#FFF'
+                            }}
+                            onRequestClose={hideMenu}
                         >
-                            <TitleText
-                                text={t("Select")}
-                                fontSize={17}
-                                fontFamily="SFProDisplay-Regular"
-                            />
-                            <SvgXml
-                                width={20}
-                                height={20}
-                                xml={selectSvg}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.contextMenu}
-                        >
-                            <TitleText
-                                text={t("Disable Notification")}
-                                fontSize={17}
-                                fontFamily="SFProDisplay-Regular"
-                            />
-                            <SvgXml
-                                width={20}
-                                height={20}
-                                xml={disableNotificationSvg}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.contextMenu}
-                        >
-                            <TitleText
+                            <TouchableOpacity
+                                style={styles.contextMenu}
+                                onPress={() => { setIsSelecting(!isSelecting); hideMenu(); }}
+                            >
+                                <TitleText
+                                    text={t("Select")}
+                                    fontSize={17}
+                                    fontFamily="SFProDisplay-Regular"
+                                />
+                                <SvgXml
+                                    width={20}
+                                    height={20}
+                                    xml={selectSvg}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.contextMenu}
+                                onPress={() => hideMenu()}
+                            >
+                                <TitleText
+                                    text={t("Disable Notification")}
+                                    fontSize={17}
+                                    fontFamily="SFProDisplay-Regular"
+                                />
+                                <SvgXml
+                                    width={20}
+                                    height={20}
+                                    xml={disableNotificationSvg}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.contextMenu}
+                                onPress={() => hideMenu()}
+                            >
+                                <TitleText
+                                    text={t("Clear chat")}
+                                    fontSize={17}
+                                    color='#E41717'
+                                    fontFamily="SFProDisplay-Regular"
+                                />
+                                <SvgXml
+                                    width={20}
+                                    height={20}
+                                    xml={trashSvg}
+                                />
+                            </TouchableOpacity>
+                        </Menu>
+                    </View>
+                    :
+                    <View
+                        style={[
+                            { marginTop: Platform.OS == 'ios' ? 56 : 26, paddingHorizontal: 12, marginBottom: 10 },
+                            styles.rowSpaceBetween
+                        ]}
+                    >
+                        <TouchableOpacity onPress={() => onClearChat()}>
+                            <DescriptionText
                                 text={t("Clear chat")}
                                 fontSize={17}
-                                color='#E41717'
-                                fontFamily="SFProDisplay-Regular"
-                            />
-                            <SvgXml
-                                width={20}
-                                height={20}
-                                xml={trashSvg}
+                                lineHeight={28}
+                                color='#8327D8'
                             />
                         </TouchableOpacity>
-                    </Menu>
-                </View>
+                        <SemiBoldText
+                            text={`${selectedItems.length} Selected`}
+                            fontSize={17}
+                            lineHeight={28}
+                        />
+                        <TouchableOpacity onPress={() => { setSelectedItems([]); setIsSelecting(false); }}>
+                            <DescriptionText
+                                text={t("Clean")}
+                                fontSize={17}
+                                lineHeight={28}
+                                color='#8327D8'
+                            />
+                        </TouchableOpacity>
+                    </View>
+                }
             </View>
             {(!isLoading && messages.length == 0) && <View style={{ position: 'absolute', bottom: 109 }}>
                 <View style={{ width: windowWidth, alignItems: 'center' }}>
@@ -484,9 +563,13 @@ const ConversationScreen = (props) => {
                     />
                 </View>
             </View>}
-            <ScrollView style={{ paddingHorizontal: 16 }} ref={scrollRef} onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}>
-                {messages.map((item, index) =>
-                    <View key={"voiceMessage" + item.id}>
+            <ScrollView style={{ paddingHorizontal: 8 }} ref={scrollRef} onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}>
+                {messages.map((item, index) => {
+                    let ancestorIdx = null;
+                    if (item.ancestorId) {
+                        ancestorIdx = messages.findIndex(msg => (msg.id == item.ancestorId));
+                    }
+                    return <View key={"message" + item.id}>
                         {(index == 0 || !onDateCompare(item.createdAt, messages[index - 1].createdAt)) &&
                             <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 16, marginBottom: 8 }}>
                                 <View style={{ paddingVertical: 6, paddingHorizontal: 12, borderRadius: 12, backgroundColor: 'rgba(59, 31, 82, 0.6)' }}>
@@ -509,9 +592,14 @@ const ConversationScreen = (props) => {
                         <MessageItem
                             props={props}
                             info={item}
+                            ancestorInfo={ancestorIdx != null ? messages[ancestorIdx] : null}
+                            isSelect={isSelecting ? (selectedItems.indexOf(index) == -1 ? 0 : 1) : -1}
+                            onDeleteItem={() => onDeleteItem(index)}
+                            onSelectItem={() => onSelectItem(index)}
+                            onReplyMsg={() => { setReplyIdx(index); }}
                         />
                     </View>
-                )}
+                })}
                 <View style={{ height: 110 }}></View>
             </ScrollView>
             {!isPublish ?
@@ -520,13 +608,60 @@ const ConversationScreen = (props) => {
                         position: 'absolute',
                         bottom: 42,
                         right: windowWidth - 376,
-                        width: 116,
+                        width: replyIdx == -1 ? 116 : 343,
                         height: 56,
                         borderRadius: 28,
                         backgroundColor: '#FFF',
-                        justifyContent: 'center'
+                        flexDirection: 'row',
+                        alignItems: 'center'
                     }}>
-                        <TouchableOpacity>
+                        {replyIdx != -1 && <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            width: 212,
+                            marginLeft: 16
+                        }}>
+                            <View style={styles.rowAlignItems}>
+                                <SvgXml
+                                    width={20}
+                                    height={20}
+                                    xml={replySvg}
+                                />
+                                <View style={{ marginLeft: 16 }}>
+                                    <DescriptionText
+                                        text={info.user.name}
+                                        fontSize={15}
+                                        lineHeight={24}
+                                        color='#8327D8'
+                                    />
+                                    <DescriptionText
+                                        text="voice message"
+                                        fontSize={12}
+                                        lineHeight={16}
+                                        color='rgba(59, 31, 82, 0.6)'
+                                    />
+                                </View>
+                            </View>
+                            <View style={styles.rowAlignItems}>
+                                <TouchableOpacity onPress={() => setReplyIdx(-1)}>
+                                    <SvgXml
+                                        width={24}
+                                        height={24}
+                                        xml={closeSvg}
+                                    />
+                                </TouchableOpacity>
+                                <View style={{
+                                    height: 32,
+                                    width: 1.5,
+                                    backgroundColor: '#F2F0F5',
+                                    marginLeft: 8,
+                                }}>
+                                </View>
+                            </View>
+                        </View>
+                        }
+                        <TouchableOpacity onPress={() => setIsSelectingPhoto(true)}>
                             <SvgXml
                                 width={24}
                                 height={24}
@@ -645,12 +780,12 @@ const ConversationScreen = (props) => {
                             paddingRight: 12,
                             paddingVertical: 8,
                             backgroundColor: '#FFF',
-                            shadowColor: 'rgba(176, 148, 235, 1)',
-                            elevation: 10,
-                            shadowOffset: { width: 0, height: 2 },
-                            shadowOpacity: 0.5,
-                            shadowRadius: 8,
                             borderRadius: 30,
+                            // shadowColor: 'rgba(176, 148, 235, 1)',
+                            // elevation: 10,
+                            // shadowOffset: { width: 0, height: 2 },
+                            // shadowOpacity: 0.5,
+                            // shadowRadius: 8,
                         }}
                     >
                         <VoicePlayer
@@ -671,7 +806,7 @@ const ConversationScreen = (props) => {
                             />
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity disabled={isLoading} onPress={handleSubmit}>
+                    <TouchableOpacity disabled={isLoading} onPress={() => handleSubmit('voice')}>
                         <Image
                             style={{
                                 height: 56,
@@ -683,6 +818,12 @@ const ConversationScreen = (props) => {
                         />
                     </TouchableOpacity>
                 </View>
+            }
+            {isSelectingPhoto &&
+                <PhotoSelector
+                    onSendPhoto={(v) => { setIsSelectingPhoto(false); handleSubmit('photo', v); }}
+                    onCloseModal={() => setIsSelectingPhoto(false)}
+                />
             }
             {isLoading &&
                 <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(1,1,1,0.3)' }}>

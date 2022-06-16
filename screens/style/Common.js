@@ -64,6 +64,10 @@ export const styles = StyleSheet.create({
         marginTop:-10,
         
     },
+    cameraIcon: {
+        width: 50,
+        height: 50
+    },
     swipeContainerContent: {
         position:'absolute',
         bottom:0,

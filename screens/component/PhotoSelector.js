@@ -1,0 +1,219 @@
+import React, { useState, useCallback, useEffect } from 'react';
+import {
+  View,
+  Pressable,
+  TouchableOpacity,
+  Image,
+  Platform,
+  PermissionsAndroid
+} from 'react-native';
+
+import * as Progress from "react-native-progress";
+import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
+import { TitleText } from './TitleText';
+import { VoiceItem } from './VoiceItem';
+import SwipeDownModal from 'react-native-swipe-down';
+import Share from 'react-native-share';
+import { setRefreshState } from '../../store/actions';
+
+import { SvgXml } from 'react-native-svg';
+//Context Icons
+import VoiceService from '../../services/VoiceService';
+import closeBlackSvg from '../../assets/record/closeBlack.svg';
+import { useSelector, useDispatch } from 'react-redux';
+import { styles } from '../style/Common';
+
+import { useTranslation } from 'react-i18next';
+import '../../language/i18n';
+import { ScrollView } from 'react-native-gesture-handler';
+import { MyButton } from './MyButton';
+
+export const PhotoSelector = ({
+  onSendPhoto = () => { },
+  onCloseModal = () => { },
+}) => {
+
+  const { t, i18n } = useTranslation();
+
+  const [showModal, setShowModal] = useState(true);
+  const [photoResourcePath, setPhotoResourcePath] = useState({ assets: null });
+
+  let { user } = useSelector((state) => {
+    return (
+      state.user
+    )
+  });
+
+  const closeModal = () => {
+    setShowModal(false);
+    onCloseModal();
+  }
+
+  const selectFileByCamera = () => {
+    var options = {
+      mediaType: 'photo',
+      cameraType: 'back',
+      maxWidth: 600,
+      maxHeight: 600,
+    };
+
+    launchCamera(options, res => {
+      if (res.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (res.error) {
+        console.log('ImagePicker Error: ', res.error);
+      } else if (res.customButton) {
+        console.log('User tapped custom button: ', res.customButton);
+        alert(res.customButton);
+      } else {
+        let source = res;
+        setPhotoResourcePath(source);
+      }
+    });
+  }
+
+  const selectFile = () => {
+    var options = {
+      title: 'Select Image',
+      customButtons: [
+        {
+          name: 'customOptionKey',
+          title: t("Choose file from Custom Option")
+        },
+      ],
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+      maxWidth: 600,
+      maxHeight: 600,
+    };
+
+    launchImageLibrary(options, res => {
+      if (res.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (res.error) {
+        console.log('ImagePicker Error: ', res.error);
+      } else if (res.customButton) {
+        console.log('User tapped custom button: ', res.customButton);
+        alert(res.customButton);
+      } else {
+        let source = res;
+        setPhotoResourcePath(source);
+      }
+    });
+  };
+
+  const requestCameraPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: t("App Camera Permission"),
+          message: t("App needs access to your camera "),
+          buttonNeutral: t("Ask Me Later"),
+          buttonNegative: t("Cancel"),
+          buttonPositive: t("OK")
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("Camera permission given");
+      } else {
+        console.log("Camera permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  useEffect(() => {
+    if (Platform.OS === 'android')
+      requestCameraPermission();
+  }, [])
+
+  return (
+    <SwipeDownModal
+      modalVisible={showModal}
+      ContentModal={
+        <View style={[styles.swipeContainerContent, { alignItems: 'center' }]}>
+          <View style={{
+            width: 31,
+            height: 3,
+            borderRadius: 2,
+            backgroundColor: '#D4C9DE',
+            marginTop: 8,
+            marginBottom: 40
+          }}>
+          </View>
+          <View style={styles.rowAlignItems}>
+            <View
+              style={{
+                width: 150,
+                height: 150,
+                borderRadius: 24,
+                backgroundColor: '#F2F0F5',
+                borderWidth: 1,
+                borderColor: '#F2F0F5',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+              onPress={() => { setModalVisible(true); setErrorText(null) }}
+            >
+              <Image source={{ uri: photoResourcePath.assets ? photoResourcePath.assets[0].uri : '' }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  borderWidth: 1,
+                  borderColor: '#F2F0F5',
+                  borderRadius: 24,
+                }}
+              />
+            </View>
+            <View style={{
+              marginLeft:50
+            }}>
+              <TouchableOpacity
+                onPress={selectFileByCamera}
+              >
+                <Image
+                  style={styles.cameraIcon}
+                  source={require('../../assets/login/camera.png')}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={selectFile}
+                style={{
+                  marginTop:10
+                }}
+              >
+                <Image
+                  style={styles.cameraIcon}
+                  source={require('../../assets/login/image.png')}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View
+            style={{
+              paddingHorizontal: 16,
+              width: '100%',
+              marginBottom: 30,
+              marginTop:30
+            }}
+          >
+            <MyButton
+              label={t("Send")}
+              active={photoResourcePath.assets}
+              onPress={() => onSendPhoto(photoResourcePath.assets[0])}
+            />
+          </View>
+        </View>
+      }
+      ContentModalStyle={styles.swipeModal}
+      onRequestClose={() => closeModal()}
+      onClose={() =>
+        closeModal()
+      }
+    />
+  );
+};

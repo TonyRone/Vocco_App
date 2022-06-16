@@ -8,6 +8,9 @@ import { HeartIcon } from './HeartIcon';
 import { StoryLikes } from "./StoryLikes";
 import whiteTrashSvg from '../../assets/notification/white_trash.svg'
 import pauseSvg from '../../assets/common/pause.svg';
+import replySvg from '../../assets/chat/reply-icon.svg';
+import selectedSvg from '../../assets/chat/selected.svg';
+import unSelectedSvg from '../../assets/chat/unselected.svg';
 import playSvg from '../../assets/common/play.svg';
 import blankHeartSvg from '../../assets/post/blankHeart.svg';
 import redHeartSvg from '../../assets/post/redHeart.svg';
@@ -24,10 +27,16 @@ import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import LinearGradient from "react-native-linear-gradient";
 import { MessageContext } from "./MessageContext";
+import { MessageContent } from "./MessageContent";
 
 export const MessageItem = ({
   props,
   info,
+  isSelect = -1,
+  ancestorInfo = null,
+  onDeleteItem=()=>{},
+  onSelectItem = () => { },
+  onReplyMsg = () => { }
 }) => {
 
   const { user } = useSelector((state) => state.user);
@@ -38,59 +47,69 @@ export const MessageItem = ({
 
   const isSender = (user.id == info.user.id);
 
-  let num = Math.ceil((new Date().getTime() - new Date(info.createdAt).getTime()) / 60000), minute = num % 60;
-
   return (
     <>
-      <Pressable onLongPress={() => setShowContext(true)} style={{ flexDirection: 'row', justifyContent: isSender ? 'flex-end' : 'flex-start' }}>
-        <LinearGradient
-          style={
-            {
-              padding: 8,
-              paddingRight: 8,
-              paddingLeft: 0,
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-              borderTopLeftRadius: isSender ? 16 : 8,
-              borderTopRightRadius: isSender ? 8 : 16,
-              marginTop: 8
-            }
-          }
-          start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-          colors={isSender ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#FFF', '#FFF', '#FFF']}
-        >
-          <VoicePlayer
-            voiceUrl={info?.file.url}
-            playBtn={true}
-            waveColor={['#E4CAFC', '#E4CAFC', '#E4CAFC']}
-            playing={false}
-            height={25}
-            startPlay={() => { }}
-            stopPlay={() => { }}
-            tinWidth={windowWidth / 300}
-            mrg={windowWidth / 730}
-            duration={info.duration * 1000}
+      <View style={[styles.rowAlignItems, { width: windowWidth }]}>
+        {isSelect >= 0 &&
+          <SvgXml
+            width={24}
+            height={24}
+            style={{
+              marginRight: 16
+            }}
+            xml={isSelect > 0 ? selectedSvg : unSelectedSvg}
           />
-          <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 8, marginTop: 6 }]}>
-            <DescriptionText
-              text={new Date(info.duration * 1000).toISOString().substr(14, 5)}
-              lineHeight={12}
-              fontSize={11}
-              color={isSender ? '#FFF' : 'rgba(59, 31, 82, 0.6)'}
+        }
+        <Pressable onPress={() => isSelect>=0?onSelectItem():null} onLongPress={() => isSelect ==-1?setShowContext(true):null } style={{
+          flexDirection: 'row',
+          width: windowWidth - (isSelect >= 0?56:16),
+          justifyContent: isSender ? 'flex-end' : 'flex-start', marginTop: 8
+        }}>
+          {ancestorInfo ?
+            <View style={styles.rowAlignItems}>
+              <View style={{
+                width: 2,
+                height: '90%',
+                backgroundColor: '#A851F8',
+                marginRight: 12,
+              }}>
+              </View>
+              <View>
+                <MessageContent
+                  info={ancestorInfo}
+                />
+                <View style={{
+                  marginTop: 8,
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                  <MessageContent
+                    info={info}
+                    isAnswer={true}
+                  />
+                  <SvgXml
+                    width={23}
+                    height={23}
+                    style={{ marginLeft: 9 }}
+                    xml={replySvg}
+                  />
+                </View>
+              </View>
+            </View>
+            :
+            <MessageContent
+              info={info}
             />
-            <DescriptionText
-              text={new Date(info.createdAt).toISOString().substr(11, 5)}
-              lineHeight={12}
-              fontSize={11}
-              color={isSender ? '#FFF' : 'rgba(59, 31, 82, 0.6)'}
-            />
-          </View>
-        </LinearGradient>
-      </Pressable>
+          }
+        </Pressable>
+      </View>
       {showContext &&
         <MessageContext
           props={props}
           info={info}
+          onDeleteItem={()=>onDeleteItem()}
+          onSelectItem={()=>onSelectItem()}
+          onReplyMsg={() => onReplyMsg()}
           onCloseModal={() => setShowContext(false)}
         />
       }

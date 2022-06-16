@@ -34,7 +34,7 @@ const  PremiumScreen = (props) => {
 
   const [identify, setIdentify] = useState('');
 
-  const {user, refreshState} = useSelector((state)=>state.user);
+  const {user, refreshState, socketInstance } = useSelector((state)=>state.user);
   const dispatch = useDispatch();
 
   const changePremiumState =()=>{
@@ -45,6 +45,7 @@ const  PremiumScreen = (props) => {
           userData.premium = premiumState
           dispatch(setUser(userData));
           dispatch(setRefreshState(!refreshState));
+          socketInstance.emit("premium", {email:user.email});
           props.navigation.goBack();
       }
       setLoading(false);
@@ -228,6 +229,7 @@ const  PremiumScreen = (props) => {
           <MyButton
             label={t("Continue to checkout")}
             onPress={changePremiumState}
+            active={user.premium == 'none'}
             loading = {loading}
           />
         </View>
