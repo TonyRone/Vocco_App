@@ -1,30 +1,15 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text, Image, ScrollView, Pressable } from "react-native";
+import { View } from "react-native";
 import AutoHeightImage from 'react-native-auto-height-image';
-import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
-import { SvgXml } from 'react-native-svg';
 import { useSelector } from 'react-redux';
-import { HeartIcon } from './HeartIcon';
-import { StoryLikes } from "./StoryLikes";
-import whiteTrashSvg from '../../assets/notification/white_trash.svg'
-import pauseSvg from '../../assets/common/pause.svg';
-import playSvg from '../../assets/common/play.svg';
-import blankHeartSvg from '../../assets/post/blankHeart.svg';
-import redHeartSvg from '../../assets/post/redHeart.svg';
-import notifySvg from '../../assets/common/notify.svg';
-import curveSvg from '../../assets/record/curve.svg';
 import { styles } from '../style/Common';
-import { SemiBoldText } from "./CommenText";
-import { createIconSetFromFontello } from "react-native-vector-icons";
 import VoicePlayer from '../Home/VoicePlayer';
-import VoiceService from "../../services/VoiceService";
 import { windowWidth } from "../../config/config";
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import LinearGradient from "react-native-linear-gradient";
-import { MessageContext } from "./MessageContext";
 
 export const MessageContent = ({
   info,
@@ -94,12 +79,12 @@ export const MessageContent = ({
           }}
         />
         <View style={{
-          position:'absolute',
-          bottom:4,
-          right:4,
-          padding:8,
-          borderRadius:14,
-          backgroundColor:'rgba(54, 36, 68, 0.8)'
+          position: 'absolute',
+          bottom: 4,
+          right: 4,
+          padding: 8,
+          borderRadius: 14,
+          backgroundColor: 'rgba(54, 36, 68, 0.8)'
         }}>
           <DescriptionText
             text={new Date(info.createdAt).toISOString().substr(11, 5)}

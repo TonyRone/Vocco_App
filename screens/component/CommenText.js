@@ -6,7 +6,7 @@ export const SemiBoldText = ({
   fontFamily = "SFProDisplay-Semibold",
   textAlign = "left",
   color = "#281E30",
-  numberOfLines,
+  numberOfLines = 1,
   marginBottom,
   marginTop,
   marginLeft,
@@ -17,7 +17,7 @@ export const SemiBoldText = ({
 }) => {
   return (
     <Text
-      numberOfLines={1}
+      numberOfLines={numberOfLines}
       style={{
         fontFamily: fontFamily,
         fontSize: fontSize,

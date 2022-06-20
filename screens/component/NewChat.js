@@ -1,44 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, Image, Platform, Share, StatusBar, Pressable, ScrollView, TextInput, Vibration } from "react-native";
+import { View, TouchableOpacity, Text, Image, Pressable, TextInput } from "react-native";
 import { SvgXml } from 'react-native-svg';
 
-import { API_URL, windowWidth, windowHeight } from '../../config/config';
+import { windowWidth, windowHeight } from '../../config/config';
 
 import * as Progress from "react-native-progress";
 import { TitleText } from './TitleText';
-import LinearGradient from 'react-native-linear-gradient';
 import SwipeDownModal from 'react-native-swipe-down';
 import { FlatList } from "react-native-gesture-handler";
 import VoiceService from '../../services/VoiceService';
-import Clipboard from '@react-native-community/clipboard';
-import socialShare from 'react-native-share';
-import { MyButton } from './MyButton';
-import { setRefreshState } from '../../store/actions';
 import { styles } from '../style/Common';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import searchSvg from '../../assets/login/search.svg';
 import closeCircleSvg from '../../assets/common/close-circle.svg';
-import copySvg from '../../assets/post/copy.svg';
 import { SemiBoldText } from "./CommenText";
 import { DescriptionText } from "./DescriptionText";
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
-import { set } from "immer/dist/internal";
 
 export const NewChat = ({
   props,
   onCloseModal = () => { },
 }) => {
 
-  let { user, refreshState, socketInstance } = useSelector((state) => {
+  let { user, socketInstance } = useSelector((state) => {
     return (
       state.user
     )
   });
-
-  const dispatch = useDispatch();
 
   const { t, i18n } = useTranslation();
 
@@ -47,7 +38,6 @@ export const NewChat = ({
   const [friends, setFriends] = useState([]);
   const [isSearch, setIsSearch] = useState(false);
   const [label, setLabel] = useState('');
-  const [submitLoading, setSubmitLoading] = useState(false);
   const [filterCount, setFilterCount] = useState(0);
 
   const closeModal = () => {
@@ -81,10 +71,6 @@ export const NewChat = ({
       .catch(err => {
         console.log(err);
       });
-  }
-
-  const onSelectFriend = (id, add = false) => {
-
   }
 
   const renderName = (fname, lname) => {
@@ -129,8 +115,8 @@ export const NewChat = ({
 
   useEffect(() => {
     getFriends();
-    socketInstance.on("user_login", listener );
-    return ()=>socketInstance.off("user_login", listener);
+    socketInstance.on("user_login", listener);
+    return () => socketInstance.off("user_login", listener);
   }, [])
 
   return (

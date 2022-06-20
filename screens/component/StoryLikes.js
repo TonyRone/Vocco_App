@@ -1,4 +1,4 @@
-import React, { useState , useCallback, useEffect} from 'react';
+import React, { useState , useEffect} from 'react';
 import { 
   View, 
   Pressable,
@@ -8,16 +8,11 @@ import {
 
 import * as Progress from "react-native-progress";
 import { TitleText } from './TitleText';
-import { VoiceItem } from './VoiceItem';
 import SwipeDownModal from 'react-native-swipe-down';
-import Share from 'react-native-share';
-import { setRefreshState } from '../../store/actions';
-
 import { SvgXml } from 'react-native-svg';
-//Context Icons
 import VoiceService from '../../services/VoiceService';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
-import { useSelector , useDispatch} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { styles } from '../style/Common';
 
 import {useTranslation} from 'react-i18next';

@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import { View, TouchableOpacity, Text, Platform, StatusBar } from "react-native";
+import React from "react";
+import { View, TouchableOpacity } from "react-native";
 import { SvgXml } from 'react-native-svg';
 import { CommenText } from '../component/CommenText';
 import { styles } from '../style/Common';

@@ -1,25 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { View, KeyboardAvoidingView, Text, ImageBackground, TextInput, Platform, StatusBar } from 'react-native';
-
 import Tooltip from 'react-native-walkthrough-tooltip';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { VoiceItem } from '../component/VoiceItem';
-
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
 import { NavigationActions, StackActions } from 'react-navigation';
-
 import { SvgXml } from 'react-native-svg';
 import recordSvg from '../../assets/common/bottomIcons/record.svg';
 import searchSvg from '../../assets/login/search.svg';
-
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TUTORIAL_CHECK, windowWidth, windowHeight } from '../../config/config';
 import { styles } from '../style/Common';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
 import { useSelector } from 'react-redux';
 
 const TutorialScreen = (props) => {
@@ -28,18 +22,20 @@ const TutorialScreen = (props) => {
   const [searchTip, setSearchTip] = useState(false);
   const [voiceItemTip, setVoiceItemTip] = useState(false);
 
-  const {t, i18n} = useTranslation();
-  
-  const user = useSelector((state)=>state.user.user);
+  const { t, i18n } = useTranslation();
 
-  let voiceInfo={user:{avatar:{url:user.avatar?.url},name:user.name},
-    title:t("Bad grades again"),
-    duration:52,
-    emoji:"😍",
-    isPlay:true,
-    reactions:[{emoji:"🤣"}, {"emoji": "😍"}, {"emoji": "😡"}],
-    likesCount:740,
-    answersCount:65}
+  const user = useSelector((state) => state.user.user);
+
+  let voiceInfo = {
+    user: { avatar: { url: user.avatar?.url }, name: user.name },
+    title: t("Bad grades again"),
+    duration: 52,
+    emoji: "😍",
+    isPlay: true,
+    reactions: [{ emoji: "🤣" }, { "emoji": "😍" }, { "emoji": "😡" }],
+    likesCount: 740,
+    answersCount: 65
+  }
 
   const nextFirstStep = () => {
     setTip(false);
@@ -73,398 +69,395 @@ const TutorialScreen = (props) => {
   }
 
   useEffect(() => {
-    // setTip(true);
   }, [])
 
   return (
-      <KeyboardAvoidingView 
+    <KeyboardAvoidingView
+      style={{
+        backgroundColor: '#FFF',
+        flex: 1
+      }}
+    >
+      <ImageBackground
+        source={require('../../assets/discover/blurback.png')}
         style={{
-          backgroundColor:'#FFF',
-          flex:1
+          width: windowWidth,
+          flex: 1
         }}
+        resizeMode="stretch"
       >
-        <ImageBackground
-          source={require('../../assets/discover/blurback.png')}
-          style={{
-            width:windowWidth,
-            flex:1
-          }}
-          resizeMode="stretch"
-        >
-        <View style={{
-        //  paddingHorizontal:16
-        }}>
-          {searchTip && 
-          <Tooltip
-          isVisible={searchTip}
-          content={
-            <View>
-              <TitleText 
-                text={t("Search new voices")}
-                fontSize={22}
-              />
-              <DescriptionText 
-                text={t("This text for description search")}
-                fontSize={15}
-                color="#281E30"
-                marginTop={16}
-              />
+        <View>
+          {searchTip &&
+            <Tooltip
+              isVisible={searchTip}
+              content={
+                <View>
+                  <TitleText
+                    text={t("Search new voices")}
+                    fontSize={22}
+                  />
+                  <DescriptionText
+                    text={t("This text for description search")}
+                    fontSize={15}
+                    color="#281E30"
+                    marginTop={16}
+                  />
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginTop: 20
+                    }}
+                  >
+                    <View style={{ flexDirection: 'row' }}>
+                      <View
+                        style={{
+                          width: 8,
+                          height: 8,
+                          backgroundColor: '#D4C9DE',
+                          borderRadius: 4
+                        }}
+                      ></View>
+                      <View
+                        style={{
+                          width: 8,
+                          height: 8,
+                          backgroundColor: '#8327D8',
+                          borderRadius: 4,
+                          marginHorizontal: 8
+                        }}
+                      ></View>
+                      <View
+                        style={{
+                          width: 8,
+                          height: 8,
+                          backgroundColor: '#D4C9DE',
+                          borderRadius: 4,
+                        }}
+                      ></View>
+                    </View>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: '#F8F0FF',
+                        width: 102,
+                        height: 60,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: 16
+                      }}
+                    >
+                      <Text
+                        style={
+                          {
+                            color: '#8327D8',
+                            fontFamily: "SFProDisplay-Semibold",
+                            fontSize: 17
+                          }
+                        }
+                      >
+                        {t("Next")}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              }
+              placement="bottom"
+              onClose={() => secondStep()}
+              useInteractionManager={true} // need this prop to wait for react navigation
+              // below is for the status bar of react navigation bar
+              topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
+              backgroundColor="rgba(31, 43, 69, 0)"
+              showChildInTooltip={false}
+              arrowStyle={{
+                marginTop: 40
+              }}
+              contentStyle={{
+                marginTop: 40,
+                padding: 24,
+                borderRadius: 16
+              }}
+            >
               <View
                 style={{
-                  flexDirection:'row',
-                  justifyContent:'space-between',
-                  alignItems:'center',
-                  marginTop:20
+                  paddingHorizontal: 16
                 }}
               >
-                <View style={{flexDirection:'row'}}>
-                  <View
+
+                <View style={{
+                  marginTop: 50
+                }}>
+                  <SvgXml
+                    width="24"
+                    height="24"
+                    xml={searchSvg}
                     style={{
-                      width:8,
-                      height:8,
-                      backgroundColor:'#D4C9DE',
-                      borderRadius:4
+                      position: 'absolute',
+                      left: 20,
+                      top: 15,
+                      zIndex: 2
                     }}
-                  ></View>
-                  <View
+                  />
+                  <TextInput
                     style={{
-                      width:8,
-                      height:8,
-                      backgroundColor:'#8327D8',
-                      borderRadius:4,
-                      marginHorizontal:8
+                      backgroundColor: '#F2F0F5',
+                      borderRadius: 24,
+                      fontSize: 17,
+                      fontFamily: 'SFProDisplay-Regular',
+                      paddingLeft: 55,
+                      paddingRight: 16,
+                      paddingVertical: 12
                     }}
-                  ></View>
-                  <View
-                    style={{
-                      width:8,
-                      height:8,
-                      backgroundColor:'#D4C9DE',
-                      borderRadius:4,
-                    }}
-                  ></View>
+                    placeholder={t("Search")}
+                    placeholderTextColor="rgba(59, 31, 82, 0.6)"
+                  />
                 </View>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor:'#F8F0FF',
-                    width:102,
-                    height:60,
-                    justifyContent:'center',
-                    alignItems:'center',
-                    borderRadius:16
-                  }}
-                >
-                  <Text
-                    style={
-                      {
-                        color: '#8327D8',
-                        fontFamily: "SFProDisplay-Semibold",
-                        fontSize: 17
-                      }
-                    }
-                  >
-                    {t("Next")}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          }
-          placement="bottom"
-          onClose={() => secondStep()}
-          useInteractionManager={true} // need this prop to wait for react navigation
-          // below is for the status bar of react navigation bar
-          topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
-          backgroundColor="rgba(31, 43, 69, 0)"
-          showChildInTooltip={false}
-          arrowStyle={{
-            marginTop:40
-          }}
-          contentStyle={{
-            marginTop:40,
-            padding: 24,
-            borderRadius:16
-          }}
-        >
-          <View
-            style={{
-             paddingHorizontal:16
-            }}
-          >
-          
-              <View style={{
-                marginTop:50
-              }}>
-                <SvgXml
-                  width="24"
-                  height="24"
-                  xml={searchSvg}
-                  style={{
-                    position: 'absolute',
-                    left: 20,
-                    top: 15,
-                    zIndex: 2
-                  }}
-                />
-                <TextInput
-                  style={{
-                    backgroundColor: '#F2F0F5',
-                    borderRadius: 24,
-                    fontSize: 17,
-                    fontFamily: 'SFProDisplay-Regular',
-                    paddingLeft: 55,
-                    paddingRight: 16,
-                    paddingVertical: 12
-                  }}
-                  placeholder={t("Search")}
-                  placeholderTextColor="rgba(59, 31, 82, 0.6)"
-                />
+
               </View>
 
-            </View>
-     
-        </Tooltip>
+            </Tooltip>
           }
 
-          
+
           {voiceItemTip &&
-          <View
-            style={{
-              marginTop:350
-            }}
-          >
-            <Tooltip
-            isVisible={voiceItemTip}
-            content={
-              <View>
-                <TitleText 
-                  text={t("What happened to your friends?")}
-                  fontSize={22}
-                />
-                <DescriptionText 
-                  text={t("Discover stories from all around the world.")}
-                  fontSize={15}
-                  color="#281E30"
-                  marginTop={16}
-                />
-                <DescriptionText 
-                  text={t("Like, answer & share them to your friends!")}
-                  fontSize={15}
-                  color="#281E30"
-                  marginTop={16}
-                />
-                <View
-                  style={{
-                    flexDirection:'row',
-                    justifyContent:'space-between',
-                    alignItems:'center',
-                    marginTop:20
-                  }}
-                >
-                  <View style={{flexDirection:'row'}}>
+            <View
+              style={{
+                marginTop: 350
+              }}
+            >
+              <Tooltip
+                isVisible={voiceItemTip}
+                content={
+                  <View>
+                    <TitleText
+                      text={t("What happened to your friends?")}
+                      fontSize={22}
+                    />
+                    <DescriptionText
+                      text={t("Discover stories from all around the world.")}
+                      fontSize={15}
+                      color="#281E30"
+                      marginTop={16}
+                    />
+                    <DescriptionText
+                      text={t("Like, answer & share them to your friends!")}
+                      fontSize={15}
+                      color="#281E30"
+                      marginTop={16}
+                    />
                     <View
                       style={{
-                        width:8,
-                        height:8,
-                        backgroundColor:'#D4C9DE',
-                        borderRadius:4
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginTop: 20
                       }}
-                    ></View>
-                    <View
-                      style={{
-                        width:8,
-                        height:8,
-                        backgroundColor:'#D4C9DE',
-                        borderRadius:4,
-                        marginHorizontal:8
-                      }}
-                    ></View>
-                    <View
-                      style={{
-                        width:8,
-                        height:8,
-                        backgroundColor:'#8327D8',
-                        borderRadius:4,
-                      }}
-                    ></View>
-                  </View>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor:'#F8F0FF',
-                      width:115,
-                      height:60,
-                      justifyContent:'center',
-                      alignItems:'center',
-                      borderRadius:16
-                    }}
-                  >
-                    <Text
-                      style={
-                        {
-                          color: '#8327D8',
-                          fontFamily: "SFProDisplay-Semibold",
-                          fontSize: 17
-                        }
-                      }
                     >
-                      {t("Let's start")}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            }
-            placement="top"
-            onClose={() => lastTutorial()}
-            useInteractionManager={true} // need this prop to wait for react navigation
-            // below is for the status bar of react navigation bar
-            topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
-            backgroundColor="rgba(31, 43, 69, 0)"
-            showChildInTooltip={false}
-            contentStyle={{
-              padding: 24,
-              borderRadius:16
-            }}
-          >
-            <VoiceItem 
-              info={voiceInfo}
-              playStatus = {true}
-            />
-       
-          </Tooltip>
-          </View>
-        }
+                      <View style={{ flexDirection: 'row' }}>
+                        <View
+                          style={{
+                            width: 8,
+                            height: 8,
+                            backgroundColor: '#D4C9DE',
+                            borderRadius: 4
+                          }}
+                        ></View>
+                        <View
+                          style={{
+                            width: 8,
+                            height: 8,
+                            backgroundColor: '#D4C9DE',
+                            borderRadius: 4,
+                            marginHorizontal: 8
+                          }}
+                        ></View>
+                        <View
+                          style={{
+                            width: 8,
+                            height: 8,
+                            backgroundColor: '#8327D8',
+                            borderRadius: 4,
+                          }}
+                        ></View>
+                      </View>
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: '#F8F0FF',
+                          width: 115,
+                          height: 60,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          borderRadius: 16
+                        }}
+                      >
+                        <Text
+                          style={
+                            {
+                              color: '#8327D8',
+                              fontFamily: "SFProDisplay-Semibold",
+                              fontSize: 17
+                            }
+                          }
+                        >
+                          {t("Let's start")}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                }
+                placement="top"
+                onClose={() => lastTutorial()}
+                useInteractionManager={true} // need this prop to wait for react navigation
+                // below is for the status bar of react navigation bar
+                topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
+                backgroundColor="rgba(31, 43, 69, 0)"
+                showChildInTooltip={false}
+                contentStyle={{
+                  padding: 24,
+                  borderRadius: 16
+                }}
+              >
+                <VoiceItem
+                  info={voiceInfo}
+                  playStatus={true}
+                />
+
+              </Tooltip>
+            </View>
+          }
         </View>
         <View
           style={{
             marginTop: 'auto',
-            marginBottom:20,
-            justifyContent:'center',
-            alignItems:'center'
+            marginBottom: 20,
+            justifyContent: 'center',
+            alignItems: 'center'
           }}
         >
-          { showTip &&
-        <Tooltip
-            isVisible={showTip}
-            content={
-              <View>
-                <TitleText 
-                  text={ user.name ? t("Welcome")+" " + user.name : t("Welcome")+"!"}
-                  fontSize={22}
-                />
-                <DescriptionText 
-                  text={t("You can now talk to the world. Tell your story, ask a questions or simply share whatever you have in mind!")}
-                  fontSize={15}
-                  color="#281E30"
-                  marginTop={16}
-                />
-                <DescriptionText 
-                  text={t("Click & hold on the microphone to start recording your first story.")}
-                  fontSize={15}
-                  color="#281E30"
-                  marginTop={16}
-                />
-                <DescriptionText 
-                  text={t("You have 1:00 maximum")}
-                  fontSize={15}
-                  color="#281E30"
-                  marginTop={16}
-                  fontFamily="SFProDisplay-Semibold"
-                />
-                <View
-                  style={{
-                    flexDirection:'row',
-                    justifyContent:'space-between',
-                    alignItems:'center',
-                    marginTop:20
-                  }}
-                >
-                  <View style={{flexDirection:'row'}}>
-                    <View
-                      style={{
-                        width:8,
-                        height:8,
-                        backgroundColor:'#8327D8',
-                        borderRadius:4
-                      }}
-                    ></View>
-                    <View
-                      style={{
-                        width:8,
-                        height:8,
-                        backgroundColor:'#D4C9DE',
-                        borderRadius:4,
-                        marginHorizontal:8
-                      }}
-                    ></View>
-                    <View
-                      style={{
-                        width:8,
-                        height:8,
-                        backgroundColor:'#D4C9DE',
-                        borderRadius:4,
-                      }}
-                    ></View>
-                  </View>
-                  <TouchableOpacity
+          {showTip &&
+            <Tooltip
+              isVisible={showTip}
+              content={
+                <View>
+                  <TitleText
+                    text={user.name ? t("Welcome") + " " + user.name : t("Welcome") + "!"}
+                    fontSize={22}
+                  />
+                  <DescriptionText
+                    text={t("You can now talk to the world. Tell your story, ask a questions or simply share whatever you have in mind!")}
+                    fontSize={15}
+                    color="#281E30"
+                    marginTop={16}
+                  />
+                  <DescriptionText
+                    text={t("Click & hold on the microphone to start recording your first story.")}
+                    fontSize={15}
+                    color="#281E30"
+                    marginTop={16}
+                  />
+                  <DescriptionText
+                    text={t("You have 1:00 maximum")}
+                    fontSize={15}
+                    color="#281E30"
+                    marginTop={16}
+                    fontFamily="SFProDisplay-Semibold"
+                  />
+                  <View
                     style={{
-                      backgroundColor:'#F8F0FF',
-                      width:102,
-                      height:60,
-                      justifyContent:'center',
-                      alignItems:'center',
-                      borderRadius:16
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginTop: 20
                     }}
                   >
-                    <Text
-                      style={
-                        {
-                          color: '#8327D8',
-                          fontFamily: "SFProDisplay-Semibold",
-                          fontSize: 17
-                        }
-                      }
+                    <View style={{ flexDirection: 'row' }}>
+                      <View
+                        style={{
+                          width: 8,
+                          height: 8,
+                          backgroundColor: '#8327D8',
+                          borderRadius: 4
+                        }}
+                      ></View>
+                      <View
+                        style={{
+                          width: 8,
+                          height: 8,
+                          backgroundColor: '#D4C9DE',
+                          borderRadius: 4,
+                          marginHorizontal: 8
+                        }}
+                      ></View>
+                      <View
+                        style={{
+                          width: 8,
+                          height: 8,
+                          backgroundColor: '#D4C9DE',
+                          borderRadius: 4,
+                        }}
+                      ></View>
+                    </View>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: '#F8F0FF',
+                        width: 102,
+                        height: 60,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: 16
+                      }}
                     >
-                      {t("Next")}
-                    </Text>
-                  </TouchableOpacity>
+                      <Text
+                        style={
+                          {
+                            color: '#8327D8',
+                            fontFamily: "SFProDisplay-Semibold",
+                            fontSize: 17
+                          }
+                        }
+                      >
+                        {t("Next")}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-            }
-            placement="top"
-            onClose={() => nextFirstStep()}
-            useInteractionManager={true} // need this prop to wait for react navigation
-            // below is for the status bar of react navigation bar
-            topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
-            backgroundColor="rgba(31, 43, 69, 0)"
-            showChildInTooltip={false}
-            contentStyle={{
-              padding: 24,
-              borderRadius:16
-            }}
-          >
-            <View
-              style={{
-                justifyContent:'center',
-                alignItems:'center',
-                width:67,
-                height:67,
-                backgroundColor:'#FFF',
-                borderRadius:35
+              }
+              placement="top"
+              onClose={() => nextFirstStep()}
+              useInteractionManager={true} // need this prop to wait for react navigation
+              // below is for the status bar of react navigation bar
+              topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
+              backgroundColor="rgba(31, 43, 69, 0)"
+              showChildInTooltip={false}
+              contentStyle={{
+                padding: 24,
+                borderRadius: 16
               }}
             >
-            
-              <SvgXml
-                width={52}
-                height={52}
-                xml={recordSvg}
-              />
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 67,
+                  height: 67,
+                  backgroundColor: '#FFF',
+                  borderRadius: 35
+                }}
+              >
+
+                <SvgXml
+                  width={52}
+                  height={52}
+                  xml={recordSvg}
+                />
 
               </View>
-       
-          </Tooltip>
+
+            </Tooltip>
           }
-          </View>
-          </ImageBackground>
-      </KeyboardAvoidingView>
+        </View>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 };
 

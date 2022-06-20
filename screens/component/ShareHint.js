@@ -5,10 +5,8 @@ import {
 
 import SwipeDownModal from 'react-native-swipe-down';
 import { SvgXml } from 'react-native-svg';
-//Context Icons
 import ShareIconsSvg from '../../assets/post/ShareIcons.svg';
 import ShareHintSvg from '../../assets/post/ShareHint.svg';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { POST_CHECK } from '../../config/config';
 import { styles } from '../style/Common';

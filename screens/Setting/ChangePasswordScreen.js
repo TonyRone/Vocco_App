@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   View, 
-  SafeAreaView, 
   TouchableOpacity,
-  KeyboardAvoidingViewBase,
   KeyboardAvoidingView, 
 } from 'react-native';
 
@@ -32,7 +30,6 @@ const ChangePasswordScreen = (props) => {
     const dispatch = useDispatch();
 
     const passwordRef = useRef();
-    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState({});
@@ -93,7 +90,6 @@ const ChangePasswordScreen = (props) => {
     }
 
     useEffect(() => {
-      //  checkLogin();
     }, [])
     return (
       <KeyboardAvoidingView 

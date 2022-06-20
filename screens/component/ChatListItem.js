@@ -2,10 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
     View,
     TouchableOpacity,
-    Text,
     Image,
-    Pressable,
-    ScrollView
 } from "react-native";
 
 import { useTranslation } from 'react-i18next';
@@ -13,20 +10,16 @@ import '../../language/i18n'
 import { DescriptionText } from "./DescriptionText";
 
 import { SvgXml } from 'react-native-svg';
-import redTrashSvg from '../../assets/common/red_trash.svg';
 import voiceMessageSvg from '../../assets/chat/voice_message.svg';
 import singleCheckSvg from '../../assets/chat/single-check.svg';
 import doubleCheckSvg from '../../assets/chat/double-check.svg';
 import lightSingleCheckSvg from '../../assets/chat/light-single-check.svg';
 import lightDoubleCheckSvg from '../../assets/chat/light-double-check.svg';
-import yellow_starSvg from '../../assets/common/yellow_star.svg';
 
-import whiteTrashSvg from '../../assets/notification/white_trash.svg'
 
 import { styles } from '../style/Common';
 import { SemiBoldText } from "./CommenText";
 import { windowWidth } from "../../config/config";
-import { produceWithPatches } from 'immer';
 import { useSelector } from 'react-redux';
 
 export const ChatListItem = ({

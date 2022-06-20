@@ -158,6 +158,7 @@ class VoiceService {
             }
             );
     }
+
     async unfollowFriend(userId) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
@@ -166,6 +167,50 @@ class VoiceService {
                 `${API_URL}/actions/unfollow?id=${userId}`, {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
+            }
+            );
+    }
+
+    async deleteSuggest(userId) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'POST',
+                `${API_URL}/actions/deleteSuggest?userId=${userId}`, {
+                'Authorization': `Bearer ${token}`
+            }
+            );
+    }
+
+    async deleteFollower(userId) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'POST',
+                `${API_URL}/actions/deleteFollower?userId=${userId}`, {
+                'Authorization': `Bearer ${token}`
+            }
+            );
+    }
+
+    async deleteFollowing(userId) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'POST',
+                `${API_URL}/actions/deleteFollowing?userId=${userId}`, {
+                'Authorization': `Bearer ${token}`
+            }
+            );
+    }
+
+    async inviteFriend(userId) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'POST',
+                `${API_URL}/actions/inviteFriend?userId=${userId}`, {
+                'Authorization': `Bearer ${token}`
             }
             );
     }
@@ -475,6 +520,28 @@ class VoiceService {
             fetch(
                 'GET',
                 `${API_URL}/actions/getTags?storyId=${storyId}&storyType=${storyType}`, {
+                'Authorization': `Bearer ${token}`
+            }
+            );
+    }
+
+    async getSuggests(skip) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'GET',
+                `${API_URL}/records/getSuggests?skip=${skip}`, {
+                'Authorization': `Bearer ${token}`
+            }
+            );
+    }
+
+    async getInvites() {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'GET',
+                `${API_URL}/records/getInvites`, {
                 'Authorization': `Bearer ${token}`
             }
             );

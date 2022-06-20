@@ -1,6 +1,6 @@
-import React, {useState, useRef, useEffect} from "react";
-import { View , StyleSheet, TouchableOpacity , Image, Text} from "react-native";
-import * as Animatable from 'react-native-animatable'  
+import React, { useState, useRef, useEffect } from "react";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
+import * as Animatable from 'react-native-animatable'
 import Icon from 'react-native-vector-icons/AntDesign'
 
 export const HeartIcon = ({
@@ -9,7 +9,7 @@ export const HeartIcon = ({
   marginLeft = 0,
   marginRight = 0,
   marginBottom = 0,
-  OnSetLike = ()=>{}
+  OnSetLike = () => { }
 }) => {
 
   const [liked, setLiked] = useState(isLike);
@@ -23,16 +23,16 @@ export const HeartIcon = ({
   }
 
   useEffect(() => {
-    if(isLike != liked){
+    if (isLike != liked) {
       handleOnPressLike();
     }
-  },[isLike])
+  }, [isLike])
 
   return (
     <TouchableOpacity
       activeOpacity={1}
       onPress={OnSetLike}
-      style={{height: height,marginLeft:marginLeft,marginRight:marginRight,marginBottom:marginBottom}}
+      style={{ height: height, marginLeft: marginLeft, marginRight: marginRight, marginBottom: marginBottom }}
     >
       <AnimatedIcon
         ref={smallAnimatedIcon}
@@ -50,7 +50,7 @@ const colors = {
   white: '#fff',
   heartColor: '#e92f3c',
   textPrimary: '#515151',
-  black: '#000', 
+  black: '#000',
 }
 
 const styles = StyleSheet.create({
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   card: {
-    
+
   },
   image: {
     marginTop: 10,

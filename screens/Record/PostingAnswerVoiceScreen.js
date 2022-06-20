@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   KeyboardAvoidingView,
@@ -8,16 +8,14 @@ import {
 } from 'react-native';
 
 import RNFetchBlob from 'rn-fetch-blob';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { TitleText } from '../component/TitleText';
 import { ShareHint } from '../component/ShareHint';
 import { ShareVoice } from '../component/ShareVoice';
-
 import { MyButton } from '../component/MyButton';
 import { ReactionEmojies } from '../component/ReactionEmojies';
-
 import { SvgXml } from 'react-native-svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,23 +23,22 @@ import { POST_CHECK, windowWidth, } from '../../config/config';
 import VoiceService from '../../services/VoiceService';
 import VoicePlayer from '../Home/VoicePlayer';
 import { setRefreshState } from '../../store/actions';
-import { useSelector , useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 const PostingAnswerVoiceScreen = (props) => {
 
   let recordId = props.navigation.state.params.id;
 
-  let { user , refreshState } = useSelector((state) => {
+  let { user, refreshState } = useSelector((state) => {
     return (
-        state.user
+      state.user
     )
   });
 
-  const {t, i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const [playStatus, setPlayStatus] = useState(false);
   const [displayDuration, setDisplayDuration] = useState(props.navigation.state.params?.recordSecs ? props.navigation.state.params?.recordSecs : 0);
-  const [isLoading,setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [icon, setIcon] = useState("😁");
   const [visibleReaction, setVisibleReaction] = useState(false);
   const [showHint, setShowHint] = useState(false);
@@ -56,15 +53,6 @@ const PostingAnswerVoiceScreen = (props) => {
     android: `${dirs.CacheDir}/hello.mp3`,
   });
 
-  const onNavigate = (des, par = null) =>{
-    //props.navigation.navigate(navigateScreen,{info:jsonRes})
-    const resetActionTrue = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: des, params:par })],
-    });
-    props.navigation.dispatch(resetActionTrue);
-  }
-
   const selectIcon = (icon) => {
     setIcon(icon);
     setVisibleReaction(false);
@@ -72,20 +60,20 @@ const PostingAnswerVoiceScreen = (props) => {
 
   const handleSubmit = async () => {
     const post_check = await AsyncStorage.getItem(POST_CHECK);
-    if (!post_check){
+    if (!post_check) {
       setShowHint(true);
-      return ;
+      return;
     }
     setPlayStatus(false);
     setIsLoading(true);
     if (path) {
       let voiceFile = [
-        { name:'duration', data:String(displayDuration) },
-        { name:'record', data:recordId },
-        { name:'emoji', data:String(icon) },
-        {name: 'file', filename:Platform.OS==='android'?'answer.mp3':'answer.m4a', data: RNFetchBlob.wrap(String(path))},
-      ] ;
-      VoiceService.postAnswerVoice(voiceFile).then(async res => { 
+        { name: 'duration', data: String(displayDuration) },
+        { name: 'record', data: recordId },
+        { name: 'emoji', data: String(icon) },
+        { name: 'file', filename: Platform.OS === 'android' ? 'answer.mp3' : 'answer.m4a', data: RNFetchBlob.wrap(String(path)) },
+      ];
+      VoiceService.postAnswerVoice(voiceFile).then(async res => {
         const jsonRes = await res.json();
         if (res.respInfo.status !== 201) {
         } else {
@@ -95,14 +83,13 @@ const PostingAnswerVoiceScreen = (props) => {
         }
         setIsLoading(false);
       })
-      .catch(err => {
+        .catch(err => {
           console.log(err);
-      });
+        });
     }
   }
 
   useEffect(() => {
-    //  checkLogin();
   }, [])
   return (
     <KeyboardAvoidingView
@@ -111,12 +98,12 @@ const PostingAnswerVoiceScreen = (props) => {
         flex: 1,
       }}
     >
-      <View style={{ width: windowWidth}}>
+      <View style={{ width: windowWidth }}>
         <View style={{ marginTop: 50, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}>
-          <Pressable style={{ 
+          <Pressable style={{
             marginLeft: 16,
-            position:'absolute',
-            left:0
+            position: 'absolute',
+            left: 0
           }} onPress={() => props.navigation.goBack()}>
             <SvgXml width="24" height="24" xml={closeBlackSvg} />
           </Pressable>
@@ -129,26 +116,6 @@ const PostingAnswerVoiceScreen = (props) => {
         </View>
       </View>
       <View style={{ alignItems: 'center', marginTop: 150 }}>
-        {/* <TouchableOpacity onPress={() => setVisibleReaction(true)} style={[{ width: 80, height: 80, backgroundColor: '#FFFFFF', borderRadius: 40 }, styles.contentCenter]}>
-          <Text
-            style={{
-              fontSize: 45,
-              color: 'white',
-            }}
-          >
-            {icon}
-          </Text>
-
-          <View style={[styles.contentCenter, { position: 'absolute', height: 24, width: 24, borderRadius: 12, bottom: 0, right: 0, backgroundColor: '#8327D8' }]}>
-            <View>
-              <SvgXml
-                width={16}
-                height={16}
-                xml={editSvg}
-              />
-            </View>
-          </View>
-        </TouchableOpacity> */}
         <TitleText
           text={`${t("Duration")}: ${displayDuration} ${t("seconds")}`}
           fontFamily="SFProDisplay-Regular"
@@ -164,30 +131,30 @@ const PostingAnswerVoiceScreen = (props) => {
           paddingVertical: 16,
           backgroundColor: '#FFF',
           shadowColor: 'rgba(176, 148, 235, 1)',
-          shadowOffset:{width: 0, height: 2},
-          shadowOpacity:0.5,
-          shadowRadius:8,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.5,
+          shadowRadius: 8,
           elevation: 10,
           borderRadius: 16,
           marginHorizontal: 20,
-          marginTop:30
+          marginTop: 30
         }}
       >
         <VoicePlayer
-          playBtn = {true}
-          replayBtn = {true}
-          waveColor={user.premium != 'none'?['#FFC701','#FFA901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
-          playing = {false}
-          stopPlay = {()=>{}}
-          startPlay = {()=>{}}
-          duration = {displayDuration*1000}
+          playBtn={true}
+          replayBtn={true}
+          waveColor={user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
+          playing={false}
+          stopPlay={() => { }}
+          startPlay={() => { }}
+          duration={displayDuration * 1000}
         />
       </View>
       <View
         style={{
           paddingHorizontal: 16,
           width: '100%',
-          position:'absolute',
+          position: 'absolute',
           bottom: 40
         }}
       >
@@ -197,20 +164,20 @@ const PostingAnswerVoiceScreen = (props) => {
           onPress={handleSubmit}
         />
       </View>
-      {visibleReaction && 
-      <ReactionEmojies
-        onSelectIcon ={(icon)=>selectIcon(icon)}   
-        onCloseModal ={()=>setVisibleReaction(false)}
-      />}
-      {showHint&&
-      <ShareHint
-        onCloseModal={()=>{setShowHint(false);handleSubmit();}}
-      />}
-      {showShareVoice&&
-      <ShareVoice
-        info = {{file:{url:showShareVoice.file.url}, title:'answer voice'}}
-        onCloseModal={()=>{setShowShareVoice(false);props.navigation.navigate("VoiceProfile",{id:recordId});}}
-      />}
+      {visibleReaction &&
+        <ReactionEmojies
+          onSelectIcon={(icon) => selectIcon(icon)}
+          onCloseModal={() => setVisibleReaction(false)}
+        />}
+      {showHint &&
+        <ShareHint
+          onCloseModal={() => { setShowHint(false); handleSubmit(); }}
+        />}
+      {showShareVoice &&
+        <ShareVoice
+          info={{ file: { url: showShareVoice.file.url }, title: 'answer voice' }}
+          onCloseModal={() => { setShowShareVoice(false); props.navigation.navigate("VoiceProfile", { id: recordId }); }}
+        />}
     </KeyboardAvoidingView>
   );
 };

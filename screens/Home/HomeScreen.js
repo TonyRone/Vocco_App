@@ -14,7 +14,6 @@ import closeSvg from '../../assets/common/close.svg';
 import { BottomButtons } from '../component/BottomButtons';
 import black_settingsSvg from '../../assets/notification/black_settings.svg';
 import notificationSvg from '../../assets/discover/notification.svg';
-
 import { windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/CommenText';
@@ -22,7 +21,6 @@ import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState } from '../../store/actions';
 import { RecordIcon } from '../component/RecordIcon';
-
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { Feed } from '../component/Feed';
@@ -101,7 +99,7 @@ const HomeScreen = (props) => {
                 noticeDispatch("reset");
             }, 1500);
         }
-        return ()=>socketInstance.off("notice_Voice");
+        return () => socketInstance.off("notice_Voice");
     }, [])
 
     return (
@@ -139,7 +137,7 @@ const HomeScreen = (props) => {
                         />
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress = {()=>props.navigation.navigate('Notification')}>
+                <TouchableOpacity onPress={() => props.navigation.navigate('Notification')}>
                     <SvgXml
                         width={24}
                         height={24}
@@ -186,7 +184,7 @@ const HomeScreen = (props) => {
             >
                 <Feed
                     props={props}
-                    onSetExpandKey={()=>setExpandKey(expandKey+1)}
+                    onSetExpandKey={() => setExpandKey(expandKey + 1)}
                 />
                 <Discover
                     props={props}
@@ -229,7 +227,7 @@ const HomeScreen = (props) => {
                     />
                 </TouchableOpacity>
             }
-            <BottomButtons 
+            <BottomButtons
                 active='home'
                 props={props}
             />
@@ -237,7 +235,7 @@ const HomeScreen = (props) => {
                 props={props}
                 bottom={15.5}
                 expandKey={expandKey}
-                left = {windowWidth/2-27}
+                left={windowWidth / 2 - 27}
             />
         </SafeAreaView>
     );

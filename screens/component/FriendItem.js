@@ -1,6 +1,5 @@
 import React from "react";
-import { View, Pressable, Image, Text, TouchableOpacity } from "react-native";
-import LinearGradient from 'react-native-linear-gradient';
+import { Image, Text, TouchableOpacity } from "react-native";
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';

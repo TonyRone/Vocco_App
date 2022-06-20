@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Platform, KeyboardAvoidingView, ImageBackground, Text, TouchableOpacity } from 'react-native';
+import { View, Platform, ImageBackground, Text, TouchableOpacity } from 'react-native';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { GoogleSignin, statusCodes } from 'react-native-google-signin';
-import appleAuth, { appleAuthAndroid, AppleAuthRequestOperation, AppleAuthRequestScope } from '@invertase/react-native-apple-authentication';
+import appleAuth, { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { v4 as uuid } from 'uuid'
@@ -186,12 +186,12 @@ const LoginScreen = (props) => {
     props.navigation.dispatch(resetActionTrue);
   }
 
-  const onCreateSocket = (jsonRes,isRegister) => {
+  const onCreateSocket = (jsonRes, isRegister) => {
     if (socketInstance == null) {
       let socket = io(SOCKET_URL);
       dispatch(setSocketInstance(socket));
       socket.on("connect", () => {
-        socket.emit("login", { uid: jsonRes.id, email: jsonRes.email, isNew:isRegister }, (res) => {
+        socket.emit("login", { uid: jsonRes.id, email: jsonRes.email, isNew: isRegister }, (res) => {
           if (res == "Success") {
             onGoScreen(jsonRes);
           }

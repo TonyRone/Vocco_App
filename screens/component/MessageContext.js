@@ -1,31 +1,18 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Pressable,
   TouchableOpacity
 } from 'react-native';
 import { TitleText } from './TitleText';
-import { VoiceItem } from './VoiceItem';
 import SwipeDownModal from 'react-native-swipe-down';
-import Share from 'react-native-share';
-import { setRefreshState } from '../../store/actions';
-
 import { SvgXml } from 'react-native-svg';
-//Context Icons
-import blankHeartSvg from '../../assets/post/blankHeart.svg';
 import replySvg from '../../assets/chat/reply.svg';
 import forwardSvg from '../../assets/chat/forward.svg';
 import saveSvg from '../../assets/chat/save.svg';
 import trashSvg from '../../assets/chat/trash.svg';
 import selectSvg from '../../assets/chat/select.svg';
-import redHeartSvg from '../../assets/post/redHeart.svg';
-import ciShareSvg from '../../assets/discover/context/share.svg';
-import ciMicrophoneSvg from '../../assets/discover/context/microphone.svg';
-import ciUsertSvg from '../../assets/discover/context/user.svg';
-import ciReportRedSvg from '../../assets/discover/context/report.svg';
-import { useSelector, useDispatch } from 'react-redux';
 import { styles } from '../style/Common';
-
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { MessageItem } from './MessageItem';
@@ -33,8 +20,8 @@ import { MessageItem } from './MessageItem';
 export const MessageContext = ({
   info,
   props,
-  onDeleteItem=()=>{},
-  onSelectItem=()=>{},
+  onDeleteItem = () => { },
+  onSelectItem = () => { },
   onReplyMsg = () => { },
   onCloseModal = () => { },
 }) => {
@@ -42,14 +29,6 @@ export const MessageContext = ({
   const { t, i18n } = useTranslation();
 
   const [showModal, setShowModal] = useState(true);
-
-  let { user, refreshState } = useSelector((state) => {
-    return (
-      state.user
-    )
-  });
-
-  const dispatch = useDispatch();
 
   const closeModal = () => {
     setShowModal(false);
@@ -61,7 +40,7 @@ export const MessageContext = ({
       modalVisible={showModal}
       ContentModal={
         <View
-          style={{ marginTop: "25%" , paddingHorizontal:8}}
+          style={{ marginTop: "25%", paddingHorizontal: 8 }}
         >
           <MessageItem
             props={props}
@@ -77,7 +56,7 @@ export const MessageContext = ({
           >
             <TouchableOpacity
               style={styles.contextMenu}
-              onPress={() => {onReplyMsg();closeModal();}}
+              onPress={() => { onReplyMsg(); closeModal(); }}
             >
               <TitleText
                 text={t("Reply")}
@@ -119,7 +98,7 @@ export const MessageContext = ({
               />
             </TouchableOpacity>
             <Pressable
-              onPress={()=>onDeleteItem()}
+              onPress={() => onDeleteItem()}
               style={[styles.contextMenu, { borderBottomWidth: 8 }]}
             >
               <TitleText
@@ -135,7 +114,7 @@ export const MessageContext = ({
               />
             </Pressable>
             <TouchableOpacity
-              onPress={() => {onSelectItem();closeModal();}}
+              onPress={() => { onSelectItem(); closeModal(); }}
               style={{
                 paddingVertical: 10,
                 paddingHorizontal: 16,

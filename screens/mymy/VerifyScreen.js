@@ -1,26 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, KeyboardAvoidingView, Text, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { TitleText } from '../component/TitleText';
 import { ConfirmVerify } from '../component/ConfirmVerify';
-
 import { SvgXml } from 'react-native-svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin } from 'react-native-google-signin';
 import { NavigationActions, StackActions } from 'react-navigation';
-import { ACCESSTOKEN_KEY, REFRESHTOKEN_KEY, windowHeight, API_URL } from '../../config/config';
+import { ACCESSTOKEN_KEY } from '../../config/config';
 import { styles } from '../style/Login';
-import AuthService from '../../services/AuthService';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSocketInstance } from '../../store/actions';
 
 const VerifyScreen = (props) => {
 
-  let { user, socketInstance } = useSelector((state) => {
+  let { socketInstance } = useSelector((state) => {
     return (
       state.user
     )
@@ -29,10 +26,10 @@ const VerifyScreen = (props) => {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
 
-  const onNavigate = (des, par = null) =>{
+  const onNavigate = (des, par = null) => {
     const resetActionTrue = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: des, params:par })],
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: des, params: par })],
     });
     props.navigation.dispatch(resetActionTrue);
   }
@@ -51,7 +48,6 @@ const VerifyScreen = (props) => {
 
 
   useEffect(() => {
-    checkLogin();
   }, [])
 
   return (

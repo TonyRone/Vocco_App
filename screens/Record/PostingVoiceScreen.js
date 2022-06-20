@@ -11,7 +11,7 @@ import {
   Vibration
 } from 'react-native';
 
-import { useSelector , useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { FlatList } from 'react-native-gesture-handler';
 import RNFetchBlob from 'rn-fetch-blob';
 import { NavigationActions, StackActions } from 'react-navigation';
@@ -23,7 +23,7 @@ import EmojiPicker from 'rn-emoji-keyboard';
 import { ShareHint } from '../component/ShareHint';
 import { ShareVoice } from '../component/ShareVoice';
 
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import SwipeDownModal from 'react-native-swipe-down';
 import { SvgXml } from 'react-native-svg';
@@ -32,43 +32,41 @@ import yesSwitchSvg from '../../assets/common/yesSwitch.svg';
 import noSwitchSvg from '../../assets/common/noSwitch.svg';
 import editSvg from '../../assets/record/edit.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { POST_CHECK, Categories,windowWidth } from '../../config/config';
+import { POST_CHECK, Categories, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { AllCategory } from '../component/AllCategory';
 import VoiceService from '../../services/VoiceService';
 import VoicePlayer from "../Home/VoicePlayer";
 import { setRefreshState, setVoiceState } from '../../store/actions';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
 
 const PostingVoiceScreen = (props) => {
 
   const param = props.navigation.state.params;
   let displayDuration = param.recordSecs ? param.recordSecs : param.info.duration;
-  let isTemporary = param.isTemporary?true:false;
+  let isTemporary = param.isTemporary ? true : false;
 
   let { user, refreshState, voiceState, socketInstance } = useSelector((state) => state.user);
 
   let initCategory = 0;
-  if(param.info){
-    for(let i = 0 ; i < Categories.length ; i++){
-      if(Categories[i].label == param.info.category){
+  if (param.info) {
+    for (let i = 0; i < Categories.length; i++) {
+      if (Categories[i].label == param.info.category) {
         initCategory = i;
-        break ;
+        break;
       }
     }
   }
 
-  const {t, i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [category, setCategory] = useState(initCategory);
-  const [visibleStatus, setVisibleStatus] = useState( param.info?param.info.privacy:false);
-  const [temporaryStatus, setTemporaryStatus] = useState(param.info?param.info.temporary:isTemporary);
+  const [visibleStatus, setVisibleStatus] = useState(param.info ? param.info.privacy : false);
+  const [temporaryStatus, setTemporaryStatus] = useState(param.info ? param.info.temporary : isTemporary);
   const [visibleReaction, setVisibleReaction] = useState(false);
-  const [icon, setIcon] = useState(param.info?param.info.emoji:"😁");
-  const [voiceTitle, setVoiceTitle] = useState(param.info?param.info.title:'');
-  const [isLoading,setIsLoading] = useState(false);
-  const [showModal,setShowModal] = useState(false);
+  const [icon, setIcon] = useState(param.info ? param.info.emoji : "😁");
+  const [voiceTitle, setVoiceTitle] = useState(param.info ? param.info.title : '');
+  const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [showShareVoice, setShowShareVoice] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(initCategory);
@@ -83,11 +81,10 @@ const PostingVoiceScreen = (props) => {
     android: `${dirs.CacheDir}/hello.mp3`,
   });
 
-  const onNavigate = (des, par = null) =>{
-    //props.navigation.navigate(navigateScreen,{info:jsonRes})
+  const onNavigate = (des, par = null) => {
     const resetActionTrue = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: des, params:par })],
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: des, params: par })],
     });
     props.navigation.dispatch(resetActionTrue);
   }
@@ -97,7 +94,7 @@ const PostingVoiceScreen = (props) => {
     setVisibleReaction(false);
   }
 
-  const onChangeCategory = (id)=>{
+  const onChangeCategory = (id) => {
     setCategory(id);
     setSelectedCategory(id);
     scrollRef.current?.scrollToOffset({ animated: true, offset: 0 });
@@ -106,51 +103,51 @@ const PostingVoiceScreen = (props) => {
 
   const handleSubmit = async () => {
     const post_check = await AsyncStorage.getItem(POST_CHECK);
-    if (!post_check){
+    if (!post_check) {
       setShowHint(true);
-      return ;
+      return;
     }
     if (path) {
       let voiceFile = [
         {
-          name: 'file', filename: Platform.OS==='android'?`${voiceTitle}.mp3`:`${voiceTitle}.m4a`, data: RNFetchBlob.wrap(path)
+          name: 'file', filename: Platform.OS === 'android' ? `${voiceTitle}.mp3` : `${voiceTitle}.m4a`, data: RNFetchBlob.wrap(path)
         },
-        { name:'title', data:voiceTitle },
-        { name:'emoji', data:String(icon) },
-        { name:'duration', data:String(displayDuration) },
-        { name:'category', data:Categories[category].label },
-        { name:'privacy', data:String(visibleStatus) },
-        { name:'temporary', data:String(temporaryStatus) }
-      ] ;
+        { name: 'title', data: voiceTitle },
+        { name: 'emoji', data: String(icon) },
+        { name: 'duration', data: String(displayDuration) },
+        { name: 'category', data: Categories[category].label },
+        { name: 'privacy', data: String(visibleStatus) },
+        { name: 'temporary', data: String(temporaryStatus) }
+      ];
       setIsLoading(true);
-      VoiceService.postVoice(voiceFile).then(async res => { 
+      VoiceService.postVoice(voiceFile).then(async res => {
         const jsonRes = await res.json();
         if (res.respInfo.status !== 201) {
         } else {
           Vibration.vibrate(100);
-          socketInstance.emit("newVoice", {uid:user.id});
+          socketInstance.emit("newVoice", { uid: user.id });
           setShowShareVoice(jsonRes);
           dispatch(setRefreshState(!refreshState));
         }
         setIsLoading(false);
       })
-      .catch(err => {
+        .catch(err => {
           console.log(err);
-      });
+        });
     }
   }
 
   const changeStory = async () => {
     const payload = {
       id: param.info.id,
-      title:voiceTitle,
-      emoji:icon,
+      title: voiceTitle,
+      emoji: icon,
       category: Categories[category].label,
       privacy: visibleStatus,
-      temporary:temporaryStatus
+      temporary: temporaryStatus
     };
     setIsLoading(true);
-    VoiceService.changeVoice(payload).then(async res => { 
+    VoiceService.changeVoice(payload).then(async res => {
       if (res.respInfo.status !== 200) {
       } else {
         dispatch(setRefreshState(!refreshState));
@@ -160,19 +157,18 @@ const PostingVoiceScreen = (props) => {
         info.category = Categories[category].label;
         info.privacy = visibleStatus;
         info.temporary = temporaryStatus;
-        props.navigation.navigate("VoiceProfile",{id:info.id});
+        props.navigation.navigate("VoiceProfile", { id: info.id });
       }
       setIsLoading(false);
     })
-    .catch(err => {
+      .catch(err => {
         console.log(err);
-    });
+      });
   }
 
   useEffect(() => {
-    //  checkLogin();
-    if(param.info)
-      dispatch(setVoiceState(voiceState+1));
+    if (param.info)
+      dispatch(setVoiceState(voiceState + 1));
   }, [])
   return (
     <KeyboardAvoidingView
@@ -182,17 +178,17 @@ const PostingVoiceScreen = (props) => {
       }}
     >
       <View style={{ width: windowWidth, height: 280, borderBottomLeftRadius: 50, borderBottomRightRadius: 50, backgroundColor: '#F8F0FF' }}>
-        <View style={{ marginTop: Platform.OS=='ios'?50:20, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}>
-          <Pressable style={{ 
+        <View style={{ marginTop: Platform.OS == 'ios' ? 50 : 20, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}>
+          <Pressable style={{
             marginLeft: 16,
-            position:'absolute',
-            left:0
+            position: 'absolute',
+            left: 0
           }} onPress={() => props.navigation.goBack()}>
             <SvgXml width="24" height="24" xml={closeBlackSvg} />
           </Pressable>
 
           <TitleText
-            text={param.info?t("Change your story"):t("Share your story")}
+            text={param.info ? t("Change your story") : t("Share your story")}
             fontSize={20}
             lineHeight={24}
           />
@@ -224,7 +220,7 @@ const PostingVoiceScreen = (props) => {
             color="#281E30"
             textAlign={'center'}
             value={voiceTitle}
-            onChangeText={(s)=>s.length<=25?setVoiceTitle(s):null}
+            onChangeText={(s) => s.length <= 25 ? setVoiceTitle(s) : null}
             fontFamily="SFProDisplay-Regular"
             fontSize={28}
             lineHeight={34}
@@ -249,26 +245,26 @@ const PostingVoiceScreen = (props) => {
             paddingVertical: 16,
             backgroundColor: '#FFF',
             shadowColor: 'rgba(176, 148, 235, 1)',
-            shadowOffset:{width: 0, height: 2},
-            shadowOpacity:0.5,
-            shadowRadius:8,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.5,
+            shadowRadius: 8,
             elevation: 10,
             borderRadius: 16,
             marginHorizontal: 16,
           }}
         >
           <VoicePlayer
-            voiceUrl = {param.info?param.info.file.url:null}
-            playBtn = {true}
-            replayBtn = {true}
-            waveColor={user.premium != 'none'?['#FFC701','#FFA901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
-            playing = {false}
-            stopPlay = {()=>{}}
-            startPlay = {()=>{}}
-            duration = {displayDuration*1000}
+            voiceUrl={param.info ? param.info.file.url : null}
+            playBtn={true}
+            replayBtn={true}
+            waveColor={user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
+            playing={false}
+            stopPlay={() => { }}
+            startPlay={() => { }}
+            duration={displayDuration * 1000}
           />
         </View>
-        <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <TitleText
             text={t("Select category")}
             fontFamily="SFProDisplay-Regular"
@@ -280,7 +276,7 @@ const PostingVoiceScreen = (props) => {
             color="rgba(54, 36, 68, 0.8)"
           />
           <TouchableOpacity onPress={() => {
-                setShowModal(true);
+            setShowModal(true);
           }}>
             <TitleText
               text={t('SEE ALL')}
@@ -294,46 +290,29 @@ const PostingVoiceScreen = (props) => {
             />
           </TouchableOpacity>
         </View>
-        {/* <ScrollView horizontal showsHorizontalScrollIndicator={false} style={[{marginLeft:12},styles.mt16]}>
-          {Categories.map((item,index)=>{
-            var temp_item, id = index;
-            // if(category > 4) id = index-1;
-            // if(id < 0) id = category;
-            temp_item = Categories[id];
-            return(
-              <CategoryIcon 
-                key = {'catagory'+index}
-                label={temp_item.label}
-                source={temp_item.uri}
-                onPress={()=>setCategory(id)}
-                active={category == id ? true : false}
-              />
-            )
-          })}
-        </ScrollView> */}
         <FlatList
-          horizontal = {true}
-          ref = {scrollRef}
-          showsHorizontalScrollIndicator = {false}
-          style={[{marginLeft:12},styles.mt16]}
-          data = {Categories}
-          renderItem={({item,index})=>{
+          horizontal={true}
+          ref={scrollRef}
+          showsHorizontalScrollIndicator={false}
+          style={[{ marginLeft: 12 }, styles.mt16]}
+          data={Categories}
+          renderItem={({ item, index }) => {
             let idx = 0;
-            if(selectedCategory > 0){
-              if(index == 0) idx = selectedCategory;
-              else if(index <= selectedCategory) idx = index-1;
+            if (selectedCategory > 0) {
+              if (index == 0) idx = selectedCategory;
+              else if (index <= selectedCategory) idx = index - 1;
               else idx = index;
             }
             else idx = index;
-            return <CategoryIcon 
-              key = {'category'+idx}
+            return <CategoryIcon
+              key={'category' + idx}
               label={Categories[idx].label}
               source={Categories[idx].uri}
-              onPress={()=>setCategory(idx)}
+              onPress={() => setCategory(idx)}
               active={category == idx ? true : false}
             />
           }}
-          keyExtractor={(item, idx) => idx.toString()} 
+          keyExtractor={(item, idx) => idx.toString()}
         />
         <TitleText
           text={t("Privacy settings")}
@@ -345,7 +324,7 @@ const PostingVoiceScreen = (props) => {
           marginBottom={9}
           color="rgba(54, 36, 68, 0.8)"
         />
-        <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 12, marginBottom:5 }]}>
+        <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 12, marginBottom: 5 }]}>
           <TitleText
             text={t("Only visible to friends")}
             fontSize={17}
@@ -384,40 +363,40 @@ const PostingVoiceScreen = (props) => {
         }}
       >
         <MyButton
-          label={param.info?t("Change my story"):t("Share my story")}
-          loading = {isLoading}
-          onPress={param.info?changeStory:handleSubmit}
-          active = {voiceTitle!=''}
+          label={param.info ? t("Change my story") : t("Share my story")}
+          loading={isLoading}
+          onPress={param.info ? changeStory : handleSubmit}
+          active={voiceTitle != ''}
         />
       </View>
-      {visibleReaction && 
-      <EmojiPicker
-        onEmojiSelected={(icon)=>selectIcon(icon.emoji)}
-        open={visibleReaction}
-        onClose={() => setVisibleReaction(false)} />
+      {visibleReaction &&
+        <EmojiPicker
+          onEmojiSelected={(icon) => selectIcon(icon.emoji)}
+          open={visibleReaction}
+          onClose={() => setVisibleReaction(false)} />
       }
-      {showHint&&
-      <ShareHint
-        onCloseModal={()=>{setShowHint(false);handleSubmit();}}
-      />}
-      {showShareVoice&&
-      <ShareVoice
-        info = {showShareVoice}
-        onCloseModal={()=>{setShowShareVoice(false);onNavigate("Feed",1);}}
-      />}
+      {showHint &&
+        <ShareHint
+          onCloseModal={() => { setShowHint(false); handleSubmit(); }}
+        />}
+      {showShareVoice &&
+        <ShareVoice
+          info={showShareVoice}
+          onCloseModal={() => { setShowShareVoice(false); onNavigate("Feed", 1); }}
+        />}
       <SwipeDownModal
         modalVisible={showModal}
         ContentModal={
           <AllCategory
-            closeModal={()=>setShowModal(false)}
-            selectedCategory = {category}
-            setCategory={(id)=>onChangeCategory(id)}
+            closeModal={() => setShowModal(false)}
+            selectedCategory={category}
+            setCategory={(id) => onChangeCategory(id)}
           />
         }
         ContentModalStyle={styles.swipeModal}
-        onRequestClose={() => {setShowModal(false)}}
+        onRequestClose={() => { setShowModal(false) }}
         onClose={() => {
-            setShowModal(false);
+          setShowModal(false);
         }}
       />
     </KeyboardAvoidingView>

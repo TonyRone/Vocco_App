@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, key, ImageBackground, Text, TouchableOpacity, Platform } from 'react-native';
+import { View, ImageBackground, Text, TouchableOpacity, Platform } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
 import io from "socket.io-client";
 import { useTranslation } from 'react-i18next';
@@ -14,9 +14,9 @@ import { SvgXml } from 'react-native-svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import appleSvg from '../../assets/login/apple.svg';
 import googleSvg from '../../assets/login/google.svg';
-import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
+import { GoogleSignin, statusCodes } from 'react-native-google-signin';
 import { v4 as uuid } from 'uuid'
-import appleAuth, { appleAuthAndroid, AppleAuthRequestOperation, AppleAuthRequestScope } from '@invertase/react-native-apple-authentication';
+import appleAuth, { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 
 import AuthService from '../../services/AuthService';
 
@@ -42,7 +42,7 @@ const RegisterScreen = (props) => {
 
   const { t, i18n } = useTranslation();
 
-  const { user, socketInstance } = useSelector((state) => state.user);
+  const { socketInstance } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const scrollRef = useRef(ScrollView);
@@ -242,7 +242,7 @@ const RegisterScreen = (props) => {
       let socket = io(SOCKET_URL);
       dispatch(setSocketInstance(socket));
       socket.on("connect", () => {
-        socket.emit("login", { uid: jsonRes.id, email: jsonRes.email, isNew:isRegister }, (res) => {
+        socket.emit("login", { uid: jsonRes.id, email: jsonRes.email, isNew: isRegister }, (res) => {
           if (res == "Success") {
             onGoScreen(jsonRes);
           }
@@ -262,7 +262,7 @@ const RegisterScreen = (props) => {
     AuthService.getUserInfo(accessToken, 'reg').then(async res => {
       const jsonRes = await res.json();
       if (res.respInfo.status == 200) {
-        onCreateSocket(jsonRes,isRegister);
+        onCreateSocket(jsonRes, isRegister);
       }
     })
       .catch(err => {

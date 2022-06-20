@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import * as React from 'react';
 import { AppRegistry, Platform } from "react-native";
 import { createStackNavigator } from "react-navigation-stack";
-import {createAppContainer} from 'react-navigation'
+import { createAppContainer } from 'react-navigation'
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import PushNotification from 'react-native-push-notification';
 import SplashScreen from 'react-native-splash-screen'
@@ -55,11 +55,11 @@ import { Provider } from 'react-redux';
 
 import configureStore from './store/configureStore';
 import PostingAnswerVoiceScreen from './screens/Record/PostingAnswerVoiceScreen';
-import VoicePlayer from './screens/Home/VoicePlayer';
 import HomeScreen from './screens/Home/HomeScreen';
 import ChatScreen from './screens/Chat/ChatScreen';
 import FriendsScreen from './screens/Friends/FriendsScreen';
 import ConversationScreen from './screens/Chat/ConversationScreen';
+import PhoneNumberScreen from './screens/PhoneNumberLogin/PhoneNumberScreen';
 
 
 const slideAnimation2 = (bottomToTop) => {
@@ -86,8 +86,8 @@ const AppNavigator = createStackNavigator({
   Logo: {
     screen: LogoScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -96,8 +96,8 @@ const AppNavigator = createStackNavigator({
   Welcome: {
     screen: WelcomeScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -106,8 +106,8 @@ const AppNavigator = createStackNavigator({
   Login: {
     screen: LoginScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -116,8 +116,8 @@ const AppNavigator = createStackNavigator({
   Register: {
     screen: RegisterScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -126,8 +126,8 @@ const AppNavigator = createStackNavigator({
   Verify: {
     screen: VerifyScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -136,8 +136,8 @@ const AppNavigator = createStackNavigator({
   Username: {
     screen: UsernameScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -146,8 +146,8 @@ const AppNavigator = createStackNavigator({
   Birthday: {
     screen: BirthdayScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -156,8 +156,8 @@ const AppNavigator = createStackNavigator({
   Identify: {
     screen: IdentifyScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -166,8 +166,8 @@ const AppNavigator = createStackNavigator({
   Country: {
     screen: CountryScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -176,8 +176,8 @@ const AppNavigator = createStackNavigator({
   Photo: {
     screen: PhotoScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -188,8 +188,8 @@ const AppNavigator = createStackNavigator({
   Tutorial: {
     screen: TutorialScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -200,8 +200,8 @@ const AppNavigator = createStackNavigator({
   Discover: {
     screen: DiscoverScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -210,12 +210,12 @@ const AppNavigator = createStackNavigator({
   Search: {
     screen: SearchScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       },
-      cardStyleInterpolator:slideAnimation2
+      cardStyleInterpolator: slideAnimation2
     }
   },
 
@@ -223,8 +223,8 @@ const AppNavigator = createStackNavigator({
   Feed: {
     screen: FeedScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       },
@@ -234,8 +234,8 @@ const AppNavigator = createStackNavigator({
   Home: {
     screen: HomeScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       },
@@ -246,8 +246,8 @@ const AppNavigator = createStackNavigator({
   HoldRecord: {
     screen: HoldRecordScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -256,8 +256,8 @@ const AppNavigator = createStackNavigator({
   PostingVoice: {
     screen: PostingVoiceScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -266,8 +266,8 @@ const AppNavigator = createStackNavigator({
   Profile: {
     screen: ProfileScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -276,8 +276,8 @@ const AppNavigator = createStackNavigator({
   UserProfile: {
     screen: UserProfileScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -286,8 +286,8 @@ const AppNavigator = createStackNavigator({
   UserProfileList: {
     screen: UserProfileListScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -296,8 +296,8 @@ const AppNavigator = createStackNavigator({
   VoiceProfile: {
     screen: VoiceProfileScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -306,8 +306,8 @@ const AppNavigator = createStackNavigator({
   Setting: {
     screen: SettingScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -316,8 +316,8 @@ const AppNavigator = createStackNavigator({
   EditProfile: {
     screen: EditProfileScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -326,8 +326,8 @@ const AppNavigator = createStackNavigator({
   ChangeEmail: {
     screen: ChangeEmailScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -336,8 +336,8 @@ const AppNavigator = createStackNavigator({
   ChangePassword: {
     screen: ChangePasswordScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -346,8 +346,8 @@ const AppNavigator = createStackNavigator({
   ShareFriend: {
     screen: ShareFriendScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -356,8 +356,8 @@ const AppNavigator = createStackNavigator({
   Contact: {
     screen: ContactScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -366,8 +366,8 @@ const AppNavigator = createStackNavigator({
   Notification: {
     screen: NotificationScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -376,8 +376,8 @@ const AppNavigator = createStackNavigator({
   PostingAnswerVoice: {
     screen: PostingAnswerVoiceScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -386,8 +386,8 @@ const AppNavigator = createStackNavigator({
   Share: {
     screen: ShareScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -396,8 +396,8 @@ const AppNavigator = createStackNavigator({
   Premium: {
     screen: PremiumScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -406,8 +406,8 @@ const AppNavigator = createStackNavigator({
   Chat: {
     screen: ChatScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -416,8 +416,8 @@ const AppNavigator = createStackNavigator({
   Friends: {
     screen: FriendsScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
@@ -426,17 +426,27 @@ const AppNavigator = createStackNavigator({
   Conversation: {
     screen: ConversationScreen,
     navigationOptions: {
-      headerShown:false,
-      headerStyle:{
+      headerShown: false,
+      headerStyle: {
+        elevation: 0, // remove shadow on Android
+        shadowOpacity: 0, // remove shadow on iOS
+      }
+    }
+  },
+  PhoneNumber: {
+    screen: PhoneNumberScreen,
+    navigationOptions: {
+      headerShown: false,
+      headerStyle: {
         elevation: 0, // remove shadow on Android
         shadowOpacity: 0, // remove shadow on iOS
       }
     }
   },
 },
-{
-  //initialRouteName:'Home'
-}
+  {
+    initialRouteName:'PhoneNumber'
+  }
 );
 
 const AppContainer = createAppContainer(AppNavigator);
@@ -444,10 +454,10 @@ const AppContainer = createAppContainer(AppNavigator);
 export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
-    PushNotification.requestPermissions();
+    //PushNotification.requestPermissions();
   }, []);
   return (
-    <Provider store = { store }>
+    <Provider store={store}>
       <AppContainer
         ref={navigatorRef => {
           NavigationService.setTopLevelNavigator(navigatorRef);

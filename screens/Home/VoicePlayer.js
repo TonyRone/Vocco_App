@@ -7,15 +7,14 @@ import {
 import { styles } from '../style/Common';
 import { recorderPlayer } from './AudioRecorderPlayer';
 import { DescriptionText } from '../component/DescriptionText';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { SvgXml } from 'react-native-svg';
-import RNFetchBlob from 'rn-fetch-blob'; 
+import RNFetchBlob from 'rn-fetch-blob';
 import { setVoiceState } from '../../store/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from '@reduxjs/toolkit';
 import { windowWidth } from '../../config/config';
-
 import pauseSvg from '../../assets/common/pause.svg';
 import playSvg from '../../assets/common/play.svg';
 import replaySvg from '../../assets/common/replay.svg';
@@ -23,17 +22,17 @@ import replaySvg from '../../assets/common/replay.svg';
 const screenWidth = Dimensions.get('screen').width;
 
 class VoicePlayer extends Component {
-  
+
   dirs = RNFetchBlob.fs.dirs;
   path = Platform.select({
     ios: 'hello.m4a',
     android: `${this.dirs.CacheDir}/hello.mp3`,
   });
-  
+
   _isMounted = false;
   _playerPath = this.path;
   waveHeight = 40;
-  waveheights = [7,12,2,1,8,3,13,9,12,10,31,24,29,8,32,38,18,19,28,7,19,13,17,10,14,1,28,10,31,2,30,3,3,23,30,3,39,35,21,38,32,5,12,19,13,13,10,10,33,18,37,33,9,32,30,13,8,24,18,4,21,9,16,8,18,20,28,16,23,11,16,15,11,29,4,35,37,23,15,28]
+  waveheights = [7, 12, 2, 1, 8, 3, 13, 9, 12, 10, 31, 24, 29, 8, 32, 38, 18, 19, 28, 7, 19, 13, 17, 10, 14, 1, 28, 10, 31, 2, 30, 3, 3, 23, 30, 3, 39, 35, 21, 38, 32, 5, 12, 19, 13, 13, 10, 10, 33, 18, 37, 33, 9, 32, 30, 13, 8, 24, 18, 4, 21, 9, 16, 8, 18, 20, 28, 16, 23, 11, 16, 15, 11, 29, 4, 35, 37, 23, 15, 28]
   constructor(props) {
     super(props);
     this._onTouchStart = this._onTouchStart.bind(this);
@@ -49,95 +48,91 @@ class VoicePlayer extends Component {
       currentDurationSec: props.duration,
       playTime: '00:00:00',
       duration: '00:00:00',
-      isPlaying:false,
-      isStarted:false,
-      voiceKey:props.voiceState,
-      swipe:{}
+      isPlaying: false,
+      isStarted: false,
+      voiceKey: props.voiceState,
+      swipe: {}
     };
     this.audioRecorderPlayer = recorderPlayer;
     this.audioRecorderPlayer.setSubscriptionDuration(0.2); // optional. Default is 0.5
   }
-  
-  componentDidMount (){
+
+  componentDidMount() {
     this._isMounted = true;
     const fileRemoteUrl = this.props.voiceUrl;
-    if(fileRemoteUrl==null){
+    if (fileRemoteUrl == null) {
       this._playerPath = this.path;
-      if(this.props.playing==true) {
+      if (this.props.playing == true) {
         this.onStartPlay(this.props.voiceState)
       }
     }
-    else{
-      if(this.props.playing==true)
-        this.getPlayLink().then((res)=>
-            this.onStartPlay(res)
+    else {
+      if (this.props.playing == true)
+        this.getPlayLink().then((res) =>
+          this.onStartPlay(res)
         )
     }
   }
-  componentDidUpdate(prevProp){
-    if(this.props.voiceState != this.state.voiceKey){
-      if(this.state.isStarted==true && this.state.isPlaying == false){
+  componentDidUpdate(prevProp) {
+    if (this.props.voiceState != this.state.voiceKey) {
+      if (this.state.isStarted == true && this.state.isPlaying == false) {
         this.onResumePlay();
       }
       this.onStopPlay();
     }
   }
-    
-  componentWillUnmount(){
+
+  componentWillUnmount() {
     this.onStopPlay();
     this._isMounted = false;
   }
-  _onTouchStart=(e)=> {
-    if(this.state.isPlaying){
-   //   const touch = e.touches[0];
-      this.setState({swipe:{ x: e.nativeEvent.pageX }})
-     // this.onPausePlay();
+  _onTouchStart = (e) => {
+    if (this.state.isPlaying) {
+      this.setState({ swipe: { x: e.nativeEvent.pageX } })
     }
   }
 
-  _onTouchEnd=(e)=> {
-    if(this.state.swipe.x){
-    //  const touch = e.changedTouches[0];
+  _onTouchEnd = (e) => {
+    if (this.state.swipe.x) {
       const absX = e.nativeEvent.pageX - this.state.swipe.x;
       let positionSec = this.state.currentPositionSec;
-      positionSec += this.state.currentDurationSec * absX / windowWidth ;
-      if(positionSec<0)positionSec = 0;
-      if(positionSec>this.state.currentDurationSec) positionSec = this.state.currentDurationSec;
+      positionSec += this.state.currentDurationSec * absX / windowWidth;
+      if (positionSec < 0) positionSec = 0;
+      if (positionSec > this.state.currentDurationSec) positionSec = this.state.currentDurationSec;
       this.audioRecorderPlayer.seekToPlayer(positionSec);
-    //  this.onResumePlay();
-      this.setState({swipe : {}});
+      this.setState({ swipe: {} });
     }
   }
 
-  changePlayStatus=()=>{
-    if(this.state.isPlaying)
+  changePlayStatus = () => {
+    if (this.state.isPlaying)
       this.onPausePlay();
-    else if(this.state.isStarted)
+    else if (this.state.isStarted)
       this.onResumePlay();
-    else{
-      if(this.props.voiceUrl == null){
+    else {
+      if (this.props.voiceUrl == null) {
         this.onStartPlay(this.props.voiceState);
       }
-      else 
-        this.getPlayLink().then((res)=>{
+      else
+        this.getPlayLink().then((res) => {
           this.onStartPlay(res);
         })
     }
   }
 
-  onReplay=()=>{
-    if(this.state.isPlaying)
+  onReplay = () => {
+    if (this.state.isPlaying)
       this.audioRecorderPlayer.seekToPlayer(0);
-    else if(this.state.isStarted){
+    else if (this.state.isStarted) {
       this.audioRecorderPlayer.seekToPlayer(0);
       this.onResumePlay();
     }
-    else{
-      if(this.props.voiceUrl == null){
+    else {
+      if (this.props.voiceUrl == null) {
         this.onStartPlay(this.props.voiceState);
       }
       else
-        this.getPlayLink().then((res)=>{
+        this.getPlayLink().then((res) => {
           this.onStartPlay(res);
         })
     }
@@ -145,25 +140,25 @@ class VoicePlayer extends Component {
 
   render() {
     let waveCom = [];
-    let waveWidth = this.props.tinWidth?this.props.tinWidth:1.55;
-    let mrg = this.props.mrg?this.props.mrg:0.45;
-    this.waveHeight = this.props.height?this.props.height:39;
-    for(let i = 0 ; i < 80 ; i++) {
+    let waveWidth = this.props.tinWidth ? this.props.tinWidth : 1.55;
+    let mrg = this.props.mrg ? this.props.mrg : 0.45;
+    this.waveHeight = this.props.height ? this.props.height : 39;
+    for (let i = 0; i < 80; i++) {
       let h;
-      if(this.state.isPlaying) h = Math.floor(Math.random() * this.waveHeight) + 1;
-      else h = this.waveheights[i]*this.waveHeight/39.0;
+      if (this.state.isPlaying) h = Math.floor(Math.random() * this.waveHeight) + 1;
+      else h = this.waveheights[i] * this.waveHeight / 39.0;
       waveCom.push(
         <LinearGradient
           colors={this.props.waveColor}
-          locations={[0,0.52,1]}
-          start={{x: 0, y: 0}} end={{x: 0, y: 1}}
+          locations={[0, 0.52, 1]}
+          start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
           key={i}
           style={{
-            width:waveWidth,
+            width: waveWidth,
             height: h,
-            borderRadius:4,
-            marginRight:mrg,
-            marginLeft:mrg
+            borderRadius: 4,
+            marginRight: mrg,
+            marginLeft: mrg
           }}
         >
         </LinearGradient>
@@ -171,65 +166,65 @@ class VoicePlayer extends Component {
     }
     return (
       <View
-        style={[styles.rowSpaceBetween,{paddingHorizontal:8}]}
+        style={[styles.rowSpaceBetween, { paddingHorizontal: 8 }]}
       >
-        {this.props.playBtn&&<TouchableOpacity onPress={()=>this.changePlayStatus()}>
+        {this.props.playBtn && <TouchableOpacity onPress={() => this.changePlayStatus()}>
           <SvgXml
-            width={windowWidth/(this.props.playBtnSize?this.props.playBtnSize:10)}
-            height={windowWidth/(this.props.playBtnSize?this.props.playBtnSize:10)}
+            width={windowWidth / (this.props.playBtnSize ? this.props.playBtnSize : 10)}
+            height={windowWidth / (this.props.playBtnSize ? this.props.playBtnSize : 10)}
             style={{
-              marginRight:8
+              marginRight: 8
             }}
-            xml={this.state.isPlaying ? pauseSvg:playSvg}
+            xml={this.state.isPlaying ? pauseSvg : playSvg}
           />
         </TouchableOpacity>}
         <View>
           <View
-            style = {{
+            style={{
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
-              height:this.waveHeight+1,
+              height: this.waveHeight + 1,
             }}
-            // onTouchStart={this._onTouchStart}
-            // onTouchEnd={this._onTouchEnd}
-          > 
+          // onTouchStart={this._onTouchStart}
+          // onTouchEnd={this._onTouchEnd}
+          >
             {waveCom}
           </View>
-          {this.state.isStarted==true&&<View style={[styles.rowSpaceBetween,{marginTop:10}]}>
+          {this.state.isStarted == true && <View style={[styles.rowSpaceBetween, { marginTop: 10 }]}>
             <DescriptionText
-              text={new Date(Math.max(this.state.currentPositionSec,0)).toISOString().substr(14, 5)}
+              text={new Date(Math.max(this.state.currentPositionSec, 0)).toISOString().substr(14, 5)}
               lineHeight={13}
               fontSize={13}
             />
             <DescriptionText
-              text={new Date(this.state.currentDurationSec-this.state.currentPositionSec).toISOString().substr(14, 5)}
+              text={new Date(this.state.currentDurationSec - this.state.currentPositionSec).toISOString().substr(14, 5)}
               lineHeight={13}
               fontSize={13}
             />
           </View>}
         </View>
-        {this.props.replayBtn&&
-        <TouchableOpacity onPress={()=>this.onReplay()}>
-          <SvgXml
-            width={windowWidth/10}
-            height={windowWidth/10}
-            style={{
-              marginLeft:8
-            }}
-            xml={replaySvg}
-          />
-        </TouchableOpacity>}
-        {this.props.rPlayBtn&&<TouchableOpacity onPress={()=>this.changePlayStatus()} style = {{marginLeft:10}}>
+        {this.props.replayBtn &&
+          <TouchableOpacity onPress={() => this.onReplay()}>
+            <SvgXml
+              width={windowWidth / 10}
+              height={windowWidth / 10}
+              style={{
+                marginLeft: 8
+              }}
+              xml={replaySvg}
+            />
+          </TouchableOpacity>}
+        {this.props.rPlayBtn && <TouchableOpacity onPress={() => this.changePlayStatus()} style={{ marginLeft: 10 }}>
           <SvgXml
             width={40}
             height={40}
-            xml={this.state.isPlaying ? pauseSvg:playSvg}
+            xml={this.state.isPlaying ? pauseSvg : playSvg}
           />
         </TouchableOpacity>}
       </View>
-      
+
     );
   }
 
@@ -248,16 +243,16 @@ class VoicePlayer extends Component {
   //     this.audioRecorderPlayer.seekToPlayer(subSecs);
   //   }
   // };
-  
-  getPlayLink= async()=>{
+
+  getPlayLink = async () => {
     let { voiceState, actions } = this.props;
     this.setState({
-      voiceKey:voiceState+1,
-      isStarted:true,
-      isPlaying:true,
-      currentPositionSec:0
+      voiceKey: voiceState + 1,
+      isStarted: true,
+      isPlaying: true,
+      currentPositionSec: 0
     });
-    actions.setVoiceState(voiceState+1);
+    actions.setVoiceState(voiceState + 1);
     const fileRemoteUrl = this.props.voiceUrl;
     const fileExtension = Platform.select({
       ios: 'm4a',
@@ -272,52 +267,51 @@ class VoicePlayer extends Component {
       fileCache: false,
       appendExt: fileExtension,
       path,
-    }).fetch('GET', fileRemoteUrl).then(res=>{
-      if(this._isMounted&&res.respInfo.status==200){
+    }).fetch('GET', fileRemoteUrl).then(res => {
+      if (this._isMounted && res.respInfo.status == 200) {
         this._playerPath = `${Platform.OS === 'android' ? res.path() : 'ss.m4a'}`;
-        return voiceState + 1 ;
+        return voiceState + 1;
       }
     })
-    .catch(err=>{
-      this.onStopPlay();
-    })
+      .catch(err => {
+        this.onStopPlay();
+      })
   }
 
   onStartPlay = async (res) => {
     let { voiceState } = this.props;
-    if(res != voiceState){
+    if (res != voiceState) {
       this.onStopPlay();
-      return ;
+      return;
     }
-    try
-    {
-      if(this.state.isStarted == false)
+    try {
+      if (this.state.isStarted == false)
         this.setState({
-          isStarted:true,
-          isPlaying:true,
-          currentPositionSec:0
+          isStarted: true,
+          isPlaying: true,
+          currentPositionSec: 0
         });
       this.props.startPlay();
       const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath);
       const volume = await this.audioRecorderPlayer.setVolume(1.0);
       this.audioRecorderPlayer.addPlayBackListener((e) => {
-        if(this._isMounted){
-          if(this.state.isPlaying)
+        if (this._isMounted) {
+          if (this.state.isPlaying)
             this.setState({
               currentPositionSec: e.currentPosition,
               currentDurationSec: e.duration,
             });
-          if(e.currentPosition==e.duration){
+          if (e.currentPosition == e.duration) {
             this.onStopPlay();
           }
         }
-        else{
+        else {
           this.audioRecorderPlayer.stopPlayer();
           this.audioRecorderPlayer.removePlayBackListener();
-        } 
+        }
       });
     }
-    catch(err){
+    catch (err) {
       this.onStopPlay();
     }
   };
@@ -325,24 +319,25 @@ class VoicePlayer extends Component {
   onPausePlay = async () => {
     await this.audioRecorderPlayer.pausePlayer();
     this.setState({
-      isPlaying:false
+      isPlaying: false
     })
   };
 
   onResumePlay = async () => {
     await this.audioRecorderPlayer.resumePlayer();
     this.setState({
-      isPlaying:true
+      isPlaying: true
     })
   };
 
   onStopPlay = async () => {
-    if(this.state.isStarted == true){
-      this.setState({isPlaying:false,isStarted:false, currentPositionSec:0, currentDurationSec:0});
-      try{
+    if (this.state.isStarted == true) {
+      this.setState({ isPlaying: false, isStarted: false, currentPositionSec: 0, currentDurationSec: 0 });
+      try {
         await this.audioRecorderPlayer.stopPlayer();
-        this.audioRecorderPlayer.removePlayBackListener();}
-      catch(err){
+        this.audioRecorderPlayer.removePlayBackListener();
+      }
+      catch (err) {
         console.log(err);
       }
     }
@@ -356,7 +351,7 @@ const mapStateToProps = state => ({
 
 const ActionCreators = Object.assign(
   {},
-  {setVoiceState},
+  { setVoiceState },
 );
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(ActionCreators, dispatch),

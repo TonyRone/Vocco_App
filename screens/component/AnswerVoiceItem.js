@@ -11,18 +11,15 @@ import { StoryLikes } from "./StoryLikes";
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { SvgXml } from 'react-native-svg';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import pauseSvg from '../../assets/common/pause.svg';
 import playSvg from '../../assets/common/play.svg';
 import whiteTrashSvg from '../../assets/notification/white_trash.svg'
-import blankHeartSvg from '../../assets/post/blankHeart.svg';
-import redHeartSvg from '../../assets/post/redHeart.svg';
 import { styles } from '../style/Common';
 import VoiceService from "../../services/VoiceService";
 import VoicePlayer from "../Home/VoicePlayer";
 import { windowWidth } from "../../config/config";
 import { ReplyAnswerItem } from "./ReplyAnswerItem";
-import { set } from "immer/dist/internal";
 
 export const AnswerVoiceItem = ({
   info,
@@ -224,7 +221,7 @@ export const AnswerVoiceItem = ({
               voiceUrl={info.file.url}
               stopPlay={() => setIsPlaying(false)}
               startPlay={() => { VoiceService.listenStory(info.id, 'answer') }}
-              waveColor={info.user.premium != 'none'?['#FFC701','#FFA901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
+              waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
               playBtn={false}
               replayBtn={false}
               playing={true}
@@ -267,16 +264,16 @@ export const AnswerVoiceItem = ({
       />}
     {replyAnswers.length > 0 &&
       <>
-        {replyAnswers.map((item, index)=>
+        {replyAnswers.map((item, index) =>
           (showMore == false && index > 1) ? null :
-          <ReplyAnswerItem
-            props={props}
-            key={index + item.id + 'replyAnswerItem'}
-            info={item}
-            onChangeIsLiked={() => setIsLiked(index)}
-            onDeleteReplyItem={() => onDeleteReplyAnswer(index)}
-            isEnd={(replyAnswers.length < 3 && index == replyAnswers.length - 1) ? true : false}
-          />
+            <ReplyAnswerItem
+              props={props}
+              key={index + item.id + 'replyAnswerItem'}
+              info={item}
+              onChangeIsLiked={() => setIsLiked(index)}
+              onDeleteReplyItem={() => onDeleteReplyAnswer(index)}
+              isEnd={(replyAnswers.length < 3 && index == replyAnswers.length - 1) ? true : false}
+            />
         )}
         {replyAnswers.length > 2 &&
           <View style={{ flexDirection: 'row' }}>

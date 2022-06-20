@@ -1,31 +1,17 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
-  Pressable,
   TouchableOpacity,
   Image,
   Platform,
   PermissionsAndroid
 } from 'react-native';
 
-import * as Progress from "react-native-progress";
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
-import { TitleText } from './TitleText';
-import { VoiceItem } from './VoiceItem';
 import SwipeDownModal from 'react-native-swipe-down';
-import Share from 'react-native-share';
-import { setRefreshState } from '../../store/actions';
-
-import { SvgXml } from 'react-native-svg';
-//Context Icons
-import VoiceService from '../../services/VoiceService';
-import closeBlackSvg from '../../assets/record/closeBlack.svg';
-import { useSelector, useDispatch } from 'react-redux';
 import { styles } from '../style/Common';
-
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
-import { ScrollView } from 'react-native-gesture-handler';
 import { MyButton } from './MyButton';
 
 export const PhotoSelector = ({
@@ -38,12 +24,6 @@ export const PhotoSelector = ({
   const [showModal, setShowModal] = useState(true);
   const [photoResourcePath, setPhotoResourcePath] = useState({ assets: null });
 
-  let { user } = useSelector((state) => {
-    return (
-      state.user
-    )
-  });
-
   const closeModal = () => {
     setShowModal(false);
     onCloseModal();
@@ -53,8 +33,8 @@ export const PhotoSelector = ({
     var options = {
       mediaType: 'photo',
       cameraType: 'back',
-      maxWidth: 600,
-      maxHeight: 600,
+      maxWidth: 200,
+      maxHeight: 500,
     };
 
     launchCamera(options, res => {
@@ -85,8 +65,8 @@ export const PhotoSelector = ({
         skipBackup: true,
         path: 'images',
       },
-      maxWidth: 600,
-      maxHeight: 600,
+      maxWidth: 200,
+      maxHeight: 500,
     };
 
     launchImageLibrary(options, res => {
@@ -170,7 +150,7 @@ export const PhotoSelector = ({
               />
             </View>
             <View style={{
-              marginLeft:50
+              marginLeft: 50
             }}>
               <TouchableOpacity
                 onPress={selectFileByCamera}
@@ -183,7 +163,7 @@ export const PhotoSelector = ({
               <TouchableOpacity
                 onPress={selectFile}
                 style={{
-                  marginTop:10
+                  marginTop: 10
                 }}
               >
                 <Image
@@ -198,7 +178,7 @@ export const PhotoSelector = ({
               paddingHorizontal: 16,
               width: '100%',
               marginBottom: 30,
-              marginTop:30
+              marginTop: 30
             }}
           >
             <MyButton

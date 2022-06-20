@@ -6,14 +6,12 @@ export const TitleText = ({
   fontFamily = "SFProDisplay-Bold",
   textAlign = "left",
   color = "#281E30",
-  numberOfLines,
   marginBottom,
   marginTop,
   marginLeft,
   marginRight,
-  maxWidth ,
+  maxWidth,
   fontSize = 28,
-  letterSpaceing,
   lineHeight
 }) => {
   return (
@@ -25,10 +23,10 @@ export const TitleText = ({
         textAlign: textAlign,
         marginBottom: marginBottom,
         marginTop: marginTop,
-        marginLeft:marginLeft,
-        maxWidth:maxWidth,
-        marginRight:marginRight,
-        lineHeight:lineHeight,
+        marginLeft: marginLeft,
+        maxWidth: maxWidth,
+        marginRight: marginRight,
+        lineHeight: lineHeight,
       }}
     >
       {text}

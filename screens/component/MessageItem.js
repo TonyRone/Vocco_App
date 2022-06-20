@@ -1,31 +1,15 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text, Image, ScrollView, Pressable } from "react-native";
-import { TitleText } from "./TitleText";
-import { DescriptionText } from "./DescriptionText";
+import { View, Pressable } from "react-native";
 import { SvgXml } from 'react-native-svg';
 import { useSelector } from 'react-redux';
-import { HeartIcon } from './HeartIcon';
-import { StoryLikes } from "./StoryLikes";
-import whiteTrashSvg from '../../assets/notification/white_trash.svg'
-import pauseSvg from '../../assets/common/pause.svg';
 import replySvg from '../../assets/chat/reply-icon.svg';
 import selectedSvg from '../../assets/chat/selected.svg';
 import unSelectedSvg from '../../assets/chat/unselected.svg';
-import playSvg from '../../assets/common/play.svg';
-import blankHeartSvg from '../../assets/post/blankHeart.svg';
-import redHeartSvg from '../../assets/post/redHeart.svg';
-import notifySvg from '../../assets/common/notify.svg';
-import curveSvg from '../../assets/record/curve.svg';
 import { styles } from '../style/Common';
-import { SemiBoldText } from "./CommenText";
-import { createIconSetFromFontello } from "react-native-vector-icons";
-import VoicePlayer from '../Home/VoicePlayer';
-import VoiceService from "../../services/VoiceService";
 import { windowWidth } from "../../config/config";
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
-import LinearGradient from "react-native-linear-gradient";
 import { MessageContext } from "./MessageContext";
 import { MessageContent } from "./MessageContent";
 
@@ -34,7 +18,7 @@ export const MessageItem = ({
   info,
   isSelect = -1,
   ancestorInfo = null,
-  onDeleteItem=()=>{},
+  onDeleteItem = () => { },
   onSelectItem = () => { },
   onReplyMsg = () => { }
 }) => {
@@ -60,9 +44,9 @@ export const MessageItem = ({
             xml={isSelect > 0 ? selectedSvg : unSelectedSvg}
           />
         }
-        <Pressable onPress={() => isSelect>=0?onSelectItem():null} onLongPress={() => isSelect ==-1?setShowContext(true):null } style={{
+        <Pressable onPress={() => isSelect >= 0 ? onSelectItem() : null} onLongPress={() => isSelect == -1 ? setShowContext(true) : null} style={{
           flexDirection: 'row',
-          width: windowWidth - (isSelect >= 0?56:16),
+          width: windowWidth - (isSelect >= 0 ? 56 : 16),
           justifyContent: isSender ? 'flex-end' : 'flex-start', marginTop: 8
         }}>
           {ancestorInfo ?
@@ -107,8 +91,8 @@ export const MessageItem = ({
         <MessageContext
           props={props}
           info={info}
-          onDeleteItem={()=>onDeleteItem()}
-          onSelectItem={()=>onSelectItem()}
+          onDeleteItem={() => onDeleteItem()}
+          onSelectItem={() => onSelectItem()}
           onReplyMsg={() => onReplyMsg()}
           onCloseModal={() => setShowContext(false)}
         />

@@ -2,13 +2,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
-  SafeAreaView,
   Text,
   ImageBackground,
   Image,
   Platform,
   Animated,
-  PermissionsAndroid
 } from 'react-native';
 
 import AudioRecorderPlayer, {
@@ -31,35 +29,32 @@ import publicSvg from '../../assets/record/public.svg';
 import { DescriptionText } from './DescriptionText';
 import { useDispatch, useSelector } from 'react-redux';
 import { setVoiceState } from '../../store/actions';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 
 import recordSvg from '../../assets/common/bottomIcons/record.svg';
 import { SvgXml } from 'react-native-svg';
-import { setUseProxies } from 'immer';
 
 export const RecordIcon = ({
-    props,
-    dem = 54,
-    expandKey = 0,
-    bottom,
-    left,
+  props,
+  dem = 54,
+  expandKey = 0,
+  bottom,
+  left,
 }) => {
-
-  // var path = RNFS.DocumentDirectoryPath + '/hello.m4a';
 
   let isTemporary = props.navigation.state.params?.isTemporary;
 
-  let { user , voiceState , refreshState} = useSelector((state) => state.user) ;
+  let { user, voiceState, refreshState } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
-  const {t, i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
 
   let recordId = props.navigation.state.params?.id;
   const [fill, setFill] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [key, setKey] = useState(0);
-  const [hoverState,setHoverState] = useState(0);
+  const [hoverState, setHoverState] = useState(0);
   const [isPaused, setIsPaused] = useState(true);
   const [IsExpanded, setIsExpanded] = useState(false);
   const [expand, setExpand] = useState(0);
@@ -68,8 +63,6 @@ export const RecordIcon = ({
   const wasteTime = useRef(0);
   const dragPos = useRef(0);
 
-  //const recorderPlayer = new AudioRecorderPlayer();
-
   recorderPlayer.setSubscriptionDuration(0.5); // optional. Default is 0.1
 
   const startAnimation = () => {
@@ -77,7 +70,7 @@ export const RecordIcon = ({
     setIsPlaying(!isPlaying);
   };
 
-  const clearRecorder = async ()=>{
+  const clearRecorder = async () => {
     wasteTime.current = 0;
     setTemporary(false);
     await recorderPlayer.resumeRecorder();
@@ -86,39 +79,19 @@ export const RecordIcon = ({
   }
 
   useEffect(() => {
-    setFill(user.premium!='none'?180:60);
+    setFill(user.premium != 'none' ? 180 : 60);
     setKey(prevKey => prevKey + 1);
-    if(expandKey!=expand){
+    if (expandKey != expand) {
       setExpand(expandKey);
       setIsExpanded(true);
       setTemporary(true);
     }
     //dispatch(setVoiceState(voiceState+1));
-    return ()=>clearRecorder();
+    return () => clearRecorder();
   }, [expandKey])
 
-  const [disableCBButton, setDisableCBButton] = useState(false)
-  const defaultStatusMessage = 'swipe status appears here';
-  const [swipeStatusMessage, setSwipeStatusMessage] = useState(
-    defaultStatusMessage,
-  );
-
-  setInterval(() => setSwipeStatusMessage(defaultStatusMessage), 5000);
-  const updateSwipeStatusMessage = (message) => setSwipeStatusMessage(message);
-  const renderSubHeading = (heading) => (
-    <Text style={styles.subHeading}>{heading}</Text>
-  );
-
-  const CheckoutButton = () => {
-    return (
-      <View style={{ width: 100, height: 30, backgroundColor: '#C70039', borderRadius: 5, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ color: '#ffffff' }}>Checkout</Text>
-      </View>
-    );
-  }
-
   const onStartRecord = async () => {
-    if(isRecording==false){
+    if (isRecording == false) {
       dragPos.current = 0;
       setIsRecording(true);
       setIsPaused(false);
@@ -134,8 +107,8 @@ export const RecordIcon = ({
         AVNumberOfChannelsKeyIOS: 2,
         AVFormatIDKeyIOS: AVEncodingOption.aac,
       };
-      dispatch(setVoiceState(voiceState+1));
-      clearRecorder().then(async res=>{
+      dispatch(setVoiceState(voiceState + 1));
+      clearRecorder().then(async res => {
         await recorderPlayer.startRecorder(path, audioSet);
         recorderPlayer.addRecordBackListener((e) => {
           wasteTime.current = e.currentPosition;
@@ -145,40 +118,39 @@ export const RecordIcon = ({
   };
 
   const onStopRecord = async (publish) => {
-    if(isRecording==true){
+    if (isRecording == true) {
       setIsRecording(false);
       setIsPaused(true);
       setKey(prevKey => prevKey + 1);
-      if(publish == true){
-        let tp = Math.max(wasteTime.current,1);
-        if(recordId)
-          props.navigation.navigate('PostingAnswerVoice',{id:recordId,recordSecs:Math.ceil(tp/1000.0)})
+      if (publish == true) {
+        let tp = Math.max(wasteTime.current, 1);
+        if (recordId)
+          props.navigation.navigate('PostingAnswerVoice', { id: recordId, recordSecs: Math.ceil(tp / 1000.0) })
         else
-          props.navigation.navigate('PostingVoice',{recordSecs:Math.ceil(tp/1000.0),isTemporary:temporary})
+          props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0), isTemporary: temporary })
         clearRecorder();
-        setIsExpanded(false);   
+        setIsExpanded(false);
       }
-      else{
+      else {
         clearRecorder();
         setIsExpanded(false);
       }
     }
   };
- 
-  const onChangeRecord = async (e, v = false )=>{
-    if(v == true && isRecording == false){
+
+  const onChangeRecord = async (e, v = false) => {
+    if (v == true && isRecording == false) {
       setIsExpanded(true);
       onStartRecord();
     }
     else {
-      if(v == true && isPaused){
+      if (v == true && isPaused) {
         await recorderPlayer.resumeRecorder();
         setIsPaused(false);
-        //setStartTime(new Date());
       }
-      else if( v== false && isRecording == true){
+      else if (v == false && isRecording == true) {
         let delta = Math.abs(dragPos.current);
-        if(delta < 80){
+        if (delta < 80) {
           await recorderPlayer.pauseRecorder();
           setIsPaused(true);
         }
@@ -186,51 +158,51 @@ export const RecordIcon = ({
     }
   }
 
-  const onTimeEnd = ()=>{
+  const onTimeEnd = () => {
     onStopRecord(true);
   }
 
-  let r=0;
+  let r = 0;
   return (
     <View
       style={{
-        position:'absolute',
-        bottom: IsExpanded?0:bottom,
-        left: IsExpanded?0:left,
-        width:IsExpanded?'100%':dem,
-        height:IsExpanded?'100%':dem,
-        elevation:11
+        position: 'absolute',
+        bottom: IsExpanded ? 0 : bottom,
+        left: IsExpanded ? 0 : left,
+        width: IsExpanded ? '100%' : dem,
+        height: IsExpanded ? '100%' : dem,
+        elevation: 11
       }}
     >
-      {IsExpanded&&<View
+      {IsExpanded && <View
         style={{
           backgroundColor: '#FFF',
           flex: 1,
           width: '100%',
           height: '100%',
-          alignItems:'center'
+          alignItems: 'center'
         }}
       >
-        {user.premium!='none'&&
-        <Image
-          style={{
-            position:'absolute',
-            width:320,
-            height:68,
-            top:windowHeight/10
-          }}
-          source={require("../../assets/record/holdpremium.png")}
-        />}
-        <View style={{alignItems:'center',width:'100%'}}>
-          <TitleText 
-            text={t("Click & hold to record")} 
+        {user.premium != 'none' &&
+          <Image
+            style={{
+              position: 'absolute',
+              width: 320,
+              height: 68,
+              top: windowHeight / 10
+            }}
+            source={require("../../assets/record/holdpremium.png")}
+          />}
+        <View style={{ alignItems: 'center', width: '100%' }}>
+          <TitleText
+            text={t("Click & hold to record")}
             fontSize={20}
             marginTop={10}
             color="#281E30"
           />
           <View
             style={{
-              marginTop:windowHeight / 6
+              marginTop: windowHeight / 6
             }}
           >
             <CountdownCircleTimer
@@ -241,7 +213,7 @@ export const RecordIcon = ({
               strokeWidth={5}
               trailColor="#D4C9DE"
               trailStrokeWidth={1}
-              onComplete = {onTimeEnd}
+              onComplete={onTimeEnd}
               colors={[
                 ['#B35CF8', 0.4],
                 ['#8229F4', 0.4],
@@ -253,23 +225,23 @@ export const RecordIcon = ({
                   <ImageBackground
                     source={require('../../assets/record/Waves.png')}
                     resizeMode="stretch"
-                    style={{width:197,height:197,alignItems:'center'}}
+                    style={{ width: 197, height: 197, alignItems: 'center' }}
                   >
                     <DescriptionText
-                      text={t("seconds")} 
+                      text={t("seconds")}
                       color="rgba(59, 31, 82, 0.6)"
                       fontSize={20}
                       marginTop={32}
                     />
                     <LinearTextGradient
-                      style={{ fontSize: 80,marginTop:-10 }}
+                      style={{ fontSize: 80, marginTop: -10 }}
                       locations={[0, 1]}
-                      colors={["#C479FF","#650DD6"]}
+                      colors={["#C479FF", "#650DD6"]}
                       start={{ x: 0, y: 0 }}
                       end={{ x: 0, y: 1 }}
                     >
                       <Animated.Text style={{ color: animatedColor, fontFamily: "SFProDisplay-Semibold" }}>
-                        { fill- Math.floor(wasteTime.current/1000) }
+                        {fill - Math.floor(wasteTime.current / 1000)}
                       </Animated.Text>
                     </LinearTextGradient>
                   </ImageBackground>
@@ -278,82 +250,81 @@ export const RecordIcon = ({
             </CountdownCircleTimer>
           </View>
         </View>
-        <View style={{position:'absolute',bottom:'6%',width:'100%',alignItems:'center'}}>
+        <View style={{ position: 'absolute', bottom: '6%', width: '100%', alignItems: 'center' }}>
           <ImageBackground
             source={require('../../assets/record/RecordControl.png')}
             resizeMode="stretch"
-            style={{width:311,height:76,flexDirection:'row',justifyContent:'space-between', alignItems:'center'}}
-          >     
-            <View 
-              style={{flexDirection:'row',alignItems:'center',marginLeft:18}}
+            style={{ width: 311, height: 76, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+          >
+            <View
+              style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 18 }}
             >
-              <SvgXml width={20} height={16-(hoverState<0?r*4:0)} xml={cancelSvg} />
+              <SvgXml width={20} height={16 - (hoverState < 0 ? r * 4 : 0)} xml={cancelSvg} />
               <TitleText
-                text={t("Cancel")} 
-                fontFamily="SFProDisplay-Regular" 
+                text={t("Cancel")}
+                fontFamily="SFProDisplay-Regular"
                 fontSize={16}
                 marginLeft={8}
                 lineHeight={21}
                 color="#E41717"
               />
             </View>
-            <View style={{flexDirection:'row',alignItems:'center',marginRight:18}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 18 }}>
               <TitleText
-                  text={t("Publish")} 
-                  fontFamily="SFProDisplay-Regular" 
-                  fontSize={16}
-                  marginRight={8}
-                  lineHeight={21}
-                  color="#8327D8"
+                text={t("Publish")}
+                fontFamily="SFProDisplay-Regular"
+                fontSize={16}
+                marginRight={8}
+                lineHeight={21}
+                color="#8327D8"
               />
-              <SvgXml width={20} height={16+(hoverState>0?hoverState*4:0)} xml={publicSvg} />
+              <SvgXml width={20} height={16 + (hoverState > 0 ? hoverState * 4 : 0)} xml={publicSvg} />
             </View>
           </ImageBackground>
         </View>
         <Warning
           bottom={'25%'}
-          text = {t("Hate, racism, sexism or any kind of violence is stricly prohibited")}
+          text={t("Hate, racism, sexism or any kind of violence is stricly prohibited")}
         />
       </View>}
-      <View style={{position:IsExpanded?'absolute':'relative',bottom:'6%',width:IsExpanded?'100%':54,height:IsExpanded?76:54}}>
-        <Draggable 
-        key={key}
-        x={IsExpanded?windowWidth / 2 - 38:0} 
-        y={0}
-        shouldReverse={true}
-        minX={windowWidth / 2 - 120}
-        maxX={windowWidth / 2 + 136}
-        minY={0}
-        maxY={0}
-        touchableOpacityProps={{
-          activeOpactiy: 0.1,
-        }}
-        //onShortPressRelease={onChangeRecord}
-        onDrag={(event, gestureState) => {
-          
-        }}
-        onDragRelease={(event, gestureState, bounds) => {
-          dragPos.current = gestureState.dx;
-          if(gestureState.dx>80)
-            onStopRecord(true)
-          else if(gestureState.dx<-80)
-            onStopRecord(false);
-        }}
-        onReverse={() => {
+      <View style={{ position: IsExpanded ? 'absolute' : 'relative', bottom: '6%', width: IsExpanded ? '100%' : 54, height: IsExpanded ? 76 : 54 }}>
+        <Draggable
+          key={key}
+          x={IsExpanded ? windowWidth / 2 - 38 : 0}
+          y={0}
+          shouldReverse={true}
+          minX={windowWidth / 2 - 120}
+          maxX={windowWidth / 2 + 136}
+          minY={0}
+          maxY={0}
+          touchableOpacityProps={{
+            activeOpactiy: 0.1,
+          }}
+          onDrag={(event, gestureState) => {
 
-        }}
-        
-      >
-        <View
-          onTouchStart={(e)=>onChangeRecord( e,true )}
-          onTouchEnd={(e)=>onChangeRecord( e,false )}
+          }}
+          onDragRelease={(event, gestureState, bounds) => {
+            dragPos.current = gestureState.dx;
+            if (gestureState.dx > 80)
+              onStopRecord(true)
+            else if (gestureState.dx < -80)
+              onStopRecord(false);
+          }}
+          onReverse={() => {
+
+          }}
+
         >
-          <SvgXml
-            width={IsExpanded?76:54}
-            height={IsExpanded?76:54}
-            xml={recordSvg}
-          />
-        </View>
+          <View
+            onTouchStart={(e) => onChangeRecord(e, true)}
+            onTouchEnd={(e) => onChangeRecord(e, false)}
+          >
+            <SvgXml
+              width={IsExpanded ? 76 : 54}
+              height={IsExpanded ? 76 : 54}
+              xml={recordSvg}
+            />
+          </View>
         </Draggable>
       </View>
     </View>

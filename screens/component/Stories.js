@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   View,
-  ScrollView,
   Image,
   Text,
-  Platform,
 } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
@@ -106,11 +104,11 @@ export const Stories = ({
   return <>
     {(
       !loading ? (stories.length > 0 ? storyItems : (screenName == 'Feed' ?
-        <View style={{ width: windowWidth, alignItems: 'center'}}>
+        <View style={{ width: windowWidth, alignItems: 'center' }}>
           <Image
             style={{
-              width:343,
-              height:286
+              width: 343,
+              height: 286
             }}
             source={require('../../assets/Feed/InviteFriend.png')}
           />
@@ -129,7 +127,7 @@ export const Stories = ({
           </Text>
           <MyButton
             label='Invite friends'
-            onPress={() => {}}
+            onPress={() => { }}
           />
         </View> :
         <View style={{ marginTop: windowHeight / 20, alignItems: 'center', width: windowWidth }}>

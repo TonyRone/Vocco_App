@@ -11,7 +11,6 @@ import { MyButton } from '../component/MyButton';
 import { MyTextField } from '../component/MyTextField';
 import { ConfirmVerify } from '../component/ConfirmVerify';
 import { SvgXml } from 'react-native-svg';
-
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/CommenText';
@@ -23,7 +22,6 @@ import { setUser } from '../../store/actions';
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ChangeEmailScreen = (props) => {
 
@@ -86,7 +84,6 @@ const ChangeEmailScreen = (props) => {
             setLoading(true);
             EditService.changeEmail(payload).then(async res => {
                 try {
-                    const jsonRes = await res.json();
                     if (res.respInfo.status == 201) {
                         setStatetype('verify');
                     }
@@ -109,7 +106,6 @@ const ChangeEmailScreen = (props) => {
     }
 
     useEffect(() => {
-        //  checkLogin();
     }, [])
     return (
         <KeyboardAvoidingView

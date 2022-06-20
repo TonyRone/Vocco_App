@@ -4,18 +4,15 @@ import {
   TouchableOpacity,
   Text,
   Image,
-  Pressable,
 } from "react-native";
 
 import { useTranslation } from 'react-i18next';
-import EmojiPicker from 'rn-emoji-keyboard';
 import '../../language/i18n';
 import { PostContext } from '../component/PostContext';
 import { TitleText } from "./TitleText";
 import { HeartIcon } from './HeartIcon';
 import { StoryLikes } from './StoryLikes';
 import { DescriptionText } from "./DescriptionText";
-import { AnswerSimpleItem } from './AnswerSimpleItem';
 import { useSelector } from 'react-redux';
 import { SvgXml } from 'react-native-svg';
 import pauseSvg from '../../assets/common/pause.svg';
@@ -35,13 +32,10 @@ export const VoiceItem = ({
   onChangeLike = () => { },
   spread = true,
 }) => {
-  const [answerVoices, setAnswerVoices] = useState([]);
   const [received, setReceived] = useState(false);
   const [showAnswers, setShowAnswers] = useState(false);
-  const [showEmojies, setShowEmojies] = useState(false);
   const [showContext, setShowContext] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const [nowVoice, setNowVoice] = useState(null);
   const [lastTap, setLastTap] = useState(0);
   const [delayTime, setDelayTime] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -80,22 +74,6 @@ export const VoiceItem = ({
     setShowEmojies(false);
   }
 
-  const onShowAnswers = () => {
-    if (received == false && spread) {
-      VoiceService.getAnswerVoices(info.id).then(async res => {
-        if (res.respInfo.status === 200) {
-          const jsonRes = await res.json();
-          setAnswerVoices(jsonRes);
-          setReceived(true);
-        }
-      })
-        .catch(err => {
-          console.log(err);
-        });
-    }
-    setShowAnswers(!showAnswers);
-  }
-
   const OnSetLike = () => {
     if (info.isLike == true) {
       VoiceService.recordUnAppreciate(info.id);
@@ -105,47 +83,6 @@ export const VoiceItem = ({
     }
     onChangeLike(!info.isLike);
   }
-
-  const selectIcon = (icon) => {
-    setShowEmojies(false);
-    VoiceService.addReaction({ id: info.id, emoji: icon }).then(async res => {
-      const jsonRes = await res.json();
-      if (res.respInfo.status == 201) {
-        setReactions(jsonRes.lastreactions);
-        setReactionsCount(jsonRes.reactioncount);
-      }
-    })
-      .catch(err => {
-        console.log(err)
-      })
-    let i, temp = reactions;
-    if (temp.length == 0)
-      temp = [];
-    for (i = 0; i < reactions.length; i++) {
-      if (reactions[i].user.id == user.id) {
-        temp[i].emoji = icon;
-        break;
-      }
-    }
-    if (i == temp.length) {
-      for (i = 2; i > 0; i--) {
-        if (i > reactions.length) continue;
-        temp[i] = temp[i - 1];
-      }
-      if (temp.length == 0) {
-        temp.push({ emoji: icon, user: { id: user.id } });
-      }
-      else temp[0] = { emoji: icon, user: { id: user.id } };
-      if (reactions.length < 3)
-        setReactionsCount(reactionsCount + 1);
-      setReactions(temp);
-    }
-    else
-      setReactions(temp);
-  }
-  const onStopAnswerPlay = () => {
-    setNowVoice(null);
-  };
 
   const onClickDouble = () => {
     const timeNow = Date.now();
@@ -215,7 +152,6 @@ export const VoiceItem = ({
                     color: 'white',
                   }}
                 >
-                  {/* {String.fromCodePoint(erngSvg)} */}
                   {erngSvg}
                 </Text>
               </View>
@@ -261,14 +197,14 @@ export const VoiceItem = ({
             <VoicePlayer
               voiceUrl={info.file.url}
               stopPlay={() => setIsPlaying(false)}
-              startPlay={() => {VoiceService.listenStory(info.id, 'record')}}
+              startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
               playBtn={false}
               replayBtn={false}
-              waveColor={info.user.premium != 'none'?['#FFC701','#FFA901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
+              waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
               playing={true}
               tinWidth={windowWidth / 160}
               mrg={windowWidth / 600}
-              duration={info.duration*1000}
+              duration={info.duration * 1000}
             />
           </View>
         }
@@ -293,7 +229,7 @@ export const VoiceItem = ({
               />
             </TouchableOpacity>
             <DescriptionText
-              text={info.listenCount+" "+t("lectures")+(time!=''?" - ":'')+time}
+              text={info.listenCount + " " + t("lectures") + (time != '' ? " - " : '') + time}
               fontSize={13}
               lineHeight={15}
               marginLeft={30}
@@ -301,15 +237,6 @@ export const VoiceItem = ({
             />
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {/* <Text
-              style={{
-                fontFamily:"SFProDisplay-Regular",
-                fontSize:12,
-                color:'#8327D8'
-              }}
-            >
-              {t("Tap here to answer")}
-            </Text> */}
             <SvgXml
               width={19}
               height={19}

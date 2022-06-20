@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { KeyboardAvoidingView, Image, Text, PermissionsAndroid, Platform } from 'react-native';
+import { KeyboardAvoidingView, Image, PermissionsAndroid, Platform } from 'react-native';
 import io from "socket.io-client";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE, DEVICE_TOKEN, DEVICE_OS, windowWidth, windowHeight, APP_NAV } from '../../config/config';
+import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE, APP_NAV } from '../../config/config';
 import { NavigationActions, StackActions } from 'react-navigation';
 
 import { useTranslation } from 'react-i18next';
@@ -12,14 +12,13 @@ import '../../language/i18n';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser, setSocketInstance } from '../../store/actions/index';
 
-import { styles } from '../style/Welcome';
 import AuthService from '../../services/AuthService';
 
 const LogoScreen = (props) => {
 
     const { t, i18n } = useTranslation();
 
-    let { user, socketInstance } = useSelector((state) => {
+    let { socketInstance } = useSelector((state) => {
         return (
             state.user
         )
@@ -64,8 +63,8 @@ const LogoScreen = (props) => {
         if (socketInstance == null) {
             let socket = io(SOCKET_URL);
             dispatch(setSocketInstance(socket));
-            socket.on("connect", ()=>{
-                socket.emit("login", { uid: jsonRes.id, email: jsonRes.email, isNew:false }, (res) => {
+            socket.on("connect", () => {
+                socket.emit("login", { uid: jsonRes.id, email: jsonRes.email, isNew: false }, (res) => {
                     if (res == "Success") {
                         onGoScreen(jsonRes);
                     }
@@ -73,7 +72,7 @@ const LogoScreen = (props) => {
                         props.navigation.navigate('Welcome');
                     }
                 });
-            } )
+            })
         }
         else
             onGoScreen(jsonRes);

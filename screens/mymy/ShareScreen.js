@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  ImageBackground, 
+import {
+  View,
+  ImageBackground,
   KeyboardAvoidingView,
-  TouchableOpacity 
+  TouchableOpacity
 } from 'react-native';
 
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { DescriptionText } from '../component/DescriptionText';
 import { MyButton } from '../component/MyButton';
@@ -22,9 +22,9 @@ const ShareScreen = (props) => {
 
   let info = props.navigation.state.params.info;
 
-  const {t, i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const OnShareVoice = async ()=>{
+  const OnShareVoice = async () => {
     await AsyncStorage.setItem(
       SHARE_CHECK,
       "checked"
@@ -36,53 +36,53 @@ const ShareScreen = (props) => {
 
   }, [])
 
-  const [showShareVoice, setShowShareVoice] = useState(false); 
+  const [showShareVoice, setShowShareVoice] = useState(false);
 
   return (
-      <KeyboardAvoidingView 
-        style={{
-          backgroundColor:'#FFF',
-          flex:1
-        }}
+    <KeyboardAvoidingView
+      style={{
+        backgroundColor: '#FFF',
+        flex: 1
+      }}
+    >
+      <ImageBackground
+        source={require('../../assets/post/background.jpg')}
+        resizeMode="stretch"
+        style={styles.background}
       >
-       <ImageBackground
-          source={require('../../assets/post/background.jpg')}
-          resizeMode="stretch"
-          style={styles.background}
-        >
-          <View style={{marginTop:Platform.OS=='ios'?60:35,paddingHorizontal:16, flexDirection:'row',justifyContent:'space-between',alignItems:'center',}}>
-            <TouchableOpacity onPress={()=>props.navigation.goBack()}>
-              <SvgXml width="24" height="24" xml={closeBlackSvg} />  
-            </TouchableOpacity>
-          </View>
-          <View style={{position:'absolute', width:'100%',bottom:68,flex:1,alignItems:'center'}}>
-            <SvgXml
-              xml= {shareTextSvg}
-              height={28}
-            />
-            <DescriptionText
-              fontSize={15}
-              lineHeight={24}
-              color = 'rgba(54, 36, 68, 0.8)'
-              text= {t("Make you friends aware of the best stories!")}
-              marginTop={10}
-            />
-            <View style ={{width:'100%', paddingHorizontal:16 }}>
-              <MyButton
-                marginTop={51}
-                label={t("Let's share")}
-                onPress={()=>OnShareVoice()}
-              />
-            </View>
-          </View>
-        </ImageBackground>
-        {showShareVoice&&
-          <ShareVoice
-            info = {info}
-            onCloseModal={()=>setShowShareVoice(false) }
+        <View style={{ marginTop: Platform.OS == 'ios' ? 60 : 35, paddingHorizontal: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
+          <TouchableOpacity onPress={() => props.navigation.goBack()}>
+            <SvgXml width="24" height="24" xml={closeBlackSvg} />
+          </TouchableOpacity>
+        </View>
+        <View style={{ position: 'absolute', width: '100%', bottom: 68, flex: 1, alignItems: 'center' }}>
+          <SvgXml
+            xml={shareTextSvg}
+            height={28}
           />
-        }
-      </KeyboardAvoidingView>
+          <DescriptionText
+            fontSize={15}
+            lineHeight={24}
+            color='rgba(54, 36, 68, 0.8)'
+            text={t("Make you friends aware of the best stories!")}
+            marginTop={10}
+          />
+          <View style={{ width: '100%', paddingHorizontal: 16 }}>
+            <MyButton
+              marginTop={51}
+              label={t("Let's share")}
+              onPress={() => OnShareVoice()}
+            />
+          </View>
+        </View>
+      </ImageBackground>
+      {showShareVoice &&
+        <ShareVoice
+          info={info}
+          onCloseModal={() => setShowShareVoice(false)}
+        />
+      }
+    </KeyboardAvoidingView>
   );
 };
 

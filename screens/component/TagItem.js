@@ -2,41 +2,25 @@ import React, { useState, useEffect } from "react";
 import { View, TouchableOpacity, Text, Image } from "react-native";
 import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
-
 import { useSelector } from 'react-redux';
-
 import { HeartIcon } from './HeartIcon';
-import { AnswerReply } from "./AnswerReply";
-import { StoryLikes } from "./StoryLikes";
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
-import { SvgXml } from 'react-native-svg';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
-import pauseSvg from '../../assets/common/pause.svg';
-import playSvg from '../../assets/common/play.svg';
-import whiteTrashSvg from '../../assets/notification/white_trash.svg'
-import blankHeartSvg from '../../assets/post/blankHeart.svg';
-import redHeartSvg from '../../assets/post/redHeart.svg';
 import { styles } from '../style/Common';
 import VoiceService from "../../services/VoiceService";
-import VoicePlayer from "../Home/VoicePlayer";
 import { windowWidth } from "../../config/config";
-import { ReplyAnswerItem } from "./ReplyAnswerItem";
-import { set } from "immer/dist/internal";
 import { TagUserList } from "./TagUserList";
 
 export const TagItem = ({
   info,
   props,
-  onChangeIsLiked = () => {},
+  onChangeIsLiked = () => { },
 }) => {
 
   const { user } = useSelector((state) => state.user);
 
   const [tagUsers, setTagUsers] = useState([]);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [delayTime, setDelayTime] = useState(null);
-  const [replyAnswers, setReplyAnswers] = useState([]);
   const [showList, setShowList] = useState(false);
 
   const { t, i18n } = useTranslation();
@@ -146,14 +130,14 @@ export const TagItem = ({
             </View>
           </View>
         </View>
-        <View style={{ flexDirection: 'row', alignItems:'center' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <HeartIcon
             isLike={check}
             marginRight={33}
             OnSetLike={() => onLikeTag()}
           />
-          <View style={{ marginRight: 11 ,width: 19, height: 19}}>
-            {tagUsers.length > 0 && <TouchableOpacity onPress={()=>setShowList(true)} style={{ alignItems: 'center', justifyContent: 'center', width: 19, height: 19, borderRadius: 9.5, backgroundColor: '#7F27D3' }}>
+          <View style={{ marginRight: 11, width: 19, height: 19 }}>
+            {tagUsers.length > 0 && <TouchableOpacity onPress={() => setShowList(true)} style={{ alignItems: 'center', justifyContent: 'center', width: 19, height: 19, borderRadius: 9.5, backgroundColor: '#7F27D3' }}>
               <DescriptionText
                 text={tagUsers.length}
                 color='#FFF'
@@ -165,11 +149,11 @@ export const TagItem = ({
         </View>
       </View>
     </TouchableOpacity>
-    {showList&&
+    {showList &&
       <TagUserList
         props={props}
         users={tagUsers}
-        onCloseModal={()=>setShowList(false)}
+        onCloseModal={() => setShowList(false)}
       />
     }
   </>

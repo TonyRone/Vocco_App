@@ -6,43 +6,66 @@ export const MyProgressBar = ({
 }) => {
   return (
     <View style={{
-      flexDirection:"row",
-      justifyContent:"center",
-      alignItems:"center"
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center"
     }}>
       <View style={{
-        height:2,
-        width:28,
-        backgroundColor: progress > 0 ? '#8327D8' : '#D4C9DE',
-        marginHorizontal:5
+        height: 8,
+        width: 8,
+        borderRadius: 4,
+        backgroundColor: progress == 0 ? '#8327D8' : 'rgba(255, 255, 255, 0.6)',
+        marginHorizontal: 12
       }}>
       </View>
       <View style={{
-        height:2,
-        width:28,
-        marginHorizontal:5,
-        backgroundColor: progress > 1 ? '#8327D8' : '#D4C9DE',
+        height: 8,
+        width: 8,
+        borderRadius: 4,
+        backgroundColor: progress == 1 ? '#8327D8' : 'rgba(255, 255, 255, 0.6)',
+        marginHorizontal: 12
       }}>
-      </View>
-      <View style={{
-        height:2,
-        width:28,
-        marginHorizontal:5,
-        backgroundColor: progress > 2 ? '#8327D8' : '#D4C9DE',
+      </View><View style={{
+        height: 8,
+        width: 8,
+        borderRadius: 4,
+        backgroundColor: progress == 2 ? '#8327D8' : 'rgba(255, 255, 255, 0.6)',
+        marginHorizontal: 12
       }}>
-      </View>
-      <View style={{
-        height:2,
-        width:28,
-        marginHorizontal:5,
-        backgroundColor: progress > 3 ? '#8327D8' : '#D4C9DE',
+      </View><View style={{
+        height: 8,
+        width: 8,
+        borderRadius: 4,
+        backgroundColor: progress == 3 ? '#8327D8' : 'rgba(255, 255, 255, 0.6)',
+        marginHorizontal: 12
       }}>
-      </View>
-      <View style={{
-        height:2,
-        width:28,
-        marginHorizontal:5,
-        backgroundColor: progress > 4 ? '#8327D8' : '#D4C9DE',
+      </View><View style={{
+        height: 8,
+        width: 8,
+        borderRadius: 4,
+        backgroundColor: progress == 4 ? '#8327D8' : 'rgba(255, 255, 255, 0.6)',
+        marginHorizontal: 12
+      }}>
+      </View><View style={{
+        height: 8,
+        width: 8,
+        borderRadius: 4,
+        backgroundColor: progress == 5 ? '#8327D8' : 'rgba(255, 255, 255, 0.6)',
+        marginHorizontal: 12
+      }}>
+      </View><View style={{
+        height: 8,
+        width: 8,
+        borderRadius: 4,
+        backgroundColor: progress == 6 ? '#8327D8' : 'rgba(255, 255, 255, 0.6)',
+        marginHorizontal: 12
+      }}>
+      </View><View style={{
+        height: 8,
+        width: 8,
+        borderRadius: 4,
+        backgroundColor: progress == 7 ? '#8327D8' : 'rgba(255, 255, 255, 0.6)',
+        marginHorizontal: 12
       }}>
       </View>
     </View>

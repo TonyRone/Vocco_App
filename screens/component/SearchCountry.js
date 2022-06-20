@@ -1,25 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
-import DatePicker from 'react-native-date-picker'
-import {useTranslation} from 'react-i18next';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
-import { TitleText } from '../component/TitleText';
-import { DescriptionText } from '../component/DescriptionText';
-import { MyButton } from '../component/MyButton';
-import { MyProgressBar } from '../component/MyProgressBar';
 import { FlatList } from 'react-native-gesture-handler';
 
 import { SvgXml } from 'react-native-svg';
 import searchSvg from '../../assets/login/search.svg';
-import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import checkSvg from "../../assets/login/check.svg"
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { STORAGE_KEY, windowHeight } from '../../config/config';
-import { styles } from '../style/Login';
+import { windowHeight } from '../../config/config';
 
 export const SearchCountry = ({
-  onSelectCountry = ()=>{} ,
+  onSelectCountry = () => { },
   marginHorizontal,
   height = windowHeight - 340,
   marginTop
@@ -28,7 +20,7 @@ export const SearchCountry = ({
   const countries = require('../component/country.json');
   const [fiteredCountries, setFilteredCountries] = useState(countries);
 
-  const {t, i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const selectCountry = (index) => {
     let data = fiteredCountries;
@@ -45,7 +37,7 @@ export const SearchCountry = ({
     let data = countries;
     let result = [];
     data.map((dt) => {
-      if(dt.country.toLowerCase().indexOf(keyword.toLowerCase()) != -1) {
+      if (dt.country.toLowerCase().indexOf(keyword.toLowerCase()) != -1) {
         result.push(dt);
       }
     });
@@ -81,65 +73,65 @@ export const SearchCountry = ({
         onChangeText={(e) => filterCountry(e)}
       />
       <FlatList
-          style={{
-            marginTop: 20,
-            height: height
-          }}
-          data={fiteredCountries}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item,index})=>index ? item.country.charAt(0) != fiteredCountries[index - 1].country.charAt(0) ?
-          <View key={index+'searchCountry'}>
-          <View
-            style={{
-              flexDirection:'row',
-              justifyContent:'space-between',
-              alignItems:'center',
-              height:44
-            }}
-          >
-            <Text
+        style={{
+          marginTop: 20,
+          height: height
+        }}
+        data={fiteredCountries}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item, index }) => index ? item.country.charAt(0) != fiteredCountries[index - 1].country.charAt(0) ?
+          <View key={index + 'searchCountry'}>
+            <View
               style={{
-                fontFamily: "SFProDisplay-Semibold",
-                fontSize: 20,
-                lineHeight: 24,
-                color: '#281E30'
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                height: 44
               }}
             >
-              {item.country.charAt(0)}
-            </Text>
-          </View>
-          <TouchableOpacity
-            style={{
-              flexDirection:'row',
-              justifyContent:'space-between',
-              alignItems:'center',
-              height:44
-            }}
-            key={index}
-            onPress={()=>selectCountry(index)}
-          >
-            <Text
+              <Text
+                style={{
+                  fontFamily: "SFProDisplay-Semibold",
+                  fontSize: 20,
+                  lineHeight: 24,
+                  color: '#281E30'
+                }}
+              >
+                {item.country.charAt(0)}
+              </Text>
+            </View>
+            <TouchableOpacity
               style={{
-                fontFamily: "SFProDisplay-Regular",
-                fontSize: 17,
-                lineHeight: 28,
-                color: item.checked ? '#8327D8' : '#281E30'
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                height: 44
               }}
+              key={index}
+              onPress={() => selectCountry(index)}
             >
-              {item.country}
-            </Text>
-            {item.checked ? <SvgXml width={20} height={20} xml={checkSvg} /> : null}
-          </TouchableOpacity>
+              <Text
+                style={{
+                  fontFamily: "SFProDisplay-Regular",
+                  fontSize: 17,
+                  lineHeight: 28,
+                  color: item.checked ? '#8327D8' : '#281E30'
+                }}
+              >
+                {item.country}
+              </Text>
+              {item.checked ? <SvgXml width={20} height={20} xml={checkSvg} /> : null}
+            </TouchableOpacity>
           </View>
-          : 
+          :
           <TouchableOpacity
             style={{
-              flexDirection:'row',
-              justifyContent:'space-between',
-              alignItems:'center',
-              height:44
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              height: 44
             }}
-            key={index+'serchCountry'}
+            key={index + 'serchCountry'}
             onPress={() => selectCountry(index)}
           >
             <Text
@@ -156,47 +148,47 @@ export const SearchCountry = ({
           </TouchableOpacity>
           :
           <>
-          <View
-            style={{
-              flexDirection:'row',
-              justifyContent:'space-between',
-              alignItems:'center',
-              height:44
-            }}
-          >
-            <Text
+            <View
               style={{
-                fontFamily: "SFProDisplay-Semibold",
-                fontSize: 20,
-                lineHeight: 24,
-                color: '#281E30'
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                height: 44
               }}
             >
-              {item.country.charAt(0)}
-            </Text>
-          </View>
-          <TouchableOpacity
-            style={{
-              flexDirection:'row',
-              justifyContent:'space-between',
-              alignItems:'center',
-              height:44
-            }}
-            key={index}
-            onPress={() => selectCountry(index)}
-          >
-            <Text
+              <Text
+                style={{
+                  fontFamily: "SFProDisplay-Semibold",
+                  fontSize: 20,
+                  lineHeight: 24,
+                  color: '#281E30'
+                }}
+              >
+                {item.country.charAt(0)}
+              </Text>
+            </View>
+            <TouchableOpacity
               style={{
-                fontFamily: "SFProDisplay-Regular",
-                fontSize: 17,
-                lineHeight: 28,
-                color: item.checked ? '#8327D8' : '#281E30'
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                height: 44
               }}
+              key={index}
+              onPress={() => selectCountry(index)}
             >
-              {item.country}
-            </Text>
-            {item.checked ? <SvgXml width={20} height={20} xml={checkSvg} /> : null}
-          </TouchableOpacity>
+              <Text
+                style={{
+                  fontFamily: "SFProDisplay-Regular",
+                  fontSize: 17,
+                  lineHeight: 28,
+                  color: item.checked ? '#8327D8' : '#281E30'
+                }}
+              >
+                {item.country}
+              </Text>
+              {item.checked ? <SvgXml width={20} height={20} xml={checkSvg} /> : null}
+            </TouchableOpacity>
           </>
         }
       />

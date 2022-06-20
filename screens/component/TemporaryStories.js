@@ -5,18 +5,14 @@ import {
   Image,
   Pressable,
   Text,
-  Platform
 } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
-import * as Progress from "react-native-progress";
-import { VoiceItem } from './VoiceItem';
 import { FriendItem } from './FriendItem';
 import { SvgXml } from 'react-native-svg';
 import plusSvg from '../../assets/Feed/plus.svg'
-import box_blankSvg from '../../assets/discover/box_blank.svg';
-import { windowHeight, windowWidth } from '../../config/config';
+import { windowWidth } from '../../config/config';
 import SwipeDownModal from 'react-native-swipe-down';
 import { useSelector } from 'react-redux';
 import VoiceService from '../../services/VoiceService';
@@ -29,12 +25,9 @@ export const TemporaryStories = ({
   onSetExpandKey = () => { },
 }) => {
   const { t, i18n } = useTranslation();
-  const scrollRef = useRef();
 
   const [stories, setStories] = useState([]);
   const [temFlag, setTemFlag] = useState(-1);
-  const [LoadMore, setLoadMore] = useState(10);
-  const [loading, setLoading] = useState(true);
   const [confirmModal, setConfirmModal] = useState(false);
 
   let { user, refreshState } = useSelector((state) => {

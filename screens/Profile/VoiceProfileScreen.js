@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   KeyboardAvoidingView,
@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-
 import * as Progress from "react-native-progress";
 import { NavigationActions, StackActions } from 'react-navigation';
 import { useTranslation } from 'react-i18next';
@@ -19,15 +18,12 @@ import SwipeDownModal from 'react-native-swipe-down';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState, setVoiceState } from '../../store/actions';
 import { DescriptionText } from '../component/DescriptionText';
-import { FlatList } from 'react-native-gesture-handler';
 import VoiceService from '../../services/VoiceService';
 import { ShareVoice } from '../component/ShareVoice';
-import { AnswerReply } from '../component/AnswerReply';
 import Share from 'react-native-share';
 import VoicePlayer from '../Home/VoicePlayer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import recordSvg from '../../assets/common/bottomIcons/record.svg';
 import { SvgXml } from 'react-native-svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import moreSvg from '../../assets/common/more.svg';
@@ -40,7 +36,6 @@ import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/CommenText';
 import { AnswerVoiceItem } from '../component/AnswerVoiceItem';
 import '../../language/i18n';
-import EmojiPicker from 'rn-emoji-keyboard';
 import { RecordIcon } from '../component/RecordIcon';
 import { StoryLikes } from '../component/StoryLikes';
 import { TagFriends } from '../component/TagFriends';
@@ -82,15 +77,6 @@ const VoiceProfileScreen = (props) => {
     )
   });
 
-  const onNavigate = (des, par = null) => {
-    //props.navigation.navigate(navigateScreen,{info:jsonRes})
-    const resetActionTrue = StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: des, params: par })],
-    });
-    props.navigation.dispatch(resetActionTrue);
-  }
-
   const getUserInfo = () => {
     VoiceService.getStories(0, '', '', '', recordId).then(async res => {
       if (res.respInfo.status === 200) {
@@ -120,7 +106,6 @@ const VoiceProfileScreen = (props) => {
   }
 
   const getAnswerVoices = () => {
-    //setLoading(true);
     VoiceService.getAnswerVoices(recordId, answerId).then(async res => {
       if (res.respInfo.status === 200) {
         let answers = await res.json(), tags;
@@ -150,28 +135,16 @@ const VoiceProfileScreen = (props) => {
       });
   }
 
-  const getTags = () => {
-
-  }
-
   const editVoice = () => {
     props.navigation.navigate("PostingVoice", { info: info });
     setShowModal(false);
   }
 
   const onShareAudio = useCallback(() => {
-    // VoiceService.getVoiceFile(info.file.url).then(res=>{
-    //   if(res.respInfo.status==200){
-    //     let filePath= `${Platform.OS === 'android' ? '' : ''}${res.path()}`;
     Share.open({
       url: info.file.url,
       type: 'audio/mp3',
     });
-    //   }
-    // })
-    // .catch(err=>{
-    //   console.log(err);
-    // })
   }, []);
 
   const deleteConfirm = () => {
@@ -279,13 +252,6 @@ const VoiceProfileScreen = (props) => {
                 {info?.emoji}
               </Text>
             </View>
-            {/* <DescriptionText
-                fontSize={13}
-                lineHeight={21}
-                color={'rgba(54, 36, 68, 0.8)'}
-                text = {info?.user.name}
-                marginLeft={8}
-              /> */}
           </TouchableOpacity>}
           <SemiBoldText
             text={info?.user.name}
@@ -312,17 +278,17 @@ const VoiceProfileScreen = (props) => {
           <VoicePlayer
             voiceUrl={info?.file.url}
             playBtn={true}
-            waveColor={info.user.premium != 'none'?['#FFC701','#FFA901','#FF8B02']:['#D89DF4', '#B35CF8','#8229F4']}
+            waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
             playing={false}
             startPlay={() => { VoiceService.listenStory(recordId, 'record') }}
             stopPlay={() => { }}
             tinWidth={windowWidth / 200}
             mrg={windowWidth / 530}
-            duration={info.duration*1000}
+            duration={info.duration * 1000}
           />
         </View>}
       </ImageBackground>
-      <View style={{ marginTop: Platform.OS == 'ios' ? -60 : -100, width: '100%', flex: 1, backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 30, marginBottom:50 }}>
+      <View style={{ marginTop: Platform.OS == 'ios' ? -60 : -100, width: '100%', flex: 1, backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 30, marginBottom: 50 }}>
         <View style={{ width: '100%', marginTop: 8, alignItems: 'center' }}>
           <View style={{ width: 48, height: 4, borderRadius: 2, backgroundColor: '#D4C9DE' }}>
           </View>
@@ -393,11 +359,6 @@ const VoiceProfileScreen = (props) => {
             zIndex: 10
           }}>
             <View style={{ width: 54, height: 54 }}>
-              {/* <SvgXml
-                  width={54}
-                  height={54}
-                  xml={recordSvg}
-                /> */}
             </View>
             <SemiBoldText
               text=""
@@ -493,12 +454,6 @@ const VoiceProfileScreen = (props) => {
           </View>
         </View>
       </View>}
-      {/* {showEmoji&&
-          <EmojiPicker
-            onEmojiSelected={(icon)=>selectIcon(icon.emoji)}
-            open={showEmoji}
-            onClose={() => setShowEmojis(false)} />
-        } */}
       <SwipeDownModal
         modalVisible={showModal}
         ContentModal={

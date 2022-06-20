@@ -13,23 +13,17 @@ import {
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
-import io from "socket.io-client";
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
 import { MyButton } from '../component/MyButton';
 import { MyProgressBar } from '../component/MyProgressBar';
-
 import RNFetchBlob from 'rn-fetch-blob';
-
 import { SvgXml } from 'react-native-svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUser, setSocketInstance } from '../../store/actions';
-import { SOCKET_URL } from '../../config/config';
-
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../store/actions';
 import { styles } from '../style/Login';
 import AuthService from '../../services/AuthService';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PhotoScreen = (props) => {
 
@@ -45,16 +39,7 @@ const PhotoScreen = (props) => {
 
   const { t, i18n } = useTranslation();
 
-  let { socketInstance } = useSelector((state) => {
-    return (
-      state.user
-    )
-  });
-
   const dispatch = useDispatch();
-
-  const checkLogin = async () => {
-  }
 
   const selectFileByCamera = () => {
     setModalVisible(false);
@@ -153,10 +138,7 @@ const PhotoScreen = (props) => {
           setLoading(false);
           if (res.respInfo.status !== 201) {
             setErrorText(jsonRes.message + ' :upload Photo');
-            // setMessage(jsonRes.message);
           } else {
-            let pUrl = jsonRes.url;
-            // pUrl = pUrl.replace(/^http:\/\//i, 'https://');
             AuthService.getUserInfo().then(async res => {
               const jsonRes = await res.json();
               if (res.respInfo.status == 200) {
@@ -184,7 +166,6 @@ const PhotoScreen = (props) => {
   useEffect(() => {
     if (Platform.OS === 'android')
       requestCameraPermission();
-    checkLogin();
   }, [])
 
   return (
@@ -255,11 +236,6 @@ const PhotoScreen = (props) => {
           }}
           onPress={() => { setModalVisible(true); setErrorText(null) }}
         >
-          {/* <SvgXml 
-              width="32" 
-              height="32" 
-              xml={photoSvg} 
-            /> */}
           <Image source={{ uri: photoResourcePath.assets ? photoResourcePath.assets[0].uri : imageUrl != '' ? imageUrl : '' }}
             style={{
               width: '100%',

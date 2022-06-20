@@ -1,12 +1,11 @@
 import React from "react";
 import { View, TouchableOpacity, Text } from "react-native";
-import LinearGradient from 'react-native-linear-gradient';
 
 export const MyColorButton = ({
   label,
   onPress,
   marginTop = 20,
-  marginBottom ,
+  marginBottom,
   color = '#8327D8',
   shadowColor = color,
   active = true,
@@ -17,10 +16,10 @@ export const MyColorButton = ({
       marginBottom,
       borderRadius: 16,
       shadowColor: shadowColor,
-      shadowOffset:{width: 0, height: 2},
-      shadowOpacity:0.5,
-      shadowRadius:8,
-      elevation: active ? 20 : 0, 
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.5,
+      shadowRadius: 8,
+      elevation: active ? 20 : 0,
       zIndex: 10,
     }}>
       <TouchableOpacity
@@ -32,7 +31,7 @@ export const MyColorButton = ({
             {
               height: 60,
               borderRadius: 16,
-              backgroundColor:color,
+              backgroundColor: color,
               alignItems: 'center',
               justifyContent: 'center',
               flexDirection: 'row'
@@ -42,7 +41,7 @@ export const MyColorButton = ({
           <Text
             style={
               {
-                color:  '#FFF',
+                color: '#FFF',
                 fontFamily: "SFProDisplay-Semibold",
                 fontSize: 17
               }

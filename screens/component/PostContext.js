@@ -1,6 +1,6 @@
-import React, { useState , useCallback} from 'react';
-import { 
-  View, 
+import React, { useState, useCallback } from 'react';
+import {
+  View,
   Pressable,
   TouchableOpacity
 } from 'react-native';
@@ -8,10 +8,7 @@ import { TitleText } from './TitleText';
 import { VoiceItem } from './VoiceItem';
 import SwipeDownModal from 'react-native-swipe-down';
 import Share from 'react-native-share';
-import { setRefreshState } from '../../store/actions';
-
 import { SvgXml } from 'react-native-svg';
-//Context Icons
 import blankHeartSvg from '../../assets/post/blankHeart.svg';
 import redHeartSvg from '../../assets/post/redHeart.svg';
 import ciShareSvg from '../../assets/discover/context/share.svg';
@@ -25,67 +22,55 @@ import ciBackSvg from '../../assets/discover/context/back.svg';
 import ciTrashSvg from '../../assets/discover/context/trash.svg';
 import ciViolenceSvg from '../../assets/discover/context/violence.svg';
 import VoiceService from '../../services/VoiceService';
-import { useSelector , useDispatch} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { styles } from '../style/Common';
-
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 
 export const PostContext = ({
   postInfo,
   props,
-  onChangeIsLike=()=>{},
-  onCloseModal=()=>{},
+  onChangeIsLike = () => { },
+  onCloseModal = () => { },
 }) => {
 
-  const {t, i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [showReport, setShowReport] = useState(false);
-  const [showModal,setShowModal] = useState(true);
-  const [playstatus,setPlaystatus] = useState(false);
-  
-  let { user , refreshState} = useSelector((state) => {
+  const [showModal, setShowModal] = useState(true);
+  const [playstatus, setPlaystatus] = useState(false);
+
+  let { user } = useSelector((state) => {
     return (
-        state.user
+      state.user
     )
   });
 
-  const dispatch = useDispatch();
-
-  const appreciateVoice = ()=>{
+  const appreciateVoice = () => {
     onChangeIsLike();
-    let rep; 
-    if(postInfo.isLike==false)
-      rep = VoiceService.recordAppreciate({count:1,id:postInfo.id});
+    let rep;
+    if (postInfo.isLike == false)
+      rep = VoiceService.recordAppreciate({ count: 1, id: postInfo.id });
     else
       rep = VoiceService.recordUnAppreciate(postInfo.id);
-    rep.then(async res=>{
-      if(res.respInfo.status == 201||res.respInfo.status==200){
-       // dispatch(setRefreshState(!refreshState));
+    rep.then(async res => {
+      if (res.respInfo.status == 201 || res.respInfo.status == 200) {
       }
     })
-    .catch(err => {
-      console.log(err);
-    });
+      .catch(err => {
+        console.log(err);
+      });
   }
 
-  const closeModal = ()=>{
+  const closeModal = () => {
     setShowModal(false);
     onCloseModal();
   }
-  const onShareAudio = useCallback(()=> {
-    // VoiceService.getVoiceFile(postInfo.file.url).then(res=>{
-    //   if(res.respInfo.status==200){
-    //     let filePath= `${Platform.OS === 'android' ? '' : ''}${res.path()}`;
-        Share.open({
-          url: postInfo.file.url,
-          type: 'audio/mp3',
-        });
-  //     }
-  //   })
-  //   .catch(err=>{
-  //     console.log(err);
-  //   })
+  const onShareAudio = useCallback(() => {
+    Share.open({
+      url: postInfo.file.url,
+      type: 'audio/mp3',
+    });
   }, []);
 
   return (
@@ -93,215 +78,215 @@ export const PostContext = ({
       modalVisible={showModal}
       ContentModal={
         <View
-          style={[styles.paddingH16, {marginTop:"25%"}]}
+          style={[styles.paddingH16, { marginTop: "25%" }]}
         >
-          <VoiceItem 
+          <VoiceItem
             info={postInfo}
-            isPlaying = {playstatus}
+            isPlaying={playstatus}
             onPressPlay={() => setPlaystatus(!playstatus)}
-            onStopPlay={()=>setPlaystatus(false)}
-            spread = {false}
+            onStopPlay={() => setPlaystatus(false)}
+            spread={false}
           />
-          { !showReport ? 
-          <View
-            style={styles.contextWrap}
-          >
-            <TouchableOpacity
-              style={styles.contextMenu}
-              onPress={() => {props.navigation.navigate('VoiceProfile', {id:postInfo.id});closeModal();}}
-            >
-              <TitleText
-                text={t("Answer on voice")}
-                fontSize={17}
-                fontFamily="SFProDisplay-Regular"
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                xml={ciMicrophoneSvg}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.contextMenu}
-              onPress={onShareAudio}
-            >
-              <TitleText
-                text={t("Share")}
-                fontSize={17}
-                fontFamily="SFProDisplay-Regular"
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                xml={ciShareSvg}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.contextMenu}
-              onPress={()=>appreciateVoice()}
-            >
-              <TitleText
-                text={t("Appreciate")}
-                fontSize={17}
-                fontFamily="SFProDisplay-Regular"
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                xml={postInfo.isLike?redHeartSvg:blankHeartSvg}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.contextMenu}
-              onPress = {()=>{
-                if(postInfo.user.id==user.id)
-                  props.navigation.navigate('Profile');
-               else
-                 props.navigation.navigate('UserProfile',{userId:postInfo.user.id});
-                closeModal();
-              }}
-            >
-              <TitleText
-                text={postInfo.user.name}
-                fontSize={17}
-                fontFamily="SFProDisplay-Regular"
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                xml={ciUsertSvg}
-              />
-            </TouchableOpacity>
-            <Pressable
-              style={{
-                paddingVertical:10,
-                paddingHorizontal:16,
-                flexDirection:'row',
-                justifyContent:'space-between'
-              }}
-              onPress={() => setShowReport(true)}
-            >
-              <TitleText
-                text={t("Report")}
-                fontSize={17}
-                fontFamily="SFProDisplay-Regular"
-                color="#E41717"
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                xml={ciReportRedSvg}
-              />
-            </Pressable>
-          </View>
-          :
-          <View
-            style={styles.contextWrap}
-          >
-            <Pressable
-              style={styles.contextMenu}
-            >
-              <TitleText
-                text={t("Spam")}
-                fontSize={17}
-                fontFamily="SFProDisplay-Regular"
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                xml={ciTrashSvg}
-              />
-            </Pressable>
-            <Pressable
-              style={styles.contextMenu}
-            >
-              <TitleText
-                text={t("Fake Account")}
-                fontSize={17}
-                fontFamily="SFProDisplay-Regular"
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                xml={ciFakeSvg}
-              />
-            </Pressable>
-            <Pressable
-              style={styles.contextMenu}
-            >
-              <TitleText
-                text={t("Violence")}
-                fontSize={17}
-                fontFamily="SFProDisplay-Regular"
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                xml={ciViolenceSvg}
-              />
-            </Pressable>
-            <Pressable
-              style={styles.contextMenu}
-            >
-              <TitleText
-                text={t("Child Abuse")}
-                fontSize={17}
-                fontFamily="SFProDisplay-Regular"
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                xml={ciAbuseSvg}
-              />
-            </Pressable>
-            <Pressable
-              style={styles.contextMenu}
-            >
-              <TitleText
-                text={t("Other")}
-                fontSize={17}
-                fontFamily="SFProDisplay-Regular"
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                xml={ciReportSvg}
-              />
-            </Pressable>
+          {!showReport ?
             <View
-              style={{
-                height:8,
-                backgroundColor:'rgba(3, 0, 39, 0.15)'
-              }}
-            ></View>
-            <Pressable
-              style={{
-                paddingVertical:10,
-                paddingHorizontal:16,
-                flexDirection:'row',
-                justifyContent:'space-between'
-              }}
-              onPress={() => setShowReport(false)}
+              style={styles.contextWrap}
             >
-              <TitleText
-                text="Back"
-                fontSize={17}
-                fontFamily="SFProDisplay-Regular"
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                xml={ciBackSvg}
-              />
-            </Pressable>
-          </View>
-        }
+              <TouchableOpacity
+                style={styles.contextMenu}
+                onPress={() => { props.navigation.navigate('VoiceProfile', { id: postInfo.id }); closeModal(); }}
+              >
+                <TitleText
+                  text={t("Answer on voice")}
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                />
+                <SvgXml
+                  width={20}
+                  height={20}
+                  xml={ciMicrophoneSvg}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.contextMenu}
+                onPress={onShareAudio}
+              >
+                <TitleText
+                  text={t("Share")}
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                />
+                <SvgXml
+                  width={20}
+                  height={20}
+                  xml={ciShareSvg}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.contextMenu}
+                onPress={() => appreciateVoice()}
+              >
+                <TitleText
+                  text={t("Appreciate")}
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                />
+                <SvgXml
+                  width={20}
+                  height={20}
+                  xml={postInfo.isLike ? redHeartSvg : blankHeartSvg}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.contextMenu}
+                onPress={() => {
+                  if (postInfo.user.id == user.id)
+                    props.navigation.navigate('Profile');
+                  else
+                    props.navigation.navigate('UserProfile', { userId: postInfo.user.id });
+                  closeModal();
+                }}
+              >
+                <TitleText
+                  text={postInfo.user.name}
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                />
+                <SvgXml
+                  width={20}
+                  height={20}
+                  xml={ciUsertSvg}
+                />
+              </TouchableOpacity>
+              <Pressable
+                style={{
+                  paddingVertical: 10,
+                  paddingHorizontal: 16,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between'
+                }}
+                onPress={() => setShowReport(true)}
+              >
+                <TitleText
+                  text={t("Report")}
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                  color="#E41717"
+                />
+                <SvgXml
+                  width={20}
+                  height={20}
+                  xml={ciReportRedSvg}
+                />
+              </Pressable>
+            </View>
+            :
+            <View
+              style={styles.contextWrap}
+            >
+              <Pressable
+                style={styles.contextMenu}
+              >
+                <TitleText
+                  text={t("Spam")}
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                />
+                <SvgXml
+                  width={20}
+                  height={20}
+                  xml={ciTrashSvg}
+                />
+              </Pressable>
+              <Pressable
+                style={styles.contextMenu}
+              >
+                <TitleText
+                  text={t("Fake Account")}
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                />
+                <SvgXml
+                  width={20}
+                  height={20}
+                  xml={ciFakeSvg}
+                />
+              </Pressable>
+              <Pressable
+                style={styles.contextMenu}
+              >
+                <TitleText
+                  text={t("Violence")}
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                />
+                <SvgXml
+                  width={20}
+                  height={20}
+                  xml={ciViolenceSvg}
+                />
+              </Pressable>
+              <Pressable
+                style={styles.contextMenu}
+              >
+                <TitleText
+                  text={t("Child Abuse")}
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                />
+                <SvgXml
+                  width={20}
+                  height={20}
+                  xml={ciAbuseSvg}
+                />
+              </Pressable>
+              <Pressable
+                style={styles.contextMenu}
+              >
+                <TitleText
+                  text={t("Other")}
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                />
+                <SvgXml
+                  width={20}
+                  height={20}
+                  xml={ciReportSvg}
+                />
+              </Pressable>
+              <View
+                style={{
+                  height: 8,
+                  backgroundColor: 'rgba(3, 0, 39, 0.15)'
+                }}
+              ></View>
+              <Pressable
+                style={{
+                  paddingVertical: 10,
+                  paddingHorizontal: 16,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between'
+                }}
+                onPress={() => setShowReport(false)}
+              >
+                <TitleText
+                  text="Back"
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                />
+                <SvgXml
+                  width={20}
+                  height={20}
+                  xml={ciBackSvg}
+                />
+              </Pressable>
+            </View>
+          }
         </View>
       }
       ContentModalStyle={styles.swipeModal}
       onRequestClose={() => closeModal()}
-      onClose={() => 
-          closeModal()
+      onClose={() =>
+        closeModal()
       }
     />
   );

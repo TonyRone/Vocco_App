@@ -1,25 +1,9 @@
 import React, {useState} from "react";
-import { View, TouchableOpacity, Text, Platform, StatusBar, Pressable,ScrollView } from "react-native";
-import { SvgXml } from 'react-native-svg';
-
-import { ACCESSTOKEN_KEY, REFRESHTOKEN_KEY, TUTORIAL_CHECK, API_URL, windowWidth, windowHeight } from '../../config/config';
-
+import { View, TouchableOpacity, Text } from "react-native";
+import { windowWidth } from '../../config/config';
 import { TitleText } from '../component/TitleText';
 import SwipeDownModal from 'react-native-swipe-down';
 import { styles } from '../style/Common';
-
-//Bottom Icons
-import homeSvg from '../../assets/common/bottomIcons/home.svg';
-import homeActiveSvg from '../../assets/common/bottomIcons/homeActive.svg';
-import globalSvg from '../../assets/common/bottomIcons/global.svg';
-import globalActiveSvg from '../../assets/common/bottomIcons/globalActive.svg';
-import recordSvg from '../../assets/common/bottomIcons/record.svg';
-import profileSvg from '../../assets/common/bottomIcons/profile.svg';
-import profileActiveSvg from '../../assets/common/bottomIcons/profileActive.svg';
-import settingSvg from '../../assets/common/bottomIcons/settings.svg';
-import settingsActiveSvg from '../../assets/common/bottomIcons/settingsActive.svg';
-import { baseProps } from "react-native-gesture-handler/lib/typescript/handlers/gestureHandlers";
-
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
 
@@ -32,9 +16,6 @@ export const ReactionEmojies = ({
 
   const [showModal,setShowModal] = useState(true);
 
-  // const emojiCodes = [
-  //   "😁","😂","😃","😄","😅","😆","😉","😊","😋","😌","😍","😏","😒","😓","😔","😖","😘","😚","😜","😝","😞","😠","😡","😢","😣","😤","😥","😨","😩","😪","😫","😭","😰","😱","😲","😳","😵","😷","😸","😹","😺","😻","😼","😽","😾","😿","🙀","🙅","🙆","🙇","🙈","🙉","🙊","🙋","🙌","🙍","🙎","🙏"
-  // ];
   const emojiCodes = [
     "😁","😂","😃","😄","😅","😉","😊","😋","😌","😍","😏","😒","😓","😔","😖","😘","😚","😜","😝","😠","😡","😢","😣","😤","😥","😨","😩","😪","😫","😭","😰","😱","😲","😳","😵","😷","😸","😹","😺","😻","😼","😽","😾","😿","🙀","🙅","🙆","🙇","🙈","🙉","🙊","🙋","🙌","🙍","🙎","🙏"
   ];

@@ -7,7 +7,6 @@ import {
     Image,
     Text,
     ImageBackground,
-    PermissionsAndroid,
     Platform,
     Pressable
 } from 'react-native';
@@ -20,7 +19,7 @@ import AudioRecorderPlayer, {
 } from 'react-native-audio-recorder-player';
 
 import * as Progress from "react-native-progress";
-import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
+import { Menu } from 'react-native-material-menu';
 import RNFetchBlob from 'rn-fetch-blob';
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
 import { DescriptionText } from '../component/DescriptionText';
@@ -214,7 +213,7 @@ const ConversationScreen = (props) => {
         }
         else
             setReplyIdx(-1);
-        socketInstance.emit("chatState", {toUserId:info.user.id, state:'stopRecording'});
+        socketInstance.emit("chatState", { toUserId: info.user.id, state: 'stopRecording' });
         clearRecorder();
     };
 
@@ -235,7 +234,7 @@ const ConversationScreen = (props) => {
                 AVFormatIDKeyIOS: AVEncodingOption.aac,
             };
             dispatch(setVoiceState(voiceState + 1));
-            socketInstance.emit("chatState", {toUserId:info.user.id, state:'startRecording'});
+            socketInstance.emit("chatState", { toUserId: info.user.id, state: 'startRecording' });
             await recorderPlayer.startRecorder(path, audioSet);
             recorderPlayer.addRecordBackListener((e) => {
                 wasteTime.current = e.currentPosition;
@@ -319,6 +318,18 @@ const ConversationScreen = (props) => {
             prev = prev.filter((e, index) => selectedItems.indexOf(index) == -1);
             return [...prev]
         })
+        setSelectedItems([]);
+        setIsSelecting(false);
+    }
+
+    const onClearAllChat = () => {
+        let chatIds = messages.map((e) => e.id);
+        VoiceService.deleteMessages({ messageIds: chatIds }).then(async res => {
+        })
+            .catch(err => {
+                console.log(err);
+            })
+        setMessages([]);
         setSelectedItems([]);
         setIsSelecting(false);
     }
@@ -469,7 +480,7 @@ const ConversationScreen = (props) => {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.contextMenu}
-                                onPress={() => hideMenu()}
+                                onPress={() => { onClearAllChat(); hideMenu() }}
                             >
                                 <TitleText
                                     text={t("Clear chat")}
@@ -550,7 +561,7 @@ const ConversationScreen = (props) => {
                                 marginTop: 18
                             }}
                         >
-                            {t("You do not have any messages with Alpina yet. Let's record him something! ")}
+                            {t(`You do not have any messages with ${info.user.name} yet. Let's record him something! `)}
                         </Text>
 
                     </View>

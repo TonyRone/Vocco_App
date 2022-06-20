@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   View, 
-  SafeAreaView, 
   TouchableOpacity, 
   Image, 
   ScrollView,
@@ -20,30 +19,23 @@ import { SelectForm} from '../component/SelectForm';
 import { MyIdentify } from '../component/MyIdentify';
 import { SearchCountry } from '../component/SearchCountry';
 import * as Progress from "react-native-progress";
-
 import { SvgXml } from 'react-native-svg';
-
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import yesSwitchSvg from '../../assets/common/yesSwitch.svg';
 import noSwitchSvg from '../../assets/common/noSwitch.svg';
 import editSvg from '../../assets/record/edit.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
-
 import manSvg from '../../assets/login/man.svg';
 import womanSvg from '../../assets/login/woman.svg';
 import moreSvg from '../../assets/login/more.svg';
 import privacySvg from '../../assets/setting/privacy.svg';
-
 import {  windowHeight, windowWidth } from '../../config/config';
-
 import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/CommenText';
 import EditService from '../../services/EditService';
-
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../../store/actions';
-
 import {useTranslation} from 'react-i18next';
 import '../../language/i18n';
 
@@ -56,22 +48,22 @@ const EditProfileScreen = (props) => {
     let userData = {...user};
 
     const [username, setUsername] = useState(userData.name);
-    const [firstname, setFirstname] = useState(userData.firstname);
-    const [lastname, setLastname] = useState(userData.lastname);
-    const [birthdate,setBirthdate] = useState(new Date(userData.dob));
+    const [firstName, setFirstName] = useState(userData.firstname);
+    const [lastName, setLastName] = useState(userData.lastname);
+    const [birthDate,setBirthDate] = useState(new Date(userData.dob));
     const [showModal,setShowModal] = useState(false);
     const [gender,setGender] = useState(userData.gender);
     const [userCountry,setUserCountry] = useState({country:userData.country});
     const [validUsername, setValidUsername] = useState(true);
     const [inputState, setInputState] = useState({});
     const [privated,setPrivateStatus] = useState(userData.isPrivate);
-    const [date, setDate] = useState(birthdate);
+    const [date, setDate] = useState(birthDate);
     const [identify,setIdentify] = useState(userData.gender);
     const [secureTextEntry, setSecureTextEntry] = useState(true);
-    const [modalType,setModaltype] = useState('');
+    const [modalType,setModalType] = useState('');
     const [country, setCountry] = useState({country:userData.country});
     const [password,setPassword] = useState('');
-    const [useremail,setUseremail] = useState(userData.email);
+    const [userEmail,setUserEmail] = useState(userData.email);
     const [loading,setLoading] = useState(false);
     const [allLoading,setAllLoading] = useState(false);
     const [warningState,setWarningState] = useState(false);
@@ -88,7 +80,7 @@ const EditProfileScreen = (props) => {
 
     const setUserbirth = (birthday) =>{
         setShowModal(false);
-        setBirthdate(birthday);
+        setBirthDate(birthday);
     }
 
     const deleteAccount = () =>{
@@ -106,7 +98,7 @@ const EditProfileScreen = (props) => {
     }
 
     const openModal = (type)=>{
-        setModaltype(type);
+        setModalType(type);
         setShowModal(true);
     }
 
@@ -150,11 +142,11 @@ const EditProfileScreen = (props) => {
         const payload = {
             bio:bio,
             name: username,
-            dob: birthdate,
+            dob: birthDate,
             country:userCountry.country,
             gender:gender,
-            first:firstname,
-            last:lastname,
+            first:firstName,
+            last:lastName,
             isPrivate:privated?'true':'false'
         };
         EditService.changeProfile(payload).then(async res => { 
@@ -162,8 +154,6 @@ const EditProfileScreen = (props) => {
                 const jsonRes = await res.json();
 
                 if (res.respInfo.status != 200) {
-                    // setIsError(true);
-                    // setMessage(jsonRes.message);
                 } else {
                     dispatch(setUser(jsonRes));
                     props.navigation.navigate('Setting');
@@ -178,7 +168,6 @@ const EditProfileScreen = (props) => {
     }
 
     useEffect(() => {
-      //  checkLogin();
     }, [])
     return (
       <KeyboardAvoidingView 
@@ -272,17 +261,17 @@ const EditProfileScreen = (props) => {
                     label={t("First Name")}
                     placeholderText="John e.g"
                     color='#281E30'
-                    value={firstname}
-                    onChangeText={(newVal) => setFirstname(newVal)}
+                    value={firstName}
+                    onChangeText={(newVal) => setFirstName(newVal)}
                     marginTop={16}
                     check={false}
                 />
                 <MyTextField
                     label={t("Last Name")}
                     placeholderText="John e.g"
-                    value={lastname}
+                    value={lastName}
                     color='#281E30'
-                    onChangeText={(newVal) => setLastname(newVal)}
+                    onChangeText={(newVal) => setLastName(newVal)}
                     marginTop={16}
                     check={false}
                 />
@@ -299,7 +288,7 @@ const EditProfileScreen = (props) => {
                 />
                 <SelectForm
                     label={t("Date of Birth")}
-                    contentText={birthdate.getDate().toString()+" "+months[birthdate.getMonth()]+" "+birthdate.getFullYear().toString()}
+                    contentText={birthDate.getDate().toString()+" "+months[birthDate.getMonth()]+" "+birthDate.getFullYear().toString()}
                     onPressChange={()=>openModal('birth')}
                 />
                 <SelectForm
@@ -310,7 +299,7 @@ const EditProfileScreen = (props) => {
                 />
                 <SelectForm
                     label={t("Your email")}
-                    contentText={useremail}
+                    contentText={userEmail}
                     onPressChange={()=>props.navigation.navigate('ChangeEmail')}
                     isCheck = {true}
                 />
@@ -520,13 +509,6 @@ const EditProfileScreen = (props) => {
                                 />
                             </TouchableOpacity>
                         </View>
-                        {/* <TitleText
-                            text = {t("Confirm delete")}
-                            fontSize = {22}
-                            lineHeight = {28}
-                            textAlign = 'center'
-                            marginTop = {40}
-                        /> */}
                         <DescriptionText
                             text = {t("Enter your password for confirm deleting your account")}
                             fontSize = {17}
