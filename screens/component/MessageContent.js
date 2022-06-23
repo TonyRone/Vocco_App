@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import AutoHeightImage from 'react-native-auto-height-image';
 import { DescriptionText } from "./DescriptionText";
 import { useSelector } from 'react-redux';
@@ -68,31 +68,60 @@ export const MessageContent = ({
         </View>
       </LinearGradient>
       :
-      <View>
-        <AutoHeightImage
-          source={{ uri: info.file.url }}
-          width={199}
-          style={{
-            borderRadius: 20,
-            borderWidth: 4,
-            borderColor: '#FFF'
-          }}
-        />
+      info.type == 'emoji' ?
         <View style={{
-          position: 'absolute',
-          bottom: 4,
-          right: 4,
-          padding: 8,
-          borderRadius: 14,
-          backgroundColor: 'rgba(54, 36, 68, 0.8)'
+          marginRight:58
         }}>
-          <DescriptionText
-            text={new Date(info.createdAt).toISOString().substr(11, 5)}
-            lineHeight={12}
-            fontSize={11}
-            color='#F6EFFF'
-          />
+          <Text
+            style={{
+              fontSize: 50,
+              color: 'white',
+            }}
+          >
+            {info.emoji}
+          </Text>
+          <View style={{
+            position: 'absolute',
+            bottom: 8,
+            right: -50,
+            padding: 8,
+            borderRadius: 14,
+            backgroundColor: 'rgba(54, 36, 68, 0.8)'
+          }}>
+            <DescriptionText
+              text={new Date(info.createdAt).toISOString().substr(11, 5)}
+              lineHeight={12}
+              fontSize={11}
+              color='#F6EFFF'
+            />
+          </View>
         </View>
-      </View>
+        :
+        <View>
+          <AutoHeightImage
+            source={{ uri: info.file.url }}
+            width={199}
+            style={{
+              borderRadius: 20,
+              borderWidth: 4,
+              borderColor: '#FFF'
+            }}
+          />
+          <View style={{
+            position: 'absolute',
+            bottom: 8,
+            right: 8,
+            padding: 8,
+            borderRadius: 14,
+            backgroundColor: 'rgba(54, 36, 68, 0.8)'
+          }}>
+            <DescriptionText
+              text={new Date(info.createdAt).toISOString().substr(11, 5)}
+              lineHeight={12}
+              fontSize={11}
+              color='#F6EFFF'
+            />
+          </View>
+        </View>
   );
 };

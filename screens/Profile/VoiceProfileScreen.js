@@ -232,7 +232,7 @@ const VoiceProfileScreen = (props) => {
           }}
             style={{ paddingRight: 12 }}
           >
-            {info&&<Image
+            {info && <Image
               style={{
                 width: 64,
                 height: 64,
@@ -240,7 +240,7 @@ const VoiceProfileScreen = (props) => {
                 borderColor: '#FFA002',
                 borderWidth: (info && info.user.premium != 'none') ? 2 : 0
               }}
-              source={info.user.avatar?{ uri: info.user.avatar.url }:Avatars[info.user.avatarNumber].uri}
+              source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
             />}
             <View style={[{ position: 'absolute', left: 36, bottom: 0, width: 30, height: 30, backgroundColor: '#FFFFFF', borderRadius: 14 }, styles.contentCenter]}>
               <Text
@@ -300,7 +300,7 @@ const VoiceProfileScreen = (props) => {
           marginBottom={15}
         />
         <ScrollView>
-          {!loading ? combines.map((item, index) =>
+          {!loading ? combines.length > 0 ? combines.map((item, index) =>
             item.file ?
               <AnswerVoiceItem
                 key={index + item.id + 'answerVoice'}
@@ -316,6 +316,31 @@ const VoiceProfileScreen = (props) => {
                 info={item}
                 onChangeIsLiked={() => setIsLiked(index)}
               />)
+            :
+            <View style={{ alignItems: 'center' }}>
+              <Image
+                style={{
+                  width: 180,
+                  height: 110
+                }}
+                source={require('../../assets/discover/no-answers.png')}
+              />
+              <DescriptionText
+                text={t("No answers")}
+                fontSize={17}
+                lineHeight={28}
+                color='#281E30'
+                marginTop={24}
+              />
+              <DescriptionText
+                text={t("This voice hasn't answers. Be the first to write something back!")}
+                fontSize={17}
+                textAlign='center'
+                maxWidth={260}
+                lineHeight={28}
+                marginTop={8}
+              />
+            </View>
             :
             <Progress.Circle
               indeterminate
@@ -463,7 +488,7 @@ const VoiceProfileScreen = (props) => {
         }}
       >
         <Pressable onPressOut={() => setShowModal(false)} style={styles.swipeModal}>
-        <View style={styles.swipeContainerContent}>
+          <View style={styles.swipeContainerContent}>
             <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 14, paddingTop: 14, paddingBottom: 11, borderBottomWidth: 1, borderBottomColor: '#F0F4FC' }]}>
               <View style={styles.rowAlignItems}>
                 <Image
@@ -563,7 +588,7 @@ const VoiceProfileScreen = (props) => {
         }}
       >
         <Pressable onPressOut={() => setDeleteModal(false)} style={styles.swipeModal}>
-        <View style={{ height: '100%', width: '100%' }}>
+          <View style={{ height: '100%', width: '100%' }}>
             <View style={{ position: 'absolute', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, height: 122, borderRadius: 14, backgroundColor: '#E9EAEC' }}>
               <View style={{ paddingTop: 14, height: 65.5, width: '100%', borderBottomWidth: 1, borderBottomColor: '#B6C2DB', alignItems: 'center' }}>
                 <SemiBoldText

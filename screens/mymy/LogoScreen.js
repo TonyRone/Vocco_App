@@ -28,7 +28,6 @@ const LogoScreen = (props) => {
 
     const onGoScreen = async (jsonRes) => {
         dispatch(setUser(jsonRes));
-        console.log(jsonRes);
         let navigateScreen = 'Home';
         if (!jsonRes.id) {
             return;

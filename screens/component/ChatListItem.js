@@ -3,6 +3,7 @@ import {
     View,
     TouchableOpacity,
     Image,
+    Text
 } from "react-native";
 
 import { useTranslation } from 'react-i18next';
@@ -11,6 +12,8 @@ import { DescriptionText } from "./DescriptionText";
 
 import { SvgXml } from 'react-native-svg';
 import voiceMessageSvg from '../../assets/chat/voice_message.svg';
+import activeVoiceMessageSvg from '../../assets/chat/active_voice_message.svg';
+import imageMessageSvg from '../../assets/chat/image_message.svg';
 import singleCheckSvg from '../../assets/chat/single-check.svg';
 import doubleCheckSvg from '../../assets/chat/double-check.svg';
 import lightSingleCheckSvg from '../../assets/chat/light-single-check.svg';
@@ -128,7 +131,7 @@ export const ChatListItem = ({
                         borderColor: '#FFA002',
                         borderWidth: otherUser.premium == 'none' ? 0 : 2
                     }}
-                    source={otherUser.avatar?{ uri: otherUser.avatar.url }:Avatars[otherUser.avatarNumber].uri}
+                    source={otherUser.avatar ? { uri: otherUser.avatar.url } : Avatars[otherUser.avatarNumber].uri}
                 />
                 {info.lastSeen == 'onSession' && <View
                     style={{
@@ -143,17 +146,27 @@ export const ChatListItem = ({
                         lineHeight={24}
                     />
                     <View style={styles.rowAlignItems}>
-                        <SvgXml
-                            width={16}
-                            height={16}
-                            xml={voiceMessageSvg}
-                        />
+                        {info.type == 'emoji' ?
+                            <Text
+                                style={{
+                                    fontSize: 16,
+                                    color: 'white',
+                                }}
+                            >
+                                {info.emoji}
+                            </Text>
+                            :
+                            <SvgXml
+                                width={16}
+                                height={16}
+                                xml={info.state == 'start' ? activeVoiceMessageSvg : info.type == 'voice' ? voiceMessageSvg : imageMessageSvg}
+                            />}
                         <DescriptionText
-                            text={t("voice message")}
+                            text={t(info.state == 'start' ? "recording audio..." : info.type == 'voice' ? "voice message" : info.type == 'emoji' ? "reaction" : "picture")}
                             fontSize={13}
                             lineHeight={21}
-                            marginLeft={4}
-                            color='rgba(54, 36, 68, 0.8)'
+                            marginLeft={6}
+                            color={info.state == 'start' ? '#A24EE4' : 'rgba(54, 36, 68, 0.8)'}
                         />
                     </View>
                 </View>

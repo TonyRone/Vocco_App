@@ -52,6 +52,7 @@ import VoicePlayer from '../Home/VoicePlayer';
 import { MessageItem } from '../component/MessageItem';
 import { TitleText } from '../component/TitleText';
 import { PhotoSelector } from '../component/PhotoSelector';
+import EmojiPicker from 'rn-emoji-keyboard';
 
 const ConversationScreen = (props) => {
 
@@ -81,6 +82,7 @@ const ConversationScreen = (props) => {
     const [selectedItems, setSelectedItems] = useState([]);
     const [isSelecting, setIsSelecting] = useState(false);
     const [otherState, setOtherState] = useState('');
+    const [visibleReaction, setVisibleReaction] = useState(false);
 
     const hideMenu = () => setVisible(false);
 
@@ -103,7 +105,7 @@ const ConversationScreen = (props) => {
 
     const renderState = (lastSeen) => {
         if (lastSeen == "onSession") {
-            if (otherState == 'startRecording')
+            if (otherState == 'start')
                 return t("Recording...");
             return t("online")
         }
@@ -165,6 +167,7 @@ const ConversationScreen = (props) => {
             { name: 'type', data: fileType },
             { name: 'ancestor', data: (replyIdx >= 0 ? messages[replyIdx].id : null) },
             { name: 'file', filename: fileName, data: filePath },
+            { name: 'emoji', data: fileType=='emoji'?v:null}
         ];
         VoiceService.postMessage(sendFile).then(async res => {
             const jsonRes = await res.json();
@@ -184,6 +187,11 @@ const ConversationScreen = (props) => {
                 console.log(err);
             });
         setReplyIdx(-1);
+    }
+
+    const sendEmoji = (icon) => {
+        handleSubmit("emoji", icon);
+        setVisibleReaction(false);
     }
 
     const onConfirmMessage = () => {
@@ -213,7 +221,7 @@ const ConversationScreen = (props) => {
         }
         else
             setReplyIdx(-1);
-        socketInstance.emit("chatState", { toUserId: info.user.id, state: 'stopRecording' });
+        socketInstance.emit("chatState", { fromUserId: user.id, toUserId: info.user.id, state: 'stop' });
         clearRecorder();
     };
 
@@ -234,7 +242,7 @@ const ConversationScreen = (props) => {
                 AVFormatIDKeyIOS: AVEncodingOption.aac,
             };
             dispatch(setVoiceState(voiceState + 1));
-            socketInstance.emit("chatState", { toUserId: info.user.id, state: 'startRecording' });
+            socketInstance.emit("chatState", { fromUserId: user.id, toUserId: info.user.id, state: 'start' });
             await recorderPlayer.startRecorder(path, audioSet);
             recorderPlayer.addRecordBackListener((e) => {
                 wasteTime.current = e.currentPosition;
@@ -302,9 +310,14 @@ const ConversationScreen = (props) => {
         return 0;
     }
 
-    const listener = ({ user_id, v }) => {
+    const loginListener = ({ user_id, v }) => {
         if (user_id == info.user.id)
             setIsOnline(v)
+    }
+
+    const stateListener = ({ fromUserId, toUserId, state }) => {
+        if (fromUserId == info.user.id && toUserId == user.id)
+            setOtherState(state);
     }
 
     const onClearChat = () => {
@@ -373,17 +386,16 @@ const ConversationScreen = (props) => {
             });
             onConfirmMessage();
         });
-        socketInstance.on("chatState", (v) => {
-            setOtherState(v);
-        });
-        socketInstance.on("user_login", listener);
+        socketInstance.on("chatState", stateListener);
+        socketInstance.on("user_login", loginListener);
+        socketInstance.emit("chatState", { fromUserId: user.id, toUserId: info.user.id, state: 'confirm' });
         // if (Platform.OS === 'android')
         //     requestCameraPermission();
         return () => {
             clearRecorder();
             socketInstance.off('receiveMessage');
-            socketInstance.off('user_login', listener);
-            socketInstance.off('chatState');
+            socketInstance.off('user_login', loginListener);
+            socketInstance.off('chatState', stateListener);
             dispatch(setRefreshState(!refreshState));
         };
     }, [])
@@ -413,7 +425,7 @@ const ConversationScreen = (props) => {
                                 />
                             </TouchableOpacity>
                             <Image
-                                source={ info.user.avatar?{ uri: info.user.avatar.url }:Avatars[info.user.avatarNumber].uri}
+                                source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
                                 style={{ width: 40, height: 40, marginLeft: 25, borderRadius: 24, borderColor: '#FFA002', borderWidth: info.user.premium == 'none' ? 0 : 2 }}
                                 resizeMode='cover'
                             />
@@ -619,7 +631,7 @@ const ConversationScreen = (props) => {
                         position: 'absolute',
                         bottom: 42,
                         right: windowWidth - 376,
-                        width: replyIdx == -1 ? 116 : 343,
+                        width: replyIdx == -1 ? 140 : 343,
                         height: 56,
                         borderRadius: 28,
                         backgroundColor: '#FFF',
@@ -630,7 +642,7 @@ const ConversationScreen = (props) => {
                             flexDirection: 'row',
                             alignItems: 'center',
                             justifyContent: 'space-between',
-                            width: 212,
+                            width: 186,
                             marginLeft: 16
                         }}>
                             <View style={styles.rowAlignItems}>
@@ -672,12 +684,26 @@ const ConversationScreen = (props) => {
                             </View>
                         </View>
                         }
+                        <TouchableOpacity style={{
+                            marginLeft: 12
+                        }}
+                            onPress={() => setVisibleReaction(true)}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    color: 'white',
+                                }}
+                            >
+                                {"😁"}
+                            </Text>
+                        </TouchableOpacity>
                         <TouchableOpacity onPress={() => setIsSelectingPhoto(true)}>
                             <SvgXml
                                 width={24}
                                 height={24}
                                 style={{
-                                    marginLeft: 18
+                                    marginLeft: 10
                                 }}
                                 xml={photoSvg}
                             />
@@ -847,6 +873,13 @@ const ConversationScreen = (props) => {
                         />
                     </View>
                 </View>
+            }
+            {visibleReaction &&
+                <EmojiPicker
+                    onEmojiSelected={(icon) => sendEmoji(icon.emoji)}
+                    open={visibleReaction}
+                    onClose={() => setVisibleReaction(false)}
+                />
             }
         </ImageBackground>
     )

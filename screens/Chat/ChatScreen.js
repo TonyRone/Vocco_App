@@ -71,6 +71,7 @@ const ChatScreen = (props) => {
                         let tp = jsonRes.map((item, index) => {
                             let temp = item;
                             temp.lastSeen = res[index];
+                            temp.state = 'stop';
                             return temp;
                         })
                         setConversations([...tp]);
@@ -83,7 +84,7 @@ const ChatScreen = (props) => {
             });
     }
 
-    const listener =  ({ user_id, v }) => {
+    const loginListener = ({ user_id, v }) => {
         setConversations(prev => {
             let idx = 0;
             for (; idx < prev.length; idx++)
@@ -96,11 +97,48 @@ const ChatScreen = (props) => {
         })
     }
 
+    const stateListener = ({ fromUserId, toUserId, state, emoji }) => {
+        setConversations(prev => {
+            let idx = 0;
+            for (; idx < prev.length; idx++)
+                if ((prev[idx].sender.id == fromUserId && prev[idx].receiver.id == toUserId) ||
+                    (prev[idx].sender.id == toUserId && prev[idx].receiver.id == fromUserId)
+                ) break;
+            if (idx != prev.length) {
+                if(state=='start' || state=='stop')
+                    prev[idx].state = state;
+                else if(state == 'confirm'){
+                    if(prev[idx].sender.id == toUserId){
+                        prev[idx].newsCount = 0;
+                    }
+                }
+                else{
+                    prev[idx].state = 'stop';
+                    prev[idx].type = state;
+                    prev[idx].emoji = emoji;
+                    prev[idx].newsCount ++;
+                    if(prev[idx].sender.id != fromUserId){
+                        prev[idx].newsCount = 1;
+                        let tp = prev[idx].sender;
+                        prev[idx].sender = prev[idx].receiver;
+                        prev[idx].receiver = tp;
+                    }
+                }
+                return [...prev];
+            }
+            return prev;
+        })
+    }
+
     useEffect(() => {
         getFollowUsers();
         getConversations();
-        socketInstance.on("user_login", listener);
-       return ()=>socketInstance.off("user_login", listener);
+        socketInstance.on("user_login", loginListener);
+        socketInstance.on("chatState", stateListener);
+        return () => {
+            socketInstance.off("user_login", loginListener);
+            socketInstance.off("chatState", stateListener);
+        };
     }, [refreshState])
 
     return (
@@ -153,7 +191,7 @@ const ChatScreen = (props) => {
                             key={index + 'friendItem_chat'}
                             props={props}
                             info={item}
-                            type = 'user'
+                            type='user'
                             isUserName={true}
                         />)
                     }

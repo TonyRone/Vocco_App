@@ -99,7 +99,7 @@ const HomeScreen = (props) => {
                 noticeDispatch("reset");
             }, 1500);
         }
-        return () => socketInstance.off("notice_Voice");
+        return () => {socketInstance.off("notice_Voice")};
     }, [])
 
     return (

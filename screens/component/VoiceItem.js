@@ -32,8 +32,6 @@ export const VoiceItem = ({
   onChangeLike = () => { },
   spread = true,
 }) => {
-  const [received, setReceived] = useState(false);
-  const [showAnswers, setShowAnswers] = useState(false);
   const [showContext, setShowContext] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [lastTap, setLastTap] = useState(0);
@@ -70,7 +68,6 @@ export const VoiceItem = ({
 
   if (isRefresh != refresh) {
     setRefresh(isRefresh);
-    setShowEmojies(false);
   }
 
   const OnSetLike = () => {

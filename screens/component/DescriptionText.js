@@ -13,6 +13,7 @@ export const DescriptionText = ({
   marginLeft = 0,
   marginRight = 0,
   fontSize = 15,
+  maxWidth
 }) => {
   return (
     <Text
@@ -27,6 +28,7 @@ export const DescriptionText = ({
         marginLeft: marginLeft,
         marginRight: marginRight,
         lineHeight: lineHeight,
+        maxWidth: maxWidth,
       }}
     >
       {text}
