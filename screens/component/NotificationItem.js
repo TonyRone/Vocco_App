@@ -17,13 +17,11 @@ import yellow_starSvg from '../../assets/common/yellow_star.svg';
 import whiteTrashSvg from '../../assets/notification/white_trash.svg'
 
 import { styles } from '../style/Common';
-import { SemiBoldText } from "./CommenText";
-import { windowWidth } from "../../config/config";
+import { SemiBoldText } from "./SemiBoldText";
+import { Avatars, windowWidth } from "../../config/config";
 
 export const NotificationItem = ({
-    userImage,
-    userName,
-    userPremium = false,
+    userInfo,
     details,
     isNew = false,
     notificationTime,
@@ -74,9 +72,9 @@ export const NotificationItem = ({
                                 height: 48,
                                 borderRadius: 24,
                                 borderColor: '#FFA002',
-                                borderWidth: userPremium == 'none' ? 0 : 2
+                                borderWidth: userInfo.premium == 'none' ? 0 : 2
                             }}
-                            source={{ uri: userImage }}
+                            source={userInfo.avatar?{ uri: userInfo.avatar.url }:Avatars[userInfo.avatarNumber].uri}
                         />
                         {isNew && isActivity && <View
                             style={{
@@ -94,7 +92,7 @@ export const NotificationItem = ({
                                     />
                                 }
                                 <SemiBoldText
-                                    text={userName}
+                                    text={userInfo.name}
                                     fontSize={15}
                                     lineHeight={24}
                                 />

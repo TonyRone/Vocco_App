@@ -5,6 +5,7 @@ import {
   Image,
   Pressable,
   Text,
+  Modal,
 } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
@@ -12,8 +13,7 @@ import '../../language/i18n';
 import { FriendItem } from './FriendItem';
 import { SvgXml } from 'react-native-svg';
 import plusSvg from '../../assets/Feed/plus.svg'
-import { windowWidth } from '../../config/config';
-import SwipeDownModal from 'react-native-swipe-down';
+import { Avatars, windowWidth } from '../../config/config';
 import { useSelector } from 'react-redux';
 import VoiceService from '../../services/VoiceService';
 import { DescriptionText } from './DescriptionText';
@@ -77,7 +77,7 @@ export const TemporaryStories = ({
         onLongPress={() => temFlag >= 0 ? setConfirmModal(true) : null}
       >
         <Image
-          source={{ uri: user.avatar?.url }}
+          source={user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri}
           style={{ width: temFlag >= 0 ? 58 : 56, height: temFlag >= 0 ? 58 : 56, borderRadius: temFlag >= 0 ? 29 : 28, }}
           resizeMode='cover'
         />
@@ -127,9 +127,15 @@ export const TemporaryStories = ({
             isUserName={userId == '' ? true : false}
           />), [stories])}
     </ScrollView>
-    <SwipeDownModal
-      modalVisible={confirmModal}
-      ContentModal={
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={confirmModal}
+      onRequestClose={() => {
+        setConfirmModal(!confirmModal)
+      }}
+    >
+      <Pressable onPressOut={() => setConfirmModal(false)} style={styles.swipeModal}>
         <View style={{ height: '100%', width: '100%' }}>
           <View style={{ position: 'absolute', width: windowWidth - 16, bottom: 92, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: '#E9EAEC' }}>
             <Pressable onPress={() => { props.navigation.navigate("HoldRecord", { isTemporary: true }); setConfirmModal(false); }}>
@@ -156,12 +162,7 @@ export const TemporaryStories = ({
             </Pressable>
           </View>
         </View>
-      }
-      ContentModalStyle={styles.swipeModal}
-      onRequestClose={() => { setConfirmModal(false) }}
-      onClose={() => {
-        setConfirmModal(false);
-      }}
-    />
+      </Pressable>
+    </Modal>
   </View>
 };

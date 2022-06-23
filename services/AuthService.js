@@ -49,6 +49,42 @@ class AuthService {
             );
     }
 
+    phoneRegister(data) {
+        return RNFetchBlob
+            .config({ trusty: true })
+            .fetch(
+                'POST',
+                `${API_URL}/${'phoneRegister'}`, {
+                    'Content-Type': 'application/json',
+                },
+                JSON.stringify(data)
+            );
+    }
+
+    phoneLogin(data) {
+        return RNFetchBlob
+            .config({ trusty: true })
+            .fetch(
+                'POST',
+                `${API_URL}/${'phoneLogin'}`, {
+                    'Content-Type': 'application/json',
+                },
+                JSON.stringify(data)
+            );
+    }
+
+    confirmPhoneVerify(data) {
+        return RNFetchBlob
+            .config({ trusty: true })
+            .fetch(
+                'POST',
+                `${API_URL}/${'confirmPhoneNumber'}`, {
+                    'Content-Type': 'application/json',
+                },
+                JSON.stringify(data)
+            );
+    }
+
     async getUserInfo( accessToken = null, checkDevice = '') {
         const token = accessToken?accessToken:await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         const deviceToken = await AsyncStorage.getItem(DEVICE_TOKEN);
@@ -78,12 +114,21 @@ class AuthService {
 
     async uploadPhoto(data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
-        return RNFetchBlob
-            .config({ trusty: true,fileCache:true })
-            .fetch('POST', `${API_URL}/account/avatar`, {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': "multipart/form-data",
-            }, data);
+        return await fetch(`${API_URL}/account/avatar`, {
+            method: 'POST',
+            body: data,
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'multipart/form-data',
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+        // return RNFetchBlob
+        //     .config({ trusty: true})
+        //     .fetch('POST', `${API_URL}/account/avatar`, {
+        //         'Authorization': `Bearer ${token}`,
+        //         'Content-Type': "multipart/form-data",
+        //     }, data);
 
         // At request level
         // const agent = new https.Agent({

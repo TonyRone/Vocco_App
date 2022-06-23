@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import {
   View,
   Pressable,
-  TouchableOpacity
+  TouchableOpacity,
+  Modal
 } from 'react-native';
 import { TitleText } from './TitleText';
-import SwipeDownModal from 'react-native-swipe-down';
 import { SvgXml } from 'react-native-svg';
 import replySvg from '../../assets/chat/reply.svg';
 import forwardSvg from '../../assets/chat/forward.svg';
@@ -36,9 +36,15 @@ export const MessageContext = ({
   }
 
   return (
-    <SwipeDownModal
-      modalVisible={showModal}
-      ContentModal={
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={showModal}
+      onRequestClose={() => {
+        closeModal();
+      }}
+    >
+      <Pressable onPressOut={closeModal} style={styles.swipeModal}>
         <View
           style={{ marginTop: "25%", paddingHorizontal: 8 }}
         >
@@ -135,12 +141,7 @@ export const MessageContext = ({
             </TouchableOpacity>
           </View>
         </View>
-      }
-      ContentModalStyle={styles.swipeModal}
-      onRequestClose={() => closeModal()}
-      onClose={() =>
-        closeModal()
-      }
-    />
+      </Pressable>
+    </Modal>
   );
 };

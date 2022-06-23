@@ -4,11 +4,12 @@ import {
   TouchableOpacity,
   Image,
   Platform,
-  PermissionsAndroid
+  PermissionsAndroid,
+  Modal,
+  Pressable
 } from 'react-native';
 
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
-import SwipeDownModal from 'react-native-swipe-down';
 import { styles } from '../style/Common';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -112,9 +113,15 @@ export const PhotoSelector = ({
   }, [])
 
   return (
-    <SwipeDownModal
-      modalVisible={showModal}
-      ContentModal={
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={showModal}
+      onRequestClose={() => {
+        closeModal();
+      }}
+    >
+      <Pressable onPressOut={closeModal} style={styles.swipeModal}>
         <View style={[styles.swipeContainerContent, { alignItems: 'center' }]}>
           <View style={{
             width: 31,
@@ -188,12 +195,7 @@ export const PhotoSelector = ({
             />
           </View>
         </View>
-      }
-      ContentModalStyle={styles.swipeModal}
-      onRequestClose={() => closeModal()}
-      onClose={() =>
-        closeModal()
-      }
-    />
+      </Pressable>
+    </Modal>
   );
 };

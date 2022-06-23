@@ -28,23 +28,19 @@ const LogoScreen = (props) => {
 
     const onGoScreen = async (jsonRes) => {
         dispatch(setUser(jsonRes));
+        console.log(jsonRes);
         let navigateScreen = 'Home';
         if (!jsonRes.id) {
             return;
         }
-        if (!jsonRes.isEmailVerified) {
-            navigateScreen = 'Verify';
-        } else if (!jsonRes.name) {
-            navigateScreen = 'Username';
+        if (!jsonRes.name) {
+            navigateScreen = 'PickName';
         } else if (!jsonRes.dob) {
-            props.navigation.navigate('');
-            navigateScreen = 'Birthday';
+            navigateScreen = 'InputBirthday';
         } else if (!jsonRes.gender) {
-            navigateScreen = 'Identify';
-        } else if (!jsonRes.country) {
-            navigateScreen = 'Country';
-        } else if (!jsonRes.avatar) {
-            navigateScreen = 'Photo';
+            navigateScreen = 'SelectIdentify';
+        // } else if (!jsonRes.avatar&&!jsonRes.avatarNumber) {
+        //     navigateScreen = 'ProfilePicture';
         } else {
             const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
             if (tutorial_check)

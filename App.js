@@ -59,7 +59,15 @@ import HomeScreen from './screens/Home/HomeScreen';
 import ChatScreen from './screens/Chat/ChatScreen';
 import FriendsScreen from './screens/Friends/FriendsScreen';
 import ConversationScreen from './screens/Chat/ConversationScreen';
-import PhoneNumberScreen from './screens/PhoneNumberLogin/PhoneNumberScreen';
+import PhoneRegisterScreen from './screens/PhoneNumberLogin/PhoneRegisterScreen';
+import ProfilePictureScreen from './screens/PhoneNumberLogin/ProfilePictureScreen';
+import MainNameScreen from './screens/PhoneNumberLogin/MainNameScreen';
+import PhoneVerifyScreen from './screens/PhoneNumberLogin/PhoneVerifyScreen';
+import PickNameScreen from './screens/PhoneNumberLogin/PickNameScreen';
+import InputBirthdayScreen from './screens/PhoneNumberLogin/InputBirthdayScreen';
+import SelectIdentifyScreen from './screens/PhoneNumberLogin/SelectIdentifyScreen';
+import PhoneLoginScreen from './screens/PhoneNumberLogin/PhoneLoginScreen';
+import UpdatePictureScreen from './screens/PhoneNumberLogin/UpdatePictureScreen';
 
 
 const slideAnimation2 = (bottomToTop) => {
@@ -87,100 +95,60 @@ const AppNavigator = createStackNavigator({
     screen: LogoScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Welcome: {
     screen: WelcomeScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Login: {
     screen: LoginScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Register: {
     screen: RegisterScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Verify: {
     screen: VerifyScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Username: {
     screen: UsernameScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Birthday: {
     screen: BirthdayScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Identify: {
     screen: IdentifyScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Country: {
     screen: CountryScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Photo: {
     screen: PhotoScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
 
@@ -189,10 +157,6 @@ const AppNavigator = createStackNavigator({
     screen: TutorialScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
 
@@ -201,20 +165,12 @@ const AppNavigator = createStackNavigator({
     screen: DiscoverScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Search: {
     screen: SearchScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      },
       cardStyleInterpolator: slideAnimation2
     }
   },
@@ -224,10 +180,6 @@ const AppNavigator = createStackNavigator({
     screen: FeedScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      },
     }
   },
 
@@ -235,10 +187,6 @@ const AppNavigator = createStackNavigator({
     screen: HomeScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      },
     }
   },
 
@@ -247,205 +195,173 @@ const AppNavigator = createStackNavigator({
     screen: HoldRecordScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   PostingVoice: {
     screen: PostingVoiceScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Profile: {
     screen: ProfileScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   UserProfile: {
     screen: UserProfileScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   UserProfileList: {
     screen: UserProfileListScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   VoiceProfile: {
     screen: VoiceProfileScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Setting: {
     screen: SettingScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   EditProfile: {
     screen: EditProfileScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   ChangeEmail: {
     screen: ChangeEmailScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   ChangePassword: {
     screen: ChangePasswordScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   ShareFriend: {
     screen: ShareFriendScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Contact: {
     screen: ContactScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Notification: {
     screen: NotificationScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   PostingAnswerVoice: {
     screen: PostingAnswerVoiceScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Share: {
     screen: ShareScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Premium: {
     screen: PremiumScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Chat: {
     screen: ChatScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Friends: {
     screen: FriendsScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
   Conversation: {
     screen: ConversationScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
     }
   },
-  PhoneNumber: {
-    screen: PhoneNumberScreen,
+  PhoneRegister: {
+    screen: PhoneRegisterScreen,
     navigationOptions: {
       headerShown: false,
-      headerStyle: {
-        elevation: 0, // remove shadow on Android
-        shadowOpacity: 0, // remove shadow on iOS
-      }
+    }
+  },
+  ProfilePicture: {
+    screen: ProfilePictureScreen,
+    navigationOptions: {
+      headerShown: false,
+    }
+  },
+  MainName: {
+    screen: MainNameScreen,
+    navigationOptions: {
+      headerShown: false,
+    }
+  },
+  PhoneVerify: {
+    screen: PhoneVerifyScreen,
+    navigationOptions: {
+      headerShown: false,
+    }
+  },
+  PickName: {
+    screen: PickNameScreen,
+    navigationOptions: {
+      headerShown: false,
+    }
+  },
+  InputBirthday: {
+    screen: InputBirthdayScreen,
+    navigationOptions: {
+      headerShown: false,
+    }
+  },
+  SelectIdentify: {
+    screen: SelectIdentifyScreen,
+    navigationOptions: {
+      headerShown: false,
+    }
+  },
+  PhoneLogin: {
+    screen: PhoneLoginScreen,
+    navigationOptions: {
+      headerShown: false,
+    }
+  },
+  UpdatePicture: {
+    screen: UpdatePictureScreen,
+    navigationOptions: {
+      headerShown: false,
     }
   },
 },
   {
-    initialRouteName:'PhoneNumber'
+    //initialRouteName:'Verify'
   }
 );
 
@@ -454,7 +370,7 @@ const AppContainer = createAppContainer(AppNavigator);
 export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
-    //PushNotification.requestPermissions();
+    PushNotification.requestPermissions();
   }, []);
   return (
     <Provider store={store}>

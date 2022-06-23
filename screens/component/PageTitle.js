@@ -1,7 +1,7 @@
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { SvgXml } from 'react-native-svg';
-import { CommenText } from '../component/CommenText';
+import { SemiBoldText } from '../component/SemiBoldText';
 import { styles } from '../style/Common';
 
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
@@ -32,7 +32,7 @@ export const PageTitle = ({
           xml={arrowBendUpLeft} 
         />
       </TouchableOpacity>}
-      <CommenText
+      <SemiBoldText
         text= {titleContent}
         fontSize={20}
         lineHeight={24}

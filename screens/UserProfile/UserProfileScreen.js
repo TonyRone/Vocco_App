@@ -7,11 +7,11 @@ import {
   Platform,
   Pressable,
   ScrollView,
+  Modal,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { useDispatch } from 'react-redux';
-import SwipeDownModal from 'react-native-swipe-down';
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
 import { setRefreshState } from '../../store/actions';
@@ -31,9 +31,9 @@ import shareSvg from '../../assets/post/share.svg';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
-import { windowWidth } from '../../config/config';
+import { Avatars, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
-import { SemiBoldText } from '../component/CommenText';
+import { SemiBoldText } from '../component/SemiBoldText';
 import VoiceService from '../../services/VoiceService';
 import { PostContext } from '../component/PostContext'
 import { Stories } from '../component/Stories';
@@ -185,8 +185,8 @@ const UserProfileScreen = (props) => {
         flex: 1
       }}
     >
-      <Image
-        source={{ uri: userInfo.user?.avatar?.url }}
+      {userInfo.user && <Image
+        source={userInfo.user.avatar ? { uri: userInfo.user.avatar.url } : Avatars[userInfo.user.avatarNumber].uri}
         resizeMode="cover"
         style={[styles.topProfileContainer, {
           borderBottomLeftRadius: 45 + ((userInfo.user && userInfo.user.premium == "none") ? 0 : 3),
@@ -198,7 +198,7 @@ const UserProfileScreen = (props) => {
           marginTop: (userInfo.user && userInfo.user.premium == "none") ? 0 : -3,
           borderColor: '#FFA002'
         }]}
-      />
+      />}
       <LinearGradient
         colors={['rgba(52, 50, 56, 0)', 'rgba(42, 39, 47, 0)', 'rgba(39, 36, 44, 0.65)', 'rgba(34, 32, 38, 0.9)']}
         locations={[0, 0.63, 0.83, 1]}
@@ -372,19 +372,25 @@ const UserProfileScreen = (props) => {
           </>
         }
       </ScrollView>
-      <SwipeDownModal
-        modalVisible={showModal}
-        ContentModal={
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => {
+          setShowModal(!showModal);
+        }}
+      >
+        <Pressable onPressOut={() => setShowModal(false)} style={styles.swipeModal}>
           <View style={styles.swipeContainerContent}>
             <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 14, paddingTop: 14, paddingBottom: 11, borderBottomWidth: 1, borderBottomColor: '#F0F4FC' }]}>
               <View style={styles.rowAlignItems}>
-                <Image
+                {userInfo.user && <Image
                   style={{
                     width: 38,
                     height: 38
                   }}
-                  source={{ uri: userInfo.user?.avatar?.url }}
-                />
+                  source={userInfo.user.avatar ? { uri: userInfo.user.avatar.url } : Avatars[userInfo.user.avatarNumber].uri}
+                />}
                 <View style={{ marginLeft: 18 }}>
                   <SemiBoldText
                     text={userInfo.user?.name}
@@ -485,16 +491,17 @@ const UserProfileScreen = (props) => {
             </View>
             <View style={styles.segmentContainer}></View>
           </View>
-        }
-        ContentModalStyle={styles.swipeModal}
-        onRequestClose={() => { setShowModal(false) }}
-        onClose={() => {
-          setShowModal(false);
+        </Pressable>
+      </Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={deleteModal}
+        onRequestClose={() => {
+          setDeleteModal(!deleteModal);
         }}
-      />
-      <SwipeDownModal
-        modalVisible={deleteModal}
-        ContentModal={
+      >
+        <Pressable onPressOut={() => setDeleteModal(false)} style={styles.swipeModal}>
           <View style={{ height: '100%', width: '100%' }}>
             <View style={{ position: 'absolute', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, borderRadius: 14, backgroundColor: '#E9EAEC' }}>
               <View style={{ paddingTop: 14, paddingBottom: 8.5, width: '100%', borderBottomWidth: 1, borderBottomColor: '#B6C2DB', alignItems: 'center' }}>
@@ -528,13 +535,8 @@ const UserProfileScreen = (props) => {
               </TouchableOpacity>
             </View>
           </View>
-        }
-        ContentModalStyle={styles.swipeModal}
-        onRequestClose={() => { setDeleteModal(false) }}
-        onClose={() => {
-          setDeleteModal(false);
-        }}
-      />
+        </Pressable>
+      </Modal>
       {showContext &&
         <PostContext
           postInfo={voices[selectedIndex]}

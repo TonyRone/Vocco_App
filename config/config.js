@@ -119,3 +119,54 @@ export const Categories =
         uri:require('../assets/categories/love.png')
     },
 ]
+
+export const Avatars = [
+    {
+        label:'',
+        uri:require('../assets/phoneNumber/avatar-0.png')
+    },
+    {
+        label:'',
+        uri:require('../assets/phoneNumber/avatar-1.png')
+    },
+    {
+        label:'',
+        uri:require('../assets/phoneNumber/avatar-2.png')
+    },
+    {
+        label:'',
+        uri:require('../assets/phoneNumber/avatar-3.png')
+    },
+    {
+        label:'',
+        uri:require('../assets/phoneNumber/avatar-4.png')
+    },
+    {
+        label:'',
+        uri:require('../assets/phoneNumber/avatar-5.png')
+    },
+    {
+        label:'',
+        uri:require('../assets/phoneNumber/avatar-6.png')
+    },
+    {
+        label:'',
+        uri:require('../assets/phoneNumber/avatar-7.png')
+    },
+    {
+        label:'',
+        uri:require('../assets/phoneNumber/avatar-8.png')
+    },
+    {
+        label:'',
+        uri:require('../assets/phoneNumber/avatar-9.png')
+    },
+    {
+        label:'',
+        uri:require('../assets/phoneNumber/avatar-10.png')
+    },
+    {
+        label:'',
+        uri:require('../assets/phoneNumber/avatar-11.png')
+    },
+]

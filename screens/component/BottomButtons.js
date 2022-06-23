@@ -10,6 +10,7 @@ import chatActiveSvg from '../../assets/common/bottomIcons/chatActive.svg';
 import friendSvg from '../../assets/common/bottomIcons/friend.svg';
 import friendActiveSvg from '../../assets/common/bottomIcons/friendActive.svg';
 import { useSelector } from "react-redux";
+import { Avatars } from "../../config/config";
 
 export const BottomButtons = ({
   active = 'home',
@@ -86,7 +87,7 @@ export const BottomButtons = ({
         onPress={() => props.navigation.navigate("Profile")}
       >
         <Image
-          source={{ uri: user.avatar?.url }}
+          source={user.avatar?{ uri: user.avatar.url }:Avatars[user.avatarNumber].uri}
           style={{ width: 30, height: 30, borderRadius: 15 }}
           resizeMode='cover'
         />

@@ -6,14 +6,15 @@ import {
   ScrollView,
   Image,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  Modal,
+  Pressable
 } from 'react-native';
 
 import * as Progress from "react-native-progress";
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import '../../language/i18n';
-import SwipeDownModal from 'react-native-swipe-down';
 import { TitleText } from '../component/TitleText';
 import { FlatList } from 'react-native-gesture-handler';
 import { BlockList } from '../component/BlockList';
@@ -30,7 +31,7 @@ import box_blankSvg from '../../assets/discover/box_blank.svg';
 import image_shadowSvg from '../../assets/discover/image_shadow.svg';
 import searchSvg from '../../assets/login/search.svg';
 import closeCircleSvg from '../../assets/common/close-circle.svg';
-import { Categories, windowHeight, windowWidth } from '../../config/config';
+import { Avatars, Categories, windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { Stories } from '../component/Stories';
 import { RecordIcon } from '../component/RecordIcon';
@@ -241,7 +242,7 @@ const SearchScreen = (props) => {
                   style={{ marginBottom: 20, flexDirection: 'row', alignItems: 'center' }} key={index + 'loadusers'}
                 >
                   <Image
-                    source={{ uri: item.avatar?.url }}
+                    source={item.avatar ? { uri: item.avatar.url } : Avatars[item.avatarNumber].uri}
                     style={{ width: 24, height: 24, borderRadius: 7.2 }}
                     resizeMode='cover'
                   />
@@ -410,21 +411,22 @@ const SearchScreen = (props) => {
           <BlockList marginTop={26} blockName={t("Popular")} items={[]} />
         </ScrollView>
       </View>}
-      <SwipeDownModal
-        modalVisible={showModal}
-        ContentModal={
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => {
+          setShowModal(!showModal);
+        }}
+      >
+        <Pressable onPressOut={() => setShowModal(false)} style={styles.swipeModal}>
           <AllCategory
             closeModal={() => setShowModal(false)}
             selectedCategory={category}
             setCategory={(id) => onChangeCategory(id)}
           />
-        }
-        ContentModalStyle={styles.swipeModal}
-        onRequestClose={() => { setShowModal(false) }}
-        onClose={() => {
-          setShowModal(false);
-        }}
-      />
+        </Pressable>
+      </Modal>
       {showContext &&
         <PostContext
           postInfo={filteredVoices[selectedIndex]}

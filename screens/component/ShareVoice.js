@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Image } from "react-native";
+import { View, TouchableOpacity, Image, Modal, Pressable } from "react-native";
 import { SvgXml } from 'react-native-svg';
 import { windowWidth } from '../../config/config';
-import SwipeDownModal from 'react-native-swipe-down';
 import Clipboard from '@react-native-community/clipboard';
 import socialShare from 'react-native-share';
 import { styles } from '../style/Common';
@@ -40,9 +39,15 @@ export const ShareVoice = ({
   }
 
   return (
-    <SwipeDownModal
-      modalVisible={showModal}
-      ContentModal={
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={showModal}
+      onRequestClose={() => {
+        closeModal();
+      }}
+    >
+      <Pressable onPressOut={closeModal} style={styles.swipeModal}>
         <View
           style={{
             position: 'absolute',
@@ -212,12 +217,7 @@ export const ShareVoice = ({
             </View>
           </View>
         </View>
-      }
-      ContentModalStyle={styles.swipeModal}
-      onRequestClose={() => closeModal()}
-      onClose={() =>
-        closeModal()
-      }
-    />
+      </Pressable>
+    </Modal>
   );
 };

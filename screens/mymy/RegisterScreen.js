@@ -215,7 +215,6 @@ const RegisterScreen = (props) => {
     } else if (!jsonRes.name) {
       navigateScreen = 'Username';
     } else if (!jsonRes.dob) {
-      props.navigation.navigate('');
       navigateScreen = 'Birthday';
     } else if (!jsonRes.gender) {
       navigateScreen = 'Identify';

@@ -1,7 +1,7 @@
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { SvgXml } from 'react-native-svg';
-import { SemiBoldText } from '../component/CommenText';
+import { SemiBoldText } from '../component/SemiBoldText';
 import { styles } from '../style/Common';
 
 export const SettingList = ({

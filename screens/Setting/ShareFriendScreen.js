@@ -18,7 +18,7 @@ import whatsappSvg from '../../assets/setting/whatsapp.svg';
 import copySvg from '../../assets/setting/copy.svg';
 import { windowHeight } from '../../config/config';
 import { styles } from '../style/Common';
-import { SemiBoldText } from '../component/CommenText';
+import { SemiBoldText } from '../component/SemiBoldText';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import VoiceService from '../../services/VoiceService';

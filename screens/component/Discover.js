@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   Pressable,
   ScrollView,
-  Platform
+  Platform,
+  Modal
 } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
@@ -13,7 +14,6 @@ import { useSelector } from 'react-redux';
 import '../../language/i18n';
 import { TitleText } from './TitleText';
 import { FlatList } from 'react-native-gesture-handler';
-import SwipeDownModal from 'react-native-swipe-down';
 import { CategoryIcon } from './CategoryIcon';
 import { DescriptionText } from './DescriptionText';
 import { AllCategory } from './AllCategory';
@@ -163,21 +163,22 @@ export const Discover = ({
           category={Categories[category].label}
         />
       </ScrollView>
-      <SwipeDownModal
-        modalVisible={showModal}
-        ContentModal={
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => {
+          setShowModal(!showModal);
+        }}
+      >
+        <Pressable onPressOut={() => setShowModal(false)} style={styles.swipeModal}>
           <AllCategory
             closeModal={() => setShowModal(false)}
             selectedCategory={category}
             setCategory={(id) => onChangeCategory(id)}
           />
-        }
-        ContentModalStyle={styles.swipeModal}
-        onRequestClose={() => { setShowModal(false) }}
-        onClose={() => {
-          setShowModal(false);
-        }}
-      />
+        </Pressable>
+      </Modal>
     </View>
   );
 };

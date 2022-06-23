@@ -18,8 +18,8 @@ import lightDoubleCheckSvg from '../../assets/chat/light-double-check.svg';
 
 
 import { styles } from '../style/Common';
-import { SemiBoldText } from "./CommenText";
-import { windowWidth } from "../../config/config";
+import { SemiBoldText } from "./SemiBoldText";
+import { Avatars, windowWidth } from "../../config/config";
 import { useSelector } from 'react-redux';
 
 export const ChatListItem = ({
@@ -128,7 +128,7 @@ export const ChatListItem = ({
                         borderColor: '#FFA002',
                         borderWidth: otherUser.premium == 'none' ? 0 : 2
                     }}
-                    source={{ uri: otherUser.avatar.url }}
+                    source={otherUser.avatar?{ uri: otherUser.avatar.url }:Avatars[otherUser.avatarNumber].uri}
                 />
                 {info.lastSeen == 'onSession' && <View
                     style={{

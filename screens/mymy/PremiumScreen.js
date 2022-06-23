@@ -18,7 +18,7 @@ import { setUser, setRefreshState } from '../../store/actions';
 import { windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import EditService from '../../services/EditService';
-import { SemiBoldText } from '../component/CommenText';
+import { SemiBoldText } from '../component/SemiBoldText';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 

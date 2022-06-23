@@ -16,7 +16,7 @@ import black_settingsSvg from '../../assets/notification/black_settings.svg';
 import notificationSvg from '../../assets/discover/notification.svg';
 import { windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
-import { SemiBoldText } from '../component/CommenText';
+import { SemiBoldText } from '../component/SemiBoldText';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState } from '../../store/actions';

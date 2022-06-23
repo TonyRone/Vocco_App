@@ -50,7 +50,7 @@ const CountryScreen = (props) => {
           setIsError(true);
           setMessage(jsonRes.message);
         } else {
-          props.navigation.navigate('Photo');
+          props.navigation.navigate('ProfilePicture');
           setIsError(false);
           setMessage(jsonRes.message);
         }
@@ -61,8 +61,6 @@ const CountryScreen = (props) => {
       .catch(err => {
         console.log(err);
       });
-
-    props.navigation.navigate('Photo');
   }
 
   const selectedCountry = (cty) => {

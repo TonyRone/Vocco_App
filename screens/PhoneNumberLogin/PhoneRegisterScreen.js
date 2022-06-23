@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, ImageBackground, Image, Text, TouchableOpacity, Platform } from 'react-native';
+import { View, ImageBackground, TouchableOpacity, Platform } from 'react-native';
+import * as Progress from "react-native-progress";
 import PhoneInput from "react-native-phone-number-input";
 import { SvgXml } from 'react-native-svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import rightArrowSvg from '../../assets/phoneNumber/right-arrow.svg';
+import errorSvg from '../../assets/phoneNumber/error.svg';
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
 import { useTranslation } from 'react-i18next';
@@ -12,15 +14,36 @@ import '../../language/i18n';
 
 import { styles } from '../style/Welcome';
 import { MyProgressBar } from '../component/MyProgressBar';
-import { windowWidth } from '../../config/config';
+import { windowWidth, windowHeight } from '../../config/config';
+import AuthService from '../../services/AuthService';
 
-const PhoneNumberScreen = (props) => {
+const PhoneRegisterScreen = (props) => {
 
     const [value, setValue] = useState("");
+    const [error, setError] = useState("");
     const [formattedValue, setFormattedValue] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [country, setCountry] = useState('');
 
     const { t, i18n } = useTranslation();
     const phoneInput = useRef();
+
+    const phoneRegister = () => {
+        const payload = {
+            phoneNumber: formattedValue
+        };
+        setLoading(true);
+        AuthService.phoneRegister(payload).then(async res => {
+            const jsonRes = await res.json();
+            if (res.respInfo.status === 201) {
+                props.navigation.navigate('PhoneVerify', { number: formattedValue, country: country })
+            }
+            else{
+                setError(jsonRes.message);
+            }
+            setLoading(false);
+        })
+    }
 
     useEffect(() => {
     }, [])
@@ -28,7 +51,7 @@ const PhoneNumberScreen = (props) => {
     return (
         <ImageBackground
             source={require('../../assets/phoneNumber/background.png')}
-            resizeMode="stretch"
+            resizeMode="cover"
             style={styles.background}
         >
             <View
@@ -64,8 +87,7 @@ const PhoneNumberScreen = (props) => {
                 marginTop={8}
             />
             <View style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
+                alignItems: 'center',
                 marginTop: 45
             }}>
                 <PhoneInput
@@ -100,19 +122,37 @@ const PhoneNumberScreen = (props) => {
                     }}
                     onChangeText={(text) => {
                         setValue(text);
+                        setError('');
                     }}
                     onChangeFormattedText={(text) => {
                         setFormattedValue(text);
                     }}
+                    onChangeCountry={(country)=>{
+                        setCountry(country.name);
+                    }}
                     autoFocus
                 />
+                {error != '' && <View style={[styles.rowAlignItems, { marginTop: 10 }]}>
+                    <SvgXml
+                        width={24}
+                        height={24}
+                        xml={errorSvg}
+                    />
+                    <DescriptionText
+                        text={t(error)}
+                        fontSize={12}
+                        lineHeigh={16}
+                        marginLeft={8}
+                        color='#E41717'
+                    />
+                </View>}
             </View>
             <TouchableOpacity style={{
                 position: 'absolute',
                 right: 16,
                 bottom: 16,
             }}
-                onPress={()=>{}}
+                onPress={() => phoneRegister()}
                 disabled={!phoneInput.current?.isValidNumber(value)}
             >
                 <LinearGradient
@@ -136,8 +176,20 @@ const PhoneNumberScreen = (props) => {
                     />
                 </LinearGradient>
             </TouchableOpacity>
+            {loading &&
+                <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(1,1,1,0.3)' }}>
+                    <View style={{ marginTop: windowHeight / 2.5, alignItems: 'center', width: windowWidth }}>
+                        <Progress.Circle
+                            indeterminate
+                            size={30}
+                            color="rgba(0, 0, 255, 0.7)"
+                            style={{ alignSelf: "center" }}
+                        />
+                    </View>
+                </View>
+            }
         </ImageBackground>
     );
 };
 
-export default PhoneNumberScreen;
+export default PhoneRegisterScreen;

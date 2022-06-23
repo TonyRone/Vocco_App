@@ -6,9 +6,10 @@ import {
     Image,
     KeyboardAvoidingView,
     Platform,
+    Modal,
+    Pressable,
 } from 'react-native';
 
-import SwipeDownModal from 'react-native-swipe-down';
 import LinearGradient from 'react-native-linear-gradient';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -25,12 +26,12 @@ import passwordSvg from '../../assets/setting/password.svg';
 import contactsSvg from '../../assets/setting/contacts.svg';
 import logoutSvg from '../../assets/setting/logout.svg';
 import websiteSvg from '../../assets/setting/website.svg';
-import { windowWidth } from '../../config/config';
+import { Avatars, windowWidth } from '../../config/config';
 import { GoogleSignin } from 'react-native-google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ACCESSTOKEN_KEY, MAIN_LANGUAGE, windowHeight } from '../../config/config';
 import { styles } from '../style/Common';
-import { SemiBoldText } from '../component/CommenText';
+import { SemiBoldText } from '../component/SemiBoldText';
 import { SettingList } from '../component/SettingList';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { useSelector, useDispatch } from 'react-redux';
@@ -126,7 +127,7 @@ const SettingScreen = (props) => {
                                 borderRadius: 28,
                                 marginRight: 16
                             }}
-                            source={{ uri: userData.avatar?.url }}
+                            source={userData.avatar ? { uri: userData.avatar.url } : Avatars[userData.avatarNumber].uri}
                         />
                         <View>
                             <SemiBoldText
@@ -213,9 +214,16 @@ const SettingScreen = (props) => {
                 active='settings'
                 props={props}
             />
-            <SwipeDownModal
-                modalVisible={showModal}
-                ContentModal={
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={showModal}
+                onRequestClose={() => {
+                    //  Alert.alert("Modal has been closed.");
+                    setShowModal(!showModal);
+                }}
+            >
+                <Pressable onPressOut={() => setShowModal(false)} style={styles.swipeModal}>
                     <View style={{
                         marginTop: 300,
                         width: windowWidth - 48,
@@ -264,16 +272,17 @@ const SettingScreen = (props) => {
                             </TouchableOpacity>
                         </View>
                     </View>
-                }
-                ContentModalStyle={styles.swipeModal}
-                onRequestClose={() => { setShowModal(false) }}
-                onClose={() => {
-                    setShowModal(false);
+                </Pressable>
+            </Modal>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={showLanguageModal}
+                onRequestClose={() => {
+                    setShowLanguageModal(!showLanguageModal);
                 }}
-            />
-            <SwipeDownModal
-                modalVisible={showLanguageModal}
-                ContentModal={
+            >
+                <Pressable onPressOut={() => setShowLanguageModal(false)} style={styles.swipeModal}>
                     <View style={styles.swipeInputContainerContent}>
                         <View style={[styles.rowSpaceBetween, { paddingHorizontal: 14, paddingVertical: 12 }]}>
                             <TouchableOpacity onPress={() => setShowLanguageModal(false)}>
@@ -321,13 +330,8 @@ const SettingScreen = (props) => {
                             />
                         </LinearGradient>
                     </View>
-                }
-                ContentModalStyle={styles.swipeModal}
-                onRequestClose={() => { setShowLanguageModal(false) }}
-                onClose={() => {
-                    setShowLanguageModal(false);
-                }}
-            />
+                </Pressable>
+            </Modal>
             <RecordIcon
                 props={props}
                 bottom={15.5}

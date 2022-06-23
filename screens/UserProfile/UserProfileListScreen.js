@@ -10,7 +10,7 @@ import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import moreSvg from '../../assets/common/more.svg';
 import followSvg from '../../assets/profile/follow.svg';
 import { styles } from '../style/Common';
-import { SemiBoldText } from '../component/CommenText';
+import { SemiBoldText } from '../component/SemiBoldText';
 
 const UserProfileListScreen = (props) => {
 

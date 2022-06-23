@@ -27,7 +27,7 @@ const TutorialScreen = (props) => {
   const user = useSelector((state) => state.user.user);
 
   let voiceInfo = {
-    user: { avatar: { url: user.avatar?.url }, name: user.name },
+    user: user,
     title: t("Bad grades again"),
     duration: 52,
     emoji: "😍",

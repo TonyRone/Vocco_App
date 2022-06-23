@@ -35,9 +35,9 @@ import photoSvg from '../../assets/chat/photo.svg';
 import disableNotificationSvg from '../../assets/chat/disable_notification.svg';
 import recordSvg from '../../assets/common/bottomIcons/record.svg';
 
-import { windowHeight, windowWidth } from '../../config/config';
+import { Avatars, windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
-import { SemiBoldText } from '../component/CommenText';
+import { SemiBoldText } from '../component/SemiBoldText';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState, setVoiceState } from '../../store/actions';
@@ -413,7 +413,7 @@ const ConversationScreen = (props) => {
                                 />
                             </TouchableOpacity>
                             <Image
-                                source={{ uri: info.user.avatar?.url }}
+                                source={ info.user.avatar?{ uri: info.user.avatar.url }:Avatars[info.user.avatarNumber].uri}
                                 style={{ width: 40, height: 40, marginLeft: 25, borderRadius: 24, borderColor: '#FFA002', borderWidth: info.user.premium == 'none' ? 0 : 2 }}
                                 resizeMode='cover'
                             />

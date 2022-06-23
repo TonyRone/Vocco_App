@@ -12,7 +12,7 @@ import { MyTextField } from '../component/MyTextField';
 import { SvgXml } from 'react-native-svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import { styles } from '../style/Common';
-import { SemiBoldText } from '../component/CommenText';
+import { SemiBoldText } from '../component/SemiBoldText';
 import * as bcrypt from 'bcryptjs';
 import EditService from '../../services/EditService';
 

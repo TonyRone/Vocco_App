@@ -8,7 +8,8 @@ import {
   ScrollView,
   Text,
   TextInput,
-  Vibration
+  Vibration,
+  Modal
 } from 'react-native';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -25,7 +26,6 @@ import { ShareVoice } from '../component/ShareVoice';
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
-import SwipeDownModal from 'react-native-swipe-down';
 import { SvgXml } from 'react-native-svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import yesSwitchSvg from '../../assets/common/yesSwitch.svg';
@@ -384,21 +384,22 @@ const PostingVoiceScreen = (props) => {
           info={showShareVoice}
           onCloseModal={() => { setShowShareVoice(false); onNavigate("Feed", 1); }}
         />}
-      <SwipeDownModal
-        modalVisible={showModal}
-        ContentModal={
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => {
+          setShowModal(!showModal);
+        }}
+      >
+        <Pressable onPressOut={() => setShowModal(false)} style={styles.swipeModal}>
           <AllCategory
             closeModal={() => setShowModal(false)}
             selectedCategory={category}
             setCategory={(id) => onChangeCategory(id)}
           />
-        }
-        ContentModalStyle={styles.swipeModal}
-        onRequestClose={() => { setShowModal(false) }}
-        onClose={() => {
-          setShowModal(false);
-        }}
-      />
+        </Pressable>
+      </Modal>
     </KeyboardAvoidingView>
   );
 };

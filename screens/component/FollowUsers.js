@@ -3,22 +3,21 @@ import {
   View,
   Pressable,
   TouchableOpacity,
-  Image
+  Image,
+  Modal
 } from 'react-native';
 
 import * as Progress from "react-native-progress";
 import { TitleText } from './TitleText';
-import SwipeDownModal from 'react-native-swipe-down';
-
 import { SvgXml } from 'react-native-svg';
 import VoiceService from '../../services/VoiceService';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import { useSelector } from 'react-redux';
 import { styles } from '../style/Common';
-
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { ScrollView } from 'react-native-gesture-handler';
+import { Avatars } from '../../config/config';
 
 export const FollowUsers = ({
   props,
@@ -63,9 +62,15 @@ export const FollowUsers = ({
   }, [])
 
   return (
-    <SwipeDownModal
-      modalVisible={showModal}
-      ContentModal={
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={showModal}
+      onRequestClose={() => {
+        closeModal();
+      }}
+    >
+      <Pressable onPressOut={closeModal} style={styles.swipeModal}>
         <View style={styles.swipeContainerContent}>
           <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 14, paddingTop: 14, paddingBottom: 11, borderBottomWidth: 1, borderBottomColor: '#F0F4FC' }]}>
             <TitleText
@@ -103,7 +108,7 @@ export const FollowUsers = ({
                 style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 16, marginTop: 10, marginBottom: 10 }}
               >
                 <Image
-                  source={{ uri: item.user.avatar?.url }}
+                  source={user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri}
                   style={{ width: 50, height: 50, borderRadius: 25, borderColor: '#FFA002', borderWidth: item.user.premium == 'none' ? 0 : 2 }}
                   resizeMode='cover'
                 />
@@ -117,12 +122,7 @@ export const FollowUsers = ({
             }
           </ScrollView>
         </View>
-      }
-      ContentModalStyle={styles.swipeModal}
-      onRequestClose={() => closeModal()}
-      onClose={() =>
-        closeModal()
-      }
-    />
+      </Pressable>
+    </Modal>
   );
 };

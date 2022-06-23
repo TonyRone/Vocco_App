@@ -23,7 +23,7 @@ import yellow_starSvg from '../../assets/common/yellow_star.svg';
 import { styles } from '../style/Common';
 import VoiceService from '../../services/VoiceService';
 import VoicePlayer from '../Home/VoicePlayer';
-import { windowWidth } from '../../config/config';
+import { Avatars, windowWidth } from '../../config/config';
 
 export const VoiceItem = ({
   props,
@@ -51,8 +51,7 @@ export const VoiceItem = ({
 
   const DOUBLE_PRESS_DELAY = 400;
 
-  let userImage = info.user.avatar?.url,
-    voiceTitle = info.title,
+  let voiceTitle = info.title,
     details = info.user.name,
     voiceTime = info.duration,
     erngSvg = info.emoji ? info.emoji : "😁",
@@ -129,7 +128,7 @@ export const VoiceItem = ({
           >
             <View>
               <Image
-                source={{ uri: userImage }}
+                source={ info.user.avatar?{ uri: info.user.avatar.url }:Avatars[info.user.avatarNumber].uri}
                 style={{ width: 50, height: 50, borderRadius: 25, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
                 resizeMode='cover'
               />

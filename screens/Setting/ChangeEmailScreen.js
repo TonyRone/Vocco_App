@@ -13,7 +13,7 @@ import { ConfirmVerify } from '../component/ConfirmVerify';
 import { SvgXml } from 'react-native-svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import { styles } from '../style/Common';
-import { SemiBoldText } from '../component/CommenText';
+import { SemiBoldText } from '../component/SemiBoldText';
 import EditService from '../../services/EditService';
 import * as bcrypt from 'bcryptjs';
 

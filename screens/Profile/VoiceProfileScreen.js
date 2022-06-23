@@ -6,7 +6,8 @@ import {
   Image,
   Text,
   Platform,
-  ImageBackground
+  ImageBackground,
+  Modal
 } from 'react-native';
 
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -14,7 +15,6 @@ import * as Progress from "react-native-progress";
 import { NavigationActions, StackActions } from 'react-navigation';
 import { useTranslation } from 'react-i18next';
 import { HeartIcon } from '../component/HeartIcon';
-import SwipeDownModal from 'react-native-swipe-down';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState, setVoiceState } from '../../store/actions';
 import { DescriptionText } from '../component/DescriptionText';
@@ -31,9 +31,9 @@ import editSvg from '../../assets/common/edit.svg';
 import blueShareSvg from '../../assets/common/blue_share.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
 
-import { windowHeight, windowWidth, SHARE_CHECK } from '../../config/config';
+import { windowHeight, windowWidth, SHARE_CHECK, Avatars } from '../../config/config';
 import { styles } from '../style/Common';
-import { SemiBoldText } from '../component/CommenText';
+import { SemiBoldText } from '../component/SemiBoldText';
 import { AnswerVoiceItem } from '../component/AnswerVoiceItem';
 import '../../language/i18n';
 import { RecordIcon } from '../component/RecordIcon';
@@ -232,7 +232,7 @@ const VoiceProfileScreen = (props) => {
           }}
             style={{ paddingRight: 12 }}
           >
-            <Image
+            {info&&<Image
               style={{
                 width: 64,
                 height: 64,
@@ -240,8 +240,8 @@ const VoiceProfileScreen = (props) => {
                 borderColor: '#FFA002',
                 borderWidth: (info && info.user.premium != 'none') ? 2 : 0
               }}
-              source={{ uri: info?.user.avatar?.url }}
-            />
+              source={info.user.avatar?{ uri: info.user.avatar.url }:Avatars[info.user.avatarNumber].uri}
+            />}
             <View style={[{ position: 'absolute', left: 36, bottom: 0, width: 30, height: 30, backgroundColor: '#FFFFFF', borderRadius: 14 }, styles.contentCenter]}>
               <Text
                 style={{
@@ -454,10 +454,16 @@ const VoiceProfileScreen = (props) => {
           </View>
         </View>
       </View>}
-      <SwipeDownModal
-        modalVisible={showModal}
-        ContentModal={
-          <View style={styles.swipeContainerContent}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => {
+          setShowModal(!showModal);
+        }}
+      >
+        <Pressable onPressOut={() => setShowModal(false)} style={styles.swipeModal}>
+        <View style={styles.swipeContainerContent}>
             <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 14, paddingTop: 14, paddingBottom: 11, borderBottomWidth: 1, borderBottomColor: '#F0F4FC' }]}>
               <View style={styles.rowAlignItems}>
                 <Image
@@ -546,17 +552,18 @@ const VoiceProfileScreen = (props) => {
             </View>
             <View style={styles.segmentContainer}></View>
           </View>
-        }
-        ContentModalStyle={styles.swipeModal}
-        onRequestClose={() => { setShowModal(false) }}
-        onClose={() => {
-          setShowModal(false);
+        </Pressable>
+      </Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={deleteModal}
+        onRequestClose={() => {
+          setDeleteModal(!deleteModal);
         }}
-      />
-      <SwipeDownModal
-        modalVisible={deleteModal}
-        ContentModal={
-          <View style={{ height: '100%', width: '100%' }}>
+      >
+        <Pressable onPressOut={() => setDeleteModal(false)} style={styles.swipeModal}>
+        <View style={{ height: '100%', width: '100%' }}>
             <View style={{ position: 'absolute', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, height: 122, borderRadius: 14, backgroundColor: '#E9EAEC' }}>
               <View style={{ paddingTop: 14, height: 65.5, width: '100%', borderBottomWidth: 1, borderBottomColor: '#B6C2DB', alignItems: 'center' }}>
                 <SemiBoldText
@@ -596,13 +603,8 @@ const VoiceProfileScreen = (props) => {
               </Pressable>
             </View>
           </View>
-        }
-        ContentModalStyle={styles.swipeModal}
-        onRequestClose={() => { setDeleteModal(false) }}
-        onClose={() => {
-          setDeleteModal(false);
-        }}
-      />
+        </Pressable>
+      </Modal>
       {showShareVoice &&
         <ShareVoice
           info={info}

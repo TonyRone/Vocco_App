@@ -55,6 +55,11 @@ export const styles = StyleSheet.create({
         width: 187,
         height: 85
     },
+    rowAlignItems: {
+        // display: 'flex',
+         flexDirection: 'row',
+         alignItems: 'center'
+     },
     text: {
         color: "white",
         fontSize: 42,

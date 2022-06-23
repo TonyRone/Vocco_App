@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, Image, Pressable, TextInput } from "react-native";
+import { View, TouchableOpacity, Text, Image, Pressable, TextInput, Modal } from "react-native";
 import { SvgXml } from 'react-native-svg';
 
-import { windowWidth, windowHeight } from '../../config/config';
+import { windowWidth, windowHeight, Avatars } from '../../config/config';
 
 import * as Progress from "react-native-progress";
 import { TitleText } from './TitleText';
-import SwipeDownModal from 'react-native-swipe-down';
 import { FlatList } from "react-native-gesture-handler";
 import VoiceService from '../../services/VoiceService';
 import { styles } from '../style/Common';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import searchSvg from '../../assets/login/search.svg';
 import closeCircleSvg from '../../assets/common/close-circle.svg';
-import { SemiBoldText } from "./CommenText";
+import { SemiBoldText } from "./SemiBoldText";
 import { DescriptionText } from "./DescriptionText";
 import { useSelector } from 'react-redux';
 
@@ -120,9 +119,15 @@ export const NewChat = ({
   }, [])
 
   return (
-    <SwipeDownModal
-      modalVisible={showModal}
-      ContentModal={
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={showModal}
+      onRequestClose={() => {
+        closeModal();
+      }}
+    >
+      <Pressable onPressOut={closeModal} style={styles.swipeModal}>
         <View style={styles.swipeInputContainerContent}>
           {!isSearch ?
             <>
@@ -283,7 +288,7 @@ export const NewChat = ({
                       style={{ flexDirection: 'row', alignItems: 'center', marginLeft: isSearch ? 0 : 16, marginTop: 10, marginBottom: 10 }}
                     >
                       <Image
-                        source={{ uri: item.user.avatar?.url }}
+                        source={user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri}
                         style={{ width: 48, height: 48, borderRadius: 24, borderColor: '#FFA002', borderWidth: item.user.premium == 'none' ? 0 : 2 }}
                         resizeMode='cover'
                       />
@@ -318,12 +323,7 @@ export const NewChat = ({
             />
           </View>}
         </View>
-      }
-      ContentModalStyle={styles.swipeModal}
-      onRequestClose={() => closeModal()}
-      onClose={() => {
-        closeModal();
-      }}
-    />
+      </Pressable>
+    </Modal>
   );
 };

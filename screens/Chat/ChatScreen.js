@@ -17,7 +17,7 @@ import new_messageSvg from '../../assets/chat/new_message.svg';
 
 import { windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
-import { SemiBoldText } from '../component/CommenText';
+import { SemiBoldText } from '../component/SemiBoldText';
 import VoiceService from '../../services/VoiceService';
 import { useSelector } from 'react-redux';
 import { RecordIcon } from '../component/RecordIcon';

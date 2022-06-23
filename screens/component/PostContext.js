@@ -2,11 +2,11 @@ import React, { useState, useCallback } from 'react';
 import {
   View,
   Pressable,
-  TouchableOpacity
+  TouchableOpacity,
+  Modal
 } from 'react-native';
 import { TitleText } from './TitleText';
 import { VoiceItem } from './VoiceItem';
-import SwipeDownModal from 'react-native-swipe-down';
 import Share from 'react-native-share';
 import { SvgXml } from 'react-native-svg';
 import blankHeartSvg from '../../assets/post/blankHeart.svg';
@@ -74,9 +74,15 @@ export const PostContext = ({
   }, []);
 
   return (
-    <SwipeDownModal
-      modalVisible={showModal}
-      ContentModal={
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={showModal}
+      onRequestClose={() => {
+        closeModal();
+      }}
+    >
+      <Pressable onPressOut={closeModal} style={styles.swipeModal}>
         <View
           style={[styles.paddingH16, { marginTop: "25%" }]}
         >
@@ -282,12 +288,7 @@ export const PostContext = ({
             </View>
           }
         </View>
-      }
-      ContentModalStyle={styles.swipeModal}
-      onRequestClose={() => closeModal()}
-      onClose={() =>
-        closeModal()
-      }
-    />
+      </Pressable>
+    </Modal>
   );
 };

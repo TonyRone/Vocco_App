@@ -5,7 +5,9 @@ import {
   Image,
   Platform,
   TouchableOpacity,
-  Vibration
+  Vibration,
+  Modal,
+  Pressable
 } from 'react-native';
 
 import AudioRecorderPlayer, {
@@ -19,7 +21,6 @@ import * as Progress from "react-native-progress";
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import RNFetchBlob from 'rn-fetch-blob';
-import SwipeDownModal from 'react-native-swipe-down';
 import Draggable from 'react-native-draggable';
 import { windowHeight, windowWidth } from '../../config/config';
 import { DescriptionText } from './DescriptionText';
@@ -170,9 +171,15 @@ export const AnswerReply = ({
   }
 
   return (
-    <SwipeDownModal
-      modalVisible={showModal}
-      ContentModal={
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={showModal}
+      onRequestClose={() => {
+        closeModal();
+      }}
+    >
+      <Pressable onPressOut={closeModal} style={[styles.swipeModal, { backgroundColor: 'rgba(0, 0, 0, 0.1)' }]}>
         <>
           {isPublish ?
             <View style={{
@@ -301,12 +308,6 @@ export const AnswerReply = ({
                   }}
                 >
                 </View>
-                {/* <DescriptionText
-                text={new Date(wasteTime.current).toISOString().substr(14, 5)}
-                lineHeight={24}
-                fontSize={15}
-                marginLeft={12}
-              /> */}
                 <CountdownCircleTimer
                   key={key}
                   isPlaying={!isPaused}
@@ -343,12 +344,7 @@ export const AnswerReply = ({
               style={{ alignSelf: "center", marginTop: windowHeight / 2 }}
             />}
         </>
-      }
-      ContentModalStyle={[styles.swipeModal, { backgroundColor: 'rgba(0, 0, 0, 0.1)' }]}
-      onRequestClose={() => closeModal()}
-      onClose={() =>
-        closeModal()
-      }
-    />
+      </Pressable>
+    </Modal>
   );
 };

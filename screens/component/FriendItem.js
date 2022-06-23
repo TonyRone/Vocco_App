@@ -3,6 +3,7 @@ import { Image, Text, TouchableOpacity } from "react-native";
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
+import { Avatars } from "../../config/config";
 
 export const FriendItem = ({
   props,
@@ -47,7 +48,7 @@ export const FriendItem = ({
       }}
     >
       <Image
-        source={{ uri: info.user.avatar?.url }}
+        source={ info.user.avatar?{ uri: info.user.avatar.url }:Avatars[info.user.avatarNumber].uri}
         style={{ width: isGreen ? 57 : 56, height: isGreen ? 57 : 56, borderRadius: isGreen ? 28.5 : 28, borderWidth: isGreen ? 1 : 0, borderColor: info.user.premium != 'none' ? '#FFA002' : '#00FF00' }}
         resizeMode='cover'
       />

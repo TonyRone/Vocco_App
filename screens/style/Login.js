@@ -92,6 +92,11 @@ export const styles = StyleSheet.create({
         fontSize: 22,
         color: 'rgba(54, 36, 68, 0.8)'
     },
+    rowAlignItems: {
+        // display: 'flex',
+         flexDirection: 'row',
+         alignItems: 'center'
+     },
 
     underlineStyleHighLighted: {
         borderColor: "#8327D8",

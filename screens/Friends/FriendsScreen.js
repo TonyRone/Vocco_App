@@ -14,9 +14,9 @@ import { BottomButtons } from '../component/BottomButtons';
 import searchSvg from '../../assets/login/search.svg';
 import greenCheckSvg from '../../assets/friend/green-check.svg';
 import addSvg from '../../assets/setting/add.svg';
-import { windowWidth } from '../../config/config';
+import { Avatars, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
-import { SemiBoldText } from '../component/CommenText';
+import { SemiBoldText } from '../component/SemiBoldText';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState } from '../../store/actions';
@@ -148,7 +148,6 @@ const FriendsScreen = (props) => {
             if (res.respInfo.status === 200) {
                 const jsonRes = await res.json();
                 setFollowers(jsonRes);
-                console.log(jsonRes[0]);
                 const followerIds = new Set(jsonRes.map((item) => item.user.id));
                 VoiceService.getFollows(user.id, "Following").then(async res => {
                     if (res.respInfo.status === 200) {
@@ -255,14 +254,14 @@ const FriendsScreen = (props) => {
                             />
                         </View>
                     </View>
-                    <TouchableOpacity onPress={() => setAllRequests(!allRequests)}>
+                    {requests.length>2&& <TouchableOpacity onPress={() => setAllRequests(!allRequests)}>
                         <DescriptionText
                             text={t(allRequests ? "HIDE" : "SHOW ALL")}
                             fontSize={13}
                             lineHeight={21}
                             marginRight={15}
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
                 </View>
                 <View style={{
                     marginLeft: 16,
@@ -279,7 +278,7 @@ const FriendsScreen = (props) => {
                         return <View key={"requests" + index.toString()} style={[styles.rowSpaceBetween, { marginTop: 16 }]}>
                             <View style={styles.rowAlignItems}>
                                 <Image
-                                    source={{ uri: item.fromUser.avatar.url }}
+                                    source={item.fromUser.avatar?{ uri: item.fromUser.avatar.url }:Avatars[item.fromUser.avatarNumber].uri}
                                     style={{
                                         width: 48,
                                         height: 48,
@@ -346,14 +345,14 @@ const FriendsScreen = (props) => {
                         fontSize={15}
                         marginLeft={16}
                     />
-                    <TouchableOpacity onPress={() => setMoreSuggests(!moreSuggests)}>
+                    {suggests.length>2&&<TouchableOpacity onPress={() => setMoreSuggests(!moreSuggests)}>
                         <DescriptionText
                             text={t(moreSuggests ? "SHOW LESS" : "SHOW ALL")}
                             fontSize={13}
                             lineHeight={21}
                             marginRight={15}
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
                 </View>
                 <View style={{
                     marginLeft: 16,
@@ -390,7 +389,7 @@ const FriendsScreen = (props) => {
                                 }}>
                                 <View style={styles.rowAlignItems}>
                                     <Image
-                                        source={{ uri: item.user.avatar.url }}
+                                        source={item.user.avatar?{ uri: item.user.avatar.url }:Avatars[item.user.avatarNumber].uri}
                                         style={{
                                             width: 48,
                                             height: 48,
@@ -535,7 +534,7 @@ const FriendsScreen = (props) => {
                                 return <View key={"followers" + index.toString()} style={[styles.rowSpaceBetween, { marginTop: 16 }]}>
                                     <View style={styles.rowAlignItems}>
                                         <Image
-                                            source={{ uri: item.user.avatar.url }}
+                                            source={item.user.avatar?{ uri: item.user.avatar.url }:Avatars[item.user.avatarNumber].uri}
                                             style={{
                                                 width: 48,
                                                 height: 48,
@@ -586,7 +585,7 @@ const FriendsScreen = (props) => {
                                 return <View key={"following" + index.toString()} style={[styles.rowSpaceBetween, { marginTop: 16 }]}>
                                     <View style={styles.rowAlignItems}>
                                         <Image
-                                            source={{ uri: item.user.avatar.url }}
+                                            source={item.user.avatar?{ uri: item.user.avatar.url }:Avatars[item.user.avatarNumber].uri}
                                             style={{
                                                 width: 48,
                                                 height: 48,
@@ -651,7 +650,7 @@ const FriendsScreen = (props) => {
                         return <View key={"requests" + index.toString()} style={[styles.rowSpaceBetween, { marginTop: 16 }]}>
                             <View style={styles.rowAlignItems}>
                                 <Image
-                                    source={{ uri: item.user.avatar.url }}
+                                    source={item.user.avatar?{ uri: item.user.avatar.url }:Avatars[item.user.avatarNumber].uri}
                                     style={{
                                         width: 48,
                                         height: 48,
@@ -668,7 +667,7 @@ const FriendsScreen = (props) => {
                                         lineHeight={24}
                                     />
                                     <DescriptionText
-                                        text={renderName(item.user.firstname, item.user.lastname)}
+                                        text={item.user.phoneNumber}
                                         fontSize={13}
                                         lineHeight={21}
                                     />

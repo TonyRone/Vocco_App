@@ -22,7 +22,7 @@ import { useSelector } from 'react-redux';
 import { styles } from '../style/Common';
 import VoiceService from '../../services/VoiceService';
 import { PostContext } from '../component/PostContext';
-import { windowWidth } from '../../config/config';
+import { Avatars, windowWidth } from '../../config/config';
 import { Stories } from '../component/Stories';
 import { TemporaryStories } from '../component/TemporaryStories';
 import { RecordIcon } from '../component/RecordIcon';
@@ -35,8 +35,6 @@ const ProfileScreen = (props) => {
       state.user
     )
   });
-
-  console.log(user.id);
 
   const { t, i18n } = useTranslation();
 
@@ -131,7 +129,7 @@ const ProfileScreen = (props) => {
       }}
     >
       <Image
-        source={{ uri: userData.avatar?.url }}
+        source={userData.avatar?{ uri: userData.avatar.url }:Avatars[userData.avatarNumber].uri}
         resizeMode="cover"
         style={[styles.topProfileContainer, {
           width: windowWidth + (userData.premium == "none" ? 0 : 6),
@@ -143,7 +141,7 @@ const ProfileScreen = (props) => {
           borderColor: '#FFA002'
         }]}
       />
-      <Pressable style={{ position: 'absolute', top: 0 }} onLongPress={() => props.navigation.navigate('Photo', { imageUrl: userData.avatar?.url, backPage: 'Profile' })}>
+      <Pressable style={{ position: 'absolute', top: 0 }} onLongPress={() => props.navigation.navigate('UpdatePicture')}>
         <LinearGradient
           colors={['rgba(52, 50, 56, 0)', 'rgba(42, 39, 47, 0)', 'rgba(39, 36, 44, 0.65)', 'rgba(34, 32, 38, 0.9)']}
           locations={[0, 0.63, 0.83, 1]}

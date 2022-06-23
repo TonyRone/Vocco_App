@@ -46,8 +46,8 @@ const PhotoScreen = (props) => {
     var options = {
       mediaType: 'photo',
       cameraType: 'back',
-      maxWidth: 600,
-      maxHeight: 600,
+      maxWidth: 500,
+      maxHeight: 500,
     };
 
     launchCamera(options, res => {
@@ -100,8 +100,8 @@ const PhotoScreen = (props) => {
         skipBackup: true,
         path: 'images',
       },
-      maxWidth: 600,
-      maxHeight: 600,
+      maxWidth: 500,
+      maxHeight: 500,
     };
 
     launchImageLibrary(options, res => {
@@ -120,13 +120,7 @@ const PhotoScreen = (props) => {
   };
 
   const handleSubmit = async () => {
-    const pictureFile = new FormData();
     const fileUri = Platform.OS == 'android' ? photoResourcePath.assets[0].uri : decodeURIComponent(photoResourcePath.assets[0].uri.replace('file://', ''));
-    pictureFile.append('file', {
-      uri: fileUri,
-      name: photoResourcePath.assets[0].fileName,
-      type: photoResourcePath.assets[0].type
-    });
     let filewrap = [{
       name: 'file', filename: photoResourcePath.assets[0].fileName, data: RNFetchBlob.wrap(fileUri)
     }];

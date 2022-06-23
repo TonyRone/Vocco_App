@@ -12,7 +12,7 @@ import playSvg from '../../assets/common/play.svg';
 import { styles } from '../style/Common';
 import VoicePlayer from '../Home/VoicePlayer';
 import VoiceService from "../../services/VoiceService";
-import { windowWidth } from "../../config/config";
+import { Avatars, windowWidth } from "../../config/config";
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -35,8 +35,7 @@ export const ReplyAnswerItem = ({
 
   const DOUBLE_PRESS_DELAY = 400;
 
-  let userImage = info.user.avatar?.url,
-    userName = info.user.name,
+  let userName = info.user.name,
     heartNum = info.likesCount,
     check = info.isLiked;
   let num = Math.ceil((new Date().getTime() - new Date(info.createdAt).getTime()) / 60000), minute = num % 60;
@@ -123,7 +122,7 @@ export const ReplyAnswerItem = ({
                     borderColor: '#FFA002',
                     borderWidth: info.user.premium == 'none' ? 0 : 2
                   }}
-                  source={{ uri: userImage }}
+                  source={ info.user.avatar?{ uri: info.user.avatar.url }:Avatars[info.user.avatarNumber].uri}
                 />
               </TouchableOpacity>
               <View style={{ marginLeft: 16 }}>

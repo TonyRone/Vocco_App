@@ -19,7 +19,7 @@ import noRequestSvg from '../../assets/notification/noRequest.svg';
 import { windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { FlatList } from 'react-native-gesture-handler';
-import { SemiBoldText } from '../component/CommenText';
+import { SemiBoldText } from '../component/SemiBoldText';
 import { NotificationItem } from '../component/NotificationItem';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
@@ -338,9 +338,7 @@ const NotificationScreen = (props) => {
                             renderItem={({ item, index }) => <NotificationItem
                                 key={index + item.id + 'activities'}
                                 isNew={!item.seen && !allSeen}
-                                userImage={item.fromUser.avatar?.url}
-                                userName={item.fromUser.name}
-                                userPremium={item.fromUser.premium}
+                                userInfo={item.fromUser}
                                 details={item.type}
                                 notificationTime={item.createdAt}
                                 isActivity={true}
@@ -380,8 +378,7 @@ const NotificationScreen = (props) => {
                             renderItem={({ item, index }) => <NotificationItem
                                 key={index + item.id + 'requests'}
                                 isNew={!item.seen}
-                                userImage={item.fromUser.avatar?.url}
-                                userName={item.fromUser.name}
+                                userInfo={item.fromUser}
                                 details={item.type == 'friendRequest' ? t("Request follow") : 'Appreciated your voice'}
                                 notificationTime={item.createdAt}
                                 isActivity={false}
