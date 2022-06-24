@@ -70,18 +70,18 @@ const PhoneVerifyScreen = (props) => {
         })
     }
 
-    const onGoScreen = async (jsonRes) => {
-        jsonRes.country = country;
-        dispatch(setUser(jsonRes));
+    const onGoScreen = async () => {
+        let user = useSelector(state=>state.user.user);
+        user.country = country;
         let navigateScreen = 'Home';
-        if (!jsonRes.id) {
+        if (!user.id) {
             return;
         }
-        if (!jsonRes.name) {
+        if (!user.name) {
             navigateScreen = 'PickName';
-        } else if (!jsonRes.dob) {
+        } else if (!user.dob) {
             navigateScreen = 'InputBirthday';
-        } else if (!jsonRes.gender) {
+        } else if (!user.gender) {
             navigateScreen = 'SelectIdentify';
         // } else if (!jsonRes.avatar&&!jsonRes.avatarId) {
         //     navigateScreen = 'ProfilePicture';
@@ -103,10 +103,11 @@ const PhoneVerifyScreen = (props) => {
         if (socketInstance == null) {
             let socket = io(SOCKET_URL);
             dispatch(setSocketInstance(socket));
+            dispatch(setUser(jsonRes));
             socket.on("connect", () => {
                 socket.emit("login", { uid: jsonRes.id, email: jsonRes.phoneNumber, isNew: isRegister }, (res) => {
                     if (res == "Success") {
-                        onGoScreen(jsonRes);
+                        onGoScreen();
                     }
                     else {
                         setError({
@@ -117,7 +118,7 @@ const PhoneVerifyScreen = (props) => {
             })
         }
         else
-            onGoScreen(jsonRes);
+            onGoScreen();
     }
 
     const onSetUserInfo = async (accessToken, refreshToken, isRegister = false) => {

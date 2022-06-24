@@ -84,7 +84,7 @@ export const NotificationItem = ({
                         </View>}
                         <View style={{ marginLeft: 16 }}>
                             <View style={styles.rowAlignItems}>
-                                {userPremium != 'none' &&
+                                {userInfo.premium != 'none' &&
                                     <SvgXml
                                         width={30}
                                         height={30}

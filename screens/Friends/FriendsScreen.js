@@ -129,6 +129,7 @@ const FriendsScreen = (props) => {
         VoiceService.getRequests(0).then(async res => {
             if (res.respInfo.status == 200) {
                 const jsonRes = await res.json();
+                console.log(jsonRes[0]);
                 setRequests(jsonRes);
             }
         })
@@ -302,7 +303,7 @@ const FriendsScreen = (props) => {
                                 </View>
                             </View>
                             <View style={styles.rowAlignItems}>
-                                {!item.friend.status == 'accepted' &&
+                                {item.friend.status != 'accepted' &&
                                     <TouchableOpacity style={{
                                         backgroundColor: '#F8F0FF',
                                         paddingHorizontal: 16,
