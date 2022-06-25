@@ -231,8 +231,8 @@ const ProfileScreen = (props) => {
                   fontFamily="SFProDisplay-Bold"
                   lineHeight={33}
                 />
-                <Pressable disabled={userData.premium != 'none'} onPress={() => props.navigation.navigate("Premium")}>
-                  <Image
+                <TouchableOpacity disabled={userData.premium != 'none'} onPress={() => props.navigation.navigate("Premium")}>
+                  {userData.premium !='none'?<Image
                     style={{
                       width: 100,
                       height: 33,
@@ -240,7 +240,16 @@ const ProfileScreen = (props) => {
                     }}
                     source={require('../../assets/common/premiumstar.png')}
                   />
-                </Pressable>
+                  :
+                  <Image
+                    style={{
+                      width: 150,
+                      height: 30,
+                      marginLeft: 16
+                    }}
+                    source={require('../../assets/common/discover_premium.png')}
+                  />}
+                </TouchableOpacity>
               </View>
             </View>
             <View style={[styles.contentCenter, { height: 40, width: 40, borderRadius: 20, backgroundColor: '#F8F0FF' }]}>

@@ -108,7 +108,7 @@ export const Stories = ({
           <Image
             style={{
               width: 343,
-              height: 286
+              height: 321
             }}
             source={require('../../assets/Feed/InviteFriend.png')}
           />

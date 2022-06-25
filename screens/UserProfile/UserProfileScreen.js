@@ -266,112 +266,112 @@ const UserProfileScreen = (props) => {
           />
         </TouchableOpacity>
       </LinearGradient>
-      <TemporaryStories
-        props={props}
-        userId={userId}
-      />
-      <ScrollView
-        style={{ marginTop: 16 }}
-        onScroll={({ nativeEvent }) => {
-          if (isCloseToBottom(nativeEvent)) {
-            setLoadKey(loadKey + 1)
-          }
-        }}
-        scrollEventThrottle={400}
-      >
-        <View style={[styles.rowSpaceBetween, { paddingHorizontal: 16 }]}>
-          <View>
-            <View style={styles.rowAlignItems}>
-              <TitleText
-                text={userInfo.user?.name}
-                fontFamily="SFProDisplay-Bold"
-                lineHeight={33}
-              />
-              {userInfo.user && userInfo.user.premium != 'none' &&
-                <Pressable disabled={user.premium != 'none'} onPress={() => props.navigation.navigate("Premium")}>
-                  <Image
-                    style={{
-                      width: 100,
-                      height: 33,
-                      marginLeft: 16
-                    }}
-                    source={require('../../assets/common/premiumstar.png')}
-                  />
-                </Pressable>
+      {userInfo.user &&
+        <><TemporaryStories
+          props={props}
+          userId={userId}
+        />
+          <ScrollView
+            style={{ marginTop: 16 }}
+            onScroll={({ nativeEvent }) => {
+              if (isCloseToBottom(nativeEvent)) {
+                setLoadKey(loadKey + 1)
               }
+            }}
+            scrollEventThrottle={400}
+          >
+            <View style={[styles.rowSpaceBetween, { paddingHorizontal: 16 }]}>
+              <View>
+                <View style={styles.rowAlignItems}>
+                  <TitleText
+                    text={userInfo.user?.name}
+                    fontFamily="SFProDisplay-Bold"
+                    lineHeight={33}
+                  />
+                  {userInfo.user && userInfo.user.premium != 'none' &&
+                    <Image
+                      style={{
+                        width: 100,
+                        height: 33,
+                        marginLeft: 16
+                      }}
+                      source={require('../../assets/common/premiumstar.png')}
+                    />
+                  }
+                </View>
+              </View>
+              <View style={styles.rowAlignItems}>
+                {followState == 'accepted' && <TouchableOpacity>
+                  <SvgXml
+                    width={24}
+                    height={24}
+                    xml={followSvg}
+                  />
+                </TouchableOpacity>}
+                <TouchableOpacity onPress={() => setShowModal(true)} style={{ marginLeft: 28 }}>
+                  <SvgXml
+                    width={24}
+                    height={24}
+                    xml={moreSvg}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-          <View style={styles.rowAlignItems}>
-            {followState == 'accepted' && <TouchableOpacity>
-              <SvgXml
-                width={24}
-                height={24}
-                xml={followSvg}
+            {userInfo.user?.bio && <View style={{ paddingHorizontal: 16 }}>
+              <DescriptionText
+                numberOfLines={3}
+                marginTop={15}
+                text={userInfo.user.bio}
               />
-            </TouchableOpacity>}
-            <TouchableOpacity onPress={() => setShowModal(true)} style={{ marginLeft: 28 }}>
-              <SvgXml
-                width={24}
-                height={24}
-                xml={moreSvg}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-        {userInfo.user?.bio && <View style={{ paddingHorizontal: 16 }}>
-          <DescriptionText
-            numberOfLines={3}
-            marginTop={15}
-            text={userInfo.user.bio}
-          />
-        </View>}
-        {(followState != 'accepted') && <MyButton
-          marginTop={20}
-          marginBottom={4}
-          marginHorizontal={16}
-          label={followState == 'none' ? t("Follow") : t("Sent Request...")}
-          //active={followState=='none'}
-          onPress={() => followLoading ? null : changeFollowed()}
-          loading={followLoading}
-        />}
-        {(followState != 'accepted' && isPrivate) ? <>
-          <View style={{ marginTop: 90, width: '100%', paddingHorizontal: (windowWidth - 251) / 2, alignItems: 'center' }}>
-            <SvgXml
-              xml={blackPrivacySvg}
-            />
-            <DescriptionText
-              text={t("This account is private. Follow on user for see voices")}
-              fontSize={17}
-              lineHeight={28}
-              textAlign='center'
-              marginTop={16}
-            />
-            <SvgXml
-              position={'absolute'}
-              //transform= {[{ rotate: '-46.73deg'}]}
-              bottom={39}
-              right={28}
-              xml={arrowPointerSvg}
-            />
-          </View>
-        </> :
-          <>
-            <TitleText
-              text={t("User voices")}
-              fontSize={20}
-              marginTop={23}
-              marginBottom={3}
-              marginLeft={16}
-            />
-            <Stories
-              props={props}
-              loadKey={loadKey}
-              screenName="userProfile"
-              userId={userId}
-            />
-          </>
-        }
-      </ScrollView>
+            </View>}
+            {(followState != 'accepted') && <MyButton
+              marginTop={20}
+              marginBottom={4}
+              marginHorizontal={16}
+              label={followState == 'none' ? t("Follow") : t("Sent Request...")}
+              //active={followState=='none'}
+              onPress={() => followLoading ? null : changeFollowed()}
+              loading={followLoading}
+            />}
+            {(followState != 'accepted' && isPrivate) ? <>
+              <View style={{ marginTop: 90, width: '100%', paddingHorizontal: (windowWidth - 251) / 2, alignItems: 'center' }}>
+                <SvgXml
+                  xml={blackPrivacySvg}
+                />
+                <DescriptionText
+                  text={t("This account is private. Follow on user for see voices")}
+                  fontSize={17}
+                  lineHeight={28}
+                  textAlign='center'
+                  marginTop={16}
+                />
+                <SvgXml
+                  position={'absolute'}
+                  //transform= {[{ rotate: '-46.73deg'}]}
+                  bottom={39}
+                  right={28}
+                  xml={arrowPointerSvg}
+                />
+              </View>
+            </> :
+              <>
+                <TitleText
+                  text={t("User voices")}
+                  fontSize={20}
+                  marginTop={23}
+                  marginBottom={3}
+                  marginLeft={16}
+                />
+                <Stories
+                  props={props}
+                  loadKey={loadKey}
+                  screenName="userProfile"
+                  userId={userId}
+                />
+              </>
+            }
+          </ScrollView></>
+      }
       <Modal
         animationType="slide"
         transparent={true}

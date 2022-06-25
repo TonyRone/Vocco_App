@@ -503,6 +503,17 @@ class VoiceService {
             );
     }
 
+    async getActiveUsers(){
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'GET',
+                `${API_URL}/actions/getActiveUsers`, {
+                'Authorization': `Bearer ${token}`
+            }
+            );
+    }
+
     async getMessages(toUserId) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).

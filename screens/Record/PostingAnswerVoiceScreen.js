@@ -64,7 +64,6 @@ const PostingAnswerVoiceScreen = (props) => {
       setShowHint(true);
       return;
     }
-    setPlayStatus(false);
     setIsLoading(true);
     if (path) {
       let voiceFile = [

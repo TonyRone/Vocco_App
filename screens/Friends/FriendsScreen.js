@@ -12,9 +12,10 @@ import { DescriptionText } from '../component/DescriptionText';
 import { SvgXml } from 'react-native-svg';
 import { BottomButtons } from '../component/BottomButtons';
 import searchSvg from '../../assets/login/search.svg';
+import closeCircleSvg from '../../assets/common/close-circle.svg';
 import greenCheckSvg from '../../assets/friend/green-check.svg';
 import addSvg from '../../assets/setting/add.svg';
-import { Avatars, windowWidth } from '../../config/config';
+import { Avatars, windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
 import VoiceService from '../../services/VoiceService';
@@ -24,6 +25,7 @@ import { RecordIcon } from '../component/RecordIcon';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { TitleText } from '../component/TitleText';
+import { TextInput } from 'react-native-gesture-handler';
 
 const FriendsScreen = (props) => {
 
@@ -44,6 +46,8 @@ const FriendsScreen = (props) => {
     const [isFollowers, setIsFollowers] = useState(true);
     const [contacts, setContacts] = useState([]);
     const [invites, setInvites] = useState([]);
+    const [isSearch, setIsSearch] = useState(false);
+    const [label, setLabel] = useState('');
 
     const scrollRef = useRef();
     const scrollIndicator = useRef(new Animated.Value(0)).current;
@@ -200,37 +204,87 @@ const FriendsScreen = (props) => {
                 flex: 1,
             }}
         >
-            <View
-                style={[
-                    { marginTop: 20, paddingHorizontal: 20, marginBottom: 18 },
-                    styles.rowSpaceBetween
-                ]}
-            >
-                <TitleText
-                    text={t("Friends")}
-                    fontSize={28}
-                    color="#281E30"
-                />
-                <View style={styles.rowAlignItems}>
-                    <TouchableOpacity onPress={() => props.navigation.navigate('Setting')}>
-                        <SvgXml
-                            width="24"
-                            height="24"
-                            xml={searchSvg}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => props.navigation.navigate('Setting')}>
-                        <SvgXml
-                            width="24"
-                            height="24"
-                            style={{ marginLeft: 12 }}
-                            xml={addSvg}
+            {isSearch ?
+                <View style={[styles.paddingH16, { marginTop: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        backgroundColor: '#F2F0F5',
+                        borderRadius: 24,
+                        borderWidth: 1,
+                        borderColor: '#CC9BF9',
+                        height: 44,
+                        width: windowWidth - 95,
+                        paddingHorizontal: 12
+                    }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <SvgXml
+                                width="20"
+                                height="20"
+                                xml={searchSvg}
+                            />
+                            <TextInput
+                                style={[styles.searchInput, { paddingLeft: 12, width: windowWidth - 175 }]}
+                                value={label}
+                                color='#281E30'
+                                autoFocus={true}
+                                placeholder={t("Search")}
+                                onChangeText={(v) => setLabel(v)}
+                                placeholderTextColor="rgba(59, 31, 82, 0.6)"
+                            />
+                        </View>
+                        {label != '' &&
+                            <TouchableOpacity
+                                onPress={() => setLabel('')}
+                            >
+                                <SvgXml
+                                    width="30"
+                                    height="30"
+                                    xml={closeCircleSvg}
+                                />
+                            </TouchableOpacity>}
+                    </View>
+                    <TouchableOpacity onPress={() => { setIsSearch(false); setLabel('') }}>
+                        <TitleText
+                            text={t('Cancel')}
+                            fontSize={17}
+                            fontFamily='SFProDisplay-Regular'
+                            color='#8327D8'
                         />
                     </TouchableOpacity>
                 </View>
-            </View>
+                : <View
+                    style={[
+                        { marginTop: 20, paddingHorizontal: 20 },
+                        styles.rowSpaceBetween
+                    ]}
+                >
+                    <TitleText
+                        text={t("Friends")}
+                        fontSize={28}
+                        color="#281E30"
+                    />
+                    <View style={styles.rowAlignItems}>
+                        <TouchableOpacity onPress={() => setIsSearch(true)}>
+                            <SvgXml
+                                width="24"
+                                height="24"
+                                xml={searchSvg}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('Chat')}>
+                            <SvgXml
+                                width="24"
+                                height="24"
+                                style={{ marginLeft: 12 }}
+                                xml={addSvg}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>}
             <ScrollView
-                style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75 }}
+                style={{marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 18 }}
             >
                 <View style={styles.rowSpaceBetween}>
                     <View style={styles.rowAlignItems}>
@@ -240,7 +294,7 @@ const FriendsScreen = (props) => {
                             fontSize={15}
                             marginLeft={16}
                         />
-                        <View style={{
+                        {!isSearch && <View style={{
                             borderRadius: 12,
                             backgroundColor: '#F2F0F5',
                             paddingHorizontal: 8,
@@ -253,9 +307,9 @@ const FriendsScreen = (props) => {
                                 lineHeight={16}
                                 color="#281E30"
                             />
-                        </View>
+                        </View>}
                     </View>
-                    {requests.length>2&& <TouchableOpacity onPress={() => setAllRequests(!allRequests)}>
+                    {requests.length > 2 && <TouchableOpacity onPress={() => setAllRequests(!allRequests)}>
                         <DescriptionText
                             text={t(allRequests ? "HIDE" : "SHOW ALL")}
                             fontSize={13}
@@ -276,10 +330,16 @@ const FriendsScreen = (props) => {
                     requests.map((item, index) => {
                         if (!allRequests && index > 1)
                             return null;
-                        return <View key={"requests" + index.toString()} style={[styles.rowSpaceBetween, { marginTop: 16 }]}>
+                        if (item.fromUser.name.toLowerCase().indexOf(label.toLowerCase()) == -1)
+                            return null;
+                        return <TouchableOpacity
+                            key={"requests" + index.toString()}
+                            style={[styles.rowSpaceBetween, { marginTop: 16 }]}
+                            onPress={() => props.navigation.navigate("UserProfile", { userId: item.fromUser.id })}
+                        >
                             <View style={styles.rowAlignItems}>
                                 <Image
-                                    source={item.fromUser.avatar?{ uri: item.fromUser.avatar.url }:Avatars[item.fromUser.avatarNumber].uri}
+                                    source={item.fromUser.avatar ? { uri: item.fromUser.avatar.url } : Avatars[item.fromUser.avatarNumber].uri}
                                     style={{
                                         width: 48,
                                         height: 48,
@@ -336,7 +396,7 @@ const FriendsScreen = (props) => {
                                     />
                                 </TouchableOpacity>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     })
                 }
                 <View style={[styles.rowSpaceBetween, { marginTop: 24 }]}>
@@ -346,7 +406,7 @@ const FriendsScreen = (props) => {
                         fontSize={15}
                         marginLeft={16}
                     />
-                    {suggests.length>2&&<TouchableOpacity onPress={() => setMoreSuggests(!moreSuggests)}>
+                    {suggests.length > 2 && <TouchableOpacity onPress={() => setMoreSuggests(!moreSuggests)}>
                         <DescriptionText
                             text={t(moreSuggests ? "SHOW LESS" : "SHOW ALL")}
                             fontSize={13}
@@ -371,7 +431,9 @@ const FriendsScreen = (props) => {
                 >
                     {
                         suggests.map((item, index) => {
-                            return <View
+                            if (item.user.name.toLowerCase().indexOf(label.toLowerCase()) == -1)
+                                return null;
+                            return <TouchableOpacity
                                 key={"suggests" + index.toString()}
                                 style={{
                                     width: 190,
@@ -387,10 +449,12 @@ const FriendsScreen = (props) => {
                                     shadowOffset: { width: 0, height: 4 },
                                     shadowOpacity: 0.5,
                                     shadowRadius: 24,
-                                }}>
+                                }}
+                                onPress={() => props.navigation.navigate("UserProfile", { userId: item.user.id })}
+                            >
                                 <View style={styles.rowAlignItems}>
                                     <Image
-                                        source={item.user.avatar?{ uri: item.user.avatar.url }:Avatars[item.user.avatarNumber].uri}
+                                        source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
                                         style={{
                                             width: 48,
                                             height: 48,
@@ -446,7 +510,7 @@ const FriendsScreen = (props) => {
                                         />
                                     </TouchableOpacity>
                                 </View>
-                            </View>
+                            </TouchableOpacity>
                         })
                     }
                 </ScrollView>
@@ -459,7 +523,7 @@ const FriendsScreen = (props) => {
                             marginLeft={8}
                             fontFamily={isFollowers ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
                         />
-                        <View style={{
+                        {!isSearch && <View style={{
                             paddingHorizontal: 8,
                             paddingVertical: 4,
                             borderRadius: 12,
@@ -472,7 +536,7 @@ const FriendsScreen = (props) => {
                                 lineHeight={16}
                                 color='#281E30'
                             />
-                        </View>
+                        </View>}
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => { scrollRef.current?.scrollTo({ x: windowWidth, animated: true }); setIsFollowers(false); }} style={[styles.rowAlignItems, { marginLeft: 16, width: 126 }]}>
                         <SemiBoldText
@@ -482,7 +546,7 @@ const FriendsScreen = (props) => {
                             marginLeft={8}
                             fontFamily={!isFollowers ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
                         />
-                        <View style={{
+                        {!isSearch && <View style={{
                             paddingHorizontal: 8,
                             paddingVertical: 4,
                             borderRadius: 12,
@@ -495,7 +559,7 @@ const FriendsScreen = (props) => {
                                 lineHeight={16}
                                 color='#281E30'
                             />
-                        </View>
+                        </View>}
                     </TouchableOpacity>
                 </View>
                 <View style={{
@@ -532,10 +596,16 @@ const FriendsScreen = (props) => {
                     }}>
                         {
                             followers.map((item, index) => {
-                                return <View key={"followers" + index.toString()} style={[styles.rowSpaceBetween, { marginTop: 16 }]}>
+                                if (item.user.name.toLowerCase().indexOf(label.toLowerCase()) == -1)
+                                    return null;
+                                return <TouchableOpacity
+                                    key={"followers" + index.toString()}
+                                    style={[styles.rowSpaceBetween, { marginTop: 16 }]}
+                                    onPress={() => props.navigation.navigate("UserProfile", { userId: item.user.id })}
+                                >
                                     <View style={styles.rowAlignItems}>
                                         <Image
-                                            source={item.user.avatar?{ uri: item.user.avatar.url }:Avatars[item.user.avatarNumber].uri}
+                                            source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
                                             style={{
                                                 width: 48,
                                                 height: 48,
@@ -574,7 +644,7 @@ const FriendsScreen = (props) => {
                                             color={'rgba(54, 36, 68, 0.8)'}
                                         />
                                     </TouchableOpacity>
-                                </View>
+                                </TouchableOpacity>
                             })
                         }
                     </View>
@@ -583,10 +653,16 @@ const FriendsScreen = (props) => {
                     }}>
                         {
                             followings.map((item, index) => {
-                                return <View key={"following" + index.toString()} style={[styles.rowSpaceBetween, { marginTop: 16 }]}>
+                                if (item.user.name.toLowerCase().indexOf(label.toLowerCase()) == -1)
+                                    return null;
+                                return <TouchableOpacity
+                                    key={"following" + index.toString()}
+                                    style={[styles.rowSpaceBetween, { marginTop: 16 }]}
+                                    onPress={() => props.navigation.navigate("UserProfile", { userId: item.user.id })}
+                                >
                                     <View style={styles.rowAlignItems}>
                                         <Image
-                                            source={item.user.avatar?{ uri: item.user.avatar.url }:Avatars[item.user.avatarNumber].uri}
+                                            source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
                                             style={{
                                                 width: 48,
                                                 height: 48,
@@ -625,7 +701,7 @@ const FriendsScreen = (props) => {
                                             color={'rgba(54, 36, 68, 0.8)'}
                                         />
                                     </TouchableOpacity>
-                                </View>
+                                </TouchableOpacity>
                             })
                         }
                     </View>
@@ -647,11 +723,13 @@ const FriendsScreen = (props) => {
                 </View>
                 {
                     contacts.map((item, index) => {
+                        if(item.user.name.toLowerCase().indexOf(label.toLowerCase()) == -1)
+                                return null;
                         let idx = invites.indexOf(item.user.id);
                         return <View key={"requests" + index.toString()} style={[styles.rowSpaceBetween, { marginTop: 16 }]}>
                             <View style={styles.rowAlignItems}>
                                 <Image
-                                    source={item.user.avatar?{ uri: item.user.avatar.url }:Avatars[item.user.avatarNumber].uri}
+                                    source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
                                     style={{
                                         width: 48,
                                         height: 48,
@@ -682,7 +760,7 @@ const FriendsScreen = (props) => {
                                 marginRight: 8
                             }}
                                 onPress={() => onInviteFriend(index)}
-                                disabled={idx>=0}
+                                disabled={idx >= 0}
                             >
                                 <View style={styles.rowAlignItems}>
                                     {item.invite && <SvgXml

@@ -43,7 +43,7 @@ const LogoScreen = (props) => {
         } else {
             const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
             if (tutorial_check)
-                navigateScreen = 'Home';
+                navigateScreen = 'AddFriend';
             else
                 navigateScreen = 'Tutorial';
         }

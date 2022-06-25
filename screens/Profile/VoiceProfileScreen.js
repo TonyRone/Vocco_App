@@ -12,7 +12,6 @@ import {
 
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import * as Progress from "react-native-progress";
-import { NavigationActions, StackActions } from 'react-navigation';
 import { useTranslation } from 'react-i18next';
 import { HeartIcon } from '../component/HeartIcon';
 import { useSelector, useDispatch } from 'react-redux';
@@ -224,41 +223,44 @@ const VoiceProfileScreen = (props) => {
           </View>
         </View>
         <View style={{ alignItems: 'center', marginTop: 22 }}>
-          {info && <TouchableOpacity onPress={() => {
-            if (info.user.id == user.id)
-              props.navigation.navigate('Profile');
-            else
-              props.navigation.navigate('UserProfile', { userId: info.user.id });
-          }}
-            style={{ paddingRight: 12 }}
-          >
-            {info && <Image
-              style={{
-                width: 64,
-                height: 64,
-                borderRadius: 32,
-                borderColor: '#FFA002',
-                borderWidth: (info && info.user.premium != 'none') ? 2 : 0
-              }}
-              source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
-            />}
-            <View style={[{ position: 'absolute', left: 36, bottom: 0, width: 30, height: 30, backgroundColor: '#FFFFFF', borderRadius: 14 }, styles.contentCenter]}>
-              <Text
+          <TouchableOpacity
+            onPress={() => {
+              if (info.user.id == user.id)
+                props.navigation.navigate('Profile');
+              else
+                props.navigation.navigate('UserProfile', { userId: info.user.id });
+            }}>
+            {info && <TouchableOpacity
+              style={{ paddingRight: 12 }}
+            >
+              {info && <Image
                 style={{
-                  fontSize: 24,
-                  color: 'white',
+                  width: 64,
+                  height: 64,
+                  borderRadius: 32,
+                  borderColor: '#FFA002',
+                  borderWidth: (info && info.user.premium != 'none') ? 2 : 0
                 }}
-              >
-                {info?.emoji}
-              </Text>
-            </View>
-          </TouchableOpacity>}
-          <SemiBoldText
-            text={info?.user.name}
-            fontFamily="SFProDisplay-Semibold"
-            marginTop={8}
-            color='rgba(54, 36, 68, 0.8)'
-          />
+                source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
+              />}
+              <View style={[{ position: 'absolute', left: 36, bottom: 0, width: 30, height: 30, backgroundColor: '#FFFFFF', borderRadius: 14 }, styles.contentCenter]}>
+                <Text
+                  style={{
+                    fontSize: 24,
+                    color: 'white',
+                  }}
+                >
+                  {info?.emoji}
+                </Text>
+              </View>
+            </TouchableOpacity>}
+            <SemiBoldText
+              text={info?.user.name}
+              fontFamily="SFProDisplay-Semibold"
+              marginTop={8}
+              color='rgba(54, 36, 68, 0.8)'
+            />
+          </TouchableOpacity>
         </View>
         {info && <View
           style={{

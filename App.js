@@ -68,6 +68,8 @@ import InputBirthdayScreen from './screens/PhoneNumberLogin/InputBirthdayScreen'
 import SelectIdentifyScreen from './screens/PhoneNumberLogin/SelectIdentifyScreen';
 import PhoneLoginScreen from './screens/PhoneNumberLogin/PhoneLoginScreen';
 import UpdatePictureScreen from './screens/PhoneNumberLogin/UpdatePictureScreen';
+import SelectTopicScreen from './screens/PhoneNumberLogin/SelectTopicScreen';
+import AddFriendScreen from './screens/PhoneNumberLogin/AddFriendScreen';
 
 
 const slideAnimation2 = (bottomToTop) => {
@@ -359,9 +361,21 @@ const AppNavigator = createStackNavigator({
       headerShown: false,
     }
   },
+  SelectTopic: {
+    screen: SelectTopicScreen,
+    navigationOptions: {
+      headerShown: false,
+    }
+  },
+  AddFriend: {
+    screen: AddFriendScreen,
+    navigationOptions: {
+      headerShown: false,
+    }
+  },
 },
   {
-    //initialRouteName:'Verify'
+    //initialRouteName:'AddFriend'
   }
 );
 
