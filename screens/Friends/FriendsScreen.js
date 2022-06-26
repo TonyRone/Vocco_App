@@ -26,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { TitleText } from '../component/TitleText';
 import { TextInput } from 'react-native-gesture-handler';
+import { ContactList } from '../component/ContactList';
 
 const FriendsScreen = (props) => {
 
@@ -284,7 +285,7 @@ const FriendsScreen = (props) => {
                     </View>
                 </View>}
             <ScrollView
-                style={{marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 18 }}
+                style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 18 }}
             >
                 <View style={styles.rowSpaceBetween}>
                     <View style={styles.rowAlignItems}>
@@ -721,67 +722,9 @@ const FriendsScreen = (props) => {
                     marginTop: 9
                 }}>
                 </View>
-                {
-                    contacts.map((item, index) => {
-                        if(item.user.name.toLowerCase().indexOf(label.toLowerCase()) == -1)
-                                return null;
-                        let idx = invites.indexOf(item.user.id);
-                        return <View key={"requests" + index.toString()} style={[styles.rowSpaceBetween, { marginTop: 16 }]}>
-                            <View style={styles.rowAlignItems}>
-                                <Image
-                                    source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
-                                    style={{
-                                        width: 48,
-                                        height: 48,
-                                        borderRadius: 24,
-                                        marginLeft: 16,
-                                    }}
-                                />
-                                <View style={{
-                                    marginLeft: 12
-                                }}>
-                                    <SemiBoldText
-                                        text={item.user.name}
-                                        fontSize={15}
-                                        lineHeight={24}
-                                    />
-                                    <DescriptionText
-                                        text={item.user.phoneNumber}
-                                        fontSize={13}
-                                        lineHeight={21}
-                                    />
-                                </View>
-                            </View>
-                            <TouchableOpacity style={{
-                                backgroundColor: idx >= 0 ? '#ECF8EE' : '#F2F0F5',
-                                paddingHorizontal: 16,
-                                paddingVertical: 9,
-                                borderRadius: 8,
-                                marginRight: 8
-                            }}
-                                onPress={() => onInviteFriend(index)}
-                                disabled={idx >= 0}
-                            >
-                                <View style={styles.rowAlignItems}>
-                                    {item.invite && <SvgXml
-                                        width={20}
-                                        height={20}
-                                        style={{
-                                            marginRight: 4
-                                        }}
-                                        xml={greenCheckSvg}
-                                    />}
-                                    <SemiBoldText
-                                        text={t(idx >= 0 ? "Invited" : "Invite")}
-                                        fontSize={13}
-                                        lineHeight={21}
-                                        color={idx >= 0 ? '#1A4C22' : '#8327D8'}
-                                    />
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    })
-                }
+                <ContactList
+                    props={props}
+                />
             </ScrollView>
             <BottomButtons
                 active='friends'

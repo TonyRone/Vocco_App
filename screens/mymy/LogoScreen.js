@@ -5,7 +5,7 @@ import io from "socket.io-client";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE, APP_NAV } from '../../config/config';
 import { NavigationActions, StackActions } from 'react-navigation';
-
+import Contacts from 'react-native-contacts';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 
@@ -43,7 +43,7 @@ const LogoScreen = (props) => {
         } else {
             const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
             if (tutorial_check)
-                navigateScreen = 'AddFriend';
+                navigateScreen = 'Home';
             else
                 navigateScreen = 'Tutorial';
         }
@@ -123,6 +123,7 @@ const LogoScreen = (props) => {
                     PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
                     PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
                     PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+                    PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
                 ]);
 
                 if (

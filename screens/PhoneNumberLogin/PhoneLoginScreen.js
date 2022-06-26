@@ -107,6 +107,7 @@ const PhoneLoginScreen = (props) => {
                     textContainerStyle={{
                         borderTopRightRadius: 12,
                         borderBottomRightRadius: 12,
+                        textAlignVertical: 'center',
                         height: 60,
                     }}
                     textInputStyle={{

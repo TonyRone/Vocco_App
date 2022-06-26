@@ -3,6 +3,7 @@ import {
     View,
     KeyboardAvoidingView,
     TouchableOpacity,
+    Image,
 } from 'react-native';
 
 import { TitleText } from '../component/TitleText';
@@ -12,6 +13,7 @@ import { MyTextField } from '../component/MyTextField';
 import { ConfirmVerify } from '../component/ConfirmVerify';
 import { SvgXml } from 'react-native-svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
+import greenCheckSvg from '../../assets/friend/green-check.svg';
 import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
 import EditService from '../../services/EditService';
@@ -23,28 +25,43 @@ import { setUser } from '../../store/actions';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { windowHeight, windowWidth } from '../../config/config';
+import { Avatars, windowHeight, windowWidth } from '../../config/config';
 import { ScrollView } from 'react-native-gesture-handler';
 import VoiceService from '../../services/VoiceService';
+import { ContactList } from '../component/ContactList';
 
 const AddFriendScreen = (props) => {
 
     const { t, i18n } = useTranslation();
 
     const [activeUsers, setActiveUsers] = useState([]);
+    const [followedUsers, setFollowedUsers] = useState([]);
 
     const user = useSelector((state) => state.user.user);
     const dispatch = useDispatch();
 
-    const getActiveUsers =()=>{
-        VoiceService.getActiveUsers().then(async res=>{
+    const onContinue = () => {
+        props.navigation.navigate("Tutorial");
+    }
+
+    const getActiveUsers = () => {
+        VoiceService.getActiveUsers().then(async res => {
             const jsonRes = await res.json();
-            console.log(jsonRes[0], res.respInfo.status);
+            console.log(jsonRes);
+            if (res.respInfo.status == 200) {
+                setActiveUsers(jsonRes);
+            }
         })
-        .catch(err => {
-            console.log(err);
-            props.navigation.navigate('Welcome');
-        });
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
+    const onFollowFriend = (index) => {
+        VoiceService.followFriend(activeUsers[index].id);
+        let tp = followedUsers;
+        tp.push(index);
+        setFollowedUsers([...tp]);
     }
 
     useEffect(() => {
@@ -71,7 +88,7 @@ const AddFriendScreen = (props) => {
                     lineHeight={24}
                 />
                 <TouchableOpacity
-                    onPress={() => { }}
+                    onPress={() => onContinue()}
                 >
                     <DescriptionText
                         text={t("Skip")}
@@ -81,19 +98,90 @@ const AddFriendScreen = (props) => {
                     />
                 </TouchableOpacity>
             </View>
-            <SemiBoldText
-                text={t("Add users as friends")}
-                fontSize={17}
-                lineHeight={28}
-                marginTop={22}
-                marginLeft={16}
-            />
             <ScrollView
                 style={{
-                    maxHeight:windowHeight/2
+                    maxHeight: windowHeight / 2
                 }}
             >
-
+                <SemiBoldText
+                    text={t("Add users as friends")}
+                    fontSize={17}
+                    lineHeight={28}
+                    marginTop={22}
+                    marginLeft={16}
+                />
+                {
+                    activeUsers.map((item, index) => {
+                        let isFollowed = followedUsers.includes(index);
+                        return <View key={"AddFriends" + index.toString()} style={[styles.rowSpaceBetween, { marginTop: 16 }]}>
+                            <View style={styles.rowAlignItems}>
+                                <Image
+                                    source={item.avatar ? { uri: item.avatar.url } : Avatars[item.avatarNumber].uri}
+                                    style={{
+                                        width: 48,
+                                        height: 48,
+                                        borderRadius: 24,
+                                        marginLeft: 16,
+                                        backgroundColor: '#C4C4C4'
+                                    }}
+                                />
+                                <View style={{
+                                    marginLeft: 12
+                                }}>
+                                    <SemiBoldText
+                                        text={item.name}
+                                        fontSize={15}
+                                        lineHeight={24}
+                                    />
+                                    <DescriptionText
+                                        text={item.phoneNumber}
+                                        fontSize={13}
+                                        lineHeight={21}
+                                    />
+                                </View>
+                            </View>
+                            <TouchableOpacity style={{
+                                backgroundColor: isFollowed ? '#ECF8EE' : '#F2F0F5',
+                                paddingHorizontal: 16,
+                                paddingVertical: 9,
+                                borderRadius: 8,
+                                marginRight: 16
+                            }}
+                                onPress={() => onFollowFriend(index)}
+                                disabled={isFollowed}
+                            >
+                                <View style={styles.rowAlignItems}>
+                                    {isFollowed && <SvgXml
+                                        width={20}
+                                        height={20}
+                                        style={{
+                                            marginRight: 4
+                                        }}
+                                        xml={greenCheckSvg}
+                                    />}
+                                    <SemiBoldText
+                                        text={t(isFollowed ? "Followed" : "Follow")}
+                                        fontSize={13}
+                                        lineHeight={21}
+                                        color={isFollowed ? '#1A4C22' : '#8327D8'}
+                                    />
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    })
+                }
+            </ScrollView>
+            <ScrollView>
+                <SemiBoldText
+                    text={t("Invite your contacts")}
+                    fontSize={17}
+                    lineHeight={28}
+                    marginTop={22}
+                    marginLeft={16}
+                />
+                <ContactList
+                    props={props}
+                />
             </ScrollView>
             <View style={{
                 position: 'absolute',
@@ -103,6 +191,7 @@ const AddFriendScreen = (props) => {
             }}>
                 <MyButton
                     label={t("Continue")}
+                    onPress={() => onContinue()}
                 />
             </View>
         </SafeAreaView>

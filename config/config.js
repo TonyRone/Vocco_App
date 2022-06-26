@@ -2,8 +2,8 @@ import { Platform, Dimensions } from 'react-native';
 export const windowWidth = Dimensions.get('window').width;
 export const windowHeight = Dimensions.get('window').height;
 
-//export const API_URL = Platform.OS === 'ios' ? 'https://api.vocco.ai' : 'https://api.vocco.ai';
-export const API_URL = Platform.OS === 'ios' ? 'http://192.168.111.196:80' : 'http://192.168.111.196:80';
+export const API_URL = Platform.OS === 'ios' ? 'https://api.vocco.ai' : 'https://api.vocco.ai';
+//export const API_URL = Platform.OS === 'ios' ? 'http://192.168.111.196:80' : 'http://192.168.111.196:80';
 export const SOCKET_URL = 'https://voccosocket-i2tsf4hvaq-od.a.run.app';
 //export const SOCKET_URL = 'http://192.168.111.196:3000';
 export const ACCESSTOKEN_KEY = "@VoccoAT:2021";

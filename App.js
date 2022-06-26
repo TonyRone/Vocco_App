@@ -384,7 +384,7 @@ const AppContainer = createAppContainer(AppNavigator);
 export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
-    //PushNotification.requestPermissions();
+    PushNotification.requestPermissions();
   }, []);
   return (
     <Provider store={store}>

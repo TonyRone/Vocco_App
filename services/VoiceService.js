@@ -204,12 +204,13 @@ class VoiceService {
             );
     }
 
-    async inviteFriend(userId) {
+    async inviteFriend(phoneNumber) {
+        console.log(phoneNumber+" rrrrrrrrrrrrrrrrrrrrrrrrr");
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(
                 'POST',
-                `${API_URL}/actions/inviteFriend?userId=${userId}`, {
+                `${API_URL}/actions/inviteFriend?phoneNumber=${phoneNumber}`, {
                 'Authorization': `Bearer ${token}`
             }
             );
