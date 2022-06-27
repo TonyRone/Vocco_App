@@ -127,7 +127,7 @@ const PostingVoiceScreen = (props) => {
           Vibration.vibrate(100);
           socketInstance.emit("newVoice", { uid: user.id });
           setShowShareVoice(jsonRes);
-          dispatch(setRefreshState(!refreshState));
+         // dispatch(setRefreshState(!refreshState));
         }
         setIsLoading(false);
       })
@@ -150,6 +150,7 @@ const PostingVoiceScreen = (props) => {
     VoiceService.changeVoice(payload).then(async res => {
       if (res.respInfo.status !== 200) {
       } else {
+      //  dispatch(setRefreshState(!refreshState));
         let info = param.info;
         info.title = voiceTitle;
         info.emoji = icon;
