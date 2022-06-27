@@ -53,7 +53,7 @@ const ProfileScreen = (props) => {
   const [showEnd, setShowEnd] = useState(false);
   const [loadKey, setLoadKey] = useState(0);
   const [allFollows, setAllFollows] = useState("");
-  const [showQR, setShowQR] = useState(true);
+  const [showQR, setShowQR] = useState(false);
 
   if (props.navigation.state.params)
     () => setRefresh(!refresh);
