@@ -150,14 +150,13 @@ const PostingVoiceScreen = (props) => {
     VoiceService.changeVoice(payload).then(async res => {
       if (res.respInfo.status !== 200) {
       } else {
-        dispatch(setRefreshState(!refreshState));
         let info = param.info;
         info.title = voiceTitle;
         info.emoji = icon;
         info.category = Categories[category].label;
         info.privacy = visibleStatus;
         info.temporary = temporaryStatus;
-        props.navigation.navigate("VoiceProfile", { id: info.id });
+        onNavigate("VoiceProfile", { id: info.id });
       }
       setIsLoading(false);
     })

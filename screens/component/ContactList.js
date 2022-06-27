@@ -29,6 +29,9 @@ export const ContactList = ({
   const [contactUsers, setContactUsers] = useState([]);
   const [invitedUsers, setInvitedUsers] = useState([]);
 
+  if(Platform.OS == 'ios')
+    Contacts.iosEnableNotesUsage(true);
+
   const onInviteFriend = (index) => {
     VoiceService.inviteFriend(contactUsers[index].phoneNumbers[0].number);
     setInvitedUsers(prev => {
@@ -46,19 +49,30 @@ export const ContactList = ({
         'buttonPositive': 'Please accept bare mortal'
       }
     )
-      .then(Contacts.getAll()
+      .then(Contacts.getAllWithoutPhotos()
         .then((contacts) => {
-            // work with contacts
-              console.log(contacts)
-              setContactUsers(contacts);
-            })
-              .catch((e) => {
-                  console.log(e)
-              }))
+          // work with contacts
+          console.log(contacts)
+          setContactUsers(contacts);
+        })
+        .catch((e) => {
+          console.log(e)
+        }))
   }
 
   useEffect(async () => {
-    requestPermission();
+    if (Platform.OS == 'ios') {
+      Contacts.getAllWithoutPhotos()
+        .then((contacts) => {
+          // work with contacts
+          setContactUsers(contacts);
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    }
+    else if (Platform.OS == 'android')
+      requestPermission();
   }, [])
 
   return (

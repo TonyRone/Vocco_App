@@ -5,7 +5,6 @@ import io from "socket.io-client";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE, APP_NAV } from '../../config/config';
 import { NavigationActions, StackActions } from 'react-navigation';
-import Contacts from 'react-native-contacts';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 

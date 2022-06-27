@@ -16,8 +16,8 @@ import { BottomButtons } from '../component/BottomButtons';
 import LinearGradient from 'react-native-linear-gradient';
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
-import QRCode from 'react-native-qrcode-svg';
 import { SvgXml } from 'react-native-svg';
+import { QRCode } from 'react-native-custom-qr-codes';
 import editSvg from '../../assets/common/edit.svg';
 import boxbackArrowSvg from '../../assets/profile/box_backarrow.svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
@@ -340,9 +340,10 @@ const ProfileScreen = (props) => {
               alignItems: 'center'
             }}>
               <QRCode
-                width={100}
-                height={100}
-                value="https://testflight.apple.com/join/ztQ4TQlu"
+                content='https://testflight.apple.com/join/ztQ4TQlu'
+                codeStyle='circle'
+                logo={require('../../assets/common/qr-logo.png')}
+                linearGradient={['#FEAC5E','#EBA4F3','#B1A5FF']} gradientDirection={[0,170,0,0]}
               />
             </View>
             <LinearGradient
