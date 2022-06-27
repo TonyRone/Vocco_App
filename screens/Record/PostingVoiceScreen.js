@@ -382,7 +382,7 @@ const PostingVoiceScreen = (props) => {
       {showShareVoice &&
         <ShareVoice
           info={showShareVoice}
-          onCloseModal={() => { setShowShareVoice(false); onNavigate("Feed", 1); }}
+          onCloseModal={() => { setShowShareVoice(false); onNavigate("Home"); }}
         />}
       <Modal
         animationType="slide"

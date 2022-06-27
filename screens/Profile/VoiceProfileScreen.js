@@ -437,7 +437,7 @@ const VoiceProfileScreen = (props) => {
             </View>
             <View></View>
             <View style={{ alignItems: 'center', marginLeft: 20 }}>
-              <TouchableOpacity onPress={() => OnShareVoice()}>
+              <TouchableOpacity onPress={() => props.navigation.navigate("Conversation", { info: info })}>
                 <View style={[styles.row, { alignItems: 'center' }]}>
                   <Image
                     style={{

@@ -8,6 +8,7 @@ import {
 
 import { DescriptionText } from '../component/DescriptionText';
 import { MyButton } from '../component/MyButton';
+import { NavigationActions, StackActions } from 'react-navigation';
 import { SvgXml } from 'react-native-svg';
 import readedSvg from '../../assets/setting/readed.svg';
 import circleCheckSvg from '../../assets/setting/circle_check.svg';
@@ -29,6 +30,14 @@ const PremiumScreen = (props) => {
   const [premiumState, setPremiumState] = useState('monthly');
   const [loading, setLoading] = useState(false);
   const { user, refreshState, socketInstance } = useSelector((state) => state.user);
+
+  const onNavigate = (des, par = null) => {
+    const resetActionTrue = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: des, params: par })],
+    });
+    props.navigation.dispatch(resetActionTrue);
+  }
   const dispatch = useDispatch();
 
   const changePremiumState = () => {
@@ -38,9 +47,9 @@ const PremiumScreen = (props) => {
         let userData = { ...user }
         userData.premium = premiumState
         dispatch(setUser(userData));
-        dispatch(setRefreshState(!refreshState));
+        //dispatch(setRefreshState(!refreshState));
         socketInstance.emit("premium", { email: user.email });
-        props.navigation.goBack();
+        onNavigate("Home")
       }
       setLoading(false);
     })

@@ -22,6 +22,7 @@ import * as Progress from "react-native-progress";
 import { Menu } from 'react-native-material-menu';
 import RNFetchBlob from 'rn-fetch-blob';
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
+import { NavigationActions, StackActions } from 'react-navigation';
 import { DescriptionText } from '../component/DescriptionText';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
@@ -102,6 +103,14 @@ const ConversationScreen = (props) => {
     });
 
     let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    const onNavigate = (des, par = null) => {
+        const resetActionTrue = StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: des, params: par })],
+        });
+        props.navigation.dispatch(resetActionTrue);
+      }
 
     const renderState = (lastSeen) => {
         if (lastSeen == "onSession") {
@@ -396,7 +405,7 @@ const ConversationScreen = (props) => {
             socketInstance.off('receiveMessage');
             socketInstance.off('user_login', loginListener);
             socketInstance.off('chatState', stateListener);
-            dispatch(setRefreshState(!refreshState));
+            //dispatch(setRefreshState(!refreshState));
         };
     }, [])
 
@@ -417,7 +426,7 @@ const ConversationScreen = (props) => {
                         ]}
                     >
                         <View style={styles.rowAlignItems}>
-                            <TouchableOpacity onPress={() => props.navigation.goBack()}>
+                            <TouchableOpacity onPress={() => onNavigate("Chat")}>
                                 <SvgXml
                                     width={24}
                                     height={24}
