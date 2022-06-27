@@ -2,6 +2,7 @@
 /android
 /node_modules
 /dist
+/ios
 
 
 # Logs

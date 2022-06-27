@@ -6,7 +6,8 @@ import {
   Image,
   Pressable,
   ScrollView,
-  Platform
+  Platform,
+  Modal
 } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
@@ -15,9 +16,12 @@ import { BottomButtons } from '../component/BottomButtons';
 import LinearGradient from 'react-native-linear-gradient';
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
+import QRCode from 'react-native-qrcode-svg';
 import { SvgXml } from 'react-native-svg';
 import editSvg from '../../assets/common/edit.svg';
 import boxbackArrowSvg from '../../assets/profile/box_backarrow.svg';
+import closeBlackSvg from '../../assets/record/closeBlack.svg';
+import qrSvg from '../../assets/profile/qr-code.svg';
 import { useSelector } from 'react-redux';
 import { styles } from '../style/Common';
 import VoiceService from '../../services/VoiceService';
@@ -27,6 +31,8 @@ import { Stories } from '../component/Stories';
 import { TemporaryStories } from '../component/TemporaryStories';
 import { RecordIcon } from '../component/RecordIcon';
 import { FollowUsers } from '../component/FollowUsers';
+import { SemiBoldText } from '../component/SemiBoldText';
+import { MyButton } from '../component/MyButton';
 
 const ProfileScreen = (props) => {
 
@@ -42,12 +48,12 @@ const ProfileScreen = (props) => {
   const [voices, setVoices] = useState([]);
   const [userInfo, setUserInfo] = useState({});
   const [refresh, setRefresh] = useState(false);
-  const [showContext, setShowContext] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [loadMore, setLoadMore] = useState(10);
   const [showEnd, setShowEnd] = useState(false);
   const [loadKey, setLoadKey] = useState(0);
   const [allFollows, setAllFollows] = useState("");
+  const [showQR, setShowQR] = useState(true);
 
   if (props.navigation.state.params)
     () => setRefresh(!refresh);
@@ -57,7 +63,7 @@ const ProfileScreen = (props) => {
       onShowEnd();
       return;
     }
- 
+
     VoiceService.getUserVoice(userData.id, voices.length).then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
@@ -129,7 +135,7 @@ const ProfileScreen = (props) => {
       }}
     >
       <Image
-        source={userData.avatar?{ uri: userData.avatar.url }:Avatars[userData.avatarNumber].uri}
+        source={userData.avatar ? { uri: userData.avatar.url } : Avatars[userData.avatarNumber].uri}
         resizeMode="cover"
         style={[styles.topProfileContainer, {
           width: windowWidth + (userData.premium == "none" ? 0 : 6),
@@ -157,6 +163,13 @@ const ProfileScreen = (props) => {
             }
           ]}
         >
+          <TouchableOpacity onPress={() => setShowQR(true)} style={{ position: 'absolute', right: 16, top: Platform.OS == 'ios' ? 36 : 24 }}>
+            <SvgXml
+              width={24}
+              height={24}
+              xml={qrSvg}
+            />
+          </TouchableOpacity>
           <TouchableOpacity onPress={() => props.navigation.goBack()} style={{ position: 'absolute', left: 0, top: Platform.OS == 'ios' ? 24 : 12 }}>
             <SvgXml
               xml={boxbackArrowSvg}
@@ -232,7 +245,7 @@ const ProfileScreen = (props) => {
                   lineHeight={33}
                 />
                 <TouchableOpacity disabled={userData.premium != 'none'} onPress={() => props.navigation.navigate("Premium")}>
-                  {userData.premium !='none'?<Image
+                  {userData.premium != 'none' ? <Image
                     style={{
                       width: 100,
                       height: 33,
@@ -240,15 +253,15 @@ const ProfileScreen = (props) => {
                     }}
                     source={require('../../assets/common/premiumstar.png')}
                   />
-                  :
-                  <Image
-                    style={{
-                      width: 150,
-                      height: 30,
-                      marginLeft: 16
-                    }}
-                    source={require('../../assets/common/discover_premium.png')}
-                  />}
+                    :
+                    <Image
+                      style={{
+                        width: 150,
+                        height: 30,
+                        marginLeft: 16
+                      }}
+                      source={require('../../assets/common/discover_premium.png')}
+                    />}
                 </TouchableOpacity>
               </View>
             </View>
@@ -285,14 +298,70 @@ const ProfileScreen = (props) => {
         active='profile'
         props={props}
       />
-      {showContext &&
-        <PostContext
-          postInfo={voices[selectedIndex]}
-          props={props}
-          onChangeIsLike={() => setLiked()}
-          onCloseModal={() => setShowContext(false)}
-        />
-      }
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showQR}
+        onRequestClose={() => {
+          setShowQR(!showQR);
+        }}
+      >
+        <Pressable onPressOut={() => setShowQR(false)} style={styles.swipeModal}>
+          <View style={styles.swipeInputContainerContent}>
+            <View style={[styles.rowSpaceBetween, { paddingHorizontal: 14, paddingVertical: 12 }]}>
+              <TouchableOpacity onPress={() => setShowQR(false)}>
+                <View style={[styles.contentCenter, { width: 28, height: 28, borderRadius: 14, backgroundColor: '#F0F4FC' }]}>
+                  <SvgXml
+                    width={18}
+                    height={18}
+                    xml={closeBlackSvg}
+                  />
+                </View>
+              </TouchableOpacity>
+              <SemiBoldText
+                text={t("Change your QR-code")}
+                fontSize={17}
+                lineHeight={28}
+                color='#263449'
+              />
+              <TouchableOpacity onPress={() => { }}>
+                <DescriptionText
+                  text={t('Share')}
+                  fontSize={17}
+                  lineHeight={28}
+                  color='#8327D8'
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{
+              width: windowWidth,
+              height: 300,
+              justifyContent: "center",
+              alignItems: 'center'
+            }}>
+              <QRCode
+                width={100}
+                height={100}
+                value="https://testflight.apple.com/join/ztQ4TQlu"
+              />
+            </View>
+            <LinearGradient
+              colors={['#FFFFFF', 'rgba(255,255,255, 0)']}
+              locations={[0.7, 1]}
+              start={{ x: 0, y: 1 }} end={{ x: 0, y: 0 }}
+              style={{ position: 'absolute', paddingHorizontal: 16, bottom: 0, width: windowWidth }}
+            >
+              <MyButton
+                label={t("Share QR-code")}
+                //marginTop={90}
+                //onPress={() => { }}
+                //active={()=>{}}
+                marginBottom={20}
+              />
+            </LinearGradient>
+          </View>
+        </Pressable>
+      </Modal>
       {allFollows != '' &&
         <FollowUsers
           props={props}
