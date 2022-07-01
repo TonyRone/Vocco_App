@@ -7,7 +7,6 @@ import {
   Pressable,
   ScrollView,
   Platform,
-  Modal
 } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
@@ -17,22 +16,18 @@ import LinearGradient from 'react-native-linear-gradient';
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
 import { SvgXml } from 'react-native-svg';
-import { QRCode } from 'react-native-custom-qr-codes';
 import editSvg from '../../assets/common/edit.svg';
 import boxbackArrowSvg from '../../assets/profile/box_backarrow.svg';
-import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import qrSvg from '../../assets/profile/qr-code.svg';
 import { useSelector } from 'react-redux';
 import { styles } from '../style/Common';
 import VoiceService from '../../services/VoiceService';
-import { PostContext } from '../component/PostContext';
 import { Avatars, windowWidth } from '../../config/config';
 import { Stories } from '../component/Stories';
 import { TemporaryStories } from '../component/TemporaryStories';
 import { RecordIcon } from '../component/RecordIcon';
 import { FollowUsers } from '../component/FollowUsers';
-import { SemiBoldText } from '../component/SemiBoldText';
-import { MyButton } from '../component/MyButton';
+import { ShareQRcode } from '../component/ShareQRcode';
 
 const ProfileScreen = (props) => {
 
@@ -298,71 +293,10 @@ const ProfileScreen = (props) => {
         active='profile'
         props={props}
       />
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={showQR}
-        onRequestClose={() => {
-          setShowQR(!showQR);
-        }}
-      >
-        <Pressable onPressOut={() => setShowQR(false)} style={styles.swipeModal}>
-          <View style={styles.swipeInputContainerContent}>
-            <View style={[styles.rowSpaceBetween, { paddingHorizontal: 14, paddingVertical: 12 }]}>
-              <TouchableOpacity onPress={() => setShowQR(false)}>
-                <View style={[styles.contentCenter, { width: 28, height: 28, borderRadius: 14, backgroundColor: '#F0F4FC' }]}>
-                  <SvgXml
-                    width={18}
-                    height={18}
-                    xml={closeBlackSvg}
-                  />
-                </View>
-              </TouchableOpacity>
-              <SemiBoldText
-                text={t("Change your QR-code")}
-                fontSize={17}
-                lineHeight={28}
-                color='#263449'
-              />
-              <TouchableOpacity onPress={() => { }}>
-                <DescriptionText
-                  text={t('Share')}
-                  fontSize={17}
-                  lineHeight={28}
-                  color='#8327D8'
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={{
-              width: windowWidth,
-              height: 300,
-              justifyContent: "center",
-              alignItems: 'center'
-            }}>
-              <QRCode
-                content='https://testflight.apple.com/join/ztQ4TQlu'
-                codeStyle='circle'
-                logo={require('../../assets/common/qr-logo.png')}
-                linearGradient={['#FEAC5E','#EBA4F3','#B1A5FF']} gradientDirection={[0,170,0,0]}
-              />
-            </View>
-            <LinearGradient
-              colors={['#FFFFFF', 'rgba(255,255,255, 0)']}
-              locations={[0.7, 1]}
-              start={{ x: 0, y: 1 }} end={{ x: 0, y: 0 }}
-              style={{ position: 'absolute', paddingHorizontal: 16, bottom: 0, width: windowWidth }}
-            >
-              <MyButton
-                label={t("Share QR-code")}
-                //marginTop={90}
-                //onPress={() => { }}
-                //active={()=>{}}
-                marginBottom={20}
-              />
-            </LinearGradient>
-          </View>
-        </Pressable>
-      </Modal>
+      {showQR&&<ShareQRcode
+        userInfo={user}
+        onCloseModal={()=> setShowQR(false) }
+      />}
       {allFollows != '' &&
         <FollowUsers
           props={props}

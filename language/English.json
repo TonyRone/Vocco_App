@@ -244,6 +244,7 @@
       "online":"online",
       "Friends":"Friends",
       "Chat":"Chat",
-      "offline":"offline"
+      "offline":"offline",
+      "readings":"readings"
     }
   }

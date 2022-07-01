@@ -53,11 +53,11 @@ import VoicePlayer from '../Home/VoicePlayer';
 import { MessageItem } from '../component/MessageItem';
 import { TitleText } from '../component/TitleText';
 import { PhotoSelector } from '../component/PhotoSelector';
-import EmojiPicker from 'rn-emoji-keyboard';
 
 const ConversationScreen = (props) => {
 
     let info = props.navigation.state.params.info;
+    let recordId = props.navigation.state.params.recordId;
 
     let { user, refreshState, voiceState, socketInstance } = useSelector((state) => {
         return (
@@ -83,7 +83,6 @@ const ConversationScreen = (props) => {
     const [selectedItems, setSelectedItems] = useState([]);
     const [isSelecting, setIsSelecting] = useState(false);
     const [otherState, setOtherState] = useState('');
-    const [visibleReaction, setVisibleReaction] = useState(false);
 
     const hideMenu = () => setVisible(false);
 
@@ -106,11 +105,11 @@ const ConversationScreen = (props) => {
 
     const onNavigate = (des, par = null) => {
         const resetActionTrue = StackActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: des, params: par })],
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: des, params: par })],
         });
         props.navigation.dispatch(resetActionTrue);
-      }
+    }
 
     const renderState = (lastSeen) => {
         if (lastSeen == "onSession") {
@@ -130,7 +129,7 @@ const ConversationScreen = (props) => {
         if (updatedTime.getFullYear() != nowTime.getFullYear()) {
             return updatedTime.toDateString().substring(4);
         }
-        else if (nowTime.getDate() - updatedTime.getDate() > nowTime.getDay()) {
+        else if (nowTime.getMonth() != updatedTime.getMonth()||(nowTime.getDate() - updatedTime.getDate() > nowTime.getDay())) {
             return updatedTime.toDateString().substring(4, 10);
         }
         else if (nowTime.getDate() - 1 > updatedTime.getDate()) {
@@ -157,7 +156,28 @@ const ConversationScreen = (props) => {
             })
     }
 
-    const handleSubmit = async (fileType, v) => {
+    const sendRecordMessage = () => {
+        setIsLoading(true);
+        let sendFile = [
+            { name: 'user', data: info.user.id },
+            { name: 'record', data: recordId },
+            { name: 'type', data: 'record' },
+        ];
+        VoiceService.postMessage(sendFile).then(async res => {
+            const jsonRes = await res.json();
+            if (res.respInfo.status !== 201) {
+            } else {
+                getMessages();
+                socketInstance.emit("newMessage", { info: jsonRes });
+            }
+        })
+            .catch(err => {
+                console.log(err);
+                setIsLoading(false);
+            });
+    }
+
+    const handleSubmit = async (fileType, v, replyIndex) => {
         setIsLoading(true);
         let fileName = '', filePath = '';
         if (fileType == 'voice') {
@@ -174,10 +194,12 @@ const ConversationScreen = (props) => {
             { name: 'duration', data: String(Math.ceil(tp / 1000.0)) },
             { name: 'user', data: info.user.id },
             { name: 'type', data: fileType },
-            { name: 'ancestor', data: (replyIdx >= 0 ? messages[replyIdx].id : null) },
             { name: 'file', filename: fileName, data: filePath },
-            { name: 'emoji', data: fileType=='emoji'?v:null}
         ];
+        if (replyIndex >= 0)
+            sendFile.push({ name: 'ancestor', data: messages[replyIndex].id });
+        if (fileType == 'emoji')
+            sendFile.push({ name: 'emoji', data: v });
         VoiceService.postMessage(sendFile).then(async res => {
             const jsonRes = await res.json();
             if (res.respInfo.status !== 201) {
@@ -198,9 +220,8 @@ const ConversationScreen = (props) => {
         setReplyIdx(-1);
     }
 
-    const sendEmoji = (icon) => {
-        handleSubmit("emoji", icon);
-        setVisibleReaction(false);
+    const sendEmoji = (icon, index) => {
+        handleSubmit("emoji", icon, index);
     }
 
     const onConfirmMessage = () => {
@@ -261,50 +282,6 @@ const ConversationScreen = (props) => {
             });
         }
     };
-
-    // const onSelectPhotos = async () => {
-    //     let defaultOptions = {
-    //         //**iOS**//
-    //         usedPrefetch: false,
-    //         allowedAlbumCloudShared: false,
-    //         muteAudio: true,
-    //         autoPlay: true,
-    //         //resize thumbnail
-    //         haveThumbnail: true,
-    //         thumbnailWidth: Math.round(windowWidth / 2),
-    //         thumbnailHeight: Math.round(windowWidth / 2),
-    //         allowedLivePhotos: true,
-    //         preventAutomaticLimitedAccessAlert: true, // newest iOS 14
-    //         emptyMessage: 'No albums',
-    //         selectedColor: '#30475e',
-    //         maximumMessageTitle: 'Notification',
-    //         maximumMessage: 'You have selected the maximum number of media allowed',
-    //         messageTitleButton: 'OK',
-    //         cancelTitle: 'Cancel',
-    //         tapHereToChange: 'Tap here to change',
-    //         //****//
-    //         //**Android**//
-    //         //****//
-    //         //**Both**//
-    //         usedCameraButton: true,
-    //         allowedVideo: false,
-    //         allowedPhotograph: true, // for camera : allow this option when you want to take a photos
-    //         allowedVideoRecording: false, //for camera : allow this option when you want to recording video.
-    //         maxVideoDuration: 60, //for camera : max video recording duration
-    //         numberOfColumn: 3,
-    //         maxSelectedAssets: 20,
-    //         singleSelectedMode: false,
-    //         doneTitle: 'Done',
-    //         isPreview: true,
-    //         mediaType: 'all',
-    //         isExportThumbnail: false,
-    //         //****//
-    //         // fetchOption: Object,
-    //         // fetchCollectionOption: Object,
-    //         // emptyImage: Image,
-    //     };
-    //     const response = await MultipleImagePicker.openPicker(defaultOptions);
-    // }
 
     const onDateCompare = (a, b) => {
         return new Date(a).getDate() == new Date(b).getDate() && new Date(a).getMonth() == new Date(b).getMonth()
@@ -384,7 +361,11 @@ const ConversationScreen = (props) => {
     }
 
     useEffect(() => {
-        getMessages();
+        if (recordId) {
+            sendRecordMessage();
+        }
+        else
+            getMessages();
         setKey(prevKey => prevKey + 1);
         setFill(user.premium == 'none' ? 60 : 180);
         socketInstance.on("receiveMessage", ({ info }) => {
@@ -597,6 +578,7 @@ const ConversationScreen = (props) => {
             </View>}
             <ScrollView style={{ paddingHorizontal: 8 }} ref={scrollRef} onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}>
                 {messages.map((item, index) => {
+                    console.log(item, index);
                     let ancestorIdx = null;
                     if (item.ancestorId) {
                         ancestorIdx = messages.findIndex(msg => (msg.id == item.ancestorId));
@@ -628,7 +610,8 @@ const ConversationScreen = (props) => {
                             isSelect={isSelecting ? (selectedItems.indexOf(index) == -1 ? 0 : 1) : -1}
                             onDeleteItem={() => onDeleteItem(index)}
                             onSelectItem={() => onSelectItem(index)}
-                            onReplyMsg={() => { setReplyIdx(index); }}
+                            onReplyMsg={() => setReplyIdx(index)}
+                            onSendEmoji={(v) => sendEmoji(v, index)}
                         />
                     </View>
                 })}
@@ -640,7 +623,7 @@ const ConversationScreen = (props) => {
                         position: 'absolute',
                         bottom: 42,
                         right: windowWidth - 376,
-                        width: replyIdx == -1 ? 140 : 343,
+                        width: replyIdx == -1 ? 116 : 343,
                         height: 56,
                         borderRadius: 28,
                         backgroundColor: '#FFF',
@@ -651,7 +634,7 @@ const ConversationScreen = (props) => {
                             flexDirection: 'row',
                             alignItems: 'center',
                             justifyContent: 'space-between',
-                            width: 186,
+                            width: 212,
                             marginLeft: 16
                         }}>
                             <View style={styles.rowAlignItems}>
@@ -693,7 +676,7 @@ const ConversationScreen = (props) => {
                             </View>
                         </View>
                         }
-                        <TouchableOpacity style={{
+                        {/* <TouchableOpacity style={{
                             marginLeft: 12
                         }}
                             onPress={() => setVisibleReaction(true)}
@@ -706,13 +689,13 @@ const ConversationScreen = (props) => {
                             >
                                 {"😁"}
                             </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <TouchableOpacity onPress={() => setIsSelectingPhoto(true)}>
                             <SvgXml
                                 width={24}
                                 height={24}
                                 style={{
-                                    marginLeft: 10
+                                    marginLeft: 18
                                 }}
                                 xml={photoSvg}
                             />
@@ -852,7 +835,7 @@ const ConversationScreen = (props) => {
                             />
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity disabled={isLoading} onPress={() => handleSubmit('voice')}>
+                    <TouchableOpacity disabled={isLoading} onPress={() => handleSubmit('voice', null, replyIdx)}>
                         <Image
                             style={{
                                 height: 56,
@@ -867,7 +850,7 @@ const ConversationScreen = (props) => {
             }
             {isSelectingPhoto &&
                 <PhotoSelector
-                    onSendPhoto={(v) => { setIsSelectingPhoto(false); handleSubmit('photo', v); }}
+                    onSendPhoto={(v) => { setIsSelectingPhoto(false); handleSubmit('photo', v, replyIdx); }}
                     onCloseModal={() => setIsSelectingPhoto(false)}
                 />
             }
@@ -882,13 +865,6 @@ const ConversationScreen = (props) => {
                         />
                     </View>
                 </View>
-            }
-            {visibleReaction &&
-                <EmojiPicker
-                    onEmojiSelected={(icon) => sendEmoji(icon.emoji)}
-                    open={visibleReaction}
-                    onClose={() => setVisibleReaction(false)}
-                />
             }
         </ImageBackground>
     )

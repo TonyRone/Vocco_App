@@ -42,7 +42,7 @@ const ShareFriendScreen = (props) => {
     const shareMessage = async () => {
         const options = {
             title: 'Sharing!',
-            message: "hello world"
+            message: "Heyyy! I’m sure you’ll love these stories on Vocco app. Download the app now! It’s free! link/download.app"
         };
         const respose = await Share.share(options);
         VoiceService.shareLink();

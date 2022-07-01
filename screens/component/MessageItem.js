@@ -20,7 +20,8 @@ export const MessageItem = ({
   ancestorInfo = null,
   onDeleteItem = () => { },
   onSelectItem = () => { },
-  onReplyMsg = () => { }
+  onReplyMsg = () => { },
+  onSendEmoji = () => { }
 }) => {
 
   const { user } = useSelector((state) => state.user);
@@ -94,6 +95,7 @@ export const MessageItem = ({
           onDeleteItem={() => onDeleteItem()}
           onSelectItem={() => onSelectItem()}
           onReplyMsg={() => onReplyMsg()}
+          onSendEmoji={(v) => onSendEmoji(v)}
           onCloseModal={() => setShowContext(false)}
         />
       }

@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import VoiceService from '../../services/VoiceService';
 import { DescriptionText } from '../component/DescriptionText';
 import { MyButton } from './MyButton';
+import { InviteUsers } from './InviteUsers';
 
 export const Stories = ({
   props,
@@ -34,6 +35,7 @@ export const Stories = ({
   const [LoadMore, setLoadMore] = useState(10);
   const [loading, setLoading] = useState(true);
   const [showEnd, setShowEnd] = useState(false);
+  const [showInviteList, setShowInviteList] = useState(false);
 
   let { refreshState } = useSelector((state) => {
     return (
@@ -127,7 +129,7 @@ export const Stories = ({
           </Text>
           <MyButton
             label='Invite friends'
-            onPress={() => { }}
+            onPress={() => setShowInviteList(true) }
           />
         </View> :
         <View style={{ marginTop: windowHeight / 20, alignItems: 'center', width: windowWidth }}>
@@ -162,6 +164,12 @@ export const Stories = ({
           text={t("You are up to date 🎉! Share vocco with you friends!")}
         />
       </View>
+    }
+    {showInviteList&&
+      <InviteUsers
+        props={props}
+        onCloseModal={()=> setShowInviteList(false)}
+      />
     }
   </>
 };

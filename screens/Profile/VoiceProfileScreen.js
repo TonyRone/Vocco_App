@@ -35,10 +35,11 @@ import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
 import { AnswerVoiceItem } from '../component/AnswerVoiceItem';
 import '../../language/i18n';
-import { RecordIcon } from '../component/RecordIcon';
 import { StoryLikes } from '../component/StoryLikes';
 import { TagFriends } from '../component/TagFriends';
 import { TagItem } from '../component/TagItem';
+import { NewChat } from '../component/NewChat';
+import { AnswerRecordIcon } from '../component/AnswerRecordIcon';
 
 const VoiceProfileScreen = (props) => {
 
@@ -55,6 +56,7 @@ const VoiceProfileScreen = (props) => {
   const [isHolding, setIsHolding] = useState(false);
   const [allLikes, setAllLikes] = useState(false);
   const [showTagFriends, setShowTagFriends] = useState(false);
+  const [showFriendsList, setShowFriendsList] = useState(false)
   const [combines, setCombines] = useState([]);
 
   const dispatch = useDispatch();
@@ -437,7 +439,7 @@ const VoiceProfileScreen = (props) => {
             </View>
             <View></View>
             <View style={{ alignItems: 'center', marginLeft: 20 }}>
-              <TouchableOpacity onPress={() => props.navigation.navigate("Conversation", { info: info })}>
+              <TouchableOpacity onPress={() => setShowFriendsList(true)}>
                 <View style={[styles.row, { alignItems: 'center' }]}>
                   <Image
                     style={{
@@ -638,7 +640,7 @@ const VoiceProfileScreen = (props) => {
           onCloseModal={() => setShowShareVoice(false)}
         />
       }
-      {info && isHolding == false && <RecordIcon
+      {info && isHolding == false && <AnswerRecordIcon
         props={props}
         bottom={50}
         left={windowWidth / 2 - 27}
@@ -657,6 +659,11 @@ const VoiceProfileScreen = (props) => {
           onCloseModal={() => setShowTagFriends(false)}
         />
       }
+      {showFriendsList && <NewChat
+        props={props}
+        recordId={info.id}
+        onCloseModal={() => setShowFriendsList(false)}
+      />}
     </KeyboardAvoidingView>
   );
 };

@@ -18,6 +18,7 @@ import '../../language/i18n';
 import { MyProgressBar } from '../component/MyProgressBar';
 import { windowWidth, Avatars, windowHeight } from '../../config/config';
 import { styles } from '../style/Login';
+import { NavigationActions, StackActions } from 'react-navigation';
 import { SemiBoldText } from '../component/SemiBoldText';
 import { ScrollView } from 'react-native-gesture-handler';
 import AuthService from '../../services/AuthService';
@@ -37,6 +38,14 @@ const ProfilePictureScreen = (props) => {
     const dispatch = useDispatch();
 
     const { t, i18n } = useTranslation();
+
+    const onNavigate = (des, par = null) => {
+        const resetActionTrue = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: des, params: par })],
+        });
+        props.navigation.dispatch(resetActionTrue);
+    }
 
     const options = {
         width: 500,
@@ -70,6 +79,7 @@ const ProfilePictureScreen = (props) => {
                     if (res.respInfo.status == 200) {
                         dispatch(setUser(jsonRes));
                         props.navigation.navigate("AddFriend");
+                        onNavigate("AddFriend");
                     }
                     else {
                         setError(jsonRes.message);

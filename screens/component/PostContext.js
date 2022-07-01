@@ -77,6 +77,7 @@ export const PostContext = ({
     <Modal
       animationType="slide"
       transparent={true}
+      elevation = {5}
       visible={showModal}
       onRequestClose={() => {
         closeModal();

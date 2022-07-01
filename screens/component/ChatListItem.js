@@ -159,10 +159,10 @@ export const ChatListItem = ({
                             <SvgXml
                                 width={16}
                                 height={16}
-                                xml={info.state == 'start' ? activeVoiceMessageSvg : info.type == 'voice' ? voiceMessageSvg : imageMessageSvg}
+                                xml={info.state == 'start' ? activeVoiceMessageSvg : info.type == 'photo' ? imageMessageSvg : voiceMessageSvg}
                             />}
                         <DescriptionText
-                            text={t(info.state == 'start' ? "recording audio..." : info.type == 'voice' ? "voice message" : info.type == 'emoji' ? "reaction" : "picture")}
+                            text={t(info.state == 'start' ? "recording audio..." : info.type == 'photo' ? "picture" : info.type == 'emoji' ? "reaction" : "voice message")}
                             fontSize={13}
                             lineHeight={21}
                             marginLeft={6}

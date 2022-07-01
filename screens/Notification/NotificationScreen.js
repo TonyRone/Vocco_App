@@ -133,7 +133,7 @@ const NotificationScreen = (props) => {
                 if (activeNum - 1 + requestNum == 0)
                     dispatch(setRefreshState(!refreshState));
             }
-            if (tp[index].type == 'likeRecord' || tp[index].type == 'newAnswer' || tp[index].type == 'likeAnswer') {
+            if (tp[index].type == 'likeRecord' || tp[index].type == 'newAnswer' || tp[index].type == 'likeAnswer' || tp[index].type == 'tagFriend') {
                 props.navigation.navigate("VoiceProfile", { id: tp[index].record.id, answerId: tp[index].answer?.id })
             }
             else {
@@ -205,13 +205,14 @@ const NotificationScreen = (props) => {
     }
 
     const onAcceptRequest = (id, index) => {
+        setIsLoading(true);
         VoiceService.acceptFriend(id).then(async res => {
             if (res.respInfo.status == 201) {
                 let tp = requests;
                 tp[index].friend.status = 'accepted';
-                setRequests(tp);
+                setIsLoading(false);
+                setRequests([...tp]);
             }
-            setRefresh(!refresh);
         })
             .catch(err => {
                 console.log(err);
@@ -225,6 +226,19 @@ const NotificationScreen = (props) => {
             if (activeNum + requestNum - 1 == 0)
                 dispatch(setRefreshState(!refreshState));
         }
+    }
+
+    const onFollowUser = (id, index) => {
+        setIsLoading(true);
+        VoiceService.followFriend(id).then(async res => {
+            let tp = requests;
+            tp[index].towardFriend = { status: 'pending' };
+            setIsLoading(false);
+            setRequests([...tp]);
+        })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     useEffect(() => {
@@ -383,8 +397,10 @@ const NotificationScreen = (props) => {
                                 notificationTime={item.createdAt}
                                 isActivity={false}
                                 accepted={item.friend.status == 'accepted' || allAccept}
+                                towardFriend={item.towardFriend}
                                 onPressItem={() => onReadNotification(index, false)}
                                 onAcceptUser={() => onAcceptRequest(item.fromUser.id, index)}
+                                onFollowUser={() => onFollowUser(item.fromUser.id, index)}
                                 onDeleteItem={() => onDeleteNotification(item.id, index, false)}
                             />}
                             keyExtractor={(item, index) => index.toString()}

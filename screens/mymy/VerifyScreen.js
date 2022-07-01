@@ -13,7 +13,7 @@ import { ACCESSTOKEN_KEY } from '../../config/config';
 import { styles } from '../style/Login';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSocketInstance } from '../../store/actions';
+import { setSocketInstance, setUser } from '../../store/actions';
 
 const VerifyScreen = (props) => {
 

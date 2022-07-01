@@ -120,7 +120,7 @@ const HomeScreen = (props) => {
                 <View style={styles.rowSpaceBetween}>
                     <TouchableOpacity onPress={() => { scrollRef.current?.scrollTo({ x: 0, animated: true }); setIsActiveState(true); }} style={[styles.contentCenter, { width: 97, height: 44 }]}>
                         <SemiBoldText
-                            text={t("Friends")}
+                            text={t("Discover")}
                             fontFamily={isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
                             color={isActiveState ? '#281E30' : 'rgba(59, 31, 82, 0.6)'}
                             fontSize={17}
@@ -129,7 +129,8 @@ const HomeScreen = (props) => {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => { scrollRef.current?.scrollTo({ x: windowWidth, animated: true }); setIsActiveState(false); }} style={[styles.contentCenter, { width: 97, height: 44, marginLeft: 16 }]}>
                         <SemiBoldText
-                            text={t("Discover")}
+                            
+                            text={t("Friends")}
                             fontFamily={!isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
                             color={!isActiveState ? '#281E30' : 'rgba(59, 31, 82, 0.6)'}
                             fontSize={17}
@@ -182,12 +183,12 @@ const HomeScreen = (props) => {
                 )}
                 scrollEventThrottle={16}
             >
+                <Discover
+                    props={props}
+                />
                 <Feed
                     props={props}
                     onSetExpandKey={() => setExpandKey(expandKey + 1)}
-                />
-                <Discover
-                    props={props}
                 />
             </ScrollView>
             {

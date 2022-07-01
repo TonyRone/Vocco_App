@@ -6,7 +6,7 @@ export const SemiBoldText = ({
   fontFamily = "SFProDisplay-Semibold",
   textAlign = "left",
   color = "#281E30",
-  numberOfLines = 1,
+  numberOfLines ,
   marginBottom,
   marginTop,
   marginLeft,

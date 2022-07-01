@@ -66,7 +66,6 @@ const FriendsScreen = (props) => {
                     return [...prev]
                 });
             }
-            setRefresh(!refresh);
         })
             .catch(err => {
                 console.log(err);
@@ -134,7 +133,6 @@ const FriendsScreen = (props) => {
         VoiceService.getRequests(0).then(async res => {
             if (res.respInfo.status == 200) {
                 const jsonRes = await res.json();
-                console.log(jsonRes[0]);
                 setRequests(jsonRes);
             }
         })
@@ -267,7 +265,7 @@ const FriendsScreen = (props) => {
                         color="#281E30"
                     />
                     <View style={styles.rowAlignItems}>
-                        <TouchableOpacity onPress={() => setIsSearch(true)}>
+                        <TouchableOpacity onPress={() => props.navigation.navigate("Search")}>
                             <SvgXml
                                 width="24"
                                 height="24"

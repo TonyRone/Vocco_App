@@ -21,6 +21,7 @@ import { SvgXml } from 'react-native-svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import moreSvg from '../../assets/common/more.svg';
 import boxbackArrowSvg from '../../assets/profile/box_backarrow.svg';
+import qrSvg from '../../assets/profile/qr-code.svg';
 import followSvg from '../../assets/profile/follow.svg';
 import unfollowSvg from '../../assets/profile/unfollow.svg';
 import blockSvg from '../../assets/profile/block.svg';
@@ -40,6 +41,7 @@ import { Stories } from '../component/Stories';
 import { t } from 'i18next';
 import { TemporaryStories } from '../component/TemporaryStories';
 import { FollowUsers } from '../component/FollowUsers';
+import { ShareQRcode } from '../component/ShareQRcode';
 
 const UserProfileScreen = (props) => {
 
@@ -58,6 +60,7 @@ const UserProfileScreen = (props) => {
   const [showEnd, setShowEnd] = useState(false);
   const [loadKey, setLoadKey] = useState(0);
   const [allFollows, setAllFollows] = useState("");
+  const [showQR, setShowQR] = useState(false);
 
   let { user, refreshState } = useSelector((state) => {
     return (
@@ -215,6 +218,13 @@ const UserProfileScreen = (props) => {
           }
         ]}
       >
+        <TouchableOpacity onPress={() => setShowQR(true)} style={{ position: 'absolute', right: 16, top: Platform.OS == 'ios' ? 36 : 24 }}>
+            <SvgXml
+              width={24}
+              height={24}
+              xml={qrSvg}
+            />
+          </TouchableOpacity>
         <TouchableOpacity onPress={() => props.navigation.goBack()} style={{ position: 'absolute', left: 0, top: Platform.OS == 'ios' ? 24 : 12 }}>
           <SvgXml
             xml={boxbackArrowSvg}
@@ -545,6 +555,10 @@ const UserProfileScreen = (props) => {
           onCloseModal={() => setShowContext(false)}
         />
       }
+      {showQR&&<ShareQRcode
+        userInfo={userInfo.user}
+        onCloseModal={()=> setShowQR(false) }
+      />}
       {showShareVoice &&
         <ShareVoice
           onCloseModal={() => { setShowShareVoice(false); }}

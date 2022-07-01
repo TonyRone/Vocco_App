@@ -21,6 +21,7 @@ import '../../language/i18n';
 
 export const NewChat = ({
   props,
+  recordId = null,
   onCloseModal = () => { },
 }) => {
 
@@ -281,14 +282,14 @@ export const NewChat = ({
                   {(item.user.name.toLowerCase().indexOf(label.toLowerCase()) != -1) &&
                     <TouchableOpacity
                       onPress={() => {
-                        props.navigation.navigate("Conversation", { info: item });
+                        props.navigation.navigate("Conversation", { info: item, recordId: recordId});
                         closeModal();
                       }}
                       key={index + item.user.id + "friends"}
                       style={{ flexDirection: 'row', alignItems: 'center', marginLeft: isSearch ? 0 : 16, marginTop: 10, marginBottom: 10 }}
                     >
                       <Image
-                        source={user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri}
+                        source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
                         style={{ width: 48, height: 48, borderRadius: 24, borderColor: '#FFA002', borderWidth: item.user.premium == 'none' ? 0 : 2 }}
                         resizeMode='cover'
                       />

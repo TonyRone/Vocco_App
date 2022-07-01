@@ -171,7 +171,7 @@ const LoginScreen = (props) => {
     } else if (!jsonRes.country) {
       navigateScreen = 'Country';
     } else if (!jsonRes.avatar) {
-      navigateScreen = 'Photo';
+      navigateScreen = 'ProfilePicture';
     } else {
       const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
       if (tutorial_check)

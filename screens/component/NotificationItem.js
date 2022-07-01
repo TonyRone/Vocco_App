@@ -27,8 +27,10 @@ export const NotificationItem = ({
     notificationTime,
     isActivity = false,
     accepted = false,
+    towardFriend = null,
     onPressItem = () => { },
     onAcceptUser = () => { },
+    onFollowUser = () => { },
     onDeleteItem = () => { }
 }) => {
 
@@ -51,6 +53,8 @@ export const NotificationItem = ({
         details = t("Answered your story");
     if (details == 'likeAnswer')
         details = t("Liked your answer");
+    if (details == 'tagFriend')
+        details = t("Tagged a voice to you");
 
     return (
         !isDeleted ?
@@ -74,7 +78,7 @@ export const NotificationItem = ({
                                 borderColor: '#FFA002',
                                 borderWidth: userInfo.premium == 'none' ? 0 : 2
                             }}
-                            source={userInfo.avatar?{ uri: userInfo.avatar.url }:Avatars[userInfo.avatarNumber].uri}
+                            source={userInfo.avatar ? { uri: userInfo.avatar.url } : Avatars[userInfo.avatarNumber].uri}
                         />
                         {isNew && isActivity && <View
                             style={{
@@ -108,6 +112,14 @@ export const NotificationItem = ({
                     </View>
                     {(!isActivity) ?
                         <View style={styles.rowAlignItems}>
+                            {(accepted && (!towardFriend || towardFriend.status == 'none')) && <TouchableOpacity onPress={() => onFollowUser()} style={[styles.contentCenter, { width: 99, height: 40, borderRadius: 12, backgroundColor: '#F8F0FF', marginRight: 8 }]}>
+                                <SemiBoldText
+                                    text='Follow back'
+                                    fontSize={15}
+                                    lineHeight={24}
+                                    color='#8327D8'
+                                />
+                            </TouchableOpacity>}
                             <TouchableOpacity onPress={() => { onDeleteItem(); setIsDeleted(true); }} style={[styles.contentCenter, { width: 40, height: 40, borderRadius: 12, backgroundColor: '#FFE8E8' }]}>
                                 <SvgXml
                                     width={24}

@@ -358,7 +358,7 @@ export const TagFriends = ({
                       style={{ flexDirection: 'row', alignItems: 'center', marginLeft: isSearch ? 0 : 16, marginTop: 10, marginBottom: 10 }}
                     >
                       <Image
-                        source={user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri}
+                        source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
                         style={{ width: 48, height: 48, borderRadius: 24, borderColor: '#FFA002', borderWidth: item.user.premium == 'none' ? 0 : 2 }}
                         resizeMode='cover'
                       />

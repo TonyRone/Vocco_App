@@ -205,7 +205,6 @@ class VoiceService {
     }
 
     async inviteFriend(phoneNumber) {
-        console.log(phoneNumber+" rrrrrrrrrrrrrrrrrrrrrrrrr");
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(

@@ -36,7 +36,7 @@ import { SettingList } from '../component/SettingList';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { RecordIcon } from '../component/RecordIcon';
-import { setSocketInstance } from '../../store/actions';
+import { setSocketInstance, setUser } from '../../store/actions';
 
 const SettingScreen = (props) => {
 
@@ -263,7 +263,7 @@ const SettingScreen = (props) => {
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => sendLogOut()}>
                                 <SemiBoldText
-                                    text={t("Send")}
+                                    text={t("Validate")}
                                     fontSize={15}
                                     lineHeight={24}
                                     color='#8327D8'

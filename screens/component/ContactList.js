@@ -52,7 +52,6 @@ export const ContactList = ({
       .then(Contacts.getAllWithoutPhotos()
         .then((contacts) => {
           // work with contacts
-          console.log(contacts)
           setContactUsers(contacts);
         })
         .catch((e) => {

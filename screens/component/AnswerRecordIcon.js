@@ -35,9 +35,9 @@ import '../../language/i18n';
 
 import recordSvg from '../../assets/common/bottomIcons/record.svg';
 import { SvgXml } from 'react-native-svg';
-import { SemiBoldText } from './SemiBoldText';
+import { styles } from '../style/Common';
 
-export const RecordIcon = ({
+export const AnswerRecordIcon = ({
   props,
   dem = 54,
   expandKey = 0,
@@ -178,143 +178,79 @@ export const RecordIcon = ({
       }}
       onPress={() => onStopRecord(false)}
     >
-      {IsExpanded && <View
-        style={{
-          backgroundColor: '#FFF',
-          flex: 1,
-          width: '100%',
-          height: '100%',
-          alignItems: 'center'
-        }}
-      >
-        <View
-          style={{
-            position: 'absolute',
-            top: windowHeight / 10,
-            paddingHorizontal: 16,
-            paddingVertical: 8,
-            width: 295,
-            backgroundColor: '#FFF7E8',
-            borderWidth: 1,
-            borderRadius: 8,
-            borderColor: '#FFBB02',
-            shadowColor: '#FFB800',
-            elevation: 10,
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.5,
-            shadowRadius: 5,
-          }}
-        >
-          <SemiBoldText
-            text={user.premium != 'none' ? 'You are a premium member and you have up to three minutes of recording!' : 'Go to Premium and have 3 minutes instead of one for each record'}
-            color='#F09E00'
-            fontSize={15}
-            lineHeight={24}
-            textAlign='center'
-          />
-        </View>
-        <View style={{ alignItems: 'center', width: '100%' }}>
-          <TitleText
-            text={t("Click & hold to record")}
-            fontSize={20}
-            marginTop={10}
-            color="#281E30"
-          />
-          <View
-            style={{
-              marginTop: windowHeight / 6
-            }}
-          >
-            <CountdownCircleTimer
-              key={key}
-              isPlaying={!isPaused}
-              duration={fill}
-              size={250}
-              strokeWidth={5}
-              trailColor="#D4C9DE"
-              trailStrokeWidth={1}
-              onComplete={onTimeEnd}
-              colors={[
-                ['#B35CF8', 0.4],
-                ['#8229F4', 0.4],
-                ['#8229F4', 0.2],
-              ]}
-            >
-              {({ remainingTime, animatedColor }) => {
-                return (
-                  <ImageBackground
-                    source={require('../../assets/record/Waves.png')}
-                    resizeMode="stretch"
-                    style={{ width: 197, height: 197, alignItems: 'center' }}
-                  >
-                    <DescriptionText
-                      text={t("seconds")}
-                      color="rgba(59, 31, 82, 0.6)"
-                      fontSize={20}
-                      marginTop={32}
-                    />
-                    <LinearTextGradient
-                      style={{ fontSize: 80, marginTop: -10 }}
-                      locations={[0, 1]}
-                      colors={["#C479FF", "#650DD6"]}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 0, y: 1 }}
-                    >
-                      <Animated.Text style={{ color: animatedColor, fontFamily: "SFProDisplay-Semibold" }}>
-                        {fill - Math.floor(wasteTime.current / 1000)}
-                      </Animated.Text>
-                    </LinearTextGradient>
-                  </ImageBackground>
-                )
+      {IsExpanded &&
+        <Pressable onPressOut={()=>onStopRecord(false)} style={[styles.swipeModal, { backgroundColor: 'rgba(0, 0, 0, 0.1)' }]}>
+          <>
+            <Image
+              style={{
+                position: 'absolute',
+                bottom: 20,
+                height: 56,
+                width: 281.22,
+                right: (windowWidth - 281.22) / 2
               }}
-            </CountdownCircleTimer>
-          </View>
-        </View>
-        <View style={{ position: 'absolute', bottom: '6%', width: '100%', alignItems: 'center' }}>
-          <ImageBackground
-            source={require('../../assets/record/RecordControl.png')}
-            resizeMode="stretch"
-            style={{ width: 311, height: 76, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
-          >
-            <View
-              style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 18 }}
-            >
-              <SvgXml width={20} height={16 - (hoverState < 0 ? r * 4 : 0)} xml={cancelSvg} />
-              <TitleText
-                text={t("Cancel")}
-                fontFamily="SFProDisplay-Regular"
-                fontSize={16}
-                marginLeft={8}
-                lineHeight={21}
-                color="#E41717"
-              />
+              resizeMode="stretch"
+              source={require('../../assets/post/answerReply.png')}
+            />
+            <View style={{
+              position: 'absolute',
+              bottom: 160,
+              right: (windowWidth - 105) / 2,
+              width: 105,
+              height: 48,
+              backgroundColor: "#FFF",
+              borderRadius: 16,
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingHorizontal: 16,
+            }}>
+              <View
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: 4,
+                  backgroundColor: "#E41717"
+                }}
+              >
+              </View>
+              <CountdownCircleTimer
+                key={key}
+                isPlaying={!isPaused}
+                duration={fill}
+                size={70}
+                strokeWidth={0}
+                trailColor="#D4C9DE"
+                trailStrokeWidth={0}
+                onComplete={() => onStopRecord(true)}
+                colors={[
+                  ['#B35CF8', 0.4],
+                  ['#8229F4', 0.4],
+                  ['#8229F4', 0.2],
+                ]}
+              >
+                {({ remainingTime, animatedColor }) => {
+                  return (
+                    <DescriptionText
+                      text={new Date(wasteTime.current).toISOString().substr(14, 5)}
+                      lineHeight={24}
+                      color="rgba(54, 36, 68, 0.8)"
+                      fontSize={15}
+                    />
+                  )
+                }}
+              </CountdownCircleTimer>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 18 }}>
-              <TitleText
-                text={t("Publish")}
-                fontFamily="SFProDisplay-Regular"
-                fontSize={16}
-                marginRight={8}
-                lineHeight={21}
-                color="#8327D8"
-              />
-              <SvgXml width={20} height={16 + (hoverState > 0 ? hoverState * 4 : 0)} xml={publicSvg} />
-            </View>
-          </ImageBackground>
-        </View>
-        <Warning
-          bottom={'25%'}
-          text={t("Hate, racism, sexism or any kind of violence is stricly prohibited")}
-        />
-      </View>}
+          </>
+        </Pressable>
+      }
       <View style={{ position: IsExpanded ? 'absolute' : 'relative', bottom: '6%', width: IsExpanded ? '100%' : 54, height: IsExpanded ? 76 : 54 }}>
         <Draggable
           key={key}
           x={IsExpanded ? windowWidth / 2 - 38 : 0}
           y={0}
           shouldReverse={true}
-          minX={windowWidth / 2 - 120}
-          maxX={windowWidth / 2 + 136}
+          minX={windowWidth / 2 - 110}
+          maxX={windowWidth / 2 + 110}
           minY={0}
           maxY={0}
           touchableOpacityProps={{

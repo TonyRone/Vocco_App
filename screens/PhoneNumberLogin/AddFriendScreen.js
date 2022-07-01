@@ -47,7 +47,6 @@ const AddFriendScreen = (props) => {
     const getActiveUsers = () => {
         VoiceService.getActiveUsers().then(async res => {
             const jsonRes = await res.json();
-            console.log(jsonRes);
             if (res.respInfo.status == 200) {
                 setActiveUsers(jsonRes);
             }

@@ -12,8 +12,6 @@ export const FriendItem = ({
   isUserName = false
 }) => {
 
-  console.log(info);
-
   let isGreen = false;
   if (isUserName == true && (info.isFriend == true || info.user.premium != 'none'))
     isGreen = true;
