@@ -54,36 +54,36 @@ class VoicePlayer extends Component {
       swipe: {}
     };
     this.audioRecorderPlayer = recorderPlayer;
-    this.audioRecorderPlayer.setSubscriptionDuration(0.2); // optional. Default is 0.5
+    //this.audioRecorderPlayer.setSubscriptionDuration(0.2); // optional. Default is 0.5
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this._isMounted = true;
     const fileRemoteUrl = this.props.voiceUrl;
     if (fileRemoteUrl == null) {
       this._playerPath = this.path;
       if (this.props.playing == true) {
-        this.onStartPlay(this.props.voiceState)
+        await this.onStartPlay(this.props.voiceState)
       }
     }
     else {
       if (this.props.playing == true)
-        this.getPlayLink().then((res) =>
-          this.onStartPlay(res)
+        await this.getPlayLink().then(async(res) =>
+          await this.onStartPlay(res)
         )
     }
   }
-  componentDidUpdate(prevProp) {
+  async componentDidUpdate(prevProp) {
     if (this.props.voiceState != this.state.voiceKey) {
       if (this.state.isStarted == true && this.state.isPlaying == false) {
-        this.onResumePlay();
+        await this.onResumePlay();
       }
-      this.onStopPlay();
+      await this.onStopPlay();
     }
   }
 
-  componentWillUnmount() {
-    this.onStopPlay();
+  async componentWillUnmount() {
+    await this.onStopPlay();
     this._isMounted = false;
   }
   _onTouchStart = (e) => {
@@ -104,36 +104,36 @@ class VoicePlayer extends Component {
     }
   }
 
-  changePlayStatus = () => {
+  changePlayStatus = async() => {
     if (this.state.isPlaying)
-      this.onPausePlay();
+      await this.onPausePlay();
     else if (this.state.isStarted)
-      this.onResumePlay();
+      await this.onResumePlay();
     else {
       if (this.props.voiceUrl == null) {
-        this.onStartPlay(this.props.voiceState);
+        await this.onStartPlay(this.props.voiceState);
       }
       else
-        this.getPlayLink().then((res) => {
-          this.onStartPlay(res);
+        await this.getPlayLink().then(async(res) => {
+          await this.onStartPlay(res);
         })
     }
   }
 
-  onReplay = () => {
+  onReplay = async () => {
     if (this.state.isPlaying)
-      this.audioRecorderPlayer.seekToPlayer(0);
+      await this.audioRecorderPlayer.seekToPlayer(0);
     else if (this.state.isStarted) {
-      this.audioRecorderPlayer.seekToPlayer(0);
-      this.onResumePlay();
+      await this.audioRecorderPlayer.seekToPlayer(0);
+      await this.onResumePlay();
     }
     else {
       if (this.props.voiceUrl == null) {
-        this.onStartPlay(this.props.voiceState);
+        await this.onStartPlay(this.props.voiceState);
       }
       else
-        this.getPlayLink().then((res) => {
-          this.onStartPlay(res);
+        await this.getPlayLink().then(async(res) => {
+          await this.onStartPlay(res);
         })
     }
   }
@@ -273,15 +273,15 @@ class VoicePlayer extends Component {
         return voiceState + 1;
       }
     })
-      .catch(err => {
-        this.onStopPlay();
+      .catch(async err => {
+        await this.onStopPlay();
       })
   }
 
   onStartPlay = async (res) => {
     let { voiceState } = this.props;
     if (res != voiceState) {
-      this.onStopPlay();
+      await this.onStopPlay();
       return;
     }
     try {
@@ -294,7 +294,7 @@ class VoicePlayer extends Component {
       this.props.startPlay();
       const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath);
       const volume = await this.audioRecorderPlayer.setVolume(1.0);
-      this.audioRecorderPlayer.addPlayBackListener((e) => {
+      this.audioRecorderPlayer.addPlayBackListener(async(e) => {
         if (this._isMounted) {
           if (this.state.isPlaying)
             this.setState({
@@ -302,11 +302,11 @@ class VoicePlayer extends Component {
               currentDurationSec: e.duration,
             });
           if (e.currentPosition == e.duration) {
-            this.onStopPlay();
+            await this.onStopPlay();
           }
         }
         else {
-          this.audioRecorderPlayer.stopPlayer();
+          await this.audioRecorderPlayer.stopPlayer();
           this.audioRecorderPlayer.removePlayBackListener();
         }
       });
