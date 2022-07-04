@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import { DescriptionText } from '../component/DescriptionText';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { SvgXml } from 'react-native-svg';
 import closeSvg from '../../assets/common/close.svg';
 import { BottomButtons } from '../component/BottomButtons';
@@ -39,7 +40,7 @@ const HomeScreen = (props) => {
             return 0;
     }
 
-    const [isActiveState, setIsActiveState] = useState(true);
+    const [isActiveState, setIsActiveState] = useState(false);
     const [notify, setNotify] = useState(false);
     const [expandKey, setExpandKey] = useState(0);
 
@@ -99,7 +100,7 @@ const HomeScreen = (props) => {
                 noticeDispatch("reset");
             }, 1500);
         }
-        return () => {socketInstance.off("notice_Voice")};
+        return () => { socketInstance.off("notice_Voice") };
     }, [])
 
     return (
@@ -118,19 +119,19 @@ const HomeScreen = (props) => {
                     />
                 </TouchableOpacity>
                 <View style={styles.rowSpaceBetween}>
-                    <TouchableOpacity onPress={() => { scrollRef.current?.scrollTo({ x: 0, animated: true }); setIsActiveState(true); }} style={[styles.contentCenter, { width: 97, height: 44 }]}>
+                    <TouchableOpacity onPress={() => { setIsActiveState(true); RNVibrationFeedback.vibrateWith(1519); }} style={[styles.contentCenter, { width: 97, height: 44 }]}>
                         <SemiBoldText
-                            text={t("Discover")}
+                            text={t("Friends")}
                             fontFamily={isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
                             color={isActiveState ? '#281E30' : 'rgba(59, 31, 82, 0.6)'}
                             fontSize={17}
                             lineHeight={28}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { scrollRef.current?.scrollTo({ x: windowWidth, animated: true }); setIsActiveState(false); }} style={[styles.contentCenter, { width: 97, height: 44, marginLeft: 16 }]}>
+                    <TouchableOpacity onPress={() => { setIsActiveState(false); RNVibrationFeedback.vibrateWith(1519); }} style={[styles.contentCenter, { width: 97, height: 44, marginLeft: 16 }]}>
                         <SemiBoldText
-                            
-                            text={t("Friends")}
+
+                            text={t("Discover")}
                             fontFamily={!isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
                             color={!isActiveState ? '#281E30' : 'rgba(59, 31, 82, 0.6)'}
                             fontSize={17}
@@ -160,37 +161,28 @@ const HomeScreen = (props) => {
                     </View>}
                 </TouchableOpacity>
             </View>
-            <View style={{ width: windowWidth, flexDirection: 'row', justifyContent: 'center' }}>
+            <View style={{ width: windowWidth, flexDirection: 'row', justifyContent: 'center', marginBottom:20 }}>
                 <View style={{ width: 210 }}>
-                    <Animated.View style={{
+                    <View style={{
                         width: 97,
                         height: 1,
                         backgroundColor: '#281E30',
-                        transform: [{ translateX: scrollIndicatorPosition }]
-                    }} />
+                        marginLeft: isActiveState ? 0 : 113
+                    }}>
+                    </View>
                 </View>
             </View>
-            <ScrollView
-                style={{ marginTop: 20, maxWidth: windowWidth }}
-                horizontal
-                ref={scrollRef}
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                scrollEnabled={false}
-                onScroll={Animated.event(
-                    [{ nativeEvent: { contentOffset: { x: scrollIndicator } } }],
-                    { useNativeDriver: false }
-                )}
-                scrollEventThrottle={16}
-            >
-                <Discover
-                    props={props}
-                />
+
+            {isActiveState ?
                 <Feed
                     props={props}
                     onSetExpandKey={() => setExpandKey(expandKey + 1)}
                 />
-            </ScrollView>
+                :
+                <Discover
+                    props={props}
+                />
+            }
             {
                 noticeCount != 0 &&
                 <TouchableOpacity style={{

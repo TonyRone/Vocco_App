@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import * as Progress from "react-native-progress";
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { DescriptionText } from '../component/DescriptionText';
 import { SvgXml } from 'react-native-svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
@@ -206,6 +207,8 @@ const NotificationScreen = (props) => {
 
     const onAcceptRequest = (id, index) => {
         setIsLoading(true);
+        if (v == true)
+            RNVibrationFeedback.vibrateWith(1519);
         VoiceService.acceptFriend(id).then(async res => {
             if (res.respInfo.status == 201) {
                 let tp = requests;
@@ -230,6 +233,8 @@ const NotificationScreen = (props) => {
 
     const onFollowUser = (id, index) => {
         setIsLoading(true);
+        if (v == true)
+            RNVibrationFeedback.vibrateWith(1519);
         VoiceService.followFriend(id).then(async res => {
             let tp = requests;
             tp[index].towardFriend = { status: 'pending' };

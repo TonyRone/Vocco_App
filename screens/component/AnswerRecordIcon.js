@@ -8,6 +8,7 @@ import {
   Platform,
   Animated,
   Pressable,
+  Vibration,
 } from 'react-native';
 
 import AudioRecorderPlayer, {
@@ -18,6 +19,7 @@ import AudioRecorderPlayer, {
 } from 'react-native-audio-recorder-player';
 
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import RNFetchBlob from 'rn-fetch-blob';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import Draggable from 'react-native-draggable';
@@ -40,12 +42,10 @@ import { styles } from '../style/Common';
 export const AnswerRecordIcon = ({
   props,
   dem = 54,
-  expandKey = 0,
   bottom,
   left,
 }) => {
 
-  let isTemporary = props.navigation.state.params?.isTemporary;
 
   let { user, voiceState, refreshState } = useSelector((state) => state.user);
 
@@ -60,7 +60,6 @@ export const AnswerRecordIcon = ({
   const [isPaused, setIsPaused] = useState(true);
   const [IsExpanded, setIsExpanded] = useState(false);
   const [expand, setExpand] = useState(0);
-  const [temporary, setTemporary] = useState(isTemporary);
 
   const wasteTime = useRef(0);
   const dragPos = useRef(0);
@@ -74,7 +73,6 @@ export const AnswerRecordIcon = ({
 
   const clearRecorder = async () => {
     wasteTime.current = 0;
-    setTemporary(false);
     await recorderPlayer.resumeRecorder();
     await recorderPlayer.stopRecorder()
     recorderPlayer.removeRecordBackListener();
@@ -114,10 +112,7 @@ export const AnswerRecordIcon = ({
       setKey(prevKey => prevKey + 1);
       if (publish == true) {
         let tp = Math.max(wasteTime.current, 1);
-        if (recordId)
-          props.navigation.navigate('PostingAnswerVoice', { id: recordId, recordSecs: Math.ceil(tp / 1000.0) })
-        else
-          props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0), isTemporary: temporary })
+        props.navigation.navigate('PostingAnswerVoice', { id: recordId, recordSecs: Math.ceil(tp / 1000.0) })
         clearRecorder();
         setIsExpanded(false);
       }
@@ -129,6 +124,8 @@ export const AnswerRecordIcon = ({
   };
 
   const onChangeRecord = async (e, v = false) => {
+    if (v == true)
+      RNVibrationFeedback.vibrateWith(1519);
     if (v == true && isRecording == false) {
       setIsExpanded(true);
       onStartRecord();
@@ -157,14 +154,9 @@ export const AnswerRecordIcon = ({
   useEffect(() => {
     setFill(user.premium != 'none' ? 180 : 60);
     setKey(prevKey => prevKey + 1);
-    if (expandKey != expand) {
-      setExpand(expandKey);
-      setIsExpanded(true);
-      setTemporary(true);
-    }
     //dispatch(setVoiceState(voiceState+1));
     return () => clearRecorder();
-  }, [expandKey])
+  }, [])
 
   return (
     <Pressable
@@ -179,7 +171,7 @@ export const AnswerRecordIcon = ({
       onPress={() => onStopRecord(false)}
     >
       {IsExpanded &&
-        <Pressable onPressOut={()=>onStopRecord(false)} style={[styles.swipeModal, { backgroundColor: 'rgba(0, 0, 0, 0.1)' }]}>
+        <Pressable onPressOut={() => onStopRecord(false)} style={[styles.swipeModal, { backgroundColor: 'rgba(0, 0, 0, 0.1)' }]}>
           <>
             <Image
               style={{
@@ -261,10 +253,17 @@ export const AnswerRecordIcon = ({
           }}
           onDragRelease={(event, gestureState, bounds) => {
             dragPos.current = gestureState.dx;
-            if (gestureState.dx > 80)
-              onStopRecord(true)
-            else if (gestureState.dx < -80)
+            if (gestureState.dx > 80) {
+              onStopRecord(true);
+              RNVibrationFeedback.vibrateWith(1519);
+            }
+            else if (gestureState.dx < -80) {
               onStopRecord(false);
+              RNVibrationFeedback.vibrateWith(1519);
+              setTimeout(() => {
+                RNVibrationFeedback.vibrateWith(1519);
+              }, 300);
+            }
           }}
           onReverse={() => {
 

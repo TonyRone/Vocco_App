@@ -23,7 +23,7 @@ const PhoneLoginScreen = (props) => {
     const [error, setError] = useState("");
     const [formattedValue, setFormattedValue] = useState("");
     const [loading, setLoading] = useState(false);
-    const [country, setCountry] = useState('');
+    const [country, setCountry] = useState('France');
 
     const { t, i18n } = useTranslation();
     const phoneInput = useRef();

@@ -42,7 +42,6 @@ const PostingAnswerVoiceScreen = (props) => {
   const [icon, setIcon] = useState("😁");
   const [visibleReaction, setVisibleReaction] = useState(false);
   const [showHint, setShowHint] = useState(false);
-  const [showShareVoice, setShowShareVoice] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -78,7 +77,7 @@ const PostingAnswerVoiceScreen = (props) => {
         } else {
           Vibration.vibrate(100);
           dispatch(setRefreshState(!refreshState));
-          setShowShareVoice(jsonRes);
+          props.navigation.navigate("VoiceProfile", { id: recordId });
         }
         setIsLoading(false);
       })
@@ -171,11 +170,6 @@ const PostingAnswerVoiceScreen = (props) => {
       {showHint &&
         <ShareHint
           onCloseModal={() => { setShowHint(false); handleSubmit(); }}
-        />}
-      {showShareVoice &&
-        <ShareVoice
-          info={{ file: { url: showShareVoice.file.url }, title: 'answer voice' }}
-          onCloseModal={() => { setShowShareVoice(false); props.navigation.navigate("VoiceProfile", { id: recordId }); }}
         />}
     </KeyboardAvoidingView>
   );

@@ -97,6 +97,7 @@ const UserProfileScreen = (props) => {
         setFollowLoading(false);
         const jsonRes = await res.json();
         setUserInfo(jsonRes);
+        console.log(jsonRes);
         if (jsonRes.isFriend)
           setFollowState(jsonRes.isFriend.status);
         setIsPrivate(jsonRes.user.isPrivate);
@@ -260,15 +261,15 @@ const UserProfileScreen = (props) => {
             color="#FFFFFF"
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setAllFollows("Following")} style={{ alignItems: 'center' }}>
+        <TouchableOpacity onPress={() => setAllFollows("Likes")} style={{ alignItems: 'center' }}>
           <DescriptionText
-            text={t('Following')}
+            text={t('Likes')}
             fontSize={12}
             lineHeight={16}
             color="#F6EFFF"
           />
           <TitleText
-            text={userInfo.followings?.count}
+            text={userInfo.likes?.sum}
             fontFamily="SFProDisplay-Bold"
             fontSize={22}
             lineHeight={28}
@@ -425,7 +426,7 @@ const UserProfileScreen = (props) => {
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={{ height: 267, borderRadius: 20, borderWidth: 1, borderColor: '#F0F4FC', marginTop: 16, marginBottom: 50, marginHorizontal: 16 }}>
+            <View style={{ height: 267, borderRadius: 20, borderWidth: 0, borderColor: '#F0F4FC', marginTop: 16, marginBottom: 50, marginHorizontal: 16 }}>
               <TouchableOpacity onPress={() => setShowShareVoice(true)}>
                 <View style={[styles.rowSpaceBetween, { padding: 16, borderBottomWidth: 1, borderBottomColor: '#F0F4FC' }]}>
                   <DescriptionText

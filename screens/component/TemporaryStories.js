@@ -44,6 +44,7 @@ export const TemporaryStories = ({
         if (userId == '') {
           let flag = -1;
           jsonRes.forEach((element, index) => {
+            console.log(element.user.id," $ ",user.id)
             if (element.user.id == user.id && flag == -1) {
               flag = index;
             }

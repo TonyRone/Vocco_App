@@ -14,6 +14,7 @@ import { BottomButtons } from '../component/BottomButtons';
 import black_settingsSvg from '../../assets/notification/black_settings.svg';
 import searchSvg from '../../assets/login/search.svg';
 import new_messageSvg from '../../assets/chat/new_message.svg';
+import black_new_messageSvg from '../../assets/chat/black_new_message.svg';
 
 import { windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
@@ -174,7 +175,7 @@ const ChatScreen = (props) => {
                         <SvgXml
                             width="24"
                             height="24"
-                            xml={searchSvg}
+                            xml={black_new_messageSvg}
                         />
                     </TouchableOpacity>
                 </View>
@@ -191,7 +192,7 @@ const ChatScreen = (props) => {
                             key={index + 'friendItem_chat'}
                             props={props}
                             info={item}
-                            type='user'
+                            type='chatUser'
                             isUserName={true}
                         />)
                     }

@@ -40,10 +40,7 @@ export const FriendItem = ({
         if (type == 'story')
           props.navigation.navigate('VoiceProfile', { id: info.id });
         else {
-          if (info.user.id == user.id)
-            props.navigation.navigate('Profile');
-          else
-            props.navigation.navigate('UserProfile', { userId: info.user.id });
+          props.navigation.navigate("Conversation", { info: info});
         }
       }}
     >

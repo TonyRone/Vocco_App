@@ -44,7 +44,7 @@ export const AllCategory = ({
         ]}
       >
         <TitleText
-          text={t("All Category")}
+          text={t("All Categories")}
           fontSize={20}
           color="#281E30"
         />

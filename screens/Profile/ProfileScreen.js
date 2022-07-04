@@ -200,15 +200,15 @@ const ProfileScreen = (props) => {
               color="#FFFFFF"
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setAllFollows("Following")} style={{ alignItems: 'center' }}>
+          <TouchableOpacity onPress={() => setAllFollows("Likes")} style={{ alignItems: 'center' }}>
             <DescriptionText
-              text={t("Following")}
+              text={t("Likes")}
               fontSize={12}
               lineHeight={16}
               color="#F6EFFF"
             />
             <TitleText
-              text={userInfo.followings?.count}
+              text={userInfo.likes?.sum}
               fontSize={22}
               fontFamily="SFProDisplay-Bold"
               lineHeight={28}
@@ -276,7 +276,7 @@ const ProfileScreen = (props) => {
             text={user.bio}
           />}
           <TitleText
-            text={t('Your voices')}
+            text={t('Your stories')}
             fontSize={20}
             marginTop={21}
             marginBottom={3}

@@ -337,7 +337,7 @@ const VoiceProfileScreen = (props) => {
                 marginTop={24}
               />
               <DescriptionText
-                text={t("This voice hasn't answers. Be the first to write something back!")}
+                text={t("No answers. Be the first one to react to this story!")}
                 fontSize={17}
                 textAlign='center'
                 maxWidth={260}

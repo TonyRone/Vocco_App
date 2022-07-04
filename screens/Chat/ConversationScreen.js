@@ -19,6 +19,7 @@ import AudioRecorderPlayer, {
 } from 'react-native-audio-recorder-player';
 
 import * as Progress from "react-native-progress";
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { Menu } from 'react-native-material-menu';
 import RNFetchBlob from 'rn-fetch-blob';
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
@@ -129,7 +130,7 @@ const ConversationScreen = (props) => {
         if (updatedTime.getFullYear() != nowTime.getFullYear()) {
             return updatedTime.toDateString().substring(4);
         }
-        else if (nowTime.getMonth() != updatedTime.getMonth()||(nowTime.getDate() - updatedTime.getDate() > nowTime.getDay())) {
+        else if (nowTime.getMonth() != updatedTime.getMonth() || (nowTime.getDate() - updatedTime.getDate() > nowTime.getDay())) {
             return updatedTime.toDateString().substring(4, 10);
         }
         else if (nowTime.getDate() - 1 > updatedTime.getDate()) {
@@ -773,6 +774,12 @@ const ConversationScreen = (props) => {
                             }}
                             onDragRelease={(event, gestureState, bounds) => {
                                 dragPos.current = gestureState.dx;
+                                if (gestureState.dx <= -100) {
+                                    RNVibrationFeedback.vibrateWith(1519);
+                                    setTimeout(() => {
+                                        RNVibrationFeedback.vibrateWith(1519);
+                                    }, 300);
+                                }
                             }}
                             onReverse={() => {
 

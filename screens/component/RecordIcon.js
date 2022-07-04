@@ -8,6 +8,7 @@ import {
   Platform,
   Animated,
   Pressable,
+  Vibration,
 } from 'react-native';
 
 import AudioRecorderPlayer, {
@@ -19,6 +20,7 @@ import AudioRecorderPlayer, {
 
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
 import RNFetchBlob from 'rn-fetch-blob';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import Draggable from 'react-native-draggable';
 import { LinearTextGradient } from "react-native-text-gradient";
@@ -45,14 +47,11 @@ export const RecordIcon = ({
   left,
 }) => {
 
-  let isTemporary = props.navigation.state.params?.isTemporary;
-
   let { user, voiceState, refreshState } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
 
-  let recordId = props.navigation.state.params?.id;
   const [fill, setFill] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [key, setKey] = useState(0);
@@ -60,7 +59,7 @@ export const RecordIcon = ({
   const [isPaused, setIsPaused] = useState(true);
   const [IsExpanded, setIsExpanded] = useState(false);
   const [expand, setExpand] = useState(0);
-  const [temporary, setTemporary] = useState(isTemporary);
+  const [temporary, setTemporary] = useState(false);
 
   const wasteTime = useRef(0);
   const dragPos = useRef(0);
@@ -74,7 +73,7 @@ export const RecordIcon = ({
 
   const clearRecorder = async () => {
     wasteTime.current = 0;
-    setTemporary(false);
+    console.log("############################");
     await recorderPlayer.resumeRecorder();
     await recorderPlayer.stopRecorder()
     recorderPlayer.removeRecordBackListener();
@@ -114,10 +113,9 @@ export const RecordIcon = ({
       setKey(prevKey => prevKey + 1);
       if (publish == true) {
         let tp = Math.max(wasteTime.current, 1);
-        if (recordId)
-          props.navigation.navigate('PostingAnswerVoice', { id: recordId, recordSecs: Math.ceil(tp / 1000.0) })
-        else
-          props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0), isTemporary: temporary })
+        console.log(temporary);
+        props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0), isTemporary: temporary })
+        setTemporary(false);
         clearRecorder();
         setIsExpanded(false);
       }
@@ -129,6 +127,8 @@ export const RecordIcon = ({
   };
 
   const onChangeRecord = async (e, v = false) => {
+    if (v == true)
+      RNVibrationFeedback.vibrateWith(1519);
     if (v == true && isRecording == false) {
       setIsExpanded(true);
       onStartRecord();
@@ -158,6 +158,7 @@ export const RecordIcon = ({
     setFill(user.premium != 'none' ? 180 : 60);
     setKey(prevKey => prevKey + 1);
     if (expandKey != expand) {
+      console.log("WOWOWOW");
       setExpand(expandKey);
       setIsExpanded(true);
       setTemporary(true);
@@ -172,8 +173,8 @@ export const RecordIcon = ({
         position: 'absolute',
         bottom: IsExpanded ? 0 : bottom,
         left: IsExpanded ? 0 : left,
-        width: IsExpanded ? '100%' : dem,
-        height: IsExpanded ? '100%' : dem,
+        width: IsExpanded ? windowWidth : dem,
+        height: IsExpanded ? windowHeight : dem,
         elevation: 11
       }}
       onPress={() => onStopRecord(false)}
@@ -217,7 +218,7 @@ export const RecordIcon = ({
           <TitleText
             text={t("Click & hold to record")}
             fontSize={20}
-            marginTop={10}
+            marginTop={25}
             color="#281E30"
           />
           <View
@@ -325,10 +326,17 @@ export const RecordIcon = ({
           }}
           onDragRelease={(event, gestureState, bounds) => {
             dragPos.current = gestureState.dx;
-            if (gestureState.dx > 80)
-              onStopRecord(true)
-            else if (gestureState.dx < -80)
+            if (gestureState.dx > 80) {
+              onStopRecord(true);
+              RNVibrationFeedback.vibrateWith(1519);
+            }
+            else if (gestureState.dx < -80) {
               onStopRecord(false);
+              RNVibrationFeedback.vibrateWith(1519);
+              setTimeout(() => {
+                RNVibrationFeedback.vibrateWith(1519);
+              }, 300);
+            }
           }}
           onReverse={() => {
 

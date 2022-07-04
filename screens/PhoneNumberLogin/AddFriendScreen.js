@@ -112,6 +112,8 @@ const AddFriendScreen = (props) => {
                 {
                     activeUsers.map((item, index) => {
                         let isFollowed = followedUsers.includes(index);
+                        if(item.id == user.id)
+                            return null;
                         return <View key={"AddFriends" + index.toString()} style={[styles.rowSpaceBetween, { marginTop: 16 }]}>
                             <View style={styles.rowAlignItems}>
                                 <Image
