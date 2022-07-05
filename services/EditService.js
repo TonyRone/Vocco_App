@@ -10,9 +10,9 @@ class EditService {
             .fetch(
                 'POST',
                 `${API_URL}/account/changeemail?password=${data.password}&newemail=${data.newemail}`, {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
             );
     }
     async confirmVerify(data) {
@@ -22,9 +22,9 @@ class EditService {
             .fetch(
                 'POST',
                 `${API_URL}/account/changeemailverify?pseudo=${data}`, {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
             );
     }
 
@@ -35,9 +35,9 @@ class EditService {
             .fetch(
                 'POST',
                 `${API_URL}/account/resetpassword?oldpassword=${oldPassword}&newpassword=${newPassword}`, {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
             );
     }
     async changePremium(premium_state) {
@@ -47,9 +47,9 @@ class EditService {
             .fetch(
                 'POST',
                 `${API_URL}/account/changepremium?premium_state=${premium_state}`, {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
             );
     }
     async userNameVerify(userName) {
@@ -59,8 +59,8 @@ class EditService {
             .fetch(
                 'POST',
                 `${API_URL}/account/verifyusername?username=${userName}`, {
-                    'Authorization': `Bearer ${token}`
-                },
+                'Authorization': `Bearer ${token}`
+            },
             );
     }
     async changeProfile(data) {
@@ -70,10 +70,21 @@ class EditService {
             .fetch(
                 'PUT',
                 `${API_URL}/account/completeregister`, {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
                 JSON.stringify(data)
+            );
+    }
+
+    async deleteAccount() {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'DELETE',
+                `${API_URL}/account/deleteAccount`, {
+                'Authorization': `Bearer ${token}`
+            }
             );
     }
 }

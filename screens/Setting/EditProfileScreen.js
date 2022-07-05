@@ -11,6 +11,9 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 import DatePicker from 'react-native-date-picker';
+import { GoogleSignin } from 'react-native-google-signin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NavigationActions, StackActions } from 'react-navigation';
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
 import { MyButton } from '../component/MyButton';
@@ -36,7 +39,7 @@ import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
 import EditService from '../../services/EditService';
 import { useSelector, useDispatch } from 'react-redux';
-import { setUser } from '../../store/actions';
+import { setSocketInstance, setUser } from '../../store/actions';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 
@@ -44,7 +47,7 @@ const EditProfileScreen = (props) => {
 
     const { t, i18n } = useTranslation();
 
-    const user = useSelector((state) => state.user.user);
+    const { user, socketInstance } = useSelector((state) => state.user);
     const dispatch = useDispatch();
     let userData = { ...user };
 
@@ -74,6 +77,13 @@ const EditProfileScreen = (props) => {
 
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+    const onNavigate = (des, par = null) => {
+        const resetActionTrue = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: des, params: par })],
+        });
+        props.navigation.dispatch(resetActionTrue);
+    }
 
     const showEye = () => {
         setSecureTextEntry(!secureTextEntry);
@@ -85,6 +95,17 @@ const EditProfileScreen = (props) => {
     }
 
     const deleteAccount = () => {
+        EditService.deleteAccount().then(res => {
+            await AsyncStorage.removeItem(
+                ACCESSTOKEN_KEY
+            );
+            const isSignedIn = await GoogleSignin.isSignedIn();
+            if (isSignedIn)
+                await GoogleSignin.signOut();
+            socketInstance.disconnect();
+            dispatch(setSocketInstance(null));
+            onNavigate("Welcome")
+        })
         setShowModal(false);
     }
 
