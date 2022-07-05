@@ -73,7 +73,6 @@ export const RecordIcon = ({
 
   const clearRecorder = async () => {
     wasteTime.current = 0;
-    console.log("############################");
     await recorderPlayer.resumeRecorder();
     await recorderPlayer.stopRecorder()
     recorderPlayer.removeRecordBackListener();
@@ -113,7 +112,6 @@ export const RecordIcon = ({
       setKey(prevKey => prevKey + 1);
       if (publish == true) {
         let tp = Math.max(wasteTime.current, 1);
-        console.log(temporary);
         props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0), isTemporary: temporary })
         setTemporary(false);
         clearRecorder();
@@ -158,7 +156,6 @@ export const RecordIcon = ({
     setFill(user.premium != 'none' ? 180 : 60);
     setKey(prevKey => prevKey + 1);
     if (expandKey != expand) {
-      console.log("WOWOWOW");
       setExpand(expandKey);
       setIsExpanded(true);
       setTemporary(true);

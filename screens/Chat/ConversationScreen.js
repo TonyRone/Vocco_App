@@ -579,7 +579,6 @@ const ConversationScreen = (props) => {
             </View>}
             <ScrollView style={{ paddingHorizontal: 8 }} ref={scrollRef} onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}>
                 {messages.map((item, index) => {
-                    console.log(item, index);
                     let ancestorIdx = null;
                     if (item.ancestorId) {
                         ancestorIdx = messages.findIndex(msg => (msg.id == item.ancestorId));

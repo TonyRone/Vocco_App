@@ -278,7 +278,7 @@ const UpdatePictureScreen = (props) => {
                     paddingHorizontal: 16,
                     position: 'absolute',
                     width: '100%',
-                    bottom: 20
+                    bottom: 30
                 }}
             >
                 <MyButton

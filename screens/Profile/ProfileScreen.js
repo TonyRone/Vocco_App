@@ -78,7 +78,6 @@ const ProfileScreen = (props) => {
       if (res.respInfo.status == 200) {
         const jsonRes = await res.json();
         setUserInfo(jsonRes);
-        console.log(jsonRes);
       }
     })
       .catch(err => {

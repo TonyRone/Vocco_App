@@ -34,8 +34,6 @@ export const NotificationItem = ({
     onDeleteItem = () => { }
 }) => {
 
-    console.log(towardFriend, " $$$$$$$$$$$$$$$$$$");
-
     const { t, i18n } = useTranslation();
 
     const [isDeleted, setIsDeleted] = useState(false);

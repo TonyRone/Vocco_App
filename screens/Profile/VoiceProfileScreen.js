@@ -7,10 +7,11 @@ import {
   Text,
   Platform,
   ImageBackground,
-  Modal
+  Modal,
+  TouchableOpacity
 } from 'react-native';
 
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import * as Progress from "react-native-progress";
 import { useTranslation } from 'react-i18next';
 import { HeartIcon } from '../component/HeartIcon';
@@ -232,7 +233,7 @@ const VoiceProfileScreen = (props) => {
               else
                 props.navigation.navigate('UserProfile', { userId: info.user.id });
             }}>
-            {info && <TouchableOpacity
+            {info && <View
               style={{ paddingRight: 12 }}
             >
               {info && <Image
@@ -255,7 +256,7 @@ const VoiceProfileScreen = (props) => {
                   {info?.emoji}
                 </Text>
               </View>
-            </TouchableOpacity>}
+            </View>}
             <SemiBoldText
               text={info?.user.name}
               fontFamily="SFProDisplay-Semibold"

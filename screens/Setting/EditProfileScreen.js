@@ -95,9 +95,7 @@ const EditProfileScreen = (props) => {
     }
 
     const deleteAccount = () => {
-        console.log("strange");
         EditService.deleteAccount().then(async res => {
-            console.log(res);
             await AsyncStorage.removeItem(
                 ACCESSTOKEN_KEY
             );
