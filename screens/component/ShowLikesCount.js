@@ -76,7 +76,7 @@ export const ShowLikesCount = ({
               end={{ x: 0, y: 1 }}
             >
               <SemiBoldText
-                text={userInfo.likes.sum}
+                text={userInfo.likes}
                 fontSize={18}
                 textAlign='center'
                 lineHeight={23}

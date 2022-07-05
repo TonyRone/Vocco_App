@@ -271,7 +271,7 @@ const UserProfileScreen = (props) => {
             color="#F6EFFF"
           />
           <TitleText
-            text={userInfo.likes?.sum}
+            text={userInfo.likes}
             fontFamily="SFProDisplay-Bold"
             fontSize={22}
             lineHeight={28}
