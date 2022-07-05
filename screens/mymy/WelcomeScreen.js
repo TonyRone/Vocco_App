@@ -52,7 +52,7 @@ const WelcomeScreen = (props) => {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.loginButton}
-                                onPress={() => props.navigation.navigate('Login')}
+                                onPress={() => props.navigation.navigate('PhoneLogin')}
                             >
                                 <Text style={styles.loginText}>{t("Log In")}</Text>
                             </TouchableOpacity>
