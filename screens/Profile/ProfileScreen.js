@@ -28,6 +28,7 @@ import { TemporaryStories } from '../component/TemporaryStories';
 import { RecordIcon } from '../component/RecordIcon';
 import { FollowUsers } from '../component/FollowUsers';
 import { ShareQRcode } from '../component/ShareQRcode';
+import { ShowLikesCount } from '../component/ShowLikesCount';
 
 const ProfileScreen = (props) => {
 
@@ -49,6 +50,7 @@ const ProfileScreen = (props) => {
   const [loadKey, setLoadKey] = useState(0);
   const [allFollows, setAllFollows] = useState("");
   const [showQR, setShowQR] = useState(false);
+  const [showLikesCount, setShowLikesCount] = useState(false);
 
   if (props.navigation.state.params)
     () => setRefresh(!refresh);
@@ -76,6 +78,7 @@ const ProfileScreen = (props) => {
       if (res.respInfo.status == 200) {
         const jsonRes = await res.json();
         setUserInfo(jsonRes);
+        console.log(jsonRes);
       }
     })
       .catch(err => {
@@ -200,7 +203,7 @@ const ProfileScreen = (props) => {
               color="#FFFFFF"
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setAllFollows("Likes")} style={{ alignItems: 'center' }}>
+          <TouchableOpacity onPress={() => setShowLikesCount(true)} style={{ alignItems: 'center' }}>
             <DescriptionText
               text={t("Likes")}
               fontSize={12}
@@ -293,9 +296,9 @@ const ProfileScreen = (props) => {
         active='profile'
         props={props}
       />
-      {showQR&&<ShareQRcode
+      {showQR && <ShareQRcode
         userInfo={user}
-        onCloseModal={()=> setShowQR(false) }
+        onCloseModal={() => setShowQR(false)}
       />}
       {allFollows != '' &&
         <FollowUsers
@@ -303,6 +306,12 @@ const ProfileScreen = (props) => {
           userId={user.id}
           followType={allFollows}
           onCloseModal={() => setAllFollows('')}
+        />
+      }
+      {showLikesCount &&
+        <ShowLikesCount
+          userInfo={userInfo}
+          onCloseModal={() => setShowLikesCount(false)}
         />
       }
       <RecordIcon

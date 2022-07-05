@@ -42,6 +42,7 @@ import { t } from 'i18next';
 import { TemporaryStories } from '../component/TemporaryStories';
 import { FollowUsers } from '../component/FollowUsers';
 import { ShareQRcode } from '../component/ShareQRcode';
+import { ShowLikesCount } from '../component/ShowLikesCount';
 
 const UserProfileScreen = (props) => {
 
@@ -61,6 +62,7 @@ const UserProfileScreen = (props) => {
   const [loadKey, setLoadKey] = useState(0);
   const [allFollows, setAllFollows] = useState("");
   const [showQR, setShowQR] = useState(false);
+  const [showLikesCount, setShowLikesCount] = useState(false);
 
   let { user, refreshState } = useSelector((state) => {
     return (
@@ -261,7 +263,7 @@ const UserProfileScreen = (props) => {
             color="#FFFFFF"
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setAllFollows("Likes")} style={{ alignItems: 'center' }}>
+        <TouchableOpacity onPress={() => setShowLikesCount(true)} style={{ alignItems: 'center' }}>
           <DescriptionText
             text={t('Likes')}
             fontSize={12}
@@ -367,7 +369,7 @@ const UserProfileScreen = (props) => {
             </> :
               <>
                 <TitleText
-                  text={t("User voices")}
+                  text={t("User stories")}
                   fontSize={20}
                   marginTop={23}
                   marginBottom={3}
@@ -570,6 +572,12 @@ const UserProfileScreen = (props) => {
           userId={userId}
           followType={allFollows}
           onCloseModal={() => setAllFollows('')}
+        />
+      }
+      {showLikesCount &&
+        <ShowLikesCount
+          userInfo={userInfo}
+          onCloseModal={()=> setShowLikesCount(false) }
         />
       }
     </KeyboardAvoidingView>

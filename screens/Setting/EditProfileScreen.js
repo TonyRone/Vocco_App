@@ -34,7 +34,7 @@ import manSvg from '../../assets/login/man.svg';
 import womanSvg from '../../assets/login/woman.svg';
 import moreSvg from '../../assets/login/more.svg';
 import privacySvg from '../../assets/setting/privacy.svg';
-import { Avatars, windowHeight, windowWidth } from '../../config/config';
+import { ACCESSTOKEN_KEY, Avatars, windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
 import EditService from '../../services/EditService';
@@ -95,7 +95,9 @@ const EditProfileScreen = (props) => {
     }
 
     const deleteAccount = () => {
-        EditService.deleteAccount().then(res => {
+        console.log("strange");
+        EditService.deleteAccount().then(async res => {
+            console.log(res);
             await AsyncStorage.removeItem(
                 ACCESSTOKEN_KEY
             );
@@ -104,9 +106,9 @@ const EditProfileScreen = (props) => {
                 await GoogleSignin.signOut();
             socketInstance.disconnect();
             dispatch(setSocketInstance(null));
-            onNavigate("Welcome")
+            onNavigate("Welcome");
+            setShowModal(false);
         })
-        setShowModal(false);
     }
 
     const setUserGender = (gd) => {
@@ -568,7 +570,7 @@ const EditProfileScreen = (props) => {
                                     onPress={() => deleteAccount()}
                                     color='#E41717'
                                     shadowColor='rgba(244, 13, 13, 0.47)'
-                                    active={password ? true : false}
+                                //active={password ? true : false}
                                 />
                             </View>
                         </View>

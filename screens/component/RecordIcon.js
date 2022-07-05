@@ -218,7 +218,7 @@ export const RecordIcon = ({
           <TitleText
             text={t("Click & hold to record")}
             fontSize={20}
-            marginTop={25}
+            marginTop={30}
             color="#281E30"
           />
           <View

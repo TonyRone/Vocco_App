@@ -78,6 +78,7 @@ class EditService {
     }
 
     async deleteAccount() {
+        console.log("SSSSSSSSSSSSSSSSS");
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(
