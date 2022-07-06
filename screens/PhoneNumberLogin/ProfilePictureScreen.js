@@ -97,18 +97,18 @@ const ProfilePictureScreen = (props) => {
     }
 
     const selectFileByCamera = async () => {
-        setModalVisible(false);
         await ImagePicker.openCamera(options).then(image => {
             setSource(image);
             setAvatarId(0);
+            setModalVisible(false);
         });
     }
 
     const selectFile = async () => {
-        setModalVisible(false);
         await ImagePicker.openPicker(options).then(image => {
             setSource(image);
             setAvatarId(0);
+            setModalVisible(false);
         });
     }
 
@@ -140,7 +140,7 @@ const ProfilePictureScreen = (props) => {
                     progress={5}
                 />
                 <TouchableOpacity
-                    onPress={()=>{
+                    onPress={() => {
                         setSource(null);
                         setAvatarId(initId);
                         handleSubmit();
