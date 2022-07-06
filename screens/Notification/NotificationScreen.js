@@ -207,8 +207,7 @@ const NotificationScreen = (props) => {
 
     const onAcceptRequest = (id, index) => {
         setIsLoading(true);
-        if (v == true)
-            RNVibrationFeedback.vibrateWith(1519);
+        RNVibrationFeedback.vibrateWith(1519);
         VoiceService.acceptFriend(id).then(async res => {
             if (res.respInfo.status == 201) {
                 let tp = requests;
@@ -233,8 +232,7 @@ const NotificationScreen = (props) => {
 
     const onFollowUser = (id, index) => {
         setIsLoading(true);
-        if (v == true)
-            RNVibrationFeedback.vibrateWith(1519);
+        RNVibrationFeedback.vibrateWith(1519);
         VoiceService.followFriend(id).then(async res => {
             let tp = requests;
             tp[index].towardFriend = { status: 'pending' };

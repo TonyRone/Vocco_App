@@ -86,6 +86,7 @@ const VoiceProfileScreen = (props) => {
         setIsLike(jsonRes[0].isLike);
         setLikeCount(jsonRes[0].likesCount);
         setInfo(jsonRes[0]);
+        console.log(jsonRes[0]);
       }
     })
       .catch(err => {
@@ -142,12 +143,12 @@ const VoiceProfileScreen = (props) => {
     setShowModal(false);
   }
 
-  const onShareAudio = useCallback(() => {
+  const onShareAudio = () => {
     Share.open({
       url: info.file.url,
       type: 'audio/mp3',
     });
-  }, []);
+  }
 
   const deleteConfirm = () => {
     setShowModal(false);
@@ -499,9 +500,10 @@ const VoiceProfileScreen = (props) => {
                 <Image
                   style={{
                     width: 38,
-                    height: 38
+                    height: 38,
+                    borderRadius:19
                   }}
-                  source={require('../../assets/emotican/frequently/image_' + 2 + '.png')}
+                  source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
                 />
                 <View style={{ marginLeft: 18 }}>
                   <SemiBoldText

@@ -160,7 +160,7 @@ export const Stories = ({
           source={require('../../assets/common/happy.png')}
         />
         <DescriptionText
-          marginLeft={15}
+          marginLeft={3}
           text={t("You are up to date 🎉! Share vocco with you friends!")}
         />
       </View>

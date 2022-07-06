@@ -212,6 +212,7 @@ const ConversationScreen = (props) => {
                 tp.sort(onCompare);
                 setMessages([...tp]);
                 socketInstance.emit("newMessage", { info: jsonRes });
+                RNVibrationFeedback.vibrateWith(1519);
             }
             setIsLoading(false);
         })

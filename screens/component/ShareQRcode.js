@@ -32,7 +32,7 @@ export const ShareQRcode = ({
     myQRCode.toDataURL((dataURL) => {
       let shareImageBase64 = {
         title: 'Vocco',
-        message:"Share the profile with QRcode",
+        message: "Share the profile with QRcode",
         url: `data:image/png;base64,${dataURL}`,
         subject: 'Share Link', //  for email
       };
@@ -43,6 +43,12 @@ export const ShareQRcode = ({
   const closeModal = () => {
     onCloseModal();
     setShowQR(false);
+  }
+
+  const onLimit = (v) => {
+    return ((v).length > 9) ?
+      (((v).substring(0, 6)) + '...') :
+      v;
   }
 
   return (
@@ -72,7 +78,7 @@ export const ShareQRcode = ({
               lineHeight={28}
               color='#263449'
             />
-            <TouchableOpacity onPress={() => { }}>
+            <TouchableOpacity onPress={() => shareQRCode()}>
               <DescriptionText
                 text={t('Share')}
                 fontSize={17}
@@ -107,7 +113,7 @@ export const ShareQRcode = ({
                 end={{ x: 0, y: 1 }}
               >
                 <SemiBoldText
-                  text={'@' + userInfo.name}
+                  text={onLimit('@' + userInfo.name)}
                   fontSize={20}
                   lineHeight={24}
                 />
