@@ -112,9 +112,21 @@ const NotificationScreen = (props) => {
         VoiceService.getRequests(requests.length).then(async res => {
             if (res.respInfo.status == 200) {
                 const jsonRes = await res.json();
-                if (jsonRes.length > 0)
-                    setRequests(requests.length == 0 ? jsonRes : [...requests, ...jsonRes]);
-                setReqLoadMore(jsonRes.length);
+                console.log(jsonRes[0]);
+                let result = jsonRes.reduce((unique, o) => {
+                    if (!unique.some(obj => (
+                        o.type=='friendRequest'&&
+                        obj.type==o.type&&
+                        obj.fromUser.id === o.fromUser.id&&
+                        o.friend.status==obj.friend.status
+                        ))) {
+                      unique.push(o);
+                    }
+                    return unique;
+                  }, []);
+                if (result.length > 0)
+                    setRequests(result.length == 0 ? result : [...requests, ...result]);
+                setReqLoadMore(result.length);
                 setIsReqLoading(false);
             }
         })
@@ -212,9 +224,9 @@ const NotificationScreen = (props) => {
             if (res.respInfo.status == 201) {
                 let tp = requests;
                 tp[index].friend.status = 'accepted';
-                setIsLoading(false);
                 setRequests([...tp]);
             }
+            setIsLoading(false);
         })
             .catch(err => {
                 console.log(err);

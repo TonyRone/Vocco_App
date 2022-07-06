@@ -3,7 +3,7 @@ import { KeyboardAvoidingView, Image, PermissionsAndroid, Platform } from 'react
 import io from "socket.io-client";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE, APP_NAV } from '../../config/config';
+import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE, APP_NAV, OPEN_COUNT } from '../../config/config';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -17,7 +17,7 @@ const LogoScreen = (props) => {
 
     const { t, i18n } = useTranslation();
 
-    let { socketInstance } = useSelector((state) => {
+    let { user, socketInstance } = useSelector((state) => {
         return (
             state.user
         )
@@ -25,7 +25,19 @@ const LogoScreen = (props) => {
 
     const dispatch = useDispatch();
 
-    const onGoScreen = async (jsonRes) => {
+    const onGoScreen = async (jsonRes, prevOpenCount) => {
+        let openCount = await AsyncStorage.getItem(OPEN_COUNT);
+        if (openCount != prevOpenCount){
+            return;
+        }
+        if(prevOpenCount == null)
+            openCount = "1";
+        else
+            openCount =  (Number(prevOpenCount) + 1).toString();
+        await AsyncStorage.setItem(
+            OPEN_COUNT,
+            openCount
+        );
         dispatch(setUser(jsonRes));
         let navigateScreen = 'Home';
         if (!jsonRes.id) {
@@ -37,8 +49,8 @@ const LogoScreen = (props) => {
             navigateScreen = 'InputBirthday';
         } else if (!jsonRes.gender) {
             navigateScreen = 'SelectIdentify';
-        // } else if (!jsonRes.avatar&&!jsonRes.avatarNumber) {
-        //     navigateScreen = 'ProfilePicture';
+            // } else if (!jsonRes.avatar&&!jsonRes.avatarNumber) {
+            //     navigateScreen = 'ProfilePicture';
         } else {
             const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
             if (tutorial_check)
@@ -53,14 +65,15 @@ const LogoScreen = (props) => {
         props.navigation.dispatch(resetActionTrue);
     }
 
-    const onCreateSocket = (jsonRes) => {
+    const onCreateSocket = async (jsonRes) => {
+        let open_count = await AsyncStorage.getItem(OPEN_COUNT);
         if (socketInstance == null) {
             let socket = io(SOCKET_URL);
             dispatch(setSocketInstance(socket));
             socket.on("connect", () => {
                 socket.emit("login", { uid: jsonRes.id, email: jsonRes.email, isNew: false }, (res) => {
                     if (res == "Success") {
-                        onGoScreen(jsonRes);
+                        onGoScreen(jsonRes, open_count);
                     }
                     else {
                         props.navigation.navigate('Welcome');
@@ -69,7 +82,7 @@ const LogoScreen = (props) => {
             })
         }
         else
-            onGoScreen(jsonRes);
+            onGoScreen(jsonRes, open_count);
     }
     const checkLogin = async () => {
         let mainLanguage = await AsyncStorage.getItem(MAIN_LANGUAGE);

@@ -97,60 +97,70 @@ const AppNavigator = createStackNavigator({
     screen: LogoScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Welcome: {
     screen: WelcomeScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Login: {
     screen: LoginScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Register: {
     screen: RegisterScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Verify: {
     screen: VerifyScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Username: {
     screen: UsernameScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Birthday: {
     screen: BirthdayScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Identify: {
     screen: IdentifyScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Country: {
     screen: CountryScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Photo: {
     screen: PhotoScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
 
@@ -159,6 +169,7 @@ const AppNavigator = createStackNavigator({
     screen: TutorialScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
 
@@ -167,13 +178,14 @@ const AppNavigator = createStackNavigator({
     screen: DiscoverScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Search: {
     screen: SearchScreen,
     navigationOptions: {
       headerShown: false,
-      cardStyleInterpolator: slideAnimation2
+      animationEnabled:false
     }
   },
 
@@ -182,6 +194,7 @@ const AppNavigator = createStackNavigator({
     screen: FeedScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
 
@@ -189,6 +202,7 @@ const AppNavigator = createStackNavigator({
     screen: HomeScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
 
@@ -197,180 +211,210 @@ const AppNavigator = createStackNavigator({
     screen: HoldRecordScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   PostingVoice: {
     screen: PostingVoiceScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Profile: {
     screen: ProfileScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   UserProfile: {
     screen: UserProfileScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   UserProfileList: {
     screen: UserProfileListScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   VoiceProfile: {
     screen: VoiceProfileScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Setting: {
     screen: SettingScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   EditProfile: {
     screen: EditProfileScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   ChangeEmail: {
     screen: ChangeEmailScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   ChangePassword: {
     screen: ChangePasswordScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   ShareFriend: {
     screen: ShareFriendScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Contact: {
     screen: ContactScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Notification: {
     screen: NotificationScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   PostingAnswerVoice: {
     screen: PostingAnswerVoiceScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Share: {
     screen: ShareScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Premium: {
     screen: PremiumScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Chat: {
     screen: ChatScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Friends: {
     screen: FriendsScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   Conversation: {
     screen: ConversationScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   PhoneRegister: {
     screen: PhoneRegisterScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   ProfilePicture: {
     screen: ProfilePictureScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   MainName: {
     screen: MainNameScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   PhoneVerify: {
     screen: PhoneVerifyScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   PickName: {
     screen: PickNameScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   InputBirthday: {
     screen: InputBirthdayScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   SelectIdentify: {
     screen: SelectIdentifyScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   PhoneLogin: {
     screen: PhoneLoginScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   UpdatePicture: {
     screen: UpdatePictureScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   SelectTopic: {
     screen: SelectTopicScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
   AddFriend: {
     screen: AddFriendScreen,
     navigationOptions: {
       headerShown: false,
+      animationEnabled:false
     }
   },
 },

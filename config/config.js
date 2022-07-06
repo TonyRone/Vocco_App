@@ -14,7 +14,9 @@ export const SHARE_CHECK = "firstshare";
 export const DEVICE_TOKEN = "devicetoken";
 export const APP_NAV = "appnav";
 export const DEVICE_OS = "deviceos";
-export const MAIN_LANGUAGE = 'main_language';
+export const MAIN_LANGUAGE = "main_language";
+export const RECENT_LIST = "recent_list";
+export const OPEN_COUNT = "openCount";
 
 export const Categories = 
 [

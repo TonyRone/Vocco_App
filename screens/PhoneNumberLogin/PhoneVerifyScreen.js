@@ -14,7 +14,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import '../../language/i18n';
 
 import { MyProgressBar } from '../component/MyProgressBar';
-import { windowWidth, windowHeight } from '../../config/config';
+import { windowWidth, windowHeight, OPEN_COUNT } from '../../config/config';
 import { TextInput } from 'react-native-gesture-handler';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import AuthService from '../../services/AuthService';
@@ -70,7 +70,18 @@ const PhoneVerifyScreen = (props) => {
         })
     }
 
-    const onGoScreen = async (jsonRes) => {
+    const onGoScreen = async (jsonRes, prevOpenCount) => {
+        let openCount = await AsyncStorage.getItem(OPEN_COUNT);
+        if (openCount != prevOpenCount)
+            return;
+        if (prevOpenCount == null)
+            openCount = "1";
+        else
+            openCount = (Number(prevOpenCount) + 1).toString();
+        await AsyncStorage.setItem(
+            OPEN_COUNT,
+            openCount
+        );
         jsonRes.country = country;
         dispatch(setUser(jsonRes));
         let navigateScreen = 'Home';
@@ -83,8 +94,8 @@ const PhoneVerifyScreen = (props) => {
             navigateScreen = 'InputBirthday';
         } else if (!jsonRes.gender) {
             navigateScreen = 'SelectIdentify';
-        // } else if (!jsonRes.avatar&&!jsonRes.avatarId) {
-        //     navigateScreen = 'ProfilePicture';
+            // } else if (!jsonRes.avatar&&!jsonRes.avatarId) {
+            //     navigateScreen = 'ProfilePicture';
         } else {
             const tutorial_check = await AsyncStorage.getItem(TUTORIAL_CHECK);
             if (tutorial_check)
@@ -99,14 +110,15 @@ const PhoneVerifyScreen = (props) => {
         props.navigation.dispatch(resetActionTrue);
     }
 
-    const onCreateSocket = (jsonRes, isRegister) => {
+    const onCreateSocket = async (jsonRes, isRegister) => {
+        let open_count = await AsyncStorage.getItem(OPEN_COUNT);
         if (socketInstance == null) {
             let socket = io(SOCKET_URL);
             dispatch(setSocketInstance(socket));
             socket.on("connect", () => {
                 socket.emit("login", { uid: jsonRes.id, email: jsonRes.phoneNumber, isNew: isRegister }, (res) => {
                     if (res == "Success") {
-                        onGoScreen(jsonRes);
+                        onGoScreen(jsonRes, open_count);
                     }
                     else {
                         setError({
@@ -117,7 +129,7 @@ const PhoneVerifyScreen = (props) => {
             })
         }
         else
-            onGoScreen(jsonRes);
+            onGoScreen(jsonRes, open_count);
     }
 
     const onSetUserInfo = async (accessToken, refreshToken, isRegister = false) => {

@@ -485,7 +485,7 @@ const VoiceProfileScreen = (props) => {
           </View>
         </View>
       </View>}
-      <Modal
+      {info&&<Modal
         animationType="slide"
         transparent={true}
         visible={showModal}
@@ -585,7 +585,7 @@ const VoiceProfileScreen = (props) => {
             <View style={styles.segmentContainer}></View>
           </View>
         </Pressable>
-      </Modal>
+      </Modal>}
       <Modal
         animationType="slide"
         transparent={true}

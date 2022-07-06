@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 
 import * as Progress from "react-native-progress";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import '../../language/i18n';
@@ -31,7 +32,7 @@ import box_blankSvg from '../../assets/discover/box_blank.svg';
 import image_shadowSvg from '../../assets/discover/image_shadow.svg';
 import searchSvg from '../../assets/login/search.svg';
 import closeCircleSvg from '../../assets/common/close-circle.svg';
-import { Avatars, Categories, windowHeight, windowWidth } from '../../config/config';
+import { Avatars, Categories, RECENT_LIST, windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { Stories } from '../component/Stories';
 import { RecordIcon } from '../component/RecordIcon';
@@ -97,6 +98,10 @@ const SearchScreen = (props) => {
     setLabel(title);
     setSearchStory(recordId);
     setShowVoices(true);
+    // await AsyncStorage.setItem(
+    //   RECENT_LIST,
+    //   token
+    // );
   }
 
   const setLiked = () => {
