@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, Pressable } from "react-native";
+import { View, Pressable, Modal } from "react-native";
+import AutoHeightImage from 'react-native-auto-height-image';
 import { SvgXml } from 'react-native-svg';
 import { useSelector } from 'react-redux';
 import replySvg from '../../assets/chat/reply-icon.svg';
@@ -12,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { MessageContext } from "./MessageContext";
 import { MessageContent } from "./MessageContent";
+import { DescriptionText } from "./DescriptionText";
 
 export const MessageItem = ({
   props,
@@ -27,10 +29,23 @@ export const MessageItem = ({
   const { user } = useSelector((state) => state.user);
 
   const [showContext, setShowContext] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
 
   const { t, i18n } = useTranslation();
 
   const isSender = (user.id == info.user.id);
+
+  const onPressContent = () => {
+    if (isSelect >= 0)
+      onSelectItem();
+    else {
+      setIsSelected(true);
+    }
+  }
+
+  const onLongPressContent = () => {
+    if (isSelect == -1) setShowContext(true)
+  }
 
   return (
     <>
@@ -62,6 +77,8 @@ export const MessageItem = ({
               <View>
                 <MessageContent
                   info={ancestorInfo}
+                  onPressContent={onPressContent}
+                  onLongPressContent={onLongPressContent}
                 />
                 <View style={{
                   marginTop: 8,
@@ -71,6 +88,8 @@ export const MessageItem = ({
                   <MessageContent
                     info={info}
                     isAnswer={true}
+                    onPressContent={onPressContent}
+                    onLongPressContent={onLongPressContent}
                   />
                   <SvgXml
                     width={23}
@@ -84,6 +103,8 @@ export const MessageItem = ({
             :
             <MessageContent
               info={info}
+              onPressContent={onPressContent}
+              onLongPressContent={onLongPressContent}
             />
           }
         </Pressable>
@@ -99,6 +120,57 @@ export const MessageItem = ({
           onCloseModal={() => setShowContext(false)}
         />
       }
+      {isSelected && <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isSelected}
+        onRequestClose={() => {
+          setIsSelected(false);
+        }}
+      >
+        <Pressable onPressOut={() => setIsSelected(false)} style={[styles.swipeModal, { alignItems: 'center', justifyContent: 'center' }]}>
+          <View style={{
+            width: windowWidth,
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            marginRight: 50,
+            marginBottom: 14
+          }}>
+            <DescriptionText
+              text={'X'}
+              fontSize={20}
+              lineHeight={20}
+              color="#FFF"
+            />
+          </View>
+          <View>
+            <AutoHeightImage
+              source={{ uri: info.file.url }}
+              width={windowWidth - 48}
+              style={{
+                borderRadius: 20,
+                borderWidth: 4,
+                borderColor: '#FFF'
+              }}
+            />
+            <View style={{
+              position: 'absolute',
+              bottom: 8,
+              right: 8,
+              padding: 8,
+              borderRadius: 14,
+              backgroundColor: 'rgba(54, 36, 68, 0.8)'
+            }}>
+              <DescriptionText
+                text={new Date(info.createdAt).toISOString().substr(11, 5)}
+                lineHeight={12}
+                fontSize={11}
+                color='#F6EFFF'
+              />
+            </View>
+          </View>
+        </Pressable>
+      </Modal>}
     </>
   );
 };

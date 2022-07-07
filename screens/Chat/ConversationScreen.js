@@ -411,8 +411,8 @@ const ConversationScreen = (props) => {
                         <View style={styles.rowAlignItems}>
                             <TouchableOpacity onPress={() => onNavigate("Chat")}>
                                 <SvgXml
-                                    width={24}
-                                    height={24}
+                                    width={32}
+                                    height={32}
                                     xml={arrowBendUpLeft}
                                 />
                             </TouchableOpacity>

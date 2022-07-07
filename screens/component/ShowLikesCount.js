@@ -19,7 +19,7 @@ import { heightRate, styles } from '../style/Common';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Avatars } from '../../config/config';
+import { Avatars, windowWidth } from '../../config/config';
 import { SemiBoldText } from './SemiBoldText';
 
 export const ShowLikesCount = ({
@@ -107,6 +107,13 @@ export const ShowLikesCount = ({
             />
           </Pressable>
         </View>
+        <Image
+          style={{
+            position:'absolute',
+            left: (windowWidth-448)/2,
+          }}
+          source={require('../../assets/profile/LikesBack1.png')}
+        />
       </Pressable>
     </Modal>
   );

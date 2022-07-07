@@ -179,6 +179,13 @@ const UserProfileScreen = (props) => {
       setShowEnd(false);
     }, 2000);
   }
+
+  const onLimit = (v) => {
+    return ((v).length > 8) ?
+      (((v).substring(0, 5)) + '...') :
+      v;
+  }
+
   useEffect(() => {
     getUserInfo()
     getUserVoices();
@@ -296,7 +303,7 @@ const UserProfileScreen = (props) => {
               <View>
                 <View style={styles.rowAlignItems}>
                   <TitleText
-                    text={userInfo.user?.name}
+                    text={onLimit(userInfo.user?.name)}
                     fontFamily="SFProDisplay-Bold"
                     lineHeight={33}
                   />

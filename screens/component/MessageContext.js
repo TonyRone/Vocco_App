@@ -56,9 +56,9 @@ export const MessageContext = ({
         closeModal();
       }}
     >
-      <Pressable onPressOut={closeModal} style={styles.swipeModal}>
+      <Pressable onPressOut={closeModal} style={[styles.swipeModal,{justifyContent:'center'}]}>
         <View
-          style={{ marginTop: "25%", paddingHorizontal: 8 }}
+          style={{paddingHorizontal: 8 }}
         >
           <MessageItem
             props={props}

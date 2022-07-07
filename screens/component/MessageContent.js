@@ -17,14 +17,22 @@ import NavigationService from "../../services/NavigationService";
 
 export const MessageContent = ({
   info,
-  isAnswer = false
+  isAnswer = false,
+  onPressContent = () => { },
+  onLongPressContent = () => { }
 }) => {
 
   const { user } = useSelector((state) => state.user);
 
   const { t, i18n } = useTranslation();
+  //console.log(new Date().getTimezoneOffset());
 
-  const [isSelected, setIsSelected] = useState(false);
+  const dateString = info.createdAt
+  const userOffset = 120 * 60 * 1000;
+  const localDate = new Date(dateString);
+  const localTime = new Date(localDate.getTime() + userOffset);
+  //console.log(localTime.getTimezoneOffset)
+  console.log(localDate.getti);
 
   const isSender = (user.id == info.user.id);
 
@@ -66,7 +74,7 @@ export const MessageContent = ({
             color={isSender ? '#FFF' : 'rgba(59, 31, 82, 0.6)'}
           />
           <DescriptionText
-            text={new Date(info.createdAt).toISOString().substr(11, 5)}
+            text={new Date(localTime).toISOString().substr(11, 5)}
             lineHeight={12}
             fontSize={11}
             color={isSender ? '#FFF' : 'rgba(59, 31, 82, 0.6)'}
@@ -95,7 +103,7 @@ export const MessageContent = ({
             backgroundColor: 'rgba(54, 36, 68, 0.8)'
           }}>
             <DescriptionText
-              text={new Date(info.createdAt).toISOString().substr(11, 5)}
+              text={new Date(localTime).toISOString().substr(11, 5)}
               lineHeight={12}
               fontSize={11}
               color='#F6EFFF'
@@ -244,7 +252,8 @@ export const MessageContent = ({
           :
           <View>
             <Pressable
-              onPress={() => setIsSelected(true)}
+              onPress={onPressContent}
+              onLongPress={onLongPressContent}
             >
               <AutoHeightImage
                 source={{ uri: info.file.url }}
@@ -265,63 +274,12 @@ export const MessageContent = ({
               backgroundColor: 'rgba(54, 36, 68, 0.8)'
             }}>
               <DescriptionText
-                text={new Date(info.createdAt).toISOString().substr(11, 5)}
+                text={new Date(localTime).toISOString().substr(11, 5)}
                 lineHeight={12}
                 fontSize={11}
                 color='#F6EFFF'
               />
             </View>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={isSelected}
-              onRequestClose={() => {
-                setIsSelected(false);
-              }}
-            >
-              <Pressable onPressOut={() => setIsSelected(false)} style={[styles.swipeModal, { alignItems: 'center', justifyContent: 'center' }]}>
-                <View style={{
-                  width: windowWidth,
-                  flexDirection: 'row',
-                  justifyContent: 'flex-end',
-                  marginRight: 50,
-                  marginBottom:14
-                }}>
-                  <DescriptionText
-                    text={'X'}
-                    fontSize={20}
-                    lineHeight={20}
-                    color="#FFF"
-                  />
-                </View>
-                <View>
-                  <AutoHeightImage
-                    source={{ uri: info.file.url }}
-                    width={windowWidth - 48}
-                    style={{
-                      borderRadius: 20,
-                      borderWidth: 4,
-                      borderColor: '#FFF'
-                    }}
-                  />
-                  <View style={{
-                    position: 'absolute',
-                    bottom: 8,
-                    right: 8,
-                    padding: 8,
-                    borderRadius: 14,
-                    backgroundColor: 'rgba(54, 36, 68, 0.8)'
-                  }}>
-                    <DescriptionText
-                      text={new Date(info.createdAt).toISOString().substr(11, 5)}
-                      lineHeight={12}
-                      fontSize={11}
-                      color='#F6EFFF'
-                    />
-                  </View>
-                </View>
-              </Pressable>
-            </Modal>
           </View>
   );
 };

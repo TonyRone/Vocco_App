@@ -97,7 +97,7 @@ export const Discover = ({
         </View>
       </View>
       <ScrollView
-        style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 25 }}
+        style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75 }}
         onScroll={({ nativeEvent }) => {
           if (isCloseToBottom(nativeEvent)) {
             setLoadKey(loadKey + 1);
@@ -106,7 +106,7 @@ export const Discover = ({
         scrollEventThrottle={400}
       >
         <View
-          style={[styles.paddingH16, styles.rowSpaceBetween]}
+          style={[styles.paddingH16, styles.rowSpaceBetween,{marginTop:25}]}
         >
           <TitleText
             text={t("Top categories")}
