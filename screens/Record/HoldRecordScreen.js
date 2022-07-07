@@ -284,6 +284,9 @@ const HoldRecordScreen = (props) => {
           <View
             onTouchStart={(e) => onChangeRecord(e, true)}
             onTouchEnd={(e) => onChangeRecord(e, false)}
+            style={{
+              opacity:isPaused?1:0.1
+            }}
           >
             <SvgXml
               width={76}

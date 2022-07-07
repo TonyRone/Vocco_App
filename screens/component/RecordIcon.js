@@ -9,6 +9,7 @@ import {
   Animated,
   Pressable,
   Vibration,
+  TouchableOpacity,
 } from 'react-native';
 
 import AudioRecorderPlayer, {
@@ -316,7 +317,7 @@ export const RecordIcon = ({
           minY={0}
           maxY={0}
           touchableOpacityProps={{
-            activeOpactiy: 0.1,
+           // activeOpactiy: 1,
           }}
           onDrag={(event, gestureState) => {
 
@@ -343,6 +344,9 @@ export const RecordIcon = ({
           <View
             onTouchStart={(e) => onChangeRecord(e, true)}
             onTouchEnd={(e) => onChangeRecord(e, false)}
+            style={{
+              opacity:isPaused?1:0.1
+            }}
           >
             <SvgXml
               width={IsExpanded ? 76 : 54}

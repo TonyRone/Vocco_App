@@ -789,6 +789,9 @@ const ConversationScreen = (props) => {
                             <View
                                 onTouchStart={(e) => onChangeRecord(e, true)}
                                 onTouchEnd={(e) => onChangeRecord(e, false)}
+                                style={{
+                                    opacity:isRecording?0.1:1
+                                  }}
                             >
                                 <SvgXml
                                     width={isRecording ? 68 : 56}
