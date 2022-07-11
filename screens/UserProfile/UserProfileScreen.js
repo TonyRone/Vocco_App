@@ -8,6 +8,7 @@ import {
   Pressable,
   ScrollView,
   Modal,
+  RefreshControl,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -63,6 +64,7 @@ const UserProfileScreen = (props) => {
   const [allFollows, setAllFollows] = useState("");
   const [showQR, setShowQR] = useState(false);
   const [showLikesCount, setShowLikesCount] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   let { user, refreshState } = useSelector((state) => {
     return (
@@ -73,6 +75,14 @@ const UserProfileScreen = (props) => {
   const dispatch = useDispatch();
 
   let userId = props.navigation.state.params.userId;
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setLoadKey(loadKey - 1);
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 1000);
+  };
 
   const getUserVoices = () => {
     if (loadMore < 10) {
@@ -229,8 +239,8 @@ const UserProfileScreen = (props) => {
       >
         <TouchableOpacity onPress={() => setShowQR(true)} style={{ position: 'absolute', right: 16, top: Platform.OS == 'ios' ? 36 : 24 }}>
             <SvgXml
-              width={24}
-              height={24}
+              width={36}
+              height={36}
               xml={qrSvg}
             />
           </TouchableOpacity>
@@ -292,6 +302,12 @@ const UserProfileScreen = (props) => {
         />
           <ScrollView
             style={{ marginTop: 16 }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />
+            }
             onScroll={({ nativeEvent }) => {
               if (isCloseToBottom(nativeEvent)) {
                 setLoadKey(loadKey + 1)

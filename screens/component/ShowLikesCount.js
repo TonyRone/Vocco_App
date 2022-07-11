@@ -75,13 +75,7 @@ export const ShowLikesCount = ({
               start={{ x: 0, y: 0 }}
               end={{ x: 0, y: 1 }}
             >
-              <SemiBoldText
-                text={userInfo.likes}
-                fontSize={18}
-                textAlign='center'
-                lineHeight={23}
-                width={248}
-              />
+              <Text>{userInfo.likes}</Text>
             </LinearTextGradient>
             <SemiBoldText
               text={' likes across all stories'}
@@ -109,8 +103,8 @@ export const ShowLikesCount = ({
         </View>
         <Image
           style={{
-            position:'absolute',
-            left: (windowWidth-448)/2,
+            position: 'absolute',
+            left: (windowWidth - 448) / 2,
           }}
           source={require('../../assets/profile/LikesBack1.png')}
         />

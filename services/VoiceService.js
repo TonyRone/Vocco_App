@@ -439,6 +439,17 @@ class VoiceService {
             );
     }
 
+    async deleteTag(id) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'DELETE',
+                `${API_URL}/actions/deleteTag?id=${id}`, {
+                'Authorization': `Bearer ${token}`
+            }
+            );
+    }
+
     async deleteReplyAnswer(id) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
@@ -470,12 +481,12 @@ class VoiceService {
             }
             );
     }
-    async acceptFriend(userId) {
+    async acceptFriend(userId, requestId) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(
                 'POST',
-                `${API_URL}/actions/acceptfriend?id=${userId}`, {
+                `${API_URL}/actions/acceptfriend?id=${userId}&requestId=${requestId}`, {
                 'Authorization': `Bearer ${token}`
             }
             );

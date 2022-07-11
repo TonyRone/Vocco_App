@@ -36,7 +36,7 @@ const PhoneRegisterScreen = (props) => {
         AuthService.phoneRegister(payload).then(async res => {
             const jsonRes = await res.json();
             if (res.respInfo.status === 201) {
-                props.navigation.navigate('PhoneVerify', { number: formattedValue, country: country })
+                props.navigation.navigate('PhoneVerify', { number: formattedValue, country: country, type:'register' })
             }
             else {
                 setError(jsonRes.message);

@@ -58,8 +58,8 @@ const FriendsScreen = (props) => {
         142 / windowWidth
     )
 
-    const onAcceptRequest = (id, index) => {
-        VoiceService.acceptFriend(id).then(async res => {
+    const onAcceptRequest = (index) => {
+        VoiceService.acceptFriend(requests[index].fromUser.id, requests[index].id).then(async res => {
             if (res.respInfo.status == 201) {
                 setRequests(prev => {
                     prev.splice(index, 1);
@@ -369,7 +369,7 @@ const FriendsScreen = (props) => {
                                         paddingVertical: 9,
                                         borderRadius: 8
                                     }}
-                                        onPress={() => onAcceptRequest(item.fromUser.id, index)}
+                                        onPress={() => onAcceptRequest(index)}
                                     >
                                         <SemiBoldText
                                             text={t("Confirm")}
@@ -398,7 +398,7 @@ const FriendsScreen = (props) => {
                         </TouchableOpacity>
                     })
                 }
-                <View style={[styles.rowSpaceBetween, { marginTop: 24 }]}>
+                {/* <View style={[styles.rowSpaceBetween, { marginTop: 24 }]}>
                     <SemiBoldText
                         text={t("Suggest")}
                         lineHeight={24}
@@ -512,7 +512,7 @@ const FriendsScreen = (props) => {
                             </TouchableOpacity>
                         })
                     }
-                </ScrollView>
+                </ScrollView> */}
                 <View style={[styles.rowAlignItems, { marginTop: 16 }]}>
                     <TouchableOpacity onPress={() => { scrollRef.current?.scrollTo({ x: 0, animated: true }); setIsFollowers(true); }} style={[styles.rowAlignItems, { marginLeft: 16, width: 126 }]}>
                         <SemiBoldText
@@ -705,7 +705,7 @@ const FriendsScreen = (props) => {
                         }
                     </View>
                 </ScrollView>
-                <SemiBoldText
+                {/* <SemiBoldText
                     text={t("Invite your contacts")}
                     lineHeight={24}
                     fontSize={15}
@@ -722,7 +722,7 @@ const FriendsScreen = (props) => {
                 </View>
                 <ContactList
                     props={props}
-                />
+                /> */}
             </ScrollView>
             <BottomButtons
                 active='friends'

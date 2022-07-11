@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,11 +6,12 @@ import {
   Pressable,
   ScrollView,
   Platform,
+  RefreshControl,
   Modal
 } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import '../../language/i18n';
 import { TitleText } from './TitleText';
 import { FlatList } from 'react-native-gesture-handler';
@@ -24,6 +25,7 @@ import searchSvg from '../../assets/login/search.svg';
 import { Categories, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { Stories } from './Stories';
+import { setRefreshState } from '../../store/actions';
 
 export const Discover = ({
   props,
@@ -33,6 +35,7 @@ export const Discover = ({
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [loadKey, setLoadKey] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
 
   const scrollRef = useRef();
 
@@ -42,7 +45,17 @@ export const Discover = ({
     )
   });
 
+  const dispatch = useDispatch();
+
   const { t, i18n } = useTranslation();
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setLoadKey(loadKey - 1);
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 1000);
+  };
 
   const onSetCategory = (categoryId) => {
     setLoadKey(0);
@@ -98,6 +111,12 @@ export const Discover = ({
       </View>
       <ScrollView
         style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
         onScroll={({ nativeEvent }) => {
           if (isCloseToBottom(nativeEvent)) {
             setLoadKey(loadKey + 1);

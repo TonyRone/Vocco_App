@@ -112,14 +112,14 @@ export const NotificationItem = ({
                     </View>
                     {(!isActivity) ?
                         <View style={styles.rowAlignItems}>
-                            {(accepted && (!towardFriend || towardFriend.status == 'none')) && <TouchableOpacity onPress={() => onFollowUser()} style={[styles.contentCenter, { width: 99, height: 40, borderRadius: 12, backgroundColor: '#F8F0FF', marginRight: 8 }]}>
+                            {/* {(accepted && (!towardFriend || towardFriend.status == 'none')) && <TouchableOpacity onPress={() => onFollowUser()} style={[styles.contentCenter, { width: 99, height: 40, borderRadius: 12, backgroundColor: '#F8F0FF', marginRight: 8 }]}>
                                 <SemiBoldText
                                     text='Follow back'
                                     fontSize={15}
                                     lineHeight={24}
                                     color='#8327D8'
                                 />
-                            </TouchableOpacity>}
+                            </TouchableOpacity>} */}
                             <TouchableOpacity onPress={() => { onDeleteItem(); setIsDeleted(true); }} style={[styles.contentCenter, { width: 40, height: 40, borderRadius: 12, backgroundColor: '#FFE8E8' }]}>
                                 <SvgXml
                                     width={24}

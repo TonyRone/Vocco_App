@@ -17,6 +17,7 @@ import VoiceService from '../../services/VoiceService';
 import { DescriptionText } from '../component/DescriptionText';
 import { MyButton } from './MyButton';
 import { InviteUsers } from './InviteUsers';
+import SelectTopicScreen from '../PhoneNumberLogin/SelectTopicScreen';
 
 export const Stories = ({
   props,
@@ -36,6 +37,7 @@ export const Stories = ({
   const [loading, setLoading] = useState(true);
   const [showEnd, setShowEnd] = useState(false);
   const [showInviteList, setShowInviteList] = useState(false);
+  const [localKey, setLocalKey] = useState(0);
 
   let { refreshState } = useSelector((state) => {
     return (
@@ -52,9 +54,8 @@ export const Stories = ({
   }
 
   const getStories = (isNew) => {
-    if (isNew)
-      setLoading(true);
-    else if (LoadMore < 10) {
+    setLocalKey(loadKey);
+    if (!isNew&&LoadMore < 10) {
       OnShowEnd();
       return;
     }
@@ -100,7 +101,7 @@ export const Stories = ({
   }, [stories, refreshState])
 
   useEffect(() => {
-    getStories(loadKey == 0);
+    getStories(loadKey<=localKey);
   }, [refreshState, loadKey, category])
 
   return <>

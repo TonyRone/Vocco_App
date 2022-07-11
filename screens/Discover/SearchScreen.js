@@ -264,7 +264,7 @@ const SearchScreen = (props) => {
             onEndThreshold={0}
           /></View>
           <TitleText
-            text={t("Voices")}
+            text={t("Stories")}
             color='#281E30'
             fontSize={15}
             marginLeft={16}

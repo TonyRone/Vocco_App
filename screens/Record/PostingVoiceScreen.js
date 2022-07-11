@@ -42,7 +42,6 @@ import { setRefreshState, setVoiceState } from '../../store/actions';
 const PostingVoiceScreen = (props) => {
 
   const param = props.navigation.state.params;
-  console.log(param);
   let displayDuration = param.recordSecs ? param.recordSecs : param.info.duration;
   let isTemporary = param.isTemporary ? true : false;
 

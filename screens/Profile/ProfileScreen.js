@@ -7,6 +7,7 @@ import {
   Pressable,
   ScrollView,
   Platform,
+  RefreshControl,
 } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
@@ -51,9 +52,18 @@ const ProfileScreen = (props) => {
   const [allFollows, setAllFollows] = useState("");
   const [showQR, setShowQR] = useState(false);
   const [showLikesCount, setShowLikesCount] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   if (props.navigation.state.params)
     () => setRefresh(!refresh);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setLoadKey(loadKey - 1);
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 1000);
+  };
 
   const getUserVoices = () => {
     if (loadMore < 10) {
@@ -168,8 +178,8 @@ const ProfileScreen = (props) => {
         >
           <TouchableOpacity onPress={() => setShowQR(true)} style={{ position: 'absolute', right: 16, top: Platform.OS == 'ios' ? 36 : 24 }}>
             <SvgXml
-              width={24}
-              height={24}
+              width={36}
+              height={36}
               xml={qrSvg}
             />
           </TouchableOpacity>
@@ -231,6 +241,12 @@ const ProfileScreen = (props) => {
       />
       <ScrollView
         style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 16 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
         onScroll={({ nativeEvent }) => {
           if (isCloseToBottom(nativeEvent)) {
             setLoadKey(loadKey + 1);

@@ -35,8 +35,6 @@ class VoicePlayer extends Component {
   waveheights = [7, 12, 2, 1, 8, 3, 13, 9, 12, 10, 31, 24, 29, 8, 32, 38, 18, 19, 28, 7, 19, 13, 17, 10, 14, 1, 28, 10, 31, 2, 30, 3, 3, 23, 30, 3, 39, 35, 21, 38, 32, 5, 12, 19, 13, 13, 10, 10, 33, 18, 37, 33, 9, 32, 30, 13, 8, 24, 18, 4, 21, 9, 16, 8, 18, 20, 28, 16, 23, 11, 16, 15, 11, 29, 4, 35, 37, 23, 15, 28]
   constructor(props) {
     super(props);
-    this._onTouchStart = this._onTouchStart.bind(this);
-    this._onTouchEnd = this._onTouchEnd.bind(this);
     this.changePlayStatus = this.changePlayStatus.bind(this);
     this.onReplay = this.onReplay.bind(this);
     this.getPlayLink = this.getPlayLink.bind(this);
@@ -91,23 +89,6 @@ class VoicePlayer extends Component {
   async componentWillUnmount() {
     this._isMounted = false;
     await this.onStopPlay();
-  }
-  _onTouchStart = (e) => {
-    if (this.state.isPlaying) {
-      this.setState({ swipe: { x: e.nativeEvent.pageX } })
-    }
-  }
-
-  _onTouchEnd = (e) => {
-    if (this.state.swipe.x) {
-      const absX = e.nativeEvent.pageX - this.state.swipe.x;
-      let positionSec = this.state.currentPositionSec;
-      positionSec += this.state.currentDurationSec * absX / windowWidth;
-      if (positionSec < 0) positionSec = 0;
-      if (positionSec > this.state.currentDurationSec) positionSec = this.state.currentDurationSec;
-      this.audioRecorderPlayer.seekToPlayer(positionSec);
-      this.setState({ swipe: {} });
-    }
   }
 
   changePlayStatus = async () => {
@@ -205,7 +186,7 @@ class VoicePlayer extends Component {
               fontSize={13}
             />
             <DescriptionText
-              text={new Date(Math.max((this.state.currentDurationSec - this.state.currentPositionSec),0)).toISOString().substr(14, 5)}
+              text={new Date(Math.max((this.state.currentDurationSec - this.state.currentPositionSec), 0)).toISOString().substr(14, 5)}
               lineHeight={13}
               fontSize={13}
             />
@@ -252,7 +233,7 @@ class VoicePlayer extends Component {
 
   getPlayLink = async () => {
     let { voiceState, actions } = this.props;
-    this.setState({
+    if (this._isMounted) this.setState({
       voiceKey: voiceState + 1,
       isStarted: true,
       isPlaying: true,
@@ -291,10 +272,9 @@ class VoicePlayer extends Component {
           currentPositionSec: e.currentPosition,
           currentDurationSec: e.duration,
         });
-
-      if (e.currentPosition == e.duration) {
-        await this.onStopPlay();
-      }
+    }
+    if (e.currentPosition == e.duration) {
+      await this.onStopPlay();
     }
   }
 
@@ -305,14 +285,15 @@ class VoicePlayer extends Component {
       return;
     }
     try {
-      if (this.state.isStarted == false)
+      if (this.state.isStarted == false && this._isMounted)
         this.setState({
           isStarted: true,
           isPlaying: true,
           currentPositionSec: 0
         });
       this.props.startPlay();
-      const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath);
+      const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath)
+        .catch(err => console.log(err.message));
       //const volume = await this.audioRecorderPlayer.setVolume(1.0);
       this.audioRecorderPlayer.addPlayBackListener(async (e) => {
         this.onSetPosition(e)
@@ -325,24 +306,29 @@ class VoicePlayer extends Component {
   };
 
   onPausePlay = async () => {
-    await this.audioRecorderPlayer.pausePlayer();
-    this.setState({
-      isPlaying: false
+    await this.audioRecorderPlayer.pausePlayer().then(res => {
+      if (this._isMounted) this.setState({
+        isPlaying: false
+      })
     })
+      .catch(err => console.log(err.message));;
   };
 
   onResumePlay = async () => {
-    await this.audioRecorderPlayer.resumePlayer();
-    this.setState({
-      isPlaying: true
+    await this.audioRecorderPlayer.resumePlayer().then(res => {
+      if (this._isMounted) this.setState({
+        isPlaying: true
+      })
     })
+      .catch(err => console.log(err.message));;
   };
 
   onStopPlay = async () => {
     if (this.state.isStarted == true) {
       if (this._isMounted) this.setState({ isPlaying: false, isStarted: false, currentPositionSec: 0, currentDurationSec: 0 });
       try {
-        await this.audioRecorderPlayer.stopPlayer();
+        await this.audioRecorderPlayer.stopPlayer()
+          .catch(err => console.log(err.message));
         this.audioRecorderPlayer.removePlayBackListener();
       }
       catch (err) {

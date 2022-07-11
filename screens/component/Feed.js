@@ -3,6 +3,7 @@ import {
   View,
   ScrollView,
   Platform,
+  RefreshControl,
 } from 'react-native';
 
 import { Stories } from './Stories';
@@ -18,10 +19,19 @@ export const Feed = ({
 }) => {
 
   const [loadKey, setLoadKey] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
 
   const { t, i18n } = useTranslation();
 
   const scrollRef = useRef();
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setLoadKey(loadKey - 1);
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 1000);
+  };
 
   const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
     const paddingToBottom = 10;
@@ -48,6 +58,12 @@ export const Feed = ({
       <ScrollView
         style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 10 }}
         ref={scrollRef}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
         onScroll={({ nativeEvent }) => {
           if (isCloseToBottom(nativeEvent)) {
             setLoadKey(loadKey + 1);

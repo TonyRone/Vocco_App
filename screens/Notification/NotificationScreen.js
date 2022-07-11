@@ -112,18 +112,17 @@ const NotificationScreen = (props) => {
         VoiceService.getRequests(requests.length).then(async res => {
             if (res.respInfo.status == 200) {
                 const jsonRes = await res.json();
-                console.log(jsonRes[0]);
                 let result = jsonRes.reduce((unique, o) => {
                     if (!unique.some(obj => (
-                        o.type=='friendRequest'&&
-                        obj.type==o.type&&
-                        obj.fromUser.id === o.fromUser.id&&
-                        o.friend.status==obj.friend.status
-                        ))) {
-                      unique.push(o);
+                        o.type == 'friendRequest' &&
+                        obj.type == o.type &&
+                        obj.fromUser.id === o.fromUser.id &&
+                        o.friend.status == obj.friend.status
+                    ))) {
+                        unique.push(o);
                     }
                     return unique;
-                  }, []);
+                }, []);
                 if (result.length > 0)
                     setRequests(result.length == 0 ? result : [...requests, ...result]);
                 setReqLoadMore(result.length);
@@ -217,13 +216,13 @@ const NotificationScreen = (props) => {
             });
     }
 
-    const onAcceptRequest = (id, index) => {
+    const onAcceptRequest = (index) => {
         setIsLoading(true);
         RNVibrationFeedback.vibrateWith(1519);
-        VoiceService.acceptFriend(id).then(async res => {
+        VoiceService.acceptFriend(requests[index].fromUser.id, requests[index].id).then(async res => {
             if (res.respInfo.status == 201) {
                 let tp = requests;
-                tp[index].friend.status = 'accepted';
+                tp.splice(index, 1);
                 setRequests([...tp]);
             }
             setIsLoading(false);
@@ -414,7 +413,7 @@ const NotificationScreen = (props) => {
                                 accepted={item.friend.status == 'accepted' || allAccept}
                                 towardFriend={item.towardFriend}
                                 onPressItem={() => onReadNotification(index, false)}
-                                onAcceptUser={() => onAcceptRequest(item.fromUser.id, index)}
+                                onAcceptUser={() => onAcceptRequest(index)}
                                 onFollowUser={() => onFollowUser(item.fromUser.id, index)}
                                 onDeleteItem={() => onDeleteNotification(item.id, index, false)}
                             />}

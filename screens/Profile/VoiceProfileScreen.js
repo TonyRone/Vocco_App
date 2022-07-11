@@ -86,7 +86,6 @@ const VoiceProfileScreen = (props) => {
         setIsLike(jsonRes[0].isLike);
         setLikeCount(jsonRes[0].likesCount);
         setInfo(jsonRes[0]);
-        console.log(jsonRes[0]);
       }
     })
       .catch(err => {
@@ -174,11 +173,10 @@ const VoiceProfileScreen = (props) => {
     setCombines(tp);
   }
 
-  const onDeleteAnswer = (index) => {
-    let tp = [...answerVoices];
+  const onDeleteItem = (index) => {
+    let tp = [...combines];
     tp.splice(index, 1);
-    setAnswerVoices(tp);
-    onCombine(tp, tags);
+    setCombines(tp);
   }
 
   const OnSetLike = () => {
@@ -313,7 +311,7 @@ const VoiceProfileScreen = (props) => {
                 props={props}
                 info={item}
                 onChangeIsLiked={() => setIsLiked(index)}
-                onDeleteItem={() => onDeleteAnswer(index)}
+                onDeleteItem={() => onDeleteItem(index)}
                 holdToAnswer={(v) => setIsHolding(v)}
               /> :
               <TagItem
@@ -321,6 +319,7 @@ const VoiceProfileScreen = (props) => {
                 props={props}
                 info={item}
                 onChangeIsLiked={() => setIsLiked(index)}
+                onDeleteItem={() => onDeleteItem(index)}
               />)
             :
             <View style={{ alignItems: 'center' }}>

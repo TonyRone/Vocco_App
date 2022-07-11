@@ -32,6 +32,7 @@ const PhoneVerifyScreen = (props) => {
 
     const phoneNumber = props.navigation.state.params?.number;
     const country = props.navigation.state.params?.country;
+    const type = props.navigation.state.params?.type;
 
     const { socketInstance } = useSelector((state) => state.user);
     const dispatch = useDispatch();
@@ -60,14 +61,24 @@ const PhoneVerifyScreen = (props) => {
         const payload = {
             phoneNumber: phoneNumber
         };
-        AuthService.phoneRegister(payload).then(async res => {
-            const jsonRes = await res.json();
-            if (res.respInfo.status === 201) {
-            }
-            else {
-                setError(jsonRes.message);
-            }
-        })
+        if (type == 'register')
+            AuthService.phoneRegister(payload).then(async res => {
+                const jsonRes = await res.json();
+                if (res.respInfo.status === 201) {
+                }
+                else {
+                    setError(jsonRes.message);
+                }
+            })
+        else
+            AuthService.phoneLogin(payload).then(async res => {
+                const jsonRes = await res.json();
+                if (res.respInfo.status === 201) {
+                }
+                else {
+                    setError(jsonRes.message);
+                }
+            })
     }
 
     const onGoScreen = async (jsonRes, prevOpenCount) => {

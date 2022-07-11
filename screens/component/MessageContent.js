@@ -25,14 +25,11 @@ export const MessageContent = ({
   const { user } = useSelector((state) => state.user);
 
   const { t, i18n } = useTranslation();
-  //console.log(new Date().getTimezoneOffset());
 
   const dateString = info.createdAt
   const userOffset = 120 * 60 * 1000;
   const localDate = new Date(dateString);
   const localTime = new Date(localDate.getTime() + userOffset);
-  //console.log(localTime.getTimezoneOffset)
-  console.log(localDate.getti);
 
   const isSender = (user.id == info.user.id);
 
@@ -131,13 +128,20 @@ export const MessageContent = ({
               borderColor: '#FFF',
               backgroundColor: '#FFD2F3'
             }}>
-              <View style={{
+              <TouchableOpacity style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 marginLeft: 11,
                 marginTop: 11,
                 marginBottom: 12
-              }}>
+              }}
+                onPress={() => {
+                  if (info.record.user.id == user.id)
+                    NavigationService.navigate('Profile');
+                  else
+                    NavigationService.navigate('UserProfile', { userId: info.record.user.id });
+                }}
+              >
                 <Image
                   source={info.record.user.avatar ? { uri: info.record.user.avatar.url } : Avatars[info.record.user.avatarNumber].uri}
                   style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: '#FFF' }}
@@ -158,7 +162,7 @@ export const MessageContent = ({
                   marginLeft={9}
                   color='#000'
                 />
-              </View>
+              </TouchableOpacity>
               <TouchableOpacity onPress={() => NavigationService.navigate("VoiceProfile", { id: info.record.id })}>
                 <LinearGradient
                   style={
