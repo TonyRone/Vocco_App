@@ -82,7 +82,8 @@ const UserProfileScreen = (props) => {
     setRefreshing(true);
     setLoadKey(loadKey - 1);
     setTimeout(() => {
-      setRefreshing(false)
+      if (mounted.current)
+        setRefreshing(false)
     }, 1000);
   };
 
@@ -192,7 +193,8 @@ const UserProfileScreen = (props) => {
     if (showEnd) return;
     setShowEnd(true);
     setTimeout(() => {
-      setShowEnd(false);
+      if (mounted.current)
+        setShowEnd(false);
     }, 2000);
   }
 
@@ -206,7 +208,7 @@ const UserProfileScreen = (props) => {
     mounted.current = true;
     getUserInfo()
     getUserVoices();
-    return ()=>{
+    return () => {
       mounted.current = false;
     }
   }, [refreshState, userId])

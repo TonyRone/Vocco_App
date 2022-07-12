@@ -38,6 +38,7 @@ export const Discover = ({
   const [refreshing, setRefreshing] = useState(false);
 
   const scrollRef = useRef();
+  const mounted = useRef(false);
 
   let { refreshState } = useSelector((state) => {
     return (
@@ -53,7 +54,8 @@ export const Discover = ({
     setRefreshing(true);
     setLoadKey(loadKey - 1);
     setTimeout(() => {
-      setRefreshing(false)
+      if(mounted.current)
+        setRefreshing(false)
     }, 1000);
   };
 
@@ -76,6 +78,10 @@ export const Discover = ({
   };
 
   useEffect(() => {
+    mounted.current = true;
+    return ()=>{
+      mounted.current = false;
+    }
   }, [refreshState])
 
   return (

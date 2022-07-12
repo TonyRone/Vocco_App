@@ -21,6 +21,8 @@ export const Feed = ({
   const [loadKey, setLoadKey] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
 
+  const mounted = useRef(false);
+
   const { t, i18n } = useTranslation();
 
   const scrollRef = useRef();
@@ -29,7 +31,8 @@ export const Feed = ({
     setRefreshing(true);
     setLoadKey(loadKey - 1);
     setTimeout(() => {
-      setRefreshing(false)
+      if (mounted.current)
+        setRefreshing(false)
     }, 1000);
   };
 
@@ -40,7 +43,10 @@ export const Feed = ({
   };
 
   useEffect(() => {
-
+    mounted.current = true;
+    return ()=>{
+      mounted.current = false;
+    }
   }, [])
 
   return (

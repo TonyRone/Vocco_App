@@ -49,8 +49,10 @@ export const TagItem = ({
     } else {
       setLastTap(timeNow);
       setDelayTime(setTimeout(() => {
-        setShowList(true);
-        setLastTap(0);
+        if (mounted.current) {
+          setShowList(true);
+          setLastTap(0);
+        }
       }, DOUBLE_PRESS_DELAY));
     }
   };
@@ -58,7 +60,7 @@ export const TagItem = ({
   const getTagUsers = () => {
     VoiceService.getTagUsers(info.id).then(async res => {
       const jsonRes = await res.json();
-      if (res.respInfo.status === 200&&mounted.current) {
+      if (res.respInfo.status === 200 && mounted.current) {
         setTagUsers(jsonRes);
       }
     })
@@ -80,7 +82,7 @@ export const TagItem = ({
   useEffect(() => {
     mounted.current = true;
     getTagUsers();
-    return ()=>{
+    return () => {
       mounted.current = false;
     }
   }, [])

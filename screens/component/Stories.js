@@ -50,7 +50,8 @@ export const Stories = ({
     if (showEnd) return;
     setShowEnd(true);
     setTimeout(() => {
-      setShowEnd(false);
+      if (mounted.current)
+        setShowEnd(false);
     }, 2000);
   }
 

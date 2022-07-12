@@ -63,7 +63,8 @@ const ProfileScreen = (props) => {
     setRefreshing(true);
     setLoadKey(loadKey - 1);
     setTimeout(() => {
-      setRefreshing(false)
+      if (mounted.current)
+        setRefreshing(false)
     }, 1000);
   };
 
@@ -128,7 +129,8 @@ const ProfileScreen = (props) => {
     if (showEnd) return;
     setShowEnd(true);
     setTimeout(() => {
-      setShowEnd(false);
+      if (mounted.current)
+        setShowEnd(false);
     }, 2000);
   }
 

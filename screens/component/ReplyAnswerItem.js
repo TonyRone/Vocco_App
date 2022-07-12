@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, TouchableOpacity, Image, ScrollView } from "react-native";
 import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
@@ -31,6 +31,8 @@ export const ReplyAnswerItem = ({
   const [lastTap, setLastTap] = useState(0);
   const [allLikes, setAllLikes] = useState(false);
 
+  const mounted = useRef(false);
+
   const { t, i18n } = useTranslation();
 
   const DOUBLE_PRESS_DELAY = 400;
@@ -58,7 +60,8 @@ export const ReplyAnswerItem = ({
     } else {
       setLastTap(timeNow);
       const timeout = setTimeout(() => {
-        setLastTap(0);
+        if(mounted.current)
+          setLastTap(0);
       }, DOUBLE_PRESS_DELAY);
     }
   };
@@ -69,6 +72,13 @@ export const ReplyAnswerItem = ({
       onDeleteReplyItem();
     }
   }
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    }
+  }, [])
 
   return (
     <View style={{ flexDirection: 'row' }}>

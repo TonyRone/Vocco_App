@@ -67,13 +67,13 @@ const HomeScreen = (props) => {
 
     const getNewNotifyCount = () => {
         VoiceService.unreadActivityCount().then(async res => {
-            if (res.respInfo.status == 201&&mounted.current) {
+            if (res.respInfo.status == 201 && mounted.current) {
                 const jsonRes = await res.json();
                 if (jsonRes.count > 0)
                     setNotify(true);
                 else {
                     VoiceService.unreadRequestCount().then(async res => {
-                        if (res.respInfo.status == 201&&mounted.current) {
+                        if (res.respInfo.status == 201 && mounted.current) {
                             const jsonRes = await res.json();
                             if (jsonRes.count > 0)
                                 setNotify(true);
@@ -100,7 +100,8 @@ const HomeScreen = (props) => {
         });
         if (new_init < 0) {
             setTimeout(() => {
-                noticeDispatch("reset");
+                if (mounted.current)
+                    noticeDispatch("reset");
             }, 1500);
         }
         return () => {
@@ -167,7 +168,7 @@ const HomeScreen = (props) => {
                     </View>}
                 </TouchableOpacity>
             </View>
-            <View style={{ width: windowWidth, flexDirection: 'row', justifyContent: 'center', marginBottom:20 }}>
+            <View style={{ width: windowWidth, flexDirection: 'row', justifyContent: 'center', marginBottom: 20 }}>
                 <View style={{ width: 210 }}>
                     <View style={{
                         width: 97,

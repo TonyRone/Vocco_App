@@ -69,8 +69,10 @@ export const AnswerVoiceItem = ({
     } else {
       setLastTap(timeNow);
       setDelayTime(setTimeout(() => {
-        holdAnswer(true);
-        setLastTap(0);
+        if (mounted.current) {
+          holdAnswer(true);
+          setLastTap(0);
+        }
       }, DOUBLE_PRESS_DELAY));
     }
   };
@@ -82,7 +84,7 @@ export const AnswerVoiceItem = ({
     // else{
     //   setIsExpanded(true);
     VoiceService.getReplyAnswerVoices(info.id).then(async res => {
-      if (res.respInfo.status === 200&&mounted.current) {
+      if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
         setReplyAnswers([...jsonRes]);
       }
@@ -122,7 +124,7 @@ export const AnswerVoiceItem = ({
   useEffect(() => {
     mounted.current = true;
     getReplies();
-    return ()=>{
+    return () => {
       mounted.current = false;
     }
   }, [])
@@ -155,7 +157,7 @@ export const AnswerVoiceItem = ({
                   borderColor: '#FFA002',
                   borderWidth: info.user.premium == 'none' ? 0 : 2
                 }}
-                source={ info.user.avatar?{ uri: info.user.avatar.url }:Avatars[info.user.avatarNumber].uri}
+                source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
               />
             </TouchableOpacity>
             <View style={{ marginLeft: 16 }}>
