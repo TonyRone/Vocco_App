@@ -135,10 +135,10 @@ export const TagFriends = ({
     setSubmitLoading(true);
     VoiceService.postTag(payload).then(async res => {
       if (res.respInfo.status !== 201) {
-      } else if(mounted.current){
+      } else {
         Vibration.vibrate(100);
         dispatch(setRefreshState(!refreshState));
-        setSubmitLoading(false);
+        if(mounted.current) setSubmitLoading(false);
       }
     })
       .catch(err => {

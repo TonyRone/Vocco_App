@@ -159,10 +159,8 @@ const VoiceProfileScreen = (props) => {
   const deleteVoice = () => {
     setDeleteModal(false);
     VoiceService.deleteVoice(info.id).then(async res => {
-      if (mounted.current) {
-        dispatch(setRefreshState(!refreshState));
-        props.navigation.navigate('Home');
-      }
+      dispatch(setRefreshState(!refreshState));
+      props.navigation.navigate('Home');
     })
       .catch(err => {
         console.log(err)
@@ -202,7 +200,7 @@ const VoiceProfileScreen = (props) => {
     getUserInfo();
     getAnswerVoices();
     dispatch(setVoiceState(voiceState + 1));
-    return ()=>{
+    return () => {
       mounted.current = false;
     }
   }, [refreshState])

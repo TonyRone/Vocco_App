@@ -145,12 +145,11 @@ const UserProfileScreen = (props) => {
   const OnBlockUser = () => {
     setFollowLoading(true);
     VoiceService.blockUser(userId).then(async res => {
-      if (mounted.current) {
+      if (mounted.current)
         setFollowLoading(false);
-        if (res.respInfo.status == 201) {
-          dispatch(setRefreshState(!refreshState));
-          props.navigation.navigate('Home');
-        }
+      if (res.respInfo.status == 201) {
+        dispatch(setRefreshState(!refreshState));
+        props.navigation.navigate('Home');
       }
     })
       .catch(err => {

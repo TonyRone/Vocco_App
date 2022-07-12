@@ -75,15 +75,14 @@ const PostingAnswerVoiceScreen = (props) => {
       ];
       VoiceService.postAnswerVoice(voiceFile).then(async res => {
         const jsonRes = await res.json();
-        if (mounted.current) {
-          if (res.respInfo.status !== 201) {
-          } else {
-            Vibration.vibrate(100);
-            dispatch(setRefreshState(!refreshState));
-            props.navigation.navigate("VoiceProfile", { id: recordId });
-          }
-          setIsLoading(false);
+        if (res.respInfo.status !== 201) {
+        } else {
+          Vibration.vibrate(100);
+          dispatch(setRefreshState(!refreshState));
+          props.navigation.navigate("VoiceProfile", { id: recordId });
         }
+        if(mounted.current)
+          setIsLoading(false);
       })
         .catch(err => {
           console.log(err);
@@ -93,7 +92,7 @@ const PostingAnswerVoiceScreen = (props) => {
 
   useEffect(() => {
     mounted.current = true;
-    return ()=>{
+    return () => {
       mounted.current = false;
     }
   }, [])

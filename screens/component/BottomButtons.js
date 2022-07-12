@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, TouchableOpacity, Vibration, Image } from "react-native";
 import { NavigationActions, StackActions } from 'react-navigation';
 import { SvgXml } from 'react-native-svg';

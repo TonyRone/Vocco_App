@@ -106,7 +106,11 @@ const ProfilePictureScreen = (props) => {
                 setAvatarId(0);
                 setModalVisible(false);
             }
-        });
+        })
+            .catch(err=>{
+                console.log(err);
+            })
+        ;
     }
 
     const selectFile = async () => {
@@ -116,7 +120,11 @@ const ProfilePictureScreen = (props) => {
                 setAvatarId(0);
                 setModalVisible(false);
             }
-        });
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+        ;
     }
 
     useEffect(() => {
