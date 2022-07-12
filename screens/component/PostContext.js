@@ -53,13 +53,6 @@ export const PostContext = ({
       rep = VoiceService.recordAppreciate({ count: 1, id: postInfo.id });
     else
       rep = VoiceService.recordUnAppreciate(postInfo.id);
-    rep.then(async res => {
-      if (res.respInfo.status == 201 || res.respInfo.status == 200) {
-      }
-    })
-      .catch(err => {
-        console.log(err);
-      });
   }
 
   const closeModal = () => {

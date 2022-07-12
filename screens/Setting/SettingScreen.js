@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     View,
     TouchableOpacity,
@@ -53,6 +53,9 @@ const SettingScreen = (props) => {
     const [showModal, setShowModal] = useState(false);
     const [showLanguageModal, setShowLanguageModal] = useState(false);
     const [language, setLanguage] = useState(null);
+
+    const mounted = useRef(false);
+
     const { t, i18n } = useTranslation();
 
     const onNavigate = (des, par = null) => {

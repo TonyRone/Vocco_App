@@ -29,6 +29,8 @@ const PickNameScreen = (props) => {
     const [validUsername, setValidUsername] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    const mounted = useRef(false);
+
     const { t, i18n } = useTranslation();
 
     const checkUsername = (newVal) => {
@@ -52,25 +54,30 @@ const PickNameScreen = (props) => {
         else {
             setLoading(true);
             EditService.userNameVerify(value).then(async res => {
-                if (res.respInfo.status == 201) {
-                    let userData = { ...user };
-                    userData.name = value;
-                    dispatch(setUser(userData));
-                    props.navigation.navigate("InputBirthday");
+                if (mounted.current) {
+                    if (res.respInfo.status == 201) {
+                        let userData = { ...user };
+                        userData.name = value;
+                        dispatch(setUser(userData));
+                        props.navigation.navigate("InputBirthday");
+                    }
+                    else {
+                        setError("This username is busy. Please, try another");
+                    }
+                    setLoading(false);
                 }
-                else {
-                    setError("This username is busy. Please, try another");
-                }
-                setLoading(false);
             })
                 .catch(err => {
-                    setLoading(false);
                     console.log(err);
                 })
         }
     }
 
     useEffect(() => {
+        mounted.current = true;
+        return ()=>{
+            mounted.current = false;
+        }
     }, [])
 
     return (

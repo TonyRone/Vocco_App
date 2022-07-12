@@ -30,6 +30,8 @@ export const TemporaryStories = ({
   const [temFlag, setTemFlag] = useState(-1);
   const [confirmModal, setConfirmModal] = useState(false);
 
+  const mounted = useRef(false);
+
   let { user, refreshState } = useSelector((state) => {
     return (
       state.user
@@ -38,7 +40,7 @@ export const TemporaryStories = ({
 
   const getTemporaryStories = () => {
     VoiceService.getTemporaryList(userId).then(async res => {
-      if (res.respInfo.status === 200) {
+      if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
         setStories([...jsonRes]);
         if (userId == '') {
@@ -58,7 +60,11 @@ export const TemporaryStories = ({
   }
 
   useEffect(() => {
+    mounted.current = true;
     getTemporaryStories();
+    return ()=>{
+      mounted.current = false;
+    }
   }, [refreshState])
 
   return <View style={{ flexDirection: 'row', paddingHorizontal: 16 }}>

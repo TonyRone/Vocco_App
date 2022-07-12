@@ -335,7 +335,8 @@ class VoicePlayer extends Component {
         console.log(err);
       }
     }
-    this.props.stopPlay();
+    if(this._isMounted)
+      this.props.stopPlay();
   };
 }
 

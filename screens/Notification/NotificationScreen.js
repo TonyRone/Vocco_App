@@ -53,6 +53,8 @@ const NotificationScreen = (props) => {
         )
     });
 
+    const mounted = useRef(false);
+
     const dispatch = useDispatch();
 
     const scrollIndicator = useRef(new Animated.Value(0)).current;
@@ -66,7 +68,7 @@ const NotificationScreen = (props) => {
 
     const getNewActivityCount = () => {
         VoiceService.unreadActivityCount().then(async res => {
-            if (res.respInfo.status == 201) {
+            if (res.respInfo.status == 201 && mounted.current) {
                 const jsonRes = await res.json();
                 setActiveNum(jsonRes.count);
             }
@@ -78,7 +80,7 @@ const NotificationScreen = (props) => {
 
     const getNewRequestCount = () => {
         VoiceService.unreadRequestCount().then(async res => {
-            if (res.respInfo.status == 201) {
+            if (res.respInfo.status == 201 && mounted.current) {
                 const jsonRes = await res.json();
                 setRequestNum(jsonRes.count);
             }
@@ -93,7 +95,7 @@ const NotificationScreen = (props) => {
         if (activities.length == 0)
             setIsActLoading(true);
         VoiceService.getActivities(activities.length).then(async res => {
-            if (res.respInfo.status == 200) {
+            if (res.respInfo.status == 200 && mounted.current) {
                 const jsonRes = await res.json();
                 if (jsonRes.length > 0)
                     setActivities(activities.length == 0 ? jsonRes : [...activities, ...jsonRes]);
@@ -110,7 +112,7 @@ const NotificationScreen = (props) => {
         if (requests.length == 0)
             setIsReqLoading(true);
         VoiceService.getRequests(requests.length).then(async res => {
-            if (res.respInfo.status == 200) {
+            if (res.respInfo.status == 200 && mounted.current) {
                 const jsonRes = await res.json();
                 let result = jsonRes.reduce((unique, o) => {
                     if (!unique.some(obj => (
@@ -196,7 +198,7 @@ const NotificationScreen = (props) => {
     const onMarkAll = () => {
         let repo = isActiveState ? VoiceService.markAllactivitySeen() : VoiceService.markAllrequestSeen();
         repo.then(async res => {
-            if (res.respInfo.status == 200) {
+            if (res.respInfo.status == 200 && mounted.current) {
                 if (isActiveState) {
                     setAllSeen(true);
                     setActiveNum(0);
@@ -220,12 +222,12 @@ const NotificationScreen = (props) => {
         setIsLoading(true);
         RNVibrationFeedback.vibrateWith(1519);
         VoiceService.acceptFriend(requests[index].fromUser.id, requests[index].id).then(async res => {
-            if (res.respInfo.status == 201) {
+            if (res.respInfo.status == 201 && mounted.current) {
                 let tp = requests;
                 tp.splice(index, 1);
                 setRequests([...tp]);
+                setIsLoading(false);
             }
-            setIsLoading(false);
         })
             .catch(err => {
                 console.log(err);
@@ -245,10 +247,12 @@ const NotificationScreen = (props) => {
         setIsLoading(true);
         RNVibrationFeedback.vibrateWith(1519);
         VoiceService.followFriend(id).then(async res => {
-            let tp = requests;
-            tp[index].towardFriend = { status: 'pending' };
-            setIsLoading(false);
-            setRequests([...tp]);
+            if (mounted.current) {
+                let tp = requests;
+                tp[index].towardFriend = { status: 'pending' };
+                setIsLoading(false);
+                setRequests([...tp]);
+            }
         })
             .catch(err => {
                 console.log(err);
@@ -256,10 +260,14 @@ const NotificationScreen = (props) => {
     }
 
     useEffect(() => {
+        mounted.current = true;
         getNewActivityCount();
         getNewRequestCount();
         getActivities();
         getRequests();
+        return ()=>{
+            mounted.current = false;
+        }
     }, [])
     return (
         <SafeAreaView

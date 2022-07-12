@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { View, TouchableOpacity, Text, Image, Pressable, TextInput, Vibration, Modal } from "react-native";
 import { SvgXml } from 'react-native-svg';
 
@@ -49,6 +49,8 @@ export const TagFriends = ({
   const [submitLoading, setSubmitLoading] = useState(false);
   const [filterCount, setFilterCount] = useState(0);
 
+  const mounted = useRef(false);
+
   const closeModal = () => {
     setShowModal(false);
     onCloseModal();
@@ -63,7 +65,7 @@ export const TagFriends = ({
   const getFriends = () => {
     setIsLoading(true);
     VoiceService.getFollows(user.id, "Following").then(async res => {
-      if (res.respInfo.status === 200) {
+      if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
         const userIds = jsonRes.map((item, index) => item.user.id);
         socketInstance.emit("getUsersState", userIds, (res) => {
@@ -74,8 +76,8 @@ export const TagFriends = ({
           })
           setFriends([...tp]);
         })
+        setIsLoading(false);
       }
-      setIsLoading(false);
     })
       .catch(err => {
         console.log(err);
@@ -133,12 +135,11 @@ export const TagFriends = ({
     setSubmitLoading(true);
     VoiceService.postTag(payload).then(async res => {
       if (res.respInfo.status !== 201) {
-      } else {
+      } else if(mounted.current){
         Vibration.vibrate(100);
         dispatch(setRefreshState(!refreshState));
-        closeModal();
+        setSubmitLoading(false);
       }
-      setSubmitLoading(false);
     })
       .catch(err => {
         console.log(err);
@@ -160,9 +161,13 @@ export const TagFriends = ({
   }
 
   useEffect(() => {
+    mounted.current = true;
     getFriends();
     socketInstance.on("user_login", listener);
-    return () => socketInstance.off("user_login", listener);
+    return () => {
+      socketInstance.off("user_login", listener);
+      mounted.current = false;
+    }
   }, [])
 
   return (

@@ -35,6 +35,8 @@ const UpdatePictureScreen = (props) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const mounted = useRef(false);
+
     const dispatch = useDispatch();
 
     const { t, i18n } = useTranslation();
@@ -68,12 +70,14 @@ const UpdatePictureScreen = (props) => {
             .then(async res => {
                 AuthService.getUserInfo().then(async res => {
                     const jsonRes = await res.json();
-                    if (res.respInfo.status == 200) {
-                        dispatch(setUser(jsonRes));
-                        props.navigation.goBack();
-                    }
-                    else {
-                        setError(jsonRes.message);
+                    if (mounted.current) {
+                        if (res.respInfo.status == 200) {
+                            dispatch(setUser(jsonRes));
+                            props.navigation.goBack();
+                        }
+                        else {
+                            setError(jsonRes.message);
+                        }
                     }
                 })
                     .catch(err => {
@@ -89,21 +93,29 @@ const UpdatePictureScreen = (props) => {
 
     const selectFileByCamera = async () => {
         await ImagePicker.openCamera(options).then(image => {
-            setSource(image);
-            setAvatarId(0);
-            setModalVisible(false);
+            if (mounted.current) {
+                setSource(image);
+                setAvatarId(0);
+                setModalVisible(false);
+            }
         });
     }
 
     const selectFile = async () => {
         await ImagePicker.openPicker(options).then(image => {
-            setSource(image);
-            setAvatarId(0);
-            setModalVisible(false);
+            if (mounted.current) {
+                setSource(image);
+                setAvatarId(0);
+                setModalVisible(false);
+            }
         });
     }
 
     useEffect(() => {
+        mounted.current = true;
+        return () => {
+            mounted.current = false;
+        }
     }, [])
 
     return (
@@ -284,7 +296,7 @@ const UpdatePictureScreen = (props) => {
                 <MyButton
                     label={t("Save")}
                     loading={loading}
-                    active={source!=null||avatarId>0}
+                    active={source != null || avatarId > 0}
                     onPress={handleSubmit}
                 />
             </View>

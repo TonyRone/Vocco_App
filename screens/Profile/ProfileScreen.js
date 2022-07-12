@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   KeyboardAvoidingView,
@@ -54,6 +54,8 @@ const ProfileScreen = (props) => {
   const [showLikesCount, setShowLikesCount] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
+  const mounted = useRef(false);
+
   if (props.navigation.state.params)
     () => setRefresh(!refresh);
 
@@ -72,7 +74,7 @@ const ProfileScreen = (props) => {
     }
 
     VoiceService.getUserVoice(userData.id, voices.length).then(async res => {
-      if (res.respInfo.status === 200) {
+      if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
         if (jsonRes.length > 0)
           setVoices(voices.length == 0 ? jsonRes : [...voices, ...jsonRes]);
@@ -85,7 +87,7 @@ const ProfileScreen = (props) => {
   }
   const getUserInfo = () => {
     VoiceService.getProfile(userData.id).then(async res => {
-      if (res.respInfo.status == 200) {
+      if (res.respInfo.status == 200 && mounted.current) {
         const jsonRes = await res.json();
         setUserInfo(jsonRes);
       }
@@ -137,8 +139,12 @@ const ProfileScreen = (props) => {
   }
 
   useEffect(() => {
+    mounted.current = true;
     getUserVoices();
     getUserInfo();
+    return () => {
+      mounted.current = false;
+    }
   }, [refreshState])
   return (
     <KeyboardAvoidingView
@@ -190,7 +196,7 @@ const ProfileScreen = (props) => {
           </TouchableOpacity>
           <View style={{ alignItems: 'center' }}>
             <DescriptionText
-              text={t("Voices")}
+              text={t("Stories")}
               fontSize={12}
               lineHeight={16}
               color="#F6EFFF"

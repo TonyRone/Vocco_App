@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   KeyboardAvoidingView,
@@ -66,6 +66,8 @@ const UserProfileScreen = (props) => {
   const [showLikesCount, setShowLikesCount] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
+  const mounted = useRef(false);
+
   let { user, refreshState } = useSelector((state) => {
     return (
       state.user
@@ -90,7 +92,7 @@ const UserProfileScreen = (props) => {
       return;
     }
     VoiceService.getUserVoice(userId, voices.length).then(async res => {
-      if (res.respInfo.status === 200) {
+      if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
         if (jsonRes.length > 0)
           setVoices(voices.length == 0 ? jsonRes : [...voices, ...jsonRes]);
@@ -105,7 +107,7 @@ const UserProfileScreen = (props) => {
   const getUserInfo = () => {
     setFollowLoading(true);
     VoiceService.getProfile(userId).then(async res => {
-      if (res.respInfo.status == 200) {
+      if (res.respInfo.status == 200 && mounted.current) {
         setFollowLoading(false);
         const jsonRes = await res.json();
         setUserInfo(jsonRes);
@@ -123,12 +125,14 @@ const UserProfileScreen = (props) => {
     setFollowLoading(true);
     let repo = followState == 'none' ? VoiceService.followFriend(userId) : VoiceService.unfollowFriend(userId);
     repo.then(async res => {
-      setFollowLoading(false);
-      if (res.respInfo.status == 201 || res.respInfo.status == 200) {
-        if (followState == 'none')
-          setFollowState('pending');
-        else
-          setFollowState('none');
+      if (mounted.current) {
+        setFollowLoading(false);
+        if (res.respInfo.status == 201 || res.respInfo.status == 200) {
+          if (followState == 'none')
+            setFollowState('pending');
+          else
+            setFollowState('none');
+        }
       }
     })
       .catch(err => {
@@ -140,10 +144,12 @@ const UserProfileScreen = (props) => {
   const OnBlockUser = () => {
     setFollowLoading(true);
     VoiceService.blockUser(userId).then(async res => {
-      setFollowLoading(false);
-      if (res.respInfo.status == 201) {
-        dispatch(setRefreshState(!refreshState));
-        props.navigation.navigate('Home');
+      if (mounted.current) {
+        setFollowLoading(false);
+        if (res.respInfo.status == 201) {
+          dispatch(setRefreshState(!refreshState));
+          props.navigation.navigate('Home');
+        }
       }
     })
       .catch(err => {
@@ -197,8 +203,12 @@ const UserProfileScreen = (props) => {
   }
 
   useEffect(() => {
+    mounted.current = true;
     getUserInfo()
     getUserVoices();
+    return ()=>{
+      mounted.current = false;
+    }
   }, [refreshState, userId])
   return (
     <KeyboardAvoidingView
@@ -215,7 +225,6 @@ const UserProfileScreen = (props) => {
           width: windowWidth + ((userInfo.user && userInfo.user.premium == "none") ? 0 : 6),
           height: 350 + ((userInfo.user && userInfo.user.premium == "none") ? 0 : 6),
           borderWidth: (userInfo.user && userInfo.user.premium == "none") ? 0 : 3,
-          borderLeftWidth: (userInfo.user && userInfo.user.premium == "none") ? 0 : 3,
           marginLeft: (userInfo.user && userInfo.user.premium == "none") ? 0 : -3,
           marginTop: (userInfo.user && userInfo.user.premium == "none") ? 0 : -3,
           borderColor: '#FFA002'
@@ -238,12 +247,12 @@ const UserProfileScreen = (props) => {
         ]}
       >
         <TouchableOpacity onPress={() => setShowQR(true)} style={{ position: 'absolute', right: 16, top: Platform.OS == 'ios' ? 36 : 24 }}>
-            <SvgXml
-              width={36}
-              height={36}
-              xml={qrSvg}
-            />
-          </TouchableOpacity>
+          <SvgXml
+            width={36}
+            height={36}
+            xml={qrSvg}
+          />
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => props.navigation.goBack()} style={{ position: 'absolute', left: 0, top: Platform.OS == 'ios' ? 24 : 12 }}>
           <SvgXml
             xml={boxbackArrowSvg}
@@ -251,7 +260,7 @@ const UserProfileScreen = (props) => {
         </TouchableOpacity>
         <View style={{ alignItems: 'center' }}>
           <DescriptionText
-            text={t('Voices')}
+            text={t('Stories')}
             fontSize={12}
             lineHeight={16}
             color="#F6EFFF"
@@ -580,9 +589,9 @@ const UserProfileScreen = (props) => {
           onCloseModal={() => setShowContext(false)}
         />
       }
-      {showQR&&<ShareQRcode
+      {showQR && <ShareQRcode
         userInfo={userInfo.user}
-        onCloseModal={()=> setShowQR(false) }
+        onCloseModal={() => setShowQR(false)}
       />}
       {showShareVoice &&
         <ShareVoice
@@ -599,7 +608,7 @@ const UserProfileScreen = (props) => {
       {showLikesCount &&
         <ShowLikesCount
           userInfo={userInfo}
-          onCloseModal={()=> setShowLikesCount(false) }
+          onCloseModal={() => setShowLikesCount(false)}
         />
       }
     </KeyboardAvoidingView>

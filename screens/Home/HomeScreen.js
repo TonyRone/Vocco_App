@@ -46,6 +46,8 @@ const HomeScreen = (props) => {
 
     const [noticeCount, noticeDispatch] = useReducer(reducer, new_init);
 
+    const mounted = useRef(false);
+
     let { user, refreshState, socketInstance } = useSelector((state) => {
         return (
             state.user
@@ -65,13 +67,13 @@ const HomeScreen = (props) => {
 
     const getNewNotifyCount = () => {
         VoiceService.unreadActivityCount().then(async res => {
-            if (res.respInfo.status == 201) {
+            if (res.respInfo.status == 201&&mounted.current) {
                 const jsonRes = await res.json();
                 if (jsonRes.count > 0)
                     setNotify(true);
                 else {
                     VoiceService.unreadRequestCount().then(async res => {
-                        if (res.respInfo.status == 201) {
+                        if (res.respInfo.status == 201&&mounted.current) {
                             const jsonRes = await res.json();
                             if (jsonRes.count > 0)
                                 setNotify(true);
@@ -91,6 +93,7 @@ const HomeScreen = (props) => {
     }
 
     useEffect(() => {
+        mounted.current = true;
         getNewNotifyCount();
         socketInstance.on("notice_Voice", (data) => {
             noticeDispatch("news");
@@ -100,7 +103,10 @@ const HomeScreen = (props) => {
                 noticeDispatch("reset");
             }, 1500);
         }
-        return () => { socketInstance.off("notice_Voice") };
+        return () => {
+            socketInstance.off("notice_Voice")
+            mounted.current = false;
+        };
     }, [])
 
     return (

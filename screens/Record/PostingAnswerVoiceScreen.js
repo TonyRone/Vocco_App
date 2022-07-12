@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   KeyboardAvoidingView,
@@ -43,6 +43,8 @@ const PostingAnswerVoiceScreen = (props) => {
   const [visibleReaction, setVisibleReaction] = useState(false);
   const [showHint, setShowHint] = useState(false);
 
+  const mounted = useRef(false);
+
   const dispatch = useDispatch();
 
   const dirs = RNFetchBlob.fs.dirs;
@@ -73,13 +75,15 @@ const PostingAnswerVoiceScreen = (props) => {
       ];
       VoiceService.postAnswerVoice(voiceFile).then(async res => {
         const jsonRes = await res.json();
-        if (res.respInfo.status !== 201) {
-        } else {
-          Vibration.vibrate(100);
-          dispatch(setRefreshState(!refreshState));
-          props.navigation.navigate("VoiceProfile", { id: recordId });
+        if (mounted.current) {
+          if (res.respInfo.status !== 201) {
+          } else {
+            Vibration.vibrate(100);
+            dispatch(setRefreshState(!refreshState));
+            props.navigation.navigate("VoiceProfile", { id: recordId });
+          }
+          setIsLoading(false);
         }
-        setIsLoading(false);
       })
         .catch(err => {
           console.log(err);
@@ -88,6 +92,10 @@ const PostingAnswerVoiceScreen = (props) => {
   }
 
   useEffect(() => {
+    mounted.current = true;
+    return ()=>{
+      mounted.current = false;
+    }
   }, [])
   return (
     <KeyboardAvoidingView

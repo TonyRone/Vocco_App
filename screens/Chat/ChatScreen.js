@@ -38,6 +38,8 @@ const ChatScreen = (props) => {
         )
     });
 
+    const mounted = useRef(false);
+
     const { t, i18n } = useTranslation();
 
     const [friends, setFriends] = useState([]);
@@ -48,7 +50,7 @@ const ChatScreen = (props) => {
     const getFollowUsers = () => {
         VoiceService.getFollows(user.id, "Following")
             .then(async res => {
-                if (res.respInfo.status === 200) {
+                if (res.respInfo.status === 200 && mounted.current) {
                     const jsonRes = await res.json();
                     setFriends(jsonRes);
                 }
@@ -61,7 +63,7 @@ const ChatScreen = (props) => {
     const getConversations = () => {
         VoiceService.getConversations()
             .then(async res => {
-                if (res.respInfo.status === 200) {
+                if (res.respInfo.status === 200&& mounted.current) {
                     const jsonRes = await res.json();
                     const userIds = jsonRes.map((item) => {
                         if (item.sender.id == user.id)
@@ -132,11 +134,13 @@ const ChatScreen = (props) => {
     }
 
     useEffect(() => {
+        mounted.current = true;
         getFollowUsers();
         getConversations();
         socketInstance.on("user_login", loginListener);
         socketInstance.on("chatState", stateListener);
         return () => {
+            mounted.current = false;
             socketInstance.off("user_login", loginListener);
             socketInstance.off("chatState", stateListener);
         };

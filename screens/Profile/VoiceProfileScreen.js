@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   KeyboardAvoidingView,
@@ -60,6 +60,8 @@ const VoiceProfileScreen = (props) => {
   const [showFriendsList, setShowFriendsList] = useState(false)
   const [combines, setCombines] = useState([]);
 
+  const mounted = useRef(false);
+
   const dispatch = useDispatch();
 
   const { t, i18n } = useTranslation();
@@ -81,7 +83,7 @@ const VoiceProfileScreen = (props) => {
 
   const getUserInfo = () => {
     VoiceService.getStories(0, '', '', '', recordId).then(async res => {
-      if (res.respInfo.status === 200) {
+      if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
         setIsLike(jsonRes[0].isLike);
         setLikeCount(jsonRes[0].likesCount);
@@ -109,7 +111,7 @@ const VoiceProfileScreen = (props) => {
 
   const getAnswerVoices = () => {
     VoiceService.getAnswerVoices(recordId, answerId).then(async res => {
-      if (res.respInfo.status === 200) {
+      if (res.respInfo.status === 200 && mounted.current) {
         let answers = await res.json(), tags;
         for (var i = 1; i < answers.length; i++) {
           if (answers[i].id == answers[0].id) {
@@ -120,12 +122,12 @@ const VoiceProfileScreen = (props) => {
         }
         setAnswerVoices(answers);
         VoiceService.getTags(recordId, 'record').then(async res => {
-          if (res.respInfo.status === 200) {
+          if (res.respInfo.status === 200 && mounted.current) {
             tags = await res.json();
             setTags(tags);
             onCombine(answers, tags);
+            setLoading(false);
           }
-          setLoading(false);
         })
           .catch(err => {
             console.log(err);
@@ -157,8 +159,10 @@ const VoiceProfileScreen = (props) => {
   const deleteVoice = () => {
     setDeleteModal(false);
     VoiceService.deleteVoice(info.id).then(async res => {
-      dispatch(setRefreshState(!refreshState));
-      props.navigation.navigate('Home');
+      if (mounted.current) {
+        dispatch(setRefreshState(!refreshState));
+        props.navigation.navigate('Home');
+      }
     })
       .catch(err => {
         console.log(err)
@@ -194,9 +198,13 @@ const VoiceProfileScreen = (props) => {
   }
 
   useEffect(() => {
+    mounted.current = true;
     getUserInfo();
     getAnswerVoices();
     dispatch(setVoiceState(voiceState + 1));
+    return ()=>{
+      mounted.current = false;
+    }
   }, [refreshState])
   return (
     <KeyboardAvoidingView
@@ -231,7 +239,11 @@ const VoiceProfileScreen = (props) => {
                 props.navigation.navigate('Profile');
               else
                 props.navigation.navigate('UserProfile', { userId: info.user.id });
-            }}>
+            }}
+            style={{
+              alignItems: 'center'
+            }}
+          >
             {info && <View
               style={{ paddingRight: 12 }}
             >
@@ -484,7 +496,7 @@ const VoiceProfileScreen = (props) => {
           </View>
         </View>
       </View>}
-      {info&&<Modal
+      {info && <Modal
         animationType="slide"
         transparent={true}
         visible={showModal}
@@ -500,7 +512,7 @@ const VoiceProfileScreen = (props) => {
                   style={{
                     width: 38,
                     height: 38,
-                    borderRadius:19
+                    borderRadius: 19
                   }}
                   source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
                 />

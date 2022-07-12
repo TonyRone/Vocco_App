@@ -57,6 +57,8 @@ export const AnswerReply = ({
   const [duration, setDuration] = useState(0);
   const [key, setKey] = useState(0);
 
+  const mounted = useRef(false);
+
   const wasteTime = useRef(0);
   const dragPos = useRef(0);
 
@@ -82,9 +84,13 @@ export const AnswerReply = ({
   }
 
   useEffect(() => {
+    mounted.current = true;
     setFill(user.premium == 'none' ? 60 : 180);
     setKey(prevKey => prevKey + 1);
-    return () => clearRecorder();
+    return () => {
+      mounted.current = false;
+      clearRecorder();
+    }
   }, [])
 
   const onStartRecord = async () => {
@@ -160,7 +166,7 @@ export const AnswerReply = ({
       VoiceService.postAnswerReply(voiceFile).then(async res => {
         const jsonRes = await res.json();
         if (res.respInfo.status !== 201) {
-        } else {
+        } else if(mounted.current){
           Vibration.vibrate(100);
           onPushReply();
           closeModal();

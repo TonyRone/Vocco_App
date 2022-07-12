@@ -31,6 +31,7 @@ export const Stories = ({
 
   const { t, i18n } = useTranslation();
   const scrollRef = useRef();
+  const mounted = useRef(false);
 
   const [stories, setStories] = useState([]);
   const [LoadMore, setLoadMore] = useState(10);
@@ -55,13 +56,13 @@ export const Stories = ({
 
   const getStories = (isNew) => {
     setLocalKey(loadKey);
-    if (!isNew&&LoadMore < 10) {
+    if (!isNew && LoadMore < 10) {
       OnShowEnd();
       return;
     }
 
     VoiceService.getStories(isNew ? 0 : stories.length, userId, category, searchTitle, recordId, screenName == 'Feed' ? 'friend' : '').then(async res => {
-      if (res.respInfo.status === 200) {
+      if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
         setStories((stories.length == 0 || isNew) ? [...jsonRes] : [...stories, ...jsonRes]);
         setLoadMore(jsonRes.length);
@@ -101,10 +102,29 @@ export const Stories = ({
   }, [stories, refreshState])
 
   useEffect(() => {
-    getStories(loadKey<=localKey);
+    mounted.current = true;
+    getStories(loadKey <= localKey);
+    return () => {
+      mounted.current = false;
+    }
   }, [refreshState, loadKey, category])
 
   return <>
+    {showEnd &&
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12 }}>
+        <Image
+          style={{
+            width: 20,
+            height: 20
+          }}
+          source={require('../../assets/common/happy.png')}
+        />
+        <DescriptionText
+          marginLeft={3}
+          text={t("You are up to date 🎉! Share vocco with you friends!")}
+        />
+      </View>
+    }
     {(
       !loading ? (stories.length > 0 ? storyItems : (screenName == 'Feed' ?
         <View style={{ width: windowWidth, alignItems: 'center' }}>
@@ -130,7 +150,7 @@ export const Stories = ({
           </Text>
           <MyButton
             label='Invite friends'
-            onPress={() => setShowInviteList(true) }
+            onPress={() => setShowInviteList(true)}
           />
         </View> :
         <View style={{ marginTop: windowHeight / 20, alignItems: 'center', width: windowWidth }}>
@@ -151,25 +171,10 @@ export const Stories = ({
           style={{ alignSelf: "center", marginTop: windowHeight / 20 }}
         />
     )}
-    {showEnd &&
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12 }}>
-        <Image
-          style={{
-            width: 20,
-            height: 20
-          }}
-          source={require('../../assets/common/happy.png')}
-        />
-        <DescriptionText
-          marginLeft={3}
-          text={t("You are up to date 🎉! Share vocco with you friends!")}
-        />
-      </View>
-    }
-    {showInviteList&&
+    {showInviteList &&
       <InviteUsers
         props={props}
-        onCloseModal={()=> setShowInviteList(false)}
+        onCloseModal={() => setShowInviteList(false)}
       />
     }
   </>

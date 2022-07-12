@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   ScrollView,
@@ -29,6 +29,8 @@ export const ContactList = ({
   const [contactUsers, setContactUsers] = useState([]);
   const [invitedUsers, setInvitedUsers] = useState([]);
 
+  const mounted = useRef(false);
+
   if(Platform.OS == 'ios')
     Contacts.iosEnableNotesUsage(true);
 
@@ -52,6 +54,7 @@ export const ContactList = ({
       .then(Contacts.getAllWithoutPhotos()
         .then((contacts) => {
           // work with contacts
+          if(mounted.current)
           setContactUsers(contacts);
         })
         .catch((e) => {
@@ -60,10 +63,12 @@ export const ContactList = ({
   }
 
   useEffect(async () => {
+    mounted.current = true;
     if (Platform.OS == 'ios') {
       Contacts.getAllWithoutPhotos()
         .then((contacts) => {
           // work with contacts
+          if(mounted.current)
           setContactUsers(contacts);
         })
         .catch((e) => {
@@ -72,6 +77,9 @@ export const ContactList = ({
     }
     else if (Platform.OS == 'android')
       requestPermission();
+    return ()=>{
+      mounted.current = false;
+    }
   }, [])
 
   return (

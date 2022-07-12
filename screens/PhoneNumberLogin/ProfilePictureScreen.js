@@ -35,6 +35,8 @@ const ProfilePictureScreen = (props) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const mounted = useRef(false);
+
     const dispatch = useDispatch();
 
     const { t, i18n } = useTranslation();
@@ -75,14 +77,16 @@ const ProfilePictureScreen = (props) => {
         AuthService.uploadPhoto(formData)
             .then(async res => {
                 AuthService.getUserInfo().then(async res => {
-                    const jsonRes = await res.json();
-                    if (res.respInfo.status == 200) {
-                        dispatch(setUser(jsonRes));
-                        props.navigation.navigate("AddFriend");
-                        onNavigate("AddFriend");
-                    }
-                    else {
-                        setError(jsonRes.message);
+                    if (mounted.current) {
+                        const jsonRes = await res.json();
+                        if (res.respInfo.status == 200) {
+                            dispatch(setUser(jsonRes));
+                            props.navigation.navigate("AddFriend");
+                            onNavigate("AddFriend");
+                        }
+                        else {
+                            setError(jsonRes.message);
+                        }
                     }
                 })
                     .catch(err => {
@@ -91,28 +95,35 @@ const ProfilePictureScreen = (props) => {
 
             })
             .catch(err => {
-                setLoading(false);
                 console.log(err);
             });
     }
 
     const selectFileByCamera = async () => {
         await ImagePicker.openCamera(options).then(image => {
-            setSource(image);
-            setAvatarId(0);
-            setModalVisible(false);
+            if (mounted.current) {
+                setSource(image);
+                setAvatarId(0);
+                setModalVisible(false);
+            }
         });
     }
 
     const selectFile = async () => {
         await ImagePicker.openPicker(options).then(image => {
-            setSource(image);
-            setAvatarId(0);
-            setModalVisible(false);
+            if (mounted.current) {
+                setSource(image);
+                setAvatarId(0);
+                setModalVisible(false);
+            }
         });
     }
 
     useEffect(() => {
+        mounted.current = true;
+        return ()=>{
+            mounted.current = false;
+        }
     }, [])
 
     return (

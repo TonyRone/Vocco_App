@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   ImageBackground,
@@ -31,6 +31,8 @@ const PremiumScreen = (props) => {
   const [loading, setLoading] = useState(false);
   const { user, refreshState, socketInstance } = useSelector((state) => state.user);
 
+  const mounted = useRef(false);
+
   const onNavigate = (des, par = null) => {
     const resetActionTrue = StackActions.reset({
       index: 0,
@@ -43,15 +45,15 @@ const PremiumScreen = (props) => {
   const changePremiumState = () => {
     setLoading(true);
     EditService.changePremium(premiumState).then(async res => {
-      if (res.respInfo.status == 201) {
+      if (res.respInfo.status == 201 && mounted.current) {
         let userData = { ...user }
         userData.premium = premiumState
         dispatch(setUser(userData));
         //dispatch(setRefreshState(!refreshState));
         socketInstance.emit("premium", { email: user.email });
-        onNavigate("Home")
+        onNavigate("Home");
+        setLoading(false);
       }
-      setLoading(false);
     })
       .catch(err => {
         console.log(err);
@@ -59,7 +61,10 @@ const PremiumScreen = (props) => {
   }
 
   useEffect(() => {
-
+    mounted.current = true;
+    return ()=>{
+      mounted.current = false;
+    }
   }, [])
 
   return (

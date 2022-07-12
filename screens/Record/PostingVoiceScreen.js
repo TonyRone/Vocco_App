@@ -71,6 +71,8 @@ const PostingVoiceScreen = (props) => {
   const [showShareVoice, setShowShareVoice] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(initCategory);
 
+  const mounted = useRef(false);
+
   const scrollRef = useRef();
   const dispatch = useDispatch();
 
@@ -122,14 +124,16 @@ const PostingVoiceScreen = (props) => {
       setIsLoading(true);
       VoiceService.postVoice(voiceFile).then(async res => {
         const jsonRes = await res.json();
-        if (res.respInfo.status !== 201) {
-        } else {
-          Vibration.vibrate(100);
-          socketInstance.emit("newVoice", { uid: user.id });
-          setShowShareVoice(jsonRes);
-         // dispatch(setRefreshState(!refreshState));
+        if (mounted.current) {
+          if (res.respInfo.status !== 201) {
+          } else {
+            Vibration.vibrate(100);
+            socketInstance.emit("newVoice", { uid: user.id });
+            setShowShareVoice(jsonRes);
+            // dispatch(setRefreshState(!refreshState));
+          }
+          setIsLoading(false);
         }
-        setIsLoading(false);
       })
         .catch(err => {
           console.log(err);
@@ -148,18 +152,20 @@ const PostingVoiceScreen = (props) => {
     };
     setIsLoading(true);
     VoiceService.changeVoice(payload).then(async res => {
-      if (res.respInfo.status !== 200) {
-      } else {
-      //  dispatch(setRefreshState(!refreshState));
-        let info = param.info;
-        info.title = voiceTitle;
-        info.emoji = icon;
-        info.category = Categories[category].label;
-        info.privacy = visibleStatus;
-        info.temporary = temporaryStatus;
-        onNavigate("VoiceProfile", { id: info.id });
+      if (mounted.current) {
+        if (res.respInfo.status !== 200) {
+        } else {
+          //  dispatch(setRefreshState(!refreshState));
+          let info = param.info;
+          info.title = voiceTitle;
+          info.emoji = icon;
+          info.category = Categories[category].label;
+          info.privacy = visibleStatus;
+          info.temporary = temporaryStatus;
+          onNavigate("VoiceProfile", { id: info.id });
+        }
+        setIsLoading(false);
       }
-      setIsLoading(false);
     })
       .catch(err => {
         console.log(err);
@@ -167,8 +173,12 @@ const PostingVoiceScreen = (props) => {
   }
 
   useEffect(() => {
+    mounted.current = true;
     if (param.info)
       dispatch(setVoiceState(voiceState + 1));
+    return ()=>{
+      mounted.current = false;
+    }
   }, [])
   return (
     <KeyboardAvoidingView

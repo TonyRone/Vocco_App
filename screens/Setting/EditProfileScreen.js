@@ -74,6 +74,7 @@ const EditProfileScreen = (props) => {
     const [bio, setBio] = useState(userData.bio);
 
     const passwordRef = useRef();
+    const mounted = useRef(false);
 
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -105,7 +106,8 @@ const EditProfileScreen = (props) => {
             socketInstance.disconnect();
             dispatch(setSocketInstance(null));
             onNavigate("Welcome");
-            setShowModal(false);
+            if (mounted.current)
+                setShowModal(false);
         })
     }
 
@@ -132,15 +134,17 @@ const EditProfileScreen = (props) => {
         else {
             setAllLoading(true);
             EditService.userNameVerify(username).then(async res => {
-                if (res.respInfo.status == 201) {
-                    setInputState({ username: t("Username is available") });
-                    handleSubmit();
+                if (mounted.current) {
+                    if (res.respInfo.status == 201) {
+                        setInputState({ username: t("Username is available") });
+                        handleSubmit();
+                    }
+                    else {
+                        setWarningState(true);
+                        setInputState({ username: t("This username is already taken") })
+                    }
+                    setAllLoading(false);
                 }
-                else {
-                    setWarningState(true);
-                    setInputState({ username: t("This username is already taken") })
-                }
-                setAllLoading(false);
             })
                 .catch(err => {
 
@@ -190,6 +194,10 @@ const EditProfileScreen = (props) => {
     }
 
     useEffect(() => {
+        mounted.current = true;
+        return ()=>{
+            mounted.current = false;
+        }
     }, [])
     return (
         <KeyboardAvoidingView

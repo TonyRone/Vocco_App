@@ -17,13 +17,15 @@ PushNotification.configure({
   },
 
   onNotification: async (notification) => {
-    if(notification.userInteraction){
-      await AsyncStorage.setItem(
-        APP_NAV,
-        'stop'
-      );
+    // if(notification.userInteraction){
+    //   await AsyncStorage.setItem(
+    //     APP_NAV,
+    //     'stop'
+    //   );
+    //   NavigationService.navigate(notification.data.nav,notification.data.params);
+    // }
+    if(notification.userInteraction)
       NavigationService.navigate(notification.data.nav,notification.data.params);
-    }
     notification.finish(PushNotificationIOS.FetchResult.NoData);
   }
 

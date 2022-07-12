@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, TouchableOpacity, Text, Image } from "react-native";
 import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
@@ -26,6 +26,8 @@ export const TagItem = ({
   const [tagUsers, setTagUsers] = useState([]);
   const [delayTime, setDelayTime] = useState(null);
   const [showList, setShowList] = useState(false);
+
+  const mounted = useRef(false);
 
   const { t, i18n } = useTranslation();
   const [lastTap, setLastTap] = useState(0);
@@ -56,7 +58,7 @@ export const TagItem = ({
   const getTagUsers = () => {
     VoiceService.getTagUsers(info.id).then(async res => {
       const jsonRes = await res.json();
-      if (res.respInfo.status === 200) {
+      if (res.respInfo.status === 200&&mounted.current) {
         setTagUsers(jsonRes);
       }
     })
@@ -76,7 +78,11 @@ export const TagItem = ({
   }
 
   useEffect(() => {
+    mounted.current = true;
     getTagUsers();
+    return ()=>{
+      mounted.current = false;
+    }
   }, [])
 
   return (<>

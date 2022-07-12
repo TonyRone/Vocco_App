@@ -37,6 +37,8 @@ const AddFriendScreen = (props) => {
     const [activeUsers, setActiveUsers] = useState([]);
     const [followedUsers, setFollowedUsers] = useState([]);
 
+    const mounted = useRef(false);
+
     const user = useSelector((state) => state.user.user);
     const dispatch = useDispatch();
 
@@ -47,7 +49,7 @@ const AddFriendScreen = (props) => {
     const getActiveUsers = () => {
         VoiceService.getActiveUsers().then(async res => {
             const jsonRes = await res.json();
-            if (res.respInfo.status == 200) {
+            if (res.respInfo.status == 200 && mounted.current) {
                 setActiveUsers(jsonRes);
             }
         })
@@ -64,7 +66,11 @@ const AddFriendScreen = (props) => {
     }
 
     useEffect(() => {
+        mounted.current = true;
         getActiveUsers();
+        return ()=>{
+            mounted.current = false;
+        }
     }, [])
     return (
         <SafeAreaView

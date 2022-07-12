@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Pressable,
@@ -32,6 +32,8 @@ export const FollowUsers = ({
   const [follows, setFollows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const mounted = useRef(false);
+
   let { user } = useSelector((state) => {
     return (
       state.user
@@ -46,11 +48,11 @@ export const FollowUsers = ({
   const getFollowUsers = () => {
     setIsLoading(true);
     VoiceService.getFollows(userId, followType).then(async res => {
-      if (res.respInfo.status === 200) {
+      if (res.respInfo.status === 200&&mounted.current) {
         const jsonRes = await res.json();
         setFollows(jsonRes);
+        setIsLoading(false);
       }
-      setIsLoading(false);
     })
       .catch(err => {
         console.log(err);
@@ -58,7 +60,11 @@ export const FollowUsers = ({
   }
 
   useEffect(() => {
+    mounted.current = true;
     getFollowUsers();
+    return ()=>{
+      mounted.current = false;
+    }
   }, [])
 
   return (

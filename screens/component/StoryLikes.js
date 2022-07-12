@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Pressable,
@@ -33,6 +33,8 @@ export const StoryLikes = ({
   const [likes, setLikes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const mounted = useRef(false);
+
   let { user } = useSelector((state) => {
     return (
       state.user
@@ -47,11 +49,11 @@ export const StoryLikes = ({
   const getStoryLikes = () => {
     setIsLoading(true);
     VoiceService.getLikes(storyId, storyType).then(async res => {
-      if (res.respInfo.status === 200) {
+      if (res.respInfo.status === 200&&mounted.current) {
         const jsonRes = await res.json();
         setLikes(jsonRes);
+        setIsLoading(false);
       }
-      setIsLoading(false);
     })
       .catch(err => {
         console.log(err);
@@ -59,7 +61,11 @@ export const StoryLikes = ({
   }
 
   useEffect(() => {
+    mounted.current = true;
     getStoryLikes();
+    return ()=>{
+      mounted.current = false;
+    }
   }, [])
 
   return (

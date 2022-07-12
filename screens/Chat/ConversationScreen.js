@@ -85,6 +85,8 @@ const ConversationScreen = (props) => {
     const [isSelecting, setIsSelecting] = useState(false);
     const [otherState, setOtherState] = useState('');
 
+    const mounted = useRef(false);
+
     const hideMenu = () => setVisible(false);
 
     const showMenu = () => setVisible(true);
@@ -147,10 +149,10 @@ const ConversationScreen = (props) => {
     const getMessages = async () => {
         VoiceService.getMessages(info.user.id).then(async res => {
             const jsonRes = await res.json();
-            if (res.respInfo.status == 200) {
+            if (res.respInfo.status == 200 && mounted.current) {
                 setMessages(jsonRes);
+                setIsLoading(false);
             }
-            setIsLoading(false);
         })
             .catch(err => {
                 console.log(err);
@@ -167,14 +169,13 @@ const ConversationScreen = (props) => {
         VoiceService.postMessage(sendFile).then(async res => {
             const jsonRes = await res.json();
             if (res.respInfo.status !== 201) {
-            } else {
+            } else if(mounted.current) {
                 getMessages();
                 socketInstance.emit("newMessage", { info: jsonRes });
             }
         })
             .catch(err => {
                 console.log(err);
-                setIsLoading(false);
             });
     }
 
@@ -204,7 +205,7 @@ const ConversationScreen = (props) => {
         VoiceService.postMessage(sendFile).then(async res => {
             const jsonRes = await res.json();
             if (res.respInfo.status !== 201) {
-            } else {
+            } else if(mounted.current){
                 Vibration.vibrate(100);
                 setIsPublish(false);
                 let tp = messages;
@@ -213,8 +214,8 @@ const ConversationScreen = (props) => {
                 setMessages([...tp]);
                 socketInstance.emit("newMessage", { info: jsonRes });
                 RNVibrationFeedback.vibrateWith(1519);
+                setIsLoading(false);
             }
-            setIsLoading(false);
         })
             .catch(err => {
                 console.log(err);
@@ -310,11 +311,7 @@ const ConversationScreen = (props) => {
 
     const onClearChat = () => {
         let chatIds = selectedItems.map((e) => messages[e].id);
-        VoiceService.deleteMessages({ messageIds: chatIds }).then(async res => {
-        })
-            .catch(err => {
-                console.log(err);
-            })
+        VoiceService.deleteMessages({ messageIds: chatIds });
         setMessages(prev => {
             prev = prev.filter((e, index) => selectedItems.indexOf(index) == -1);
             return [...prev]
@@ -325,11 +322,7 @@ const ConversationScreen = (props) => {
 
     const onClearAllChat = () => {
         let chatIds = messages.map((e) => e.id);
-        VoiceService.deleteMessages({ messageIds: chatIds }).then(async res => {
-        })
-            .catch(err => {
-                console.log(err);
-            })
+        VoiceService.deleteMessages({ messageIds: chatIds });
         setMessages([]);
         setSelectedItems([]);
         setIsSelecting(false);
@@ -338,11 +331,7 @@ const ConversationScreen = (props) => {
     const onDeleteItem = (idx) => {
         let ids = [];
         ids.push(messages[idx].id);
-        VoiceService.deleteMessages({ messageIds: ids }).then(async res => {
-        })
-            .catch(err => {
-                console.log(err);
-            });
+        VoiceService.deleteMessages({ messageIds: ids });
         setMessages(prev => {
             prev.splice(idx, 1);
             return [...prev]
@@ -363,6 +352,7 @@ const ConversationScreen = (props) => {
     }
 
     useEffect(() => {
+        mounted.current = true;
         if (recordId) {
             sendRecordMessage();
         }
@@ -384,6 +374,7 @@ const ConversationScreen = (props) => {
         // if (Platform.OS === 'android')
         //     requestCameraPermission();
         return () => {
+            mounted.current = false;
             clearRecorder();
             socketInstance.off('receiveMessage');
             socketInstance.off('user_login', loginListener);
@@ -416,26 +407,39 @@ const ConversationScreen = (props) => {
                                     xml={arrowBendUpLeft}
                                 />
                             </TouchableOpacity>
-                            <Image
-                                source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
-                                style={{ width: 40, height: 40, marginLeft: 25, borderRadius: 24, borderColor: '#FFA002', borderWidth: info.user.premium == 'none' ? 0 : 2 }}
-                                resizeMode='cover'
-                            />
-                            <View style={{
-                                marginLeft: 16
-                            }}>
-                                <SemiBoldText
-                                    text={info.user.name}
-                                    fontSize={20}
-                                    lineHeight={24}
-                                />
-                                <DescriptionText
-                                    text={renderState(isOnline)}
-                                    fontSize={13}
-                                    lineHeight={21}
-                                    color={(isOnline == 'onSession') ? '#8327D8' : 'rgba(54, 36, 68, 0.8)'}
-                                />
-                            </View>
+                            <TouchableOpacity
+                                style={styles.rowAlignItems}
+                                onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
+                            >
+                                <View
+                                    onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
+                                >
+                                    <Image
+                                        source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
+                                        style={{ width: 40, height: 40, marginLeft: 25, borderRadius: 24, borderColor: '#FFA002', borderWidth: info.user.premium == 'none' ? 0 : 2 }}
+                                        resizeMode='cover'
+                                    />
+                                </View>
+                                <View style={{
+                                    marginLeft: 16
+                                }}>
+                                    <View
+                                        onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
+                                    >
+                                        <SemiBoldText
+                                            text={info.user.name}
+                                            fontSize={20}
+                                            lineHeight={24}
+                                        />
+                                    </View>
+                                    <DescriptionText
+                                        text={renderState(isOnline)}
+                                        fontSize={13}
+                                        lineHeight={21}
+                                        color={(isOnline == 'onSession') ? '#8327D8' : 'rgba(54, 36, 68, 0.8)'}
+                                    />
+                                </View>
+                            </TouchableOpacity>
                         </View>
                         <Menu
                             visible={visible}
@@ -790,8 +794,8 @@ const ConversationScreen = (props) => {
                                 onTouchStart={(e) => onChangeRecord(e, true)}
                                 onTouchEnd={(e) => onChangeRecord(e, false)}
                                 style={{
-                                    opacity:isRecording?0.1:1
-                                  }}
+                                    opacity: isRecording ? 0.1 : 1
+                                }}
                             >
                                 <SvgXml
                                     width={isRecording ? 68 : 56}

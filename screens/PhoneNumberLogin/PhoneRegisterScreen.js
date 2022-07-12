@@ -27,6 +27,7 @@ const PhoneRegisterScreen = (props) => {
 
     const { t, i18n } = useTranslation();
     const phoneInput = useRef();
+    const mounted = useRef(false);
 
     const phoneRegister = () => {
         const payload = {
@@ -34,18 +35,24 @@ const PhoneRegisterScreen = (props) => {
         };
         setLoading(true);
         AuthService.phoneRegister(payload).then(async res => {
-            const jsonRes = await res.json();
-            if (res.respInfo.status === 201) {
-                props.navigation.navigate('PhoneVerify', { number: formattedValue, country: country, type:'register' })
+            if (mounted.current) {
+                const jsonRes = await res.json();
+                if (res.respInfo.status === 201) {
+                    props.navigation.navigate('PhoneVerify', { number: formattedValue, country: country, type: 'register' })
+                }
+                else {
+                    setError(jsonRes.message);
+                }
+                setLoading(false);
             }
-            else {
-                setError(jsonRes.message);
-            }
-            setLoading(false);
         })
     }
 
     useEffect(() => {
+        mounted.current = true;
+        return ()=>{
+            mounted.current = false;
+        }
     }, [])
 
     return (

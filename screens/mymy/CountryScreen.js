@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -23,6 +23,8 @@ const CountryScreen = (props) => {
   const [message, setMessage] = useState('');
   const [country, setCountry] = useState('');
 
+  const mounted = useRef(false);
+
   const { t, i18n } = useTranslation();
 
   const user = useSelector((state) => state.user.user);
@@ -46,13 +48,15 @@ const CountryScreen = (props) => {
     EditService.changeProfile(payload).then(async res => {
       try {
         const jsonRes = await res.json();
-        if (res.respInfo.status !== 200) {
-          setIsError(true);
-          setMessage(jsonRes.message);
-        } else {
-          props.navigation.navigate('ProfilePicture');
-          setIsError(false);
-          setMessage(jsonRes.message);
+        if (mounted.current) {
+          if (res.respInfo.status !== 200) {
+            setIsError(true);
+            setMessage(jsonRes.message);
+          } else {
+            props.navigation.navigate('ProfilePicture');
+            setIsError(false);
+            setMessage(jsonRes.message);
+          }
         }
       } catch (err) {
         console.log(err);
@@ -68,6 +72,10 @@ const CountryScreen = (props) => {
   }
 
   useEffect(() => {
+    mounted.current = true;
+    return ()=>{
+      mounted.current = false;
+    }
   }, [])
 
   return (

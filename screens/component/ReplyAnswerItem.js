@@ -48,11 +48,6 @@ export const ReplyAnswerItem = ({
       rep = VoiceService.replyAnswerAppreciate(info.id);
     else
       rep = VoiceService.replyAnswerUnAppreciate(info.id);
-    rep.then(async res => {
-    })
-      .catch(err => {
-        console.log(err);
-      });
     onChangeIsLiked();
   }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, TouchableOpacity, Text, Image } from "react-native";
 import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
@@ -40,6 +40,9 @@ export const AnswerVoiceItem = ({
 
   const { t, i18n } = useTranslation();
   const [lastTap, setLastTap] = useState(0);
+
+  const mounted = useRef(false);
+
   let userName = info.user.name,
     heartNum = info.likesCount,
     check = info.isLiked;
@@ -79,7 +82,7 @@ export const AnswerVoiceItem = ({
     // else{
     //   setIsExpanded(true);
     VoiceService.getReplyAnswerVoices(info.id).then(async res => {
-      if (res.respInfo.status === 200) {
+      if (res.respInfo.status === 200&&mounted.current) {
         const jsonRes = await res.json();
         setReplyAnswers([...jsonRes]);
       }
@@ -117,7 +120,11 @@ export const AnswerVoiceItem = ({
   }
 
   useEffect(() => {
+    mounted.current = true;
     getReplies();
+    return ()=>{
+      mounted.current = false;
+    }
   }, [])
 
   return (<>

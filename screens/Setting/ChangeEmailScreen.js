@@ -39,6 +39,8 @@ const ChangeEmailScreen = (props) => {
     const [loading, setLoading] = useState(false);
     const [statetype, setStatetype] = useState('password');
 
+    const mounted = useRef(false);
+
     const showEye = () => {
         setSecureTextEntry(!secureTextEntry);
     }
@@ -83,14 +85,16 @@ const ChangeEmailScreen = (props) => {
             };
             setLoading(true);
             EditService.changeEmail(payload).then(async res => {
-                try {
-                    if (res.respInfo.status == 201) {
-                        setStatetype('verify');
-                    }
-                } catch (err) {
-                    console.log(err);
-                };
-                setLoading(false);
+                if (mounted.current) {
+                    try {
+                        if (res.respInfo.status == 201) {
+                            setStatetype('verify');
+                        }
+                    } catch (err) {
+                        console.log(err);
+                    };
+                    setLoading(false);
+                }
             })
                 .catch(err => {
                     console.log(err);
@@ -106,6 +110,10 @@ const ChangeEmailScreen = (props) => {
     }
 
     useEffect(() => {
+        mounted.current = true;
+        return ()=>{
+            mounted.current = false;
+        }
     }, [])
     return (
         <KeyboardAvoidingView

@@ -51,6 +51,7 @@ const FriendsScreen = (props) => {
     const [label, setLabel] = useState('');
 
     const scrollRef = useRef();
+    const mounted = useRef(false);
     const scrollIndicator = useRef(new Animated.Value(0)).current;
 
     const scrollIndicatorPosition = Animated.multiply(
@@ -60,7 +61,7 @@ const FriendsScreen = (props) => {
 
     const onAcceptRequest = (index) => {
         VoiceService.acceptFriend(requests[index].fromUser.id, requests[index].id).then(async res => {
-            if (res.respInfo.status == 201) {
+            if (res.respInfo.status == 201 && mounted.current) {
                 setRequests(prev => {
                     prev.splice(index, 1);
                     return [...prev]
@@ -131,7 +132,7 @@ const FriendsScreen = (props) => {
     const getUsers = () => {
         let followers = [], followings = [], contacts = [];
         VoiceService.getRequests(0).then(async res => {
-            if (res.respInfo.status == 200) {
+            if (res.respInfo.status == 200 && mounted.current) {
                 const jsonRes = await res.json();
                 setRequests(jsonRes);
             }
@@ -140,7 +141,7 @@ const FriendsScreen = (props) => {
                 console.log(err);
             });
         VoiceService.getSuggests(0).then(async res => {
-            if (res.respInfo.status == 200) {
+            if (res.respInfo.status == 200&&mounted.current) {
                 const jsonRes = await res.json();
                 setSuggests(jsonRes);
             }
@@ -149,12 +150,12 @@ const FriendsScreen = (props) => {
                 console.log(err);
             });
         VoiceService.getFollows(user.id, "Followers").then(async res => {
-            if (res.respInfo.status === 200) {
+            if (res.respInfo.status === 200&&mounted.current) {
                 const jsonRes = await res.json();
                 setFollowers(jsonRes);
                 const followerIds = new Set(jsonRes.map((item) => item.user.id));
                 VoiceService.getFollows(user.id, "Following").then(async res => {
-                    if (res.respInfo.status === 200) {
+                    if (res.respInfo.status === 200&&mounted.current) {
                         const jsonRes1 = await res.json();
                         setFollowings(jsonRes1);
                         contacts = [...jsonRes, ...jsonRes1.filter(x => !followerIds.has(x.user.id))]
@@ -171,7 +172,7 @@ const FriendsScreen = (props) => {
                 console.log(err);
             });
         VoiceService.getInvites().then(async res => {
-            if (res.respInfo.status == 200) {
+            if (res.respInfo.status == 200&&mounted.current) {
                 const jsonRes = await res.json();
                 setInvites(jsonRes);
             }
@@ -193,7 +194,11 @@ const FriendsScreen = (props) => {
     }
 
     useEffect(() => {
+        mounted.current = true;
         getUsers();
+        return ()=>{
+            mounted.current = false;
+        }
     }, [])
 
     return (

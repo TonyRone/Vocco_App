@@ -30,6 +30,8 @@ const PhoneVerifyScreen = (props) => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const mounted = useRef(false);
+
     const phoneNumber = props.navigation.state.params?.number;
     const country = props.navigation.state.params?.country;
     const type = props.navigation.state.params?.type;
@@ -63,20 +65,24 @@ const PhoneVerifyScreen = (props) => {
         };
         if (type == 'register')
             AuthService.phoneRegister(payload).then(async res => {
-                const jsonRes = await res.json();
-                if (res.respInfo.status === 201) {
-                }
-                else {
-                    setError(jsonRes.message);
+                if (mounted.current) {
+                    const jsonRes = await res.json();
+                    if (res.respInfo.status === 201) {
+                    }
+                    else {
+                        setError(jsonRes.message);
+                    }
                 }
             })
         else
             AuthService.phoneLogin(payload).then(async res => {
-                const jsonRes = await res.json();
-                if (res.respInfo.status === 201) {
-                }
-                else {
-                    setError(jsonRes.message);
+                if (mounted.current) {
+                    const jsonRes = await res.json();
+                    if (res.respInfo.status === 201) {
+                    }
+                    else {
+                        setError(jsonRes.message);
+                    }
                 }
             })
     }
@@ -146,7 +152,7 @@ const PhoneVerifyScreen = (props) => {
     const onSetUserInfo = async (accessToken, refreshToken, isRegister = false) => {
         AuthService.getUserInfo(accessToken, 'reg').then(async res => {
             const jsonRes = await res.json();
-            if (res.respInfo.status == 200) {
+            if (res.respInfo.status == 200 && mounted.current) {
                 onCreateSocket(jsonRes, isRegister);
             }
         })
@@ -163,14 +169,16 @@ const PhoneVerifyScreen = (props) => {
         setLoading(true);
         AuthService.confirmPhoneVerify(payload).then(async res => {
             const jsonRes = await res.json();
-            if (res.respInfo.status === 201) {
-                _storeData(jsonRes.accessToken, jsonRes.refreshToken);
-                onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken, jsonRes.isRegister);
+            if (mounted.current) {
+                if (res.respInfo.status === 201) {
+                    _storeData(jsonRes.accessToken, jsonRes.refreshToken);
+                    onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken, jsonRes.isRegister);
+                }
+                else {
+                    setError(jsonRes.message);
+                }
+                setLoading(false);
             }
-            else {
-                setError(jsonRes.message);
-            }
-            setLoading(false);
         })
     }
 
@@ -179,6 +187,10 @@ const PhoneVerifyScreen = (props) => {
     const { t, i18n } = useTranslation();
 
     useEffect(() => {
+        mounted.current = true;
+        return ()=>{
+            mounted.current = false;
+        }
     }, [])
 
     return (

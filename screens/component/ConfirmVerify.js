@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, KeyboardAvoidingView, Text, TouchableOpacity } from 'react-native';
 import OTPInputView from '@twotalltotems/react-native-otp-input'
 import { useTranslation } from 'react-i18next';
@@ -21,6 +21,8 @@ export const ConfirmVerify = ({
 
   const { t, i18n } = useTranslation();
 
+  const mounted = useRef(false);
+
   const user = useSelector((state) => state.user.user);
 
   const handleSubmit = async ({ }) => {
@@ -35,22 +37,31 @@ export const ConfirmVerify = ({
       rqst = AuthService.confirmVerify(payload);
     rqst.then(async res => {
       try {
-        if (res.respInfo.status !== 201) {
-          setPseudo('');
-          //  setMessage(jsonRes.message);
-        } else {
-          onSuccess();
-          //   setMessage(jsonRes.message);
+        if (mounted.current) {
+          if (res.respInfo.status !== 201) {
+            setPseudo('');
+            //  setMessage(jsonRes.message);
+          } else {
+            onSuccess();
+            //   setMessage(jsonRes.message);
+          }
+          setLoading(false);
         }
       } catch (err) {
         console.log(err);
       };
-      setLoading(false);
     })
       .catch(err => {
         console.log(err);
       });
   }
+
+  useEffect(() => {
+    mounted.current = true;
+    return ()=>{
+      mounted.current = false;
+    }
+  }, [])
 
   return (
     <KeyboardAvoidingView

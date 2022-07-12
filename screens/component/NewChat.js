@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { View, TouchableOpacity, Text, Image, Pressable, TextInput, Modal } from "react-native";
 import { SvgXml } from 'react-native-svg';
 
@@ -40,6 +40,8 @@ export const NewChat = ({
   const [label, setLabel] = useState('');
   const [filterCount, setFilterCount] = useState(0);
 
+  const mounted = useRef(false);
+
   const closeModal = () => {
     setShowModal(false);
     onCloseModal();
@@ -54,7 +56,7 @@ export const NewChat = ({
   const getFriends = () => {
     setIsLoading(true);
     VoiceService.getFollows(user.id, "Following").then(async res => {
-      if (res.respInfo.status === 200) {
+      if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
         const userIds = jsonRes.map((item, index) => item.user.id);
         socketInstance.emit("getUsersState", userIds, (res) => {
@@ -65,8 +67,8 @@ export const NewChat = ({
           })
           setFriends([...tp]);
         })
+        setIsLoading(false);
       }
-      setIsLoading(false);
     })
       .catch(err => {
         console.log(err);
@@ -114,9 +116,13 @@ export const NewChat = ({
   }
 
   useEffect(() => {
+    mounted.current = true;
     getFriends();
     socketInstance.on("user_login", listener);
-    return () => socketInstance.off("user_login", listener);
+    return () => {
+      mounted.current = false;
+      socketInstance.off("user_login", listener);
+    }
   }, [])
 
   return (

@@ -56,6 +56,7 @@ const SearchScreen = (props) => {
   const { t, i18n } = useTranslation();
 
   const scrollRef = useRef();
+  const mounted = useRef(false);
 
   let { user, refreshState } = useSelector((state) => {
     return (
@@ -77,12 +78,12 @@ const SearchScreen = (props) => {
     if (v != '') {
       setIsLoading(true);
       VoiceService.getDiscoverTitle(v, 0, Categories[category].label).then(async res => {
-        if (res.respInfo.status === 200) {
+        if (res.respInfo.status === 200&&mounted.current) {
           const jsonRes = await res.json();
           setFilterTitles(jsonRes);
           setIsEmpty(jsonRes.length == 0);
+          setIsLoading(false);
         }
-        setIsLoading(false);
       })
         .catch(err => {
           console.log(err);
@@ -116,7 +117,10 @@ const SearchScreen = (props) => {
   }
 
   useEffect(() => {
-
+    mounted.current = true;
+    return ()=>{
+      mounted.current = false;
+    }
   }, [refreshState])
 
   return (

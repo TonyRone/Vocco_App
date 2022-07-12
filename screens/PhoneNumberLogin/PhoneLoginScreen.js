@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, ImageBackground, TouchableOpacity, Platform , Keyboard, TouchableWithoutFeedback} from 'react-native';
+import { View, ImageBackground, TouchableOpacity, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import * as Progress from "react-native-progress";
 import PhoneInput from "react-native-phone-number-input";
 import { SvgXml } from 'react-native-svg';
@@ -27,6 +27,7 @@ const PhoneLoginScreen = (props) => {
 
     const { t, i18n } = useTranslation();
     const phoneInput = useRef();
+    const mounted = useRef(false);
 
     const phoneLogin = () => {
         const payload = {
@@ -35,17 +36,23 @@ const PhoneLoginScreen = (props) => {
         setLoading(true);
         AuthService.phoneLogin(payload).then(async res => {
             const jsonRes = await res.json();
-            if (res.respInfo.status === 201) {
-                props.navigation.navigate('PhoneVerify', { number: formattedValue, country: country, type:'login' })
+            if (mounted.current) {
+                if (res.respInfo.status === 201) {
+                    props.navigation.navigate('PhoneVerify', { number: formattedValue, country: country, type: 'login' })
+                }
+                else {
+                    setError(jsonRes.message);
+                }
+                setLoading(false);
             }
-            else {
-                setError(jsonRes.message);
-            }
-            setLoading(false);
         })
     }
 
     useEffect(() => {
+        mounted.current = true;
+        return ()=>{
+            mounted.current = false;
+        }
     }, [])
 
     return (

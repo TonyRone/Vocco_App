@@ -28,6 +28,8 @@ const SelectIdentifyScreen = (props) => {
     const [identify, setIdentify] = useState('m');
     const [loading, setLoading] = useState(false);
 
+    const mounted = useRef(false);
+
     const { t, i18n } = useTranslation();
 
     const handleSubmit = () => {
@@ -43,12 +45,14 @@ const SelectIdentifyScreen = (props) => {
         setLoading(true);
         EditService.changeProfile(payload).then(async res => {
             const jsonRes = await res.json();
-            if (res.respInfo.status !== 200) {
-                setError(jsonRes.message);
-            } else {
-                props.navigation.navigate('ProfilePicture');
+            if (mounted.current) {
+                if (res.respInfo.status !== 200) {
+                    setError(jsonRes.message);
+                } else {
+                    props.navigation.navigate('ProfilePicture');
+                }
+                setLoading(false);
             }
-            setLoading(false);
         })
             .catch(err => {
                 console.log(err);
@@ -56,6 +60,10 @@ const SelectIdentifyScreen = (props) => {
     }
 
     useEffect(() => {
+        mounted.current = true;
+        return ()=>{
+            mounted.current = false;
+        }
     }, [])
 
     return (
