@@ -65,13 +65,13 @@ export const ContactList = ({
   useEffect(async () => {
     mounted.current = true;
     if (Platform.OS == 'ios') {
-      Contacts.getAllWithoutPhotos()
+      await Contacts.getAllWithoutPhotos()
         .then((contacts) => {
           // work with contacts
           if(mounted.current)
           setContactUsers(contacts);
         })
-        .catch((e) => {
+        .catch((err) => {
           console.log(e)
         })
     }

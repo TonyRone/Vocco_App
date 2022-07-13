@@ -72,8 +72,8 @@ class VoicePlayer extends Component {
     }
     else {
       if (this.props.playing == true)
-        await this.getPlayLink().then(async (res) =>
-          await this.onStartPlay(res)
+        await this.getPlayLink().then((res) =>
+          this.onStartPlay(res)
         )
     }
   }
@@ -263,7 +263,8 @@ class VoicePlayer extends Component {
         return voiceState;
     })
       .catch(async err => {
-        return voiceState;
+        console.log(err);
+        this.onStopPlay();
       })
   }
 
@@ -295,12 +296,16 @@ class VoicePlayer extends Component {
         });
       this.props.startPlay();
       const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath)
-        .catch(err => console.log(err.message));
+        .then(res => {
+          this.audioRecorderPlayer.addPlayBackListener(async (e) => {
+            this.onSetPosition(e)
+            return;
+          });
+        })
+        .catch(err => {
+          this.onStopPlay();
+        });
       //const volume = await this.audioRecorderPlayer.setVolume(1.0);
-      this.audioRecorderPlayer.addPlayBackListener(async (e) => {
-        this.onSetPosition(e)
-        return;
-      });
     }
     catch (err) {
       this.onStopPlay();
@@ -337,7 +342,7 @@ class VoicePlayer extends Component {
         console.log(err);
       }
     }
-    if(this._isMounted)
+    if (this._isMounted)
       this.props.stopPlay();
   };
 }

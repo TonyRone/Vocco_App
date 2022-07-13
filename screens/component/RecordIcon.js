@@ -97,12 +97,15 @@ export const RecordIcon = ({
         AVFormatIDKeyIOS: AVEncodingOption.aac,
       };
       dispatch(setVoiceState(voiceState + 1));
-      clearRecorder().then(async res => {
-        await recorderPlayer.startRecorder(path, audioSet);
+      await recorderPlayer.startRecorder(path, audioSet).then(res => {
         recorderPlayer.addRecordBackListener((e) => {
           wasteTime.current = e.currentPosition;
         });
-      });
+      })
+        .catch(err => {
+          console.log(err);
+          clearRecorder();
+        });
     }
   };
 
@@ -317,7 +320,7 @@ export const RecordIcon = ({
           minY={0}
           maxY={0}
           touchableOpacityProps={{
-           // activeOpactiy: 1,
+            // activeOpactiy: 1,
           }}
           onDrag={(event, gestureState) => {
 
@@ -345,7 +348,7 @@ export const RecordIcon = ({
             onTouchStart={(e) => onChangeRecord(e, true)}
             onTouchEnd={(e) => onChangeRecord(e, false)}
             style={{
-              opacity:isPaused?1:0.1
+              opacity: isPaused ? 1 : 0.1
             }}
           >
             <SvgXml
