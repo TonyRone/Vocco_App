@@ -13,18 +13,24 @@ export const HeartIcon = ({
 }) => {
 
   const [liked, setLiked] = useState(isLike);
+  const mounted = useRef(false);
 
   const AnimatedIcon = Animatable.createAnimatableComponent(Icon);
   const smallAnimatedIcon = useRef();
 
   const handleOnPressLike = async () => {
     await smallAnimatedIcon.current?.bounceIn();
-    setLiked(!liked);
+    if(mounted.current)
+      setLiked(!liked);
   }
 
   useEffect(() => {
+    mounted.current = true;
     if (isLike != liked) {
       handleOnPressLike();
+    }
+    return ()=>{
+      mounted.current = false;
     }
   }, [isLike])
 

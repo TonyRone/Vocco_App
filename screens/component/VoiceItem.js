@@ -70,6 +70,12 @@ export const VoiceItem = ({
     setRefresh(isRefresh);
   }
 
+  const onLimit = (v) => {
+    return ((v).length > 20) ?
+      (((v).substring(0, 17)) + '...') :
+      v;
+  }
+
   const OnSetLike = () => {
     if (info.isLike == true) {
       VoiceService.recordUnAppreciate(info.id);
@@ -158,7 +164,7 @@ export const VoiceItem = ({
               }}
             >
               <TitleText
-                text={voiceTitle}
+                text={onLimit(voiceTitle)}
                 maxWidth={windowWidth - 180}
                 fontSize={17}
               />

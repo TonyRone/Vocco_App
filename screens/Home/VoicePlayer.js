@@ -259,9 +259,11 @@ class VoicePlayer extends Component {
         this._playerPath = `${Platform.OS === 'android' ? res.path() : 'ss.m4a'}`;
         return voiceState + 1;
       }
+      else
+        return voiceState;
     })
       .catch(async err => {
-        await this.onStopPlay();
+        return voiceState;
       })
   }
 

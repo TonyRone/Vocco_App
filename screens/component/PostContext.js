@@ -48,11 +48,10 @@ export const PostContext = ({
 
   const appreciateVoice = () => {
     onChangeIsLike();
-    let rep;
     if (postInfo.isLike == false)
-      rep = VoiceService.recordAppreciate({ count: 1, id: postInfo.id });
+      VoiceService.recordAppreciate({ count: 1, id: postInfo.id });
     else
-      rep = VoiceService.recordUnAppreciate(postInfo.id);
+      VoiceService.recordUnAppreciate(postInfo.id);
   }
 
   const closeModal = () => {
@@ -78,7 +77,7 @@ export const PostContext = ({
     >
       <Pressable onPressOut={closeModal} style={styles.swipeModal}>
         <View
-          style={[styles.paddingH16, { marginTop: "25%" }]}
+          style={ { marginTop: "25%" }}
         >
           <VoiceItem
             info={postInfo}
@@ -89,7 +88,7 @@ export const PostContext = ({
           />
           {!showReport ?
             <View
-              style={styles.contextWrap}
+              style={[styles.contextWrap,{marginLeft:16}]}
             >
               <TouchableOpacity
                 style={styles.contextMenu}
