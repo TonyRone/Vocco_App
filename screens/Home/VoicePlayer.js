@@ -179,7 +179,7 @@ class VoicePlayer extends Component {
           >
             {waveCom}
           </View>
-          {this.state.isStarted == true && <View style={[styles.rowSpaceBetween, { marginTop: 10 }]}>
+          {(this.state.isStarted == true && !isNaN(this.props.duration)) && <View style={[styles.rowSpaceBetween, { marginTop: 10 }]}>
             <DescriptionText
               text={new Date(Math.max(this.state.currentPositionSec, 0)).toISOString().substr(14, 5)}
               lineHeight={13}
@@ -270,7 +270,7 @@ class VoicePlayer extends Component {
 
   onSetPosition = async (e) => {
     if (this._isMounted) {
-      if (this.state.isPlaying)
+      if (this.state.isPlaying&&!isNaN(e.currentPosition)&&!isNaN(e.duration))
         this.setState({
           currentPositionSec: e.currentPosition,
           currentDurationSec: e.duration,
@@ -283,7 +283,7 @@ class VoicePlayer extends Component {
 
   onStartPlay = async (res) => {
     let { voiceState } = this.props;
-    if (res != voiceState) {
+    if (res != voiceState|| isNaN(this.props.duration)) {
       await this.onStopPlay();
       return;
     }
