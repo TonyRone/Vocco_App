@@ -6,7 +6,7 @@ pod 'RNGoogleSignin', :path => '../node_modules/react-native-google-signin'
 pod 'React', :path => '../node_modules/react-native/'
 
 platform :ios, '13.0'
-#use_frameworks!
+use_frameworks!
 
 target 'Vocco' do
   #pod 'React-RCTSettings', :path => '../node_modules/react-native/Libraries/Settings'
