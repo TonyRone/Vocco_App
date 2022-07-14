@@ -31,11 +31,9 @@ import ChangeEmailScreen from './screens/Setting/ChangeEmailScreen';
 import TutorialScreen from './screens/Tutorial/TutorialScreen';
 
 //Discover
-import DiscoverScreen from './screens/Discover/DiscoverScreen';
 import SearchScreen from './screens/Discover/SearchScreen';
 
 //Feed
-import FeedScreen from './screens/Home/FeedScreen';
 
 //Record
 import HoldRecordScreen from './screens/Record/HoldRecordScreen';
@@ -173,25 +171,8 @@ const AppNavigator = createStackNavigator({
     }
   },
 
-  //Discover
-  Discover: {
-    screen: DiscoverScreen,
-    navigationOptions: {
-      headerShown: false,
-      animationEnabled:false
-    }
-  },
   Search: {
     screen: SearchScreen,
-    navigationOptions: {
-      headerShown: false,
-      animationEnabled:false
-    }
-  },
-
-  //Feed
-  Feed: {
-    screen: FeedScreen,
     navigationOptions: {
       headerShown: false,
       animationEnabled:false

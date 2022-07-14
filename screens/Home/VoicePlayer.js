@@ -5,7 +5,8 @@ import {
   View,
 } from 'react-native';
 import { styles } from '../style/Common';
-import { recorderPlayer } from './AudioRecorderPlayer';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+//import { recorderPlayer } from './AudioRecorderPlayer';
 import { DescriptionText } from '../component/DescriptionText';
 import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -57,7 +58,7 @@ class VoicePlayer extends Component {
       voiceKey: props.voiceState,
       swipe: {}
     };
-    this.audioRecorderPlayer = recorderPlayer;
+    this.audioRecorderPlayer = new AudioRecorderPlayer();
     //this.audioRecorderPlayer.setSubscriptionDuration(0.2); // optional. Default is 0.5
   }
 
