@@ -1,4 +1,5 @@
 #import "AppDelegate.h"
+#import <Firebase.h>
 
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
@@ -29,7 +30,7 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  
+  [FIRApp configure];
   for (NSString* family in [UIFont familyNames])
   {
     NSLog(@"%@", family);
