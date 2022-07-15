@@ -208,7 +208,7 @@ export const RecordIcon = ({
           }}
         >
           <SemiBoldText
-            text={user.premium != 'none' ? 'You are a premium member and you have up to three minutes of recording!' : 'Go to Premium and have 3 minutes instead of one for each record'}
+            text={user.premium != 'none' ? t("You are a premium member and you have up to three minutes of recording!") : t("Go to Premium and have 3 minutes instead of one for each record.")}
             color='#F09E00'
             fontSize={15}
             lineHeight={24}

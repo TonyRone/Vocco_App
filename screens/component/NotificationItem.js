@@ -54,7 +54,7 @@ export const NotificationItem = ({
     if (details == 'likeAnswer')
         details = t("Liked your answer");
     if (details == 'tagFriend')
-        details = t("Tagged a voice to you");
+        details = t("Tagged you in a story");
 
     return (
         !isDeleted ?

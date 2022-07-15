@@ -162,7 +162,7 @@ export const ChatListItem = ({
                                 xml={info.state == 'start' ? activeVoiceMessageSvg : info.type == 'photo' ? imageMessageSvg : voiceMessageSvg}
                             />}
                         <DescriptionText
-                            text={t(info.state == 'start' ? "recording audio..." : info.type == 'photo' ? "picture" : info.type == 'emoji' ? "reaction" : "voice message")}
+                            text={t(info.state == 'start' ? "recording audio..." : info.type == 'photo' ? t("Image") : info.type == 'emoji' ? "reaction" : t("Message vocal"))}
                             fontSize={13}
                             lineHeight={21}
                             marginLeft={6}

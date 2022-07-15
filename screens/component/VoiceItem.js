@@ -231,7 +231,7 @@ export const VoiceItem = ({
               />
             </TouchableOpacity>
             <DescriptionText
-              text={info.listenCount + " " + t("readings") + (time != '' ? " - " : '') + time}
+              text={info.listenCount + " " + t("reading") +(info.listenCount>1?'s':'')+(time != '' ? " - " : '') + time}
               fontSize={13}
               lineHeight={15}
               marginLeft={30}

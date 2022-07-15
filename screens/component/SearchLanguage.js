@@ -5,6 +5,7 @@ import { SvgXml } from 'react-native-svg';
 import searchSvg from '../../assets/login/search.svg';
 import checkSvg from "../../assets/login/check.svg"
 import { windowHeight } from '../../config/config';
+import { t } from 'i18next';
 
 export const SearchLanguage = ({
   onSelectLanguage = () => { },
@@ -62,7 +63,7 @@ export const SearchLanguage = ({
           paddingVertical: 12
         }}
         value={searchKeyword}
-        placeholder="Search"
+        placeholder={t("Search")}
         placeholderTextColor="rgba(59, 31, 82, 0.6)"
         onChangeText={(e) => filterLanguage(e)}
       />
@@ -112,7 +113,7 @@ export const SearchLanguage = ({
                   color: item.checked ? '#8327D8' : '#281E30'
                 }}
               >
-                {item.language}
+                {t("item.language")}
               </Text>
               {item.checked ? <SvgXml width={20} height={20} xml={checkSvg} /> : null}
             </TouchableOpacity>

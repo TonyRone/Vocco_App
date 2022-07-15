@@ -318,7 +318,7 @@ const EditProfileScreen = (props) => {
                     />
                     <SelectForm
                         label={t("Date of Birth")}
-                        contentText={birthDate.getDate().toString() + " " + months[birthDate.getMonth()] + " " + birthDate.getFullYear().toString()}
+                        contentText={birthDate.getDate().toString() + " " + months[t(birthDate.getMonth())] + " " + birthDate.getFullYear().toString()}
                         onPressChange={() => openModal('birth')}
                     />
                     <SelectForm

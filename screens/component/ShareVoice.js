@@ -191,7 +191,7 @@ export const ShareVoice = ({
             </View>
             <View style={{ backgroundColor: '#F2F0F5', height: 1, width: '100%', marginTop: 20, marginBottom: 16 }}></View>
             <DescriptionText
-              text='Post Link:'
+              text={t("Story Link")+":"}
               color="#281E30"
               fontSize={17}
               lineHeight={28}
