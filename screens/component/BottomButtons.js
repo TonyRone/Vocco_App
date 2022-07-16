@@ -11,13 +11,14 @@ import friendSvg from '../../assets/common/bottomIcons/friend.svg';
 import friendActiveSvg from '../../assets/common/bottomIcons/friendActive.svg';
 import { useSelector } from "react-redux";
 import { Avatars } from "../../config/config";
+import { DescriptionText } from "./DescriptionText";
 
 export const BottomButtons = ({
   active = 'home',
   props,
 }) => {
 
-  let { user } = useSelector((state) => {
+  let { user, messageCount } = useSelector((state) => {
     return (
       state.user
     )
@@ -30,6 +31,10 @@ export const BottomButtons = ({
     });
     props.navigation.dispatch(resetActionTrue);
   }
+
+  useEffect(() => {
+    console.log("WWWWWWWWWWWWWWWWWWWWW");
+  }, [])
 
   return (
     <View
@@ -82,12 +87,20 @@ export const BottomButtons = ({
           height={30}
           xml={active == 'chat' ? chatActiveSvg : chatSvg}
         />
+        {messageCount>0&&<View style={{position:'absolute',right:-4,top:-4, alignItems: 'center', justifyContent: 'center', width: 16, height: 16, borderRadius: 8, backgroundColor: '#D82783' }}>
+          <DescriptionText
+            text={messageCount}
+            color='#FFF'
+            lineHeight={17}
+            fontSize={10}
+          />
+        </View>}
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => props.navigation.navigate("Profile")}
       >
         <Image
-          source={user.avatar?{ uri: user.avatar.url }:Avatars[user.avatarNumber].uri}
+          source={user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri}
           style={{ width: 30, height: 30, borderRadius: 15 }}
           resizeMode='cover'
         />

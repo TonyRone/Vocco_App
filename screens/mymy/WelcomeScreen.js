@@ -34,12 +34,12 @@ const WelcomeScreen = (props) => {
                             style={styles.rowJustifyCenter}
                         >
                             <TitleText
-                                text={t("Raise your voice")}
+                                text={t("Worldwide stories. Everyday.")}
                                 marginTop={20}
                             />
                         </View>
                         <DescriptionText
-                            text={t("Discover stories from the world")}
+                            text={t("And share yours, too!")}
                             textAlign="center"
                             marginTop={20}
                         />

@@ -68,7 +68,7 @@ const PostingVoiceScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showHint, setShowHint] = useState(false);
-  const [showShareVoice, setShowShareVoice] = useState(null);
+  const [showShareVoice, setShowShareVoice] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(initCategory);
 
   const mounted = useRef(false);
@@ -129,7 +129,8 @@ const PostingVoiceScreen = (props) => {
           } else {
             Vibration.vibrate(100);
             socketInstance.emit("newVoice", { uid: user.id });
-            setShowShareVoice(jsonRes);
+            //setShowShareVoice(true);
+            props.navigation.navigate("ShareStory", {info:jsonRes});
             // dispatch(setRefreshState(!refreshState));
           }
           setIsLoading(false);

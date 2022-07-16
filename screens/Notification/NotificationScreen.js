@@ -4,7 +4,8 @@ import {
     TouchableOpacity,
     ScrollView,
     Animated,
-    SafeAreaView
+    SafeAreaView,
+    Vibration
 } from 'react-native';
 
 import * as Progress from "react-native-progress";
@@ -221,6 +222,7 @@ const NotificationScreen = (props) => {
     const onAcceptRequest = (index) => {
         setIsLoading(true);
         RNVibrationFeedback.vibrateWith(1519);
+        Vibration.vibrate();
         VoiceService.acceptFriend(requests[index].fromUser.id, requests[index].id).then(async res => {
             if (res.respInfo.status == 201 && mounted.current) {
                 let tp = requests;
@@ -246,6 +248,7 @@ const NotificationScreen = (props) => {
     const onFollowUser = (id, index) => {
         setIsLoading(true);
         RNVibrationFeedback.vibrateWith(1519);
+        Vibration.vibrate();
         VoiceService.followFriend(id).then(async res => {
             if (mounted.current) {
                 let tp = requests;

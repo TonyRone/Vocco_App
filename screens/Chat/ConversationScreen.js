@@ -42,7 +42,7 @@ import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
-import { setRefreshState, setVoiceState } from '../../store/actions';
+import { setMessageCount, setRefreshState, setVoiceState } from '../../store/actions';
 import moreSvg from '../../assets/common/more.svg';
 
 import { useTranslation } from 'react-i18next';
@@ -353,6 +353,7 @@ const ConversationScreen = (props) => {
 
     useEffect(() => {
         mounted.current = true;
+        dispatch(setMessageCount(0));
         if (recordId) {
             sendRecordMessage();
         }

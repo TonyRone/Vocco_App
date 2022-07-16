@@ -135,8 +135,10 @@ export const AnswerReply = ({
   };
 
   const onChangeRecord = async (e, v = false) => {
-    if (v == true)
+    if (v == true){
       RNVibrationFeedback.vibrateWith(1519);
+      Vibration.vibrate();
+    }
     if (v == true && isRecording == false) {
       onStartRecord();
     }
@@ -277,6 +279,7 @@ export const AnswerReply = ({
                     if (gestureState.dx > 80) {
                       onStopRecord(true);
                       RNVibrationFeedback.vibrateWith(1519);
+                      Vibration.vibrate();
                     }
                     else if (gestureState.dx < -80) {
                       onStopRecord(false);

@@ -113,7 +113,7 @@ export const SearchLanguage = ({
                   color: item.checked ? '#8327D8' : '#281E30'
                 }}
               >
-                {t("item.language")}
+                {t(item.language)}
               </Text>
               {item.checked ? <SvgXml width={20} height={20} xml={checkSvg} /> : null}
             </TouchableOpacity>

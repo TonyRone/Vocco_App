@@ -129,8 +129,10 @@ export const RecordIcon = ({
   };
 
   const onChangeRecord = async (e, v = false) => {
-    if (v == true)
+    if (v == true){
       RNVibrationFeedback.vibrateWith(1519);
+      Vibration.vibrate();
+    }
     if (v == true && isRecording == false) {
       setIsExpanded(true);
       onStartRecord();
@@ -330,6 +332,7 @@ export const RecordIcon = ({
             if (gestureState.dx > 80) {
               onStopRecord(true);
               RNVibrationFeedback.vibrateWith(1519);
+              Vibration.vibrate();
             }
             else if (gestureState.dx < -80) {
               onStopRecord(false);

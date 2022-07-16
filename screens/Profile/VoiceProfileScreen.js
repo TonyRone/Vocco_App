@@ -542,7 +542,7 @@ const VoiceProfileScreen = (props) => {
               <Pressable onPress={editVoice}>
                 <View style={[styles.rowSpaceBetween, { padding: 16, borderBottomWidth: 1, borderBottomColor: '#F0F4FC' }]}>
                   <DescriptionText
-                    text={t("Edit Voice")}
+                    text={t("Edit Story")}
                     fontSize={17}
                     lineHeight={22}
                     color='#281E30'

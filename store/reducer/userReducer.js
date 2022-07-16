@@ -1,38 +1,44 @@
-import { setNotificationId } from '../actions';
-import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE, SETREFRESHSTATE, SETNOTIFICATIONID } from '../constants';
+import { setMessageCount, setNotificationId } from '../actions';
+import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE, SETREFRESHSTATE, SETNOTIFICATIONID, SETMESSAGECOUNT } from '../constants';
 const initialState = {
     user: null,
     voiceState: 0,
-    socketInstance:null,
-    refreshState:false,
-    notificationId:null
+    socketInstance: null,
+    refreshState: false,
+    notificationId: null,
+    messageCount: 0
 };
 const userReducer = (state = initialState, action) => {
-    switch(action.type) {
+    switch (action.type) {
         case SETUSER:
             return {
                 ...state,
-                user:action.payload
+                user: action.payload
             };
         case SETVOICESTATE:
             return {
                 ...state,
-                voiceState:action.payload
+                voiceState: action.payload
             };
         case SETSOCKETINSTANCE:
             return {
                 ...state,
-                socketInstance:action.payload
+                socketInstance: action.payload
             };
         case SETREFRESHSTATE:
             return {
                 ...state,
-                refreshState:action.payload
+                refreshState: action.payload
             };
         case SETNOTIFICATIONID:
             return {
                 ...state,
-                notificationId:action.payload
+                notificationId: action.payload
+            };
+        case SETMESSAGECOUNT:
+            return {
+                ...state,
+                messageCount: action.payload
             };
         default:
             return state;

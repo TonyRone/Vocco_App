@@ -20,6 +20,9 @@ import ProfileScreen from './screens/Profile/ProfileScreen';
 import VoiceProfileScreen from './screens/Profile/VoiceProfileScreen';
 import ShareScreen from './screens/mymy/ShareScreen';
 import PremiumScreen from './screens/mymy/PremiumScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DEVICE_TOKEN, DEVICE_OS} from './config/config';
+import NavigationService from './services/NavigationService';
 
 //Setting
 
@@ -46,8 +49,6 @@ import NotificationScreen from './screens/Notification/NotificationScreen';
 import UserProfileScreen from './screens/UserProfile/UserProfileScreen';
 import UserProfileListScreen from './screens/UserProfile/UserProfileListScreen';
 
-import NavigationService from './services/NavigationService';
-
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { Provider } from 'react-redux';
 
@@ -68,6 +69,7 @@ import PhoneLoginScreen from './screens/PhoneNumberLogin/PhoneLoginScreen';
 import UpdatePictureScreen from './screens/PhoneNumberLogin/UpdatePictureScreen';
 import SelectTopicScreen from './screens/PhoneNumberLogin/SelectTopicScreen';
 import AddFriendScreen from './screens/PhoneNumberLogin/AddFriendScreen';
+import ShareStoryScreen from './screens/mymy/ShareStoryScreen';
 
 
 const slideAnimation2 = (bottomToTop) => {
@@ -95,70 +97,70 @@ const AppNavigator = createStackNavigator({
     screen: LogoScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Welcome: {
     screen: WelcomeScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Login: {
     screen: LoginScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Register: {
     screen: RegisterScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Verify: {
     screen: VerifyScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Username: {
     screen: UsernameScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Birthday: {
     screen: BirthdayScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Identify: {
     screen: IdentifyScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Country: {
     screen: CountryScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Photo: {
     screen: PhotoScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
 
@@ -167,7 +169,7 @@ const AppNavigator = createStackNavigator({
     screen: TutorialScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
 
@@ -175,7 +177,7 @@ const AppNavigator = createStackNavigator({
     screen: SearchScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
 
@@ -183,7 +185,7 @@ const AppNavigator = createStackNavigator({
     screen: HomeScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
 
@@ -192,224 +194,260 @@ const AppNavigator = createStackNavigator({
     screen: HoldRecordScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   PostingVoice: {
     screen: PostingVoiceScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Profile: {
     screen: ProfileScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   UserProfile: {
     screen: UserProfileScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   UserProfileList: {
     screen: UserProfileListScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   VoiceProfile: {
     screen: VoiceProfileScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Setting: {
     screen: SettingScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   EditProfile: {
     screen: EditProfileScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   ChangeEmail: {
     screen: ChangeEmailScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   ChangePassword: {
     screen: ChangePasswordScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   ShareFriend: {
     screen: ShareFriendScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Contact: {
     screen: ContactScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Notification: {
     screen: NotificationScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   PostingAnswerVoice: {
     screen: PostingAnswerVoiceScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
+    }
+  },
+  ShareStory: {
+    screen: ShareStoryScreen,
+    navigationOptions: {
+      headerShown: false,
+      animationEnabled: false
     }
   },
   Share: {
     screen: ShareScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Premium: {
     screen: PremiumScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Chat: {
     screen: ChatScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Friends: {
     screen: FriendsScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   Conversation: {
     screen: ConversationScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   PhoneRegister: {
     screen: PhoneRegisterScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   ProfilePicture: {
     screen: ProfilePictureScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   MainName: {
     screen: MainNameScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   PhoneVerify: {
     screen: PhoneVerifyScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   PickName: {
     screen: PickNameScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   InputBirthday: {
     screen: InputBirthdayScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   SelectIdentify: {
     screen: SelectIdentifyScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   PhoneLogin: {
     screen: PhoneLoginScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   UpdatePicture: {
     screen: UpdatePictureScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   SelectTopic: {
     screen: SelectTopicScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
   AddFriend: {
     screen: AddFriendScreen,
     navigationOptions: {
       headerShown: false,
-      animationEnabled:false
+      animationEnabled: false
     }
   },
 },
   {
-    //initialRouteName:'AddFriend'
+    //initialRouteName:'ShareStory'
   }
 );
 
 const AppContainer = createAppContainer(AppNavigator);
 
+const OnSetPushNotification = () => {
+  PushNotification.requestPermissions();
+  PushNotification.configure({
+    onRegister: async ({ token, os }) => {
+      await AsyncStorage.setItem(
+        DEVICE_TOKEN,
+        token
+      );
+      await AsyncStorage.setItem(
+        DEVICE_OS,
+        os
+      );
+    },
+
+    onNotification: async (notification) => {
+      // if(notification.userInteraction){
+      //   await AsyncStorage.setItem(
+      //     APP_NAV,
+      //     'stop'
+      //   );
+      //   NavigationService.navigate(notification.data.nav,notification.data.params);
+      // }
+      if (notification.userInteraction)
+        NavigationService.navigate(notification.data.nav, notification.data.params);
+      notification.finish(PushNotificationIOS.FetchResult.NoData);
+    }
+
+  });
+}
 export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
-    PushNotification.requestPermissions();
+    OnSetPushNotification();
   }, []);
   return (
     <Provider store={store}>

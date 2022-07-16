@@ -271,7 +271,7 @@ class VoicePlayer extends Component {
 
   onSetPosition = async (e) => {
     if (this._isMounted) {
-      if (this.state.isPlaying&&!isNaN(e.currentPosition)&&!isNaN(e.duration))
+      if (this.state.isPlaying && !isNaN(e.currentPosition) && !isNaN(e.duration))
         this.setState({
           currentPositionSec: e.currentPosition,
           currentDurationSec: e.duration,
@@ -284,29 +284,30 @@ class VoicePlayer extends Component {
 
   onStartPlay = async (res) => {
     let { voiceState } = this.props;
-    if (res != voiceState|| isNaN(this.props.duration)) {
+    if (res != voiceState || isNaN(this.props.duration)) {
       await this.onStopPlay();
       return;
     }
     try {
-      if (this.state.isStarted == false && this._isMounted)
-        this.setState({
-          isStarted: true,
-          isPlaying: true,
-          currentPositionSec: 0
-        });
-      this.props.startPlay();
-      const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath)
-        .then(res => {
-          this.audioRecorderPlayer.addPlayBackListener(async (e) => {
-            this.onSetPosition(e)
-            return;
+      if (this._isMounted) {
+        if (this.state.isStarted == false)
+          this.setState({
+            isStarted: true,
+            isPlaying: true,
+            currentPositionSec: 0
           });
-        })
-        .catch(err => {
-          this.onStopPlay();
-        });
-      //const volume = await this.audioRecorderPlayer.setVolume(1.0);
+        this.props.startPlay();
+        const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath)
+          .then(res => {
+            this.audioRecorderPlayer.addPlayBackListener(async (e) => {
+              this.onSetPosition(e)
+              return;
+            });
+          })
+          .catch(err => {
+            this.onStopPlay();
+          });
+      }
     }
     catch (err) {
       this.onStopPlay();

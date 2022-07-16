@@ -5,9 +5,11 @@ import {
     ScrollView,
     Animated,
     SafeAreaView,
-    Vibration
+    Vibration,
+    Platform,
 } from 'react-native';
 
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import { DescriptionText } from '../component/DescriptionText';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { SvgXml } from 'react-native-svg';
@@ -20,7 +22,7 @@ import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
-import { setRefreshState } from '../../store/actions';
+import { setMessageCount, setRefreshState } from '../../store/actions';
 import { RecordIcon } from '../component/RecordIcon';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -69,24 +71,41 @@ const HomeScreen = (props) => {
         VoiceService.unreadActivityCount().then(async res => {
             if (res.respInfo.status == 201 && mounted.current) {
                 const jsonRes = await res.json();
-                if (jsonRes.count > 0)
-                    setNotify(true);
-                else {
-                    VoiceService.unreadRequestCount().then(async res => {
-                        if (res.respInfo.status == 201 && mounted.current) {
-                            const jsonRes = await res.json();
-                            if (jsonRes.count > 0)
-                                setNotify(true);
-                            else
-                                setNotify(false);
-                        }
-                    })
-                        .catch(err => {
-                            console.log(err);
-                        });
-                }
+                let activeCount = jsonRes.count;
+                VoiceService.unreadRequestCount().then(async res => {
+                    if (res.respInfo.status == 201 && mounted.current) {
+                        const jsonRes = await res.json();
+                        let requestCount = jsonRes.count;
+                        let totalCount = activeCount + requestCount;
+                        setNotify(totalCount > 0);
+                        if (Platform.OS == 'ios')
+                            PushNotificationIOS.setApplicationIconBadgeNumber(totalCount);
+                    }
+                })
+                    .catch(err => {
+                        console.log(err);
+                    });
             }
         })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
+    const getUnreadChatCount = () => {
+        VoiceService.getConversations()
+            .then(async res => {
+                if (res.respInfo.status === 200 && mounted.current) {
+                    const jsonRes = await res.json();
+                    let totalCount = 0;
+                    jsonRes.forEach(item => {
+                        if (item.sender.id != user.id) {
+                            totalCount += item.newsCount;
+                        }
+                    });
+                    dispatch(setMessageCount(totalCount));
+                }
+            })
             .catch(err => {
                 console.log(err);
             });
@@ -95,6 +114,7 @@ const HomeScreen = (props) => {
     useEffect(() => {
         mounted.current = true;
         getNewNotifyCount();
+        getUnreadChatCount();
         socketInstance.on("notice_Voice", (data) => {
             noticeDispatch("news");
         });
@@ -126,7 +146,7 @@ const HomeScreen = (props) => {
                     />
                 </TouchableOpacity>
                 <View style={styles.rowSpaceBetween}>
-                    <TouchableOpacity onPress={() => { setIsActiveState(true); RNVibrationFeedback.vibrateWith(1519); }} style={[styles.contentCenter, { width: 97, height: 44 }]}>
+                    <TouchableOpacity onPress={() => { setIsActiveState(true); RNVibrationFeedback.vibrateWith(1519); Vibration.vibrate(); }} style={[styles.contentCenter, { width: 97, height: 44 }]}>
                         <SemiBoldText
                             text={t("Friends")}
                             fontFamily={isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
@@ -135,7 +155,7 @@ const HomeScreen = (props) => {
                             lineHeight={28}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { setIsActiveState(false); RNVibrationFeedback.vibrateWith(1519); }} style={[styles.contentCenter, { width: 97, height: 44, marginLeft: 16 }]}>
+                    <TouchableOpacity onPress={() => { setIsActiveState(false); RNVibrationFeedback.vibrateWith(1519); Vibration.vibrate(); }} style={[styles.contentCenter, { width: 97, height: 44, marginLeft: 16 }]}>
                         <SemiBoldText
 
                             text={t("Discover")}

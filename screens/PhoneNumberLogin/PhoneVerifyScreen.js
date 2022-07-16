@@ -216,7 +216,7 @@ const PhoneVerifyScreen = (props) => {
                 </TouchableOpacity>
             </View>
             <TitleText
-                text={t("What's the code")}
+                text={t("Enter your code")}
                 textAlign='center'
             />
             <DescriptionText
