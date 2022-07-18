@@ -141,7 +141,7 @@ export const NewChat = ({
               <View style={[styles.rowSpaceBetween, { paddingHorizontal: 14, paddingVertical: 12 }]}>
                 <View></View>
                 <SemiBoldText
-                  text={t("New Message")}
+                  text={t("New message")}
                   fontSize={17}
                   lineHeight={28}
                   color='#263449'

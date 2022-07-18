@@ -69,7 +69,7 @@ export const ShowLikesCount = ({
               width={248}
             />
             <LinearTextGradient
-              style={{ fontSize: 18 }}
+              style={{ fontSize: 18, fontFamily:'SFProDisplay-Semibold'}}
               locations={[0, 1]}
               colors={["#C479FF", "#650DD6"]}
               start={{ x: 0, y: 0 }}

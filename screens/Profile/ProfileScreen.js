@@ -308,7 +308,7 @@ const ProfileScreen = (props) => {
             text={user.bio}
           />}
           <TitleText
-            text={t('Your stories')}
+            text={t('Stories')}
             fontSize={20}
             marginTop={21}
             marginBottom={3}

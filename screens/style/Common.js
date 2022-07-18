@@ -223,6 +223,7 @@ export const styles = StyleSheet.create({
         backgroundColor: '#FFF',
         width: "65%",
         marginTop: 20,
-        borderRadius: 16
+        borderRadius: 16,
+        marginLeft:16
     },
 });

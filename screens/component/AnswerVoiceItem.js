@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, TouchableOpacity, Text, Image } from "react-native";
+import { View, TouchableOpacity, Text, Image, Vibration } from "react-native";
 import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
 
@@ -59,6 +59,7 @@ export const AnswerVoiceItem = ({
     else
       VoiceService.answerUnAppreciate(info.id);
     onChangeIsLiked();
+    Vibration.vibrate();
   }
 
   const onClickDouble = () => {

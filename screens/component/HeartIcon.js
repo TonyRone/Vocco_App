@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Vibration } from "react-native";
 import * as Animatable from 'react-native-animatable'
 import Icon from 'react-native-vector-icons/AntDesign'
 
@@ -20,8 +20,9 @@ export const HeartIcon = ({
 
   const handleOnPressLike = async () => {
     await smallAnimatedIcon.current?.bounceIn();
-    if(mounted.current)
+    if(mounted.current){
       setLiked(!liked);
+    }
   }
 
   useEffect(() => {

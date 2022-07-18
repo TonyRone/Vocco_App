@@ -3,7 +3,8 @@ import {
   View,
   Pressable,
   TouchableOpacity,
-  Modal
+  Modal,
+  Vibration
 } from 'react-native';
 import { TitleText } from './TitleText';
 import { VoiceItem } from './VoiceItem';
@@ -48,6 +49,7 @@ export const PostContext = ({
 
   const appreciateVoice = () => {
     onChangeIsLike();
+    Vibration.vibrate()
     if (postInfo.isLike == false)
       VoiceService.recordAppreciate({ count: 1, id: postInfo.id });
     else
@@ -88,14 +90,14 @@ export const PostContext = ({
           />
           {!showReport ?
             <View
-              style={[styles.contextWrap,{marginLeft:16}]}
+              style={styles.contextWrap}
             >
               <TouchableOpacity
                 style={styles.contextMenu}
                 onPress={() => { props.navigation.navigate('VoiceProfile', { id: postInfo.id }); closeModal(); }}
               >
                 <TitleText
-                  text={t("Answer on voice")}
+                  text={t("Answer")}
                   fontSize={17}
                   fontFamily="SFProDisplay-Regular"
                 />

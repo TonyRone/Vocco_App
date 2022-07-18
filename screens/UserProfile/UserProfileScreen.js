@@ -9,6 +9,7 @@ import {
   ScrollView,
   Modal,
   RefreshControl,
+  Vibration,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -125,6 +126,9 @@ const UserProfileScreen = (props) => {
   const changeFollowed = () => {
     setFollowLoading(true);
     let repo = followState == 'none' ? VoiceService.followFriend(userId) : VoiceService.unfollowFriend(userId);
+    if(followState == 'none'){
+      Vibration.vibrate();
+    }
     repo.then(async res => {
       if (mounted.current) {
         setFollowLoading(false);
@@ -401,7 +405,7 @@ const UserProfileScreen = (props) => {
             </> :
               <>
                 <TitleText
-                  text={t("User stories")}
+                  text={t("Stories")}
                   fontSize={20}
                   marginTop={23}
                   marginBottom={3}

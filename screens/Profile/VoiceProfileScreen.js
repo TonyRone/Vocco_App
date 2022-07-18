@@ -8,7 +8,8 @@ import {
   Platform,
   ImageBackground,
   Modal,
-  TouchableOpacity
+  TouchableOpacity,
+  Vibration
 } from 'react-native';
 
 import { ScrollView } from 'react-native-gesture-handler';
@@ -192,6 +193,7 @@ const VoiceProfileScreen = (props) => {
       rep = VoiceService.recordAppreciate({ count: 1, id: info.id });
     }
     setIsLike(!isLike);
+    Vibration.vibrate();
     rep.then(() => dispatch(setRefreshState(!refreshState)));
   }
 

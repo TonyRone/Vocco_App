@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, TouchableOpacity, Text, Image } from "react-native";
+import { View, TouchableOpacity, Text, Image, Vibration } from "react-native";
 import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
 import { useSelector } from 'react-redux';
@@ -37,6 +37,7 @@ export const TagItem = ({
   const DOUBLE_PRESS_DELAY = 400;
 
   const onLikeTag = () => {
+    Vibration.vibrate();
     VoiceService.likeTag(info.id, !check);
     onChangeIsLiked();
   }

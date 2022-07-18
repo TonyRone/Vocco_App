@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, TouchableOpacity, Image, ScrollView } from "react-native";
+import { View, TouchableOpacity, Image, ScrollView, Vibration } from "react-native";
 import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
 import { SvgXml } from 'react-native-svg';
@@ -46,6 +46,7 @@ export const ReplyAnswerItem = ({
 
   const onLikeVoice = () => {
     let rep;
+    Vibration.vibrate();
     if (info.isLiked == false)
       rep = VoiceService.replyAnswerAppreciate(info.id);
     else

@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Image,
+  ImageBackground,
   Platform,
   TouchableOpacity,
   Vibration,
@@ -27,6 +28,8 @@ import { windowHeight, windowWidth } from '../../config/config';
 import { DescriptionText } from './DescriptionText';
 import VoicePlayer from '../Home/VoicePlayer';
 import VoiceService from '../../services/VoiceService';
+import redCancelSvg from '../../assets/post/close.svg';
+import publishBlankSvg from '../../assets/post/post.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { setVoiceState } from '../../store/actions';
 import { useTranslation } from 'react-i18next';
@@ -135,7 +138,7 @@ export const AnswerReply = ({
   };
 
   const onChangeRecord = async (e, v = false) => {
-    if (v == true){
+    if (v == true) {
       RNVibrationFeedback.vibrateWith(1519);
       Vibration.vibrate();
     }
@@ -168,7 +171,7 @@ export const AnswerReply = ({
       VoiceService.postAnswerReply(voiceFile).then(async res => {
         const jsonRes = await res.json();
         if (res.respInfo.status !== 201) {
-        } else if(mounted.current){
+        } else if (mounted.current) {
           Vibration.vibrate(100);
           onPushReply();
           closeModal();
@@ -248,17 +251,50 @@ export const AnswerReply = ({
               </TouchableOpacity>
             </View>
             : <>
-              <Image
+              <ImageBackground
                 style={{
                   position: 'absolute',
                   bottom: 50,
                   height: 56,
                   width: 281.22,
-                  right: (windowWidth - 281.22) / 2
+                  right: (windowWidth - 281.22) / 2,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingHorizontal: 20
                 }}
                 resizeMode="stretch"
                 source={require('../../assets/post/answerReply.png')}
-              />
+              >
+                <View style={styles.rowAlignItems}>
+                  <SvgXml
+                    width={16}
+                    height={16}
+                    xml={redCancelSvg}
+                  />
+                  <DescriptionText
+                    text={t("Cancel")}
+                    fontSize={13}
+                    lineHeight={21}
+                    color="#E41717"
+                    marginLeft={8}
+                  />
+                </View>
+                <View style={styles.rowAlignItems}>
+                  <DescriptionText
+                    text={t("Publish")}
+                    fontSize={13}
+                    lineHeight={21}
+                    color="#8327D8"
+                    marginRight={8}
+                  />
+                  <SvgXml
+                    width={18}
+                    height={18}
+                    xml={publishBlankSvg}
+                  />
+                </View>
+              </ImageBackground>
               <View style={{ position: 'absolute', bottom: 135, width: '100%', alignItems: 'center' }}>
                 <Draggable
                   key={key}
@@ -298,7 +334,7 @@ export const AnswerReply = ({
                     onTouchStart={(e) => onChangeRecord(e, true)}
                     onTouchEnd={(e) => onChangeRecord(e, false)}
                     style={{
-                      opacity:isPaused?1:0.1
+                      opacity: isPaused ? 1 : 0.1
                     }}
                   >
                     <SvgXml

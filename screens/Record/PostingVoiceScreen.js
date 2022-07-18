@@ -127,7 +127,6 @@ const PostingVoiceScreen = (props) => {
         if (mounted.current) {
           if (res.respInfo.status !== 201) {
           } else {
-            Vibration.vibrate(100);
             socketInstance.emit("newVoice", { uid: user.id });
             //setShowShareVoice(true);
             props.navigation.navigate("ShareStory", {info:jsonRes});

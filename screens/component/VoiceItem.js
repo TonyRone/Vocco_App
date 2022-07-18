@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   Text,
   Image,
+  Vibration,
 } from "react-native";
 
 import { useTranslation } from 'react-i18next';
@@ -83,6 +84,7 @@ export const VoiceItem = ({
     else {
       VoiceService.recordAppreciate({ count: 1, id: info.id });
     }
+    Vibration.vibrate();
     onChangeLike(!info.isLike);
   }
 

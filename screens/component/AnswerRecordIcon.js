@@ -27,8 +27,8 @@ import { LinearTextGradient } from "react-native-text-gradient";
 import { TitleText } from './TitleText';
 import { Warning } from './Warning';
 import { windowHeight, windowWidth } from '../../config/config';
-import cancelSvg from '../../assets/record/cancel.svg';
-import publicSvg from '../../assets/record/public.svg';
+import redCancelSvg from '../../assets/post/close.svg';
+import publishBlankSvg from '../../assets/post/post.svg';
 import { DescriptionText } from './DescriptionText';
 import { useDispatch, useSelector } from 'react-redux';
 import { setVoiceState } from '../../store/actions';
@@ -175,17 +175,50 @@ export const AnswerRecordIcon = ({
       {IsExpanded &&
         <Pressable onPressOut={() => onStopRecord(false)} style={[styles.swipeModal, { backgroundColor: 'rgba(0, 0, 0, 0.1)' }]}>
           <>
-            <Image
+            <ImageBackground
               style={{
                 position: 'absolute',
                 bottom: 20,
                 height: 56,
                 width: 281.22,
-                right: (windowWidth - 281.22) / 2
+                right: (windowWidth - 281.22) / 2,
+                flexDirection:'row',
+                justifyContent:'space-between',
+                alignItems:'center',
+                paddingHorizontal:20
               }}
               resizeMode="stretch"
               source={require('../../assets/post/answerReply.png')}
-            />
+            >
+              <View style={styles.rowAlignItems}>
+                <SvgXml
+                  width={16}
+                  height={16}
+                  xml={redCancelSvg}
+                />
+                <DescriptionText
+                  text={t("Cancel")}
+                  fontSize={13}
+                  lineHeight={21}
+                  color="#E41717"
+                  marginLeft={8}
+                />
+              </View>
+              <View style={styles.rowAlignItems}>
+              <DescriptionText
+                  text={t("Publish")}
+                  fontSize={13}
+                  lineHeight={21}
+                  color="#8327D8"
+                  marginRight={8}
+                />
+                <SvgXml
+                  width={18}
+                  height={18}
+                  xml={publishBlankSvg}
+                />
+              </View>
+            </ImageBackground>
             <View style={{
               position: 'absolute',
               bottom: 160,

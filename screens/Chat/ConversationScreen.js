@@ -139,10 +139,10 @@ const ConversationScreen = (props) => {
             return days[updatedTime.getDay()];
         }
         else if (nowTime.getDate() - 1 == updatedTime.getDate()) {
-            return 'Yesterday'
+            return t("Yesterday")
         }
         else {
-            return 'Today'
+            return t("Today")
         }
     }
 
@@ -239,6 +239,7 @@ const ConversationScreen = (props) => {
 
     const onChangeRecord = async (e, v = false) => {
         if (v == true && isRecording == false) {
+            Vibration.vibrate();
             onStartRecord();
         }
         if (v == false && isRecording == true) {
@@ -488,7 +489,7 @@ const ConversationScreen = (props) => {
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={styles.contextMenu}
+                                style={[styles.contextMenu,{borderBottomWidth:0}]}
                                 onPress={() => { onClearAllChat(); hideMenu() }}
                             >
                                 <TitleText
@@ -521,7 +522,7 @@ const ConversationScreen = (props) => {
                             />
                         </TouchableOpacity>
                         <SemiBoldText
-                            text={`${selectedItems.length} Selected`}
+                            text={`${selectedItems.length}`+t("selected")}
                             fontSize={17}
                             lineHeight={28}
                         />
@@ -570,7 +571,7 @@ const ConversationScreen = (props) => {
                                 marginTop: 18
                             }}
                         >
-                            {t(`You do not have any messages with ${info.user.name} yet. Let's record him something! `)}
+                            {t("Your chat with")+` ${info.user.name} `+t("is empty! Start chatting now!")}
                         </Text>
 
                     </View>

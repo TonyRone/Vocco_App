@@ -5,7 +5,8 @@ import {
   Image,
   KeyboardAvoidingView,
   TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
+  Vibration
 } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
@@ -64,7 +65,7 @@ const ShareStoryScreen = (props) => {
       }}
     >
       <ScrollView>
-        <TouchableOpacity style={{ marginLeft: 16, marginTop: 20 }} onPress={() => onNavigate("Home")}>
+        <TouchableOpacity style={{ marginLeft: 16, marginTop: 20 }} onPress={() => {onNavigate("Home");Vibration.vibrate();}}>
           <SvgXml width="24" height="24" xml={closeBlackSvg} />
         </TouchableOpacity>
         <Image
