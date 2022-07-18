@@ -11,7 +11,6 @@ import {
 
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import { DescriptionText } from '../component/DescriptionText';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { SvgXml } from 'react-native-svg';
 import closeSvg from '../../assets/common/close.svg';
 import { BottomButtons } from '../component/BottomButtons';
@@ -146,7 +145,7 @@ const HomeScreen = (props) => {
                     />
                 </TouchableOpacity>
                 <View style={styles.rowSpaceBetween}>
-                    <TouchableOpacity onPress={() => { setIsActiveState(true); RNVibrationFeedback.vibrateWith(1519); Vibration.vibrate(); }} style={[styles.contentCenter, { width: 97, height: 44 }]}>
+                    <TouchableOpacity onPress={() => { setIsActiveState(true);Vibration.vibrate(); }} style={[styles.contentCenter, { width: 97, height: 44 }]}>
                         <SemiBoldText
                             text={t("Friends")}
                             fontFamily={isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
@@ -155,7 +154,7 @@ const HomeScreen = (props) => {
                             lineHeight={28}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { setIsActiveState(false); RNVibrationFeedback.vibrateWith(1519); Vibration.vibrate(); }} style={[styles.contentCenter, { width: 97, height: 44, marginLeft: 16 }]}>
+                    <TouchableOpacity onPress={() => { setIsActiveState(false);Vibration.vibrate(); }} style={[styles.contentCenter, { width: 97, height: 44, marginLeft: 16 }]}>
                         <SemiBoldText
 
                             text={t("Discover")}

@@ -8016,11 +8016,6 @@ react-native-vector-icons@^8.1.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native-vibration-feedback@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-vibration-feedback/-/react-native-vibration-feedback-1.0.0.tgz#4ee2a922d702f05c94a0833cc0676874a1411d6b"
-  integrity sha512-gMGFMsr5N37N4lrzKGNS0sVgmvs4lynT3v520KPM1Uq7LByDRfSXrgvGSfDnQZgVABiUETu211fxGO6ir7zsyQ==
-
 react-native-walkthrough-tooltip@^1.3.0:
   version "1.3.0"
   resolved "https://registry.npmjs.org/react-native-walkthrough-tooltip/-/react-native-walkthrough-tooltip-1.3.0.tgz"

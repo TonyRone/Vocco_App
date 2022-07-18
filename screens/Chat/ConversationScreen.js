@@ -19,7 +19,6 @@ import AudioRecorderPlayer, {
 } from 'react-native-audio-recorder-player';
 
 import * as Progress from "react-native-progress";
-import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { Menu } from 'react-native-material-menu';
 import RNFetchBlob from 'rn-fetch-blob';
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
@@ -213,7 +212,6 @@ const ConversationScreen = (props) => {
                 tp.sort(onCompare);
                 setMessages([...tp]);
                 socketInstance.emit("newMessage", { info: jsonRes });
-                RNVibrationFeedback.vibrateWith(1519);
                 setIsLoading(false);
             }
         })
@@ -780,12 +778,6 @@ const ConversationScreen = (props) => {
                             }}
                             onDragRelease={(event, gestureState, bounds) => {
                                 dragPos.current = gestureState.dx;
-                                if (gestureState.dx <= -100) {
-                                    RNVibrationFeedback.vibrateWith(1519);
-                                    setTimeout(() => {
-                                        RNVibrationFeedback.vibrateWith(1519);
-                                    }, 300);
-                                }
                             }}
                             onReverse={() => {
 

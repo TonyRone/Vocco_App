@@ -21,7 +21,6 @@ import AudioRecorderPlayer, {
 
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
 import RNFetchBlob from 'rn-fetch-blob';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import Draggable from 'react-native-draggable';
 import { LinearTextGradient } from "react-native-text-gradient";
@@ -130,7 +129,6 @@ export const RecordIcon = ({
 
   const onChangeRecord = async (e, v = false) => {
     if (v == true){
-      RNVibrationFeedback.vibrateWith(1519);
       Vibration.vibrate();
     }
     if (v == true && isRecording == false) {
@@ -331,15 +329,10 @@ export const RecordIcon = ({
             dragPos.current = gestureState.dx;
             if (gestureState.dx > 80) {
               onStopRecord(true);
-              RNVibrationFeedback.vibrateWith(1519);
               Vibration.vibrate();
             }
             else if (gestureState.dx < -80) {
               onStopRecord(false);
-              RNVibrationFeedback.vibrateWith(1519);
-              setTimeout(() => {
-                RNVibrationFeedback.vibrateWith(1519);
-              }, 300);
             }
           }}
           onReverse={() => {

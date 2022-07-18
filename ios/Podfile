@@ -6,12 +6,9 @@ pod 'RNGoogleSignin', :path => '../node_modules/react-native-google-signin'
 pod 'React', :path => '../node_modules/react-native/'
 
 platform :ios, '13.0'
-use_frameworks!
+#use_frameworks!
 
 target 'Vocco' do
-  #pod 'React-RCTSettings', :path => '../node_modules/react-native/Libraries/Settings'
-
-#pod 'React-CoreModules', :path => '../node_modules/react-native/React/CoreModules'
   config = use_native_modules!
   use_react_native!(
     :path => config[:reactNativePath],
@@ -22,15 +19,6 @@ target 'Vocco' do
     inherit! :complete
     # Pods for testing
   end
-  # post_install do |installer|
-  #   installer.pods_project.targets.each do |target|
-  #     target.build_configurations.each do |config|
-  #       config.build_settings['SWIFT_VERSION'] = '5.0'
-  #      end
-  #    end
-  # end
-  
-
   # Enables Flipper.
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and

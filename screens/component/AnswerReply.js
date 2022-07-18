@@ -22,7 +22,6 @@ import * as Progress from "react-native-progress";
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import RNFetchBlob from 'rn-fetch-blob';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
 import Draggable from 'react-native-draggable';
 import { windowHeight, windowWidth } from '../../config/config';
 import { DescriptionText } from './DescriptionText';
@@ -139,7 +138,6 @@ export const AnswerReply = ({
 
   const onChangeRecord = async (e, v = false) => {
     if (v == true) {
-      RNVibrationFeedback.vibrateWith(1519);
       Vibration.vibrate();
     }
     if (v == true && isRecording == false) {
@@ -314,15 +312,10 @@ export const AnswerReply = ({
                     dragPos.current = gestureState.dx;
                     if (gestureState.dx > 80) {
                       onStopRecord(true);
-                      RNVibrationFeedback.vibrateWith(1519);
                       Vibration.vibrate();
                     }
                     else if (gestureState.dx < -80) {
                       onStopRecord(false);
-                      RNVibrationFeedback.vibrateWith(1519);
-                      setTimeout(() => {
-                        RNVibrationFeedback.vibrateWith(1519);
-                      }, 300);
                     }
                   }}
                   onReverse={() => {
