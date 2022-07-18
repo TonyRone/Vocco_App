@@ -42,6 +42,7 @@ import { TagFriends } from '../component/TagFriends';
 import { TagItem } from '../component/TagItem';
 import { NewChat } from '../component/NewChat';
 import { AnswerRecordIcon } from '../component/AnswerRecordIcon';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 
 const VoiceProfileScreen = (props) => {
 
@@ -193,7 +194,6 @@ const VoiceProfileScreen = (props) => {
       rep = VoiceService.recordAppreciate({ count: 1, id: info.id });
     }
     setIsLike(!isLike);
-    Vibration.vibrate();
     rep.then(() => dispatch(setRefreshState(!refreshState)));
   }
 

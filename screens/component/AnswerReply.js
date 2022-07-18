@@ -19,6 +19,7 @@ import AudioRecorderPlayer, {
 } from 'react-native-audio-recorder-player';
 
 import * as Progress from "react-native-progress";
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -138,7 +139,7 @@ export const AnswerReply = ({
 
   const onChangeRecord = async (e, v = false) => {
     if (v == true) {
-      Vibration.vibrate();
+      RNVibrationFeedback.vibrateWith(1519);
     }
     if (v == true && isRecording == false) {
       onStartRecord();
@@ -170,7 +171,7 @@ export const AnswerReply = ({
         const jsonRes = await res.json();
         if (res.respInfo.status !== 201) {
         } else if (mounted.current) {
-          Vibration.vibrate(100);
+          RNVibrationFeedback.vibrateWith(1519);
           onPushReply();
           closeModal();
         }
@@ -312,10 +313,14 @@ export const AnswerReply = ({
                     dragPos.current = gestureState.dx;
                     if (gestureState.dx > 80) {
                       onStopRecord(true);
-                      Vibration.vibrate();
+                      RNVibrationFeedback.vibrateWith(1519);
                     }
                     else if (gestureState.dx < -80) {
                       onStopRecord(false);
+                      RNVibrationFeedback.vibrateWith(1519);
+                      setTimeout(() => {
+                        RNVibrationFeedback.vibrateWith(1519);
+                      }, 300);
                     }
                   }}
                   onReverse={() => {

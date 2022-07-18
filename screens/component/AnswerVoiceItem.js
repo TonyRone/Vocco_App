@@ -6,6 +6,7 @@ import { DescriptionText } from "./DescriptionText";
 import { useSelector } from 'react-redux';
 
 import { HeartIcon } from './HeartIcon';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { AnswerReply } from "./AnswerReply";
 import { StoryLikes } from "./StoryLikes";
 import { useTranslation } from 'react-i18next';
@@ -59,7 +60,6 @@ export const AnswerVoiceItem = ({
     else
       VoiceService.answerUnAppreciate(info.id);
     onChangeIsLiked();
-    Vibration.vibrate();
   }
 
   const onClickDouble = () => {

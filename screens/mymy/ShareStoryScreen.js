@@ -26,6 +26,7 @@ import { SHARE_CHECK, windowWidth } from '../../config/config';
 import { styles } from '../style/Login';
 import { TitleText } from '../component/TitleText';
 import { ScrollView } from 'react-native-gesture-handler';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 
 const ShareStoryScreen = (props) => {
 
@@ -65,7 +66,7 @@ const ShareStoryScreen = (props) => {
       }}
     >
       <ScrollView>
-        <TouchableOpacity style={{ marginLeft: 16, marginTop: 20 }} onPress={() => {onNavigate("Home");Vibration.vibrate();}}>
+        <TouchableOpacity style={{ marginLeft: 16, marginTop: 20 }} onPress={() => {onNavigate("Home");RNVibrationFeedback.vibrateWith(1519);}}>
           <SvgXml width="24" height="24" xml={closeBlackSvg} />
         </TouchableOpacity>
         <Image

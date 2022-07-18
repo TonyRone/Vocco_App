@@ -25,6 +25,7 @@ import { NotificationItem } from '../component/NotificationItem';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState } from '../../store/actions';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -220,7 +221,7 @@ const NotificationScreen = (props) => {
 
     const onAcceptRequest = (index) => {
         setIsLoading(true);
-        Vibration.vibrate();
+        RNVibrationFeedback.vibrateWith(1519);
         VoiceService.acceptFriend(requests[index].fromUser.id, requests[index].id).then(async res => {
             if (res.respInfo.status == 201 && mounted.current) {
                 let tp = requests;
@@ -245,7 +246,7 @@ const NotificationScreen = (props) => {
 
     const onFollowUser = (id, index) => {
         setIsLoading(true);
-        Vibration.vibrate();
+        RNVibrationFeedback.vibrateWith(1519);
         VoiceService.followFriend(id).then(async res => {
             if (mounted.current) {
                 let tp = requests;

@@ -13,6 +13,7 @@ import { TagUserList } from "./TagUserList";
 import whiteTrashSvg from '../../assets/notification/white_trash.svg'
 import { SvgXml } from 'react-native-svg';
 import { ScrollView } from 'react-native-gesture-handler';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 
 export const TagItem = ({
   info,
@@ -37,7 +38,6 @@ export const TagItem = ({
   const DOUBLE_PRESS_DELAY = 400;
 
   const onLikeTag = () => {
-    Vibration.vibrate();
     VoiceService.likeTag(info.id, !check);
     onChangeIsLiked();
   }

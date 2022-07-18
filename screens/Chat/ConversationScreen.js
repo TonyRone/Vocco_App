@@ -19,6 +19,7 @@ import AudioRecorderPlayer, {
 } from 'react-native-audio-recorder-player';
 
 import * as Progress from "react-native-progress";
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { Menu } from 'react-native-material-menu';
 import RNFetchBlob from 'rn-fetch-blob';
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
@@ -168,7 +169,7 @@ const ConversationScreen = (props) => {
         VoiceService.postMessage(sendFile).then(async res => {
             const jsonRes = await res.json();
             if (res.respInfo.status !== 201) {
-            } else if(mounted.current) {
+            } else if (mounted.current) {
                 getMessages();
                 socketInstance.emit("newMessage", { info: jsonRes });
             }
@@ -204,8 +205,8 @@ const ConversationScreen = (props) => {
         VoiceService.postMessage(sendFile).then(async res => {
             const jsonRes = await res.json();
             if (res.respInfo.status !== 201) {
-            } else if(mounted.current){
-                Vibration.vibrate(100);
+            } else if (mounted.current) {
+                RNVibrationFeedback.vibrateWith(1519);
                 setIsPublish(false);
                 let tp = messages;
                 tp.push(jsonRes);
@@ -237,7 +238,7 @@ const ConversationScreen = (props) => {
 
     const onChangeRecord = async (e, v = false) => {
         if (v == true && isRecording == false) {
-            Vibration.vibrate();
+            RNVibrationFeedback.vibrateWith(1519);
             onStartRecord();
         }
         if (v == false && isRecording == true) {
@@ -487,7 +488,7 @@ const ConversationScreen = (props) => {
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={[styles.contextMenu,{borderBottomWidth:0}]}
+                                style={[styles.contextMenu, { borderBottomWidth: 0 }]}
                                 onPress={() => { onClearAllChat(); hideMenu() }}
                             >
                                 <TitleText
@@ -520,7 +521,7 @@ const ConversationScreen = (props) => {
                             />
                         </TouchableOpacity>
                         <SemiBoldText
-                            text={`${selectedItems.length}`+t("selected")}
+                            text={`${selectedItems.length}` + t("selected")}
                             fontSize={17}
                             lineHeight={28}
                         />
@@ -569,7 +570,7 @@ const ConversationScreen = (props) => {
                                 marginTop: 18
                             }}
                         >
-                            {t("Your chat with")+` ${info.user.name} `+t("is empty! Start chatting now!")}
+                            {t("Your chat with") + ` ${info.user.name} ` + t("is empty! Start chatting now!")}
                         </Text>
 
                     </View>
@@ -778,6 +779,12 @@ const ConversationScreen = (props) => {
                             }}
                             onDragRelease={(event, gestureState, bounds) => {
                                 dragPos.current = gestureState.dx;
+                                if (gestureState.dx <= -100) {
+                                    RNVibrationFeedback.vibrateWith(1519);
+                                    setTimeout(() => {
+                                        RNVibrationFeedback.vibrateWith(1519);
+                                    }, 300);
+                                }
                             }}
                             onReverse={() => {
 
