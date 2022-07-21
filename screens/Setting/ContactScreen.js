@@ -54,12 +54,12 @@ const ContactScreen = (props) => {
                     alignItems: 'center',
                     height: 125,
                     width: '60%',
-                    borderRadius: 16,
-                    shadowColor: 'rgba(42, 10, 111, 1)',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.5,
-                    shadowRadius: 8,
-                    elevation: 10,
+                    //borderRadius: 16,
+                    // shadowColor: 'rgba(42, 10, 111, 1)',
+                    // shadowOffset: { width: 0, height: 2 },
+                    // shadowOpacity: 0.5,
+                    // shadowRadius: 8,
+                    // elevation: 10,
                 }}
                     source={require('../../assets/common/logo.png')}
                 />

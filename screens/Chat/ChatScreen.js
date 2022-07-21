@@ -5,6 +5,7 @@ import {
     ScrollView,
     KeyboardAvoidingView,
     Image,
+    RefreshControl,
     Text
 } from 'react-native';
 
@@ -46,13 +47,14 @@ const ChatScreen = (props) => {
     const [isLoading, setIsLoading] = useState(true);
     const [showFriendsList, setShowFriendsList] = useState(false);
     const [conversations, setConversations] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
 
     const getFollowUsers = () => {
         VoiceService.getFollows(user.id, "Following")
             .then(async res => {
                 if (res.respInfo.status === 200 && mounted.current) {
                     const jsonRes = await res.json();
-                    setFriends(jsonRes);
+                    setFriends([...jsonRes]);
                 }
             })
             .catch(err => {
@@ -63,7 +65,7 @@ const ChatScreen = (props) => {
     const getConversations = () => {
         VoiceService.getConversations()
             .then(async res => {
-                if (res.respInfo.status === 200&& mounted.current) {
+                if (res.respInfo.status === 200 && mounted.current) {
                     const jsonRes = await res.json();
                     const userIds = jsonRes.map((item) => {
                         if (item.sender.id == user.id)
@@ -108,19 +110,19 @@ const ChatScreen = (props) => {
                     (prev[idx].sender.id == toUserId && prev[idx].receiver.id == fromUserId)
                 ) break;
             if (idx != prev.length) {
-                if(state=='start' || state=='stop')
+                if (state == 'start' || state == 'stop')
                     prev[idx].state = state;
-                else if(state == 'confirm'){
-                    if(prev[idx].sender.id == toUserId){
+                else if (state == 'confirm') {
+                    if (prev[idx].sender.id == toUserId) {
                         prev[idx].newsCount = 0;
                     }
                 }
-                else{
+                else {
                     prev[idx].state = 'stop';
                     prev[idx].type = state;
                     prev[idx].emoji = emoji;
-                    prev[idx].newsCount ++;
-                    if(prev[idx].sender.id != fromUserId){
+                    prev[idx].newsCount++;
+                    if (prev[idx].sender.id != fromUserId) {
                         prev[idx].newsCount = 1;
                         let tp = prev[idx].sender;
                         prev[idx].sender = prev[idx].receiver;
@@ -132,6 +134,16 @@ const ChatScreen = (props) => {
             return prev;
         })
     }
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        getFollowUsers();
+        getConversations();
+        setTimeout(() => {
+          if(mounted.current)
+            setRefreshing(false)
+        }, 1000);
+      };
 
     useEffect(() => {
         mounted.current = true;
@@ -246,7 +258,14 @@ const ChatScreen = (props) => {
                             />
                         </TouchableOpacity>
                     </>}
-                    <ScrollView>
+                    <ScrollView
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
+                            />
+                        }
+                    >
                         {
                             conversations.map((item, index) =>
                                 <ChatListItem

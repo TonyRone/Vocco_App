@@ -312,8 +312,8 @@ export const AnswerReply = ({
                   onDragRelease={(event, gestureState, bounds) => {
                     dragPos.current = gestureState.dx;
                     if (gestureState.dx > 80) {
-                      onStopRecord(true);
                       RNVibrationFeedback.vibrateWith(1519);
+                      onStopRecord(true);
                     }
                     else if (gestureState.dx < -80) {
                       onStopRecord(false);

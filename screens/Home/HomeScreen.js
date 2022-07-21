@@ -73,11 +73,12 @@ const HomeScreen = (props) => {
                 const jsonRes = await res.json();
                 let activeCount = jsonRes.count;
                 VoiceService.unreadRequestCount().then(async res => {
-                    if (res.respInfo.status == 201 && mounted.current) {
+                    if (res.respInfo.status == 201) {
                         const jsonRes = await res.json();
                         let requestCount = jsonRes.count;
-                        let totalCount = activeCount + requestCount;
-                        setNotify(totalCount > 0);
+                        let totalCount = parseInt(activeCount) + parseInt(requestCount);
+                        if(mounted)
+                            setNotify(totalCount > 0);
                         if (Platform.OS == 'ios')
                             PushNotificationIOS.setApplicationIconBadgeNumber(totalCount);
                     }
@@ -216,12 +217,12 @@ const HomeScreen = (props) => {
                     position: 'absolute',
                     top: 160,
                     left: windowWidth / 2 - 78,
-                    width: noticeCount < 0 ? 183 : 156,
+                    //width: noticeCount < 0 ? 183 : 156,
                     height: 40,
                     backgroundColor: noticeCount < 0 ? '#45BF58' : '#8327D8',
                     borderRadius: 34,
                     flexDirection: 'row',
-                    justifyContent: 'space-between',
+                    //justifyContent: 'space-between',
                     alignItems: 'center'
                 }}
                     onPress={() => {

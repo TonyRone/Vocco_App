@@ -8,6 +8,7 @@ import {
   ScrollView,
   Platform,
   RefreshControl,
+  ImageBackground,
 } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
@@ -281,14 +282,25 @@ const ProfileScreen = (props) => {
                     source={require('../../assets/common/premiumstar.png')}
                   />
                     :
-                    <Image
+                    <ImageBackground
                       style={{
                         width: 150,
                         height: 30,
-                        marginLeft: 16
+                        marginLeft: 16,
+                        justifyContent: 'center'
                       }}
                       source={require('../../assets/common/discover_premium.png')}
-                    />}
+                    >
+                      <DescriptionText
+                        text={t("Discover Premium")}
+                        fontFamily="SFProDisplay-Medium"
+                        fontSize={13}
+                        lineHeight={13}
+                        color="#A360CF"
+                        marginLeft={34}
+                      />
+                    </ImageBackground>
+                  }
                 </TouchableOpacity>
               </View>
             </View>

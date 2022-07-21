@@ -14,7 +14,7 @@ import '../../language/i18n';
 import { styles } from '../style/Welcome';
 import { MyProgressBar } from '../component/MyProgressBar';
 import { windowWidth } from '../../config/config';
-import { TextInput } from 'react-native-gesture-handler';
+import { TextInput, NumberInput } from 'react-native-gesture-handler';
 import EditService from '../../services/EditService';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../../store/actions';
@@ -108,7 +108,8 @@ const InputBirthdayScreen = (props) => {
                                     width: 42
                                 }
                             }
-                            placeholder="dd"
+                            keyboardType='numeric'
+                            placeholder="27"
                             textAlign='center'
                             maxWidth={250}
                             value={day}
@@ -145,7 +146,8 @@ const InputBirthdayScreen = (props) => {
                                     width: 56
                                 }
                             }
-                            placeholder="mm"
+                            placeholder="08"
+                            keyboardType='numeric'
                             textAlign='center'
                             maxWidth={250}
                             value={month}
@@ -182,7 +184,8 @@ const InputBirthdayScreen = (props) => {
                                     width: 84
                                 }
                             }
-                            placeholder="yyyy"
+                            placeholder="1997"
+                            keyboardType='numeric'
                             textAlign='center'
                             maxWidth={250}
                             value={year}

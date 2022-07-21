@@ -31,11 +31,13 @@ import { SvgXml } from 'react-native-svg';
 import box_blankSvg from '../../assets/discover/box_blank.svg';
 import image_shadowSvg from '../../assets/discover/image_shadow.svg';
 import searchSvg from '../../assets/login/search.svg';
+import greenCheckSvg from '../../assets/friend/green-check.svg';
 import closeCircleSvg from '../../assets/common/close-circle.svg';
 import { Avatars, Categories, RECENT_LIST, windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { Stories } from '../component/Stories';
 import { RecordIcon } from '../component/RecordIcon';
+import { SemiBoldText } from '../component/SemiBoldText';
 
 const SearchScreen = (props) => {
 
@@ -78,7 +80,7 @@ const SearchScreen = (props) => {
     if (v != '') {
       setIsLoading(true);
       VoiceService.getDiscoverTitle(v, 0, Categories[category].label).then(async res => {
-        if (res.respInfo.status === 200&&mounted.current) {
+        if (res.respInfo.status === 200 && mounted.current) {
           const jsonRes = await res.json();
           setFilterTitles(jsonRes);
           setIsEmpty(jsonRes.length == 0);
@@ -116,9 +118,17 @@ const SearchScreen = (props) => {
     setFilteredVoices(tp);
   }
 
+  const onSendRequest = (index) => {
+    VoiceService.followFriend(filterTitles.user[index].id);
+    setFilterTitles(prev => {
+      prev.user[index].isNewUser = 2;
+      return {...prev};
+    })
+  }
+
   useEffect(() => {
     mounted.current = true;
-    return ()=>{
+    return () => {
       mounted.current = false;
     }
   }, [refreshState])
@@ -248,19 +258,47 @@ const SearchScreen = (props) => {
                     else
                       props.navigation.navigate('UserProfile', { userId: item.id });
                   }}
-                  style={{ marginBottom: 20, flexDirection: 'row', alignItems: 'center' }} key={index + 'loadusers'}
+                  style={{ marginBottom: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }} key={index + 'loadusers'}
                 >
-                  <Image
-                    source={item.avatar ? { uri: item.avatar.url } : Avatars[item.avatarNumber].uri}
-                    style={{ width: 24, height: 24, borderRadius: 7.2 }}
-                    resizeMode='cover'
-                  />
-                  <DescriptionText
-                    text={item.name}
-                    fontSize={15}
-                    color='#281E30'
-                    marginLeft={10}
-                  />
+                  <View style={styles.rowAlignItems}>
+                    <Image
+                      source={item.avatar ? { uri: item.avatar.url } : Avatars[item.avatarNumber].uri}
+                      style={{ width: 24, height: 24, borderRadius: 7.2 }}
+                      resizeMode='cover'
+                    />
+                    <DescriptionText
+                      text={item.name}
+                      fontSize={15}
+                      color='#281E30'
+                      marginLeft={10}
+                    />
+                  </View>
+                  {(item.id!=user.id&&item.isNewUser > 0) && <TouchableOpacity style={{
+                    backgroundColor: item.isNewUser > 1 ? '#ECF8EE' : '#F2F0F5',
+                    paddingHorizontal: 16,
+                    paddingVertical: 9,
+                    borderRadius: 8,
+                  }}
+                    onPress={() => onSendRequest(index)}
+                    disabled={item.isNewUser > 1}
+                  >
+                    <View style={styles.rowAlignItems}>
+                      {item.isNewUser > 1 && <SvgXml
+                        width={20}
+                        height={20}
+                        style={{
+                          marginRight: 4
+                        }}
+                        xml={greenCheckSvg}
+                      />}
+                      <SemiBoldText
+                        text={t(item.isNewUser > 1 ? "Added" : "Add")}
+                        fontSize={13}
+                        lineHeight={21}
+                        color={item.isNewUser > 1 ? '#1A4C22' : '#8327D8'}
+                      />
+                    </View>
+                  </TouchableOpacity>}
                 </TouchableOpacity>
             }
             keyExtractor={(item, index) => index.toString()}

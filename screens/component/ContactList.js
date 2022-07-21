@@ -31,7 +31,7 @@ export const ContactList = ({
 
   const mounted = useRef(false);
 
-  if(Platform.OS == 'ios')
+  if (Platform.OS == 'ios')
     Contacts.iosEnableNotesUsage(true);
 
   const onInviteFriend = (index) => {
@@ -54,8 +54,8 @@ export const ContactList = ({
       .then(Contacts.getAllWithoutPhotos()
         .then((contacts) => {
           // work with contacts
-          if(mounted.current)
-          setContactUsers(contacts);
+          if (mounted.current)
+            setContactUsers(contacts);
         })
         .catch((e) => {
           console.log(e)
@@ -68,8 +68,8 @@ export const ContactList = ({
       await Contacts.getAllWithoutPhotos()
         .then((contacts) => {
           // work with contacts
-          if(mounted.current)
-          setContactUsers(contacts);
+          if (mounted.current)
+            setContactUsers(contacts);
         })
         .catch((err) => {
           console.log(e)
@@ -77,7 +77,7 @@ export const ContactList = ({
     }
     else if (Platform.OS == 'android')
       requestPermission();
-    return ()=>{
+    return () => {
       mounted.current = false;
     }
   }, [])

@@ -39,7 +39,6 @@ import SearchScreen from './screens/Discover/SearchScreen';
 //Feed
 
 //Record
-import HoldRecordScreen from './screens/Record/HoldRecordScreen';
 import PostingVoiceScreen from './screens/Record/PostingVoiceScreen';
 
 import ChangePasswordScreen from './screens/Setting/ChangePasswordScreen';
@@ -189,14 +188,6 @@ const AppNavigator = createStackNavigator({
     }
   },
 
-  //Record
-  HoldRecord: {
-    screen: HoldRecordScreen,
-    navigationOptions: {
-      headerShown: false,
-      animationEnabled: false
-    }
-  },
   PostingVoice: {
     screen: PostingVoiceScreen,
     navigationOptions: {
@@ -409,7 +400,7 @@ const AppNavigator = createStackNavigator({
   },
 },
   {
-    //initialRouteName:'ShareStory'
+    //initialRouteName:'InputBirthday'
   }
 );
 

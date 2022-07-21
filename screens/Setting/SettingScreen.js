@@ -176,12 +176,12 @@ const SettingScreen = (props) => {
                 </TouchableOpacity>
                 <View style={{ marginHorizontal: 16, width: windowWidth - 32, height: 1, backgroundColor: 'rgba(242, 240, 245, 1)' }}>
                 </View>
-                <SettingList
+                {/* <SettingList
                     svgRoute={passwordSvg}
                     svgRight={chewronRightSvg}
                     titleContent={t("Change password")}
                     onPressList={() => props.navigation.navigate('ChangePassword')}
-                />
+                /> */}
                 <SettingList
                     svgRoute={referSvg}
                     svgRight={chewronRightSvg}
