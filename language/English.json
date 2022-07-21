@@ -89,7 +89,7 @@
     "Horror": "Horror",
     "Transport": "Transport",
     "Fashion": "Fashion",
-    "Cooking": "Cooking",
+    "Food": "Food",
     "Games": "Games",
     "Hobby": "Hobby",
     "Music": "Music",
@@ -267,6 +267,9 @@
     "Story Link": "Story Link",
     "You are a premium member and you have up to three minutes of recording!": "You are a premium member and you have up to three minutes of recording!",
     "Go to Premium and have 3 minutes instead of one for each record.": "Go to Premium and have 3 minutes instead of one for each record.",
-    "Discover Premium":"Discover Premium"
+    "Discover Premium":"Discover Premium",
+    "Whoooooo!":"Whoooooo!",
+    "Your story is published!":"Your story is published!",
+    "Share your new story with your friends and let the whole world hear you!":"Share your new story with your friends and let the whole world hear you!"
   }
 }

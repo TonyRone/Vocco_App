@@ -89,7 +89,7 @@
     "Horror": "Horreur",
     "Transport": "Transport",
     "Fashion": "Mode",
-    "Cooking": "Cuisine",
+    "Food": "Nourriture",
     "Games": "Jeux",
     "Hobby": "Passe-temps",
     "Music": "Musique",
@@ -277,6 +277,9 @@
     "New message":"Nouveau message",
     "Back":"Retour",
     "Answer":"Répondre",
-    "Discover Premium":"Devenir Premium"
+    "Discover Premium":"Devenir Premium",
+    "Whoooooo!":"Yeaaaah !",
+    "Your story is published!":"Ton histoire est publiée !",
+    "Share your new story with your friends and let the whole world hear you!":"Partage ton histoire avec tes amis et au reste du monde sur Vocco."
   }
 }

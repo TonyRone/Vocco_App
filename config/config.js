@@ -4,7 +4,7 @@ export const windowHeight = Dimensions.get('window').height;
 
 //export const API_URL = 'https://pioneering-tome-342312.uc.r.appspot.com';
 export const API_URL = 'https://api.vocco.ai';
-//export const API_URL = Platform.OS === 'ios' ? 'http://192.168.111.196:80' : 'https://34.135.150.176:80';
+//export const API_URL = 'http://192.168.111.196:80';
 export const SOCKET_URL = 'https://voccosocket-i2tsf4hvaq-od.a.run.app';
 //export const SOCKET_URL = 'http://192.168.111.196:3000';
 export const ACCESSTOKEN_KEY = "@VoccoAT:2021";
@@ -74,8 +74,8 @@ export const Categories =
         uri:require('../assets/categories/film.png')
     },
     {
-        label:'Cooking',
-        uri:require('../assets/categories/cooking.png')
+        label:'Food',
+        uri:require('../assets/categories/food.png')
     },
     {
         label:'Games',

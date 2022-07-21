@@ -66,19 +66,16 @@ const ShareStoryScreen = (props) => {
       }}
     >
       <ScrollView>
-        <TouchableOpacity style={{ marginLeft: 16, marginTop: 20 }} onPress={() => {onNavigate("Home");RNVibrationFeedback.vibrateWith(1519);}}>
-          <SvgXml width="24" height="24" xml={closeBlackSvg} />
-        </TouchableOpacity>
         <Image
           style={{
             width: windowWidth,
-            marginTop: -65,
+            //marginTop: -65,
             borderColor: '#000',
           }}
           source={require("../../assets/post/whooo.png")}
         />
         <TitleText
-          text={"Whoooooo!" + '\n' + t("Your story is published!")}
+          text={t("Whoooooo!") + '\n' + t("Your story is published!")}
           fontSize={28}
           lineHeight={33}
           marginTop={-95}
@@ -99,7 +96,7 @@ const ShareStoryScreen = (props) => {
         <View
           style={{
             marginTop: 24,
-            marginBottom:90,
+            marginBottom: 90,
             width: '100%',
             paddingHorizontal: 24
           }}
@@ -231,12 +228,15 @@ const ShareStoryScreen = (props) => {
             </TouchableOpacity>
           </View>
         </View>
+        <TouchableOpacity style={{ position: 'absolute', left: 16, top: 20 }} onPress={() => { onNavigate("Home"); RNVibrationFeedback.vibrateWith(1519); }}>
+          <SvgXml width="24" height="24" xml={closeBlackSvg} />
+        </TouchableOpacity>
       </ScrollView>
       <View
         style={{
           paddingHorizontal: 16,
           width: '100%',
-          position:'absolute',
+          position: 'absolute',
           bottom: 20
         }}
       >
