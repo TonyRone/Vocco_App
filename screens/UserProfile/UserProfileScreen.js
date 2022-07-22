@@ -312,10 +312,13 @@ const UserProfileScreen = (props) => {
       </LinearGradient>
       {userInfo.user &&
         <>
+<<<<<<< HEAD
         {/* <TemporaryStories
           props={props}
           userId={userId}
         /> */}
+=======
+>>>>>>> 89a5dcbb7d33a47c348fcbe418ac18bf320b2698
           <ScrollView
             style={{ marginTop: 16 }}
             refreshControl={

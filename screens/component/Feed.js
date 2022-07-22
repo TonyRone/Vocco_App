@@ -57,10 +57,13 @@ export const Feed = ({
         flex: 1,
       }}
     >
+<<<<<<< HEAD
       {/* <TemporaryStories
         props={props}
         onSetExpandKey={() => onSetExpandKey()}
       /> */}
+=======
+>>>>>>> 89a5dcbb7d33a47c348fcbe418ac18bf320b2698
       <ScrollView
         style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 10 }}
         ref={scrollRef}

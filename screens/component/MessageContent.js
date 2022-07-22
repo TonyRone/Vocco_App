@@ -25,18 +25,15 @@ export const MessageContent = ({
 
   const { t, i18n } = useTranslation();
 
-  const dateString = info.createdAt
-  const userOffset = 120 * 60 * 1000;
-  const localDate = new Date(dateString);
-  const localTime = new Date(localDate.getTime() + userOffset);
-
   const isSender = (user.id == info.user.id);
+
+  const localTime = info.createdAt;
 
   return (
     info.type == 'voice' ?
       <View style={{
-        height:80,
-        justifyContent:'center'
+        height: 80,
+        justifyContent: 'center'
       }}>
         <LinearGradient
           style={
@@ -74,7 +71,7 @@ export const MessageContent = ({
               color={isSender ? '#FFF' : 'rgba(59, 31, 82, 0.6)'}
             />
             <DescriptionText
-              text={new Date(localTime).toISOString().substr(11, 5)}
+              text={new Date(localTime).toString().substr(16, 5)}
               lineHeight={12}
               fontSize={11}
               color={isSender ? '#FFF' : 'rgba(59, 31, 82, 0.6)'}
@@ -104,7 +101,7 @@ export const MessageContent = ({
             backgroundColor: 'rgba(54, 36, 68, 0.8)'
           }}>
             <DescriptionText
-              text={new Date(localTime).toISOString().substr(11, 5)}
+              text={new Date(localTime).toString().substr(16, 5)}
               lineHeight={12}
               fontSize={11}
               color='#F6EFFF'
@@ -127,7 +124,7 @@ export const MessageContent = ({
             />
             <View style={{
               marginLeft: 13,
-              height:182,
+              height: 182,
               borderRadius: 20,
               borderWidth: 3,
               borderColor: '#FFF',
@@ -207,7 +204,7 @@ export const MessageContent = ({
                       color={isSender ? '#FFF' : 'rgba(59, 31, 82, 0.6)'}
                     />
                     <DescriptionText
-                      text={new Date(info.record.createdAt).toISOString().substr(11, 5)}
+                      text={new Date(info.record.createdAt).toString().substr(16, 5)}
                       lineHeight={12}
                       fontSize={11}
                       color={isSender ? '#FFF' : 'rgba(59, 31, 82, 0.6)'}
@@ -283,7 +280,7 @@ export const MessageContent = ({
               backgroundColor: 'rgba(54, 36, 68, 0.8)'
             }}>
               <DescriptionText
-                text={new Date(localTime).toISOString().substr(11, 5)}
+                text={new Date(localTime).toString().substr(16, 5)}
                 lineHeight={12}
                 fontSize={11}
                 color='#F6EFFF'

@@ -34,7 +34,7 @@ export const Categories =
         uri:require('../assets/categories/education.png')
     },
     {
-        label:'Adults',
+        label:'Sexo',
         uri:require('../assets/categories/adult.png')
     },
     {

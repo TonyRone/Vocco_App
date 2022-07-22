@@ -162,7 +162,7 @@ export const MessageItem = ({
               backgroundColor: 'rgba(54, 36, 68, 0.8)'
             }}>
               <DescriptionText
-                text={new Date(info.createdAt).toISOString().substr(11, 5)}
+                text={new Date(info.createdAt).toString().substr(16, 5)}
                 lineHeight={12}
                 fontSize={11}
                 color='#F6EFFF'

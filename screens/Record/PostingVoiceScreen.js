@@ -349,6 +349,7 @@ const PostingVoiceScreen = (props) => {
             />
           </TouchableOpacity>
         </View>
+<<<<<<< HEAD
         {/* <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 12, marginBottom: 30 }]}>
           <TitleText
             text={t("Temporary Story")}
@@ -364,6 +365,8 @@ const PostingVoiceScreen = (props) => {
             />
           </TouchableOpacity>
         </View> */}
+=======
+>>>>>>> 89a5dcbb7d33a47c348fcbe418ac18bf320b2698
       </ScrollView>
       <View
         style={{

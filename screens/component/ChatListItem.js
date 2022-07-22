@@ -53,7 +53,7 @@ export const ChatListItem = ({
             return updatedTime.toDateString().substring(0, 3);
         }
         else {
-            return updatedTime.toISOString().substr(11, 5);
+            return updatedTime.toString().substr(16, 5);
         }
     }
 
