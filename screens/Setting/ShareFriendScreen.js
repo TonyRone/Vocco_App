@@ -22,6 +22,7 @@ import { SemiBoldText } from '../component/SemiBoldText';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import VoiceService from '../../services/VoiceService';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 
 const ShareFriendScreen = (props) => {
 
@@ -58,7 +59,8 @@ const ShareFriendScreen = (props) => {
         VoiceService.shareLink();
     };
     const onCopyLink = () => {
-        Clipboard.setString(referLink)
+        Clipboard.setString(referLink);
+        RNVibrationFeedback.vibrateWith(1519);
     }
     useEffect(() => {
     }, [])
@@ -177,11 +179,11 @@ const ShareFriendScreen = (props) => {
                         <TouchableOpacity onPress={async () => {
                             await singleShare({
                                 title: "Share via message",
-                                message: "some awesome dangerous message",
+                                message: "",
                                 url: referLink,
                                 social: socialShare.Social.WHATSAPP,
                                 whatsAppNumber: "9199999999",
-                                filename: referLink,
+                                filename: "Vocco",
                             });
                         }}
                             style={styles.boxContainer}>

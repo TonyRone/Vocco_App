@@ -104,7 +104,8 @@ const ConversationScreen = (props) => {
         android: `${dirs.CacheDir}/hello.mp3`,
     });
 
-    let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     const onNavigate = (des, par = null) => {
         const resetActionTrue = StackActions.reset({
@@ -133,10 +134,10 @@ const ConversationScreen = (props) => {
             return updatedTime.toDateString().substring(4);
         }
         else if (nowTime.getMonth() != updatedTime.getMonth() || (nowTime.getDate() - updatedTime.getDate() > nowTime.getDay())) {
-            return updatedTime.toDateString().substring(4, 10);
+            return t(months[updatedTime.getMonth()])+' '+updatedTime.getDate().toString();
         }
         else if (nowTime.getDate() - 1 > updatedTime.getDate()) {
-            return days[updatedTime.getDay()];
+            return t(days[updatedTime.getDay()]);
         }
         else if (nowTime.getDate() - 1 == updatedTime.getDate()) {
             return t("Yesterday")

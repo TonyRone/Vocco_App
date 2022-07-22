@@ -324,7 +324,6 @@ export const RecordIcon = ({
             // activeOpactiy: 1,
           }}
           onDrag={(event, gestureState) => {
-
           }}
           onDragRelease={(event, gestureState, bounds) => {
             dragPos.current = gestureState.dx;
