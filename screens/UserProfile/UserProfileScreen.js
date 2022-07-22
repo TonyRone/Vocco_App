@@ -311,10 +311,11 @@ const UserProfileScreen = (props) => {
         </TouchableOpacity>
       </LinearGradient>
       {userInfo.user &&
-        <><TemporaryStories
+        <>
+        {/* <TemporaryStories
           props={props}
           userId={userId}
-        />
+        /> */}
           <ScrollView
             style={{ marginTop: 16 }}
             refreshControl={

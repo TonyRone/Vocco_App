@@ -438,7 +438,7 @@ const OnSetPushNotification = () => {
 export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
-    OnSetPushNotification();
+    //OnSetPushNotification();
   }, []);
   return (
     <Provider store={store}>

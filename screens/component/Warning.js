@@ -18,11 +18,12 @@ export const Warning = ({
   return (
     <View
       style={{
-        position: 'absolute',
+        //position: 'absolute',
         marginLeft: marginLeft,
         marginRight: marginRight,
         width: windowWidth - marginLeft - marginRight,
-        bottom: bottom,
+        //bottom: bottom,
+        marginBottom:70,
         borderRadius: 16,
         borderColor: '#F58D8D',
         borderWidth: 1,

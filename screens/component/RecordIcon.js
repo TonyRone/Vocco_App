@@ -21,9 +21,9 @@ import AudioRecorderPlayer, {
 
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
 import RNFetchBlob from 'rn-fetch-blob';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import Draggable from 'react-native-draggable';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { LinearTextGradient } from "react-native-text-gradient";
 import { TitleText } from './TitleText';
 import { Warning } from './Warning';
@@ -129,9 +129,8 @@ export const RecordIcon = ({
   };
 
   const onChangeRecord = async (e, v = false) => {
-    if (v == true) {
+    if (v == true)
       RNVibrationFeedback.vibrateWith(1519);
-    }
     if (v == true && isRecording == false) {
       setIsExpanded(true);
       onStartRecord();
@@ -144,7 +143,13 @@ export const RecordIcon = ({
       else if (v == false && isRecording == true) {
         let delta = Math.abs(dragPos.current);
         if (delta < 80) {
-          await recorderPlayer.pauseRecorder();
+          await recorderPlayer.pauseRecorder().then(res => {
+
+          })
+            .catch(err => {
+              console.log(err);
+            })
+            ;
           setIsPaused(true);
         }
       }
@@ -184,16 +189,21 @@ export const RecordIcon = ({
       {IsExpanded && <View
         style={{
           backgroundColor: '#FFF',
-          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'space-between',
           width: '100%',
           height: '100%',
-          alignItems: 'center'
+          alignItems: 'center',
+          paddingTop:55
         }}
       >
+        <TitleText
+          text={t("Click & hold to record")}
+          fontSize={20}
+          color="#281E30"
+        />
         <View
           style={{
-            position: 'absolute',
-            top: windowHeight / 10,
             paddingHorizontal: 16,
             paddingVertical: 8,
             width: 295,
@@ -206,6 +216,7 @@ export const RecordIcon = ({
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.5,
             shadowRadius: 5,
+            marginBottom:30
           }}
         >
           <SemiBoldText
@@ -216,99 +227,88 @@ export const RecordIcon = ({
             textAlign='center'
           />
         </View>
-        <View style={{ alignItems: 'center', width: '100%' }}>
-          <TitleText
-            text={t("Click & hold to record")}
-            fontSize={20}
-            marginTop={30}
-            color="#281E30"
-          />
-          <View
-            style={{
-              marginTop: windowHeight / 6
-            }}
+        <View
+          style={{
+            marginBottom:50
+          }}
+        >
+          <CountdownCircleTimer
+            key={key}
+            isPlaying={!isPaused}
+            duration={fill}
+            size={250}
+            strokeWidth={5}
+            trailColor="#D4C9DE"
+            trailStrokeWidth={1}
+            onComplete={onTimeEnd}
+            colors={[
+              ['#B35CF8', 0.4],
+              ['#8229F4', 0.4],
+              ['#8229F4', 0.2],
+            ]}
           >
-            <CountdownCircleTimer
-              key={key}
-              isPlaying={!isPaused}
-              duration={fill}
-              size={250}
-              strokeWidth={5}
-              trailColor="#D4C9DE"
-              trailStrokeWidth={1}
-              onComplete={onTimeEnd}
-              colors={[
-                ['#B35CF8', 0.4],
-                ['#8229F4', 0.4],
-                ['#8229F4', 0.2],
-              ]}
-            >
-              {({ remainingTime, animatedColor }) => {
-                return (
-                  <ImageBackground
-                    source={require('../../assets/record/Waves.png')}
-                    resizeMode="stretch"
-                    style={{ width: 197, height: 197, alignItems: 'center' }}
+            {({ remainingTime, animatedColor }) => {
+              return (
+                <ImageBackground
+                  source={require('../../assets/record/Waves.png')}
+                  resizeMode="stretch"
+                  style={{ width: 197, height: 197, alignItems: 'center' }}
+                >
+                  <DescriptionText
+                    text={t("seconds")}
+                    color="rgba(59, 31, 82, 0.6)"
+                    fontSize={20}
+                    marginTop={32}
+                  />
+                  <LinearTextGradient
+                    style={{ fontSize: 80, marginTop: -10 }}
+                    locations={[0, 1]}
+                    colors={["#C479FF", "#650DD6"]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0, y: 1 }}
                   >
-                    <DescriptionText
-                      text={t("seconds")}
-                      color="rgba(59, 31, 82, 0.6)"
-                      fontSize={20}
-                      marginTop={32}
-                    />
-                    <LinearTextGradient
-                      style={{ fontSize: 80, marginTop: -10 }}
-                      locations={[0, 1]}
-                      colors={["#C479FF", "#650DD6"]}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 0, y: 1 }}
-                    >
-                      <Animated.Text style={{ color: animatedColor, fontFamily: "SFProDisplay-Semibold" }}>
-                        {fill - Math.floor(wasteTime.current / 1000)}
-                      </Animated.Text>
-                    </LinearTextGradient>
-                  </ImageBackground>
-                )
-              }}
-            </CountdownCircleTimer>
-          </View>
-        </View>
-        <View style={{ position: 'absolute', bottom: '6%', width: '100%', alignItems: 'center' }}>
-          <ImageBackground
-            source={require('../../assets/record/RecordControl.png')}
-            resizeMode="stretch"
-            style={{ width: 311, height: 76, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
-          >
-            <View
-              style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 18 }}
-            >
-              <SvgXml width={20} height={16 - (hoverState < 0 ? r * 4 : 0)} xml={cancelSvg} />
-              <TitleText
-                text={t("Cancel")}
-                fontFamily="SFProDisplay-Regular"
-                fontSize={16}
-                marginLeft={8}
-                lineHeight={21}
-                color="#E41717"
-              />
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 18 }}>
-              <TitleText
-                text={t("Publish")}
-                fontFamily="SFProDisplay-Regular"
-                fontSize={16}
-                marginRight={8}
-                lineHeight={21}
-                color="#8327D8"
-              />
-              <SvgXml width={20} height={16 + (hoverState > 0 ? hoverState * 4 : 0)} xml={publicSvg} />
-            </View>
-          </ImageBackground>
+                    <Animated.Text style={{ color: animatedColor, fontFamily: "SFProDisplay-Semibold" }}>
+                      {fill - Math.floor(wasteTime.current / 1000)}
+                    </Animated.Text>
+                  </LinearTextGradient>
+                </ImageBackground>
+              )
+            }}
+          </CountdownCircleTimer>
         </View>
         <Warning
-          bottom={'25%'}
           text={t("Hate, racism, sexism or any kind of violence is stricly prohibited")}
         />
+        <ImageBackground
+          source={require('../../assets/record/RecordControl.png')}
+          resizeMode="stretch"
+          style={{ width: 311, height: 76, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom:'12%' }}
+        >
+          <View
+            style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 18 }}
+          >
+            <SvgXml width={20} height={16 - (hoverState < 0 ? r * 4 : 0)} xml={cancelSvg} />
+            <TitleText
+              text={t("Cancel")}
+              fontFamily="SFProDisplay-Regular"
+              fontSize={16}
+              marginLeft={8}
+              lineHeight={21}
+              color="#E41717"
+            />
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 18 }}>
+            <TitleText
+              text={t("Publish")}
+              fontFamily="SFProDisplay-Regular"
+              fontSize={16}
+              marginRight={8}
+              lineHeight={21}
+              color="#8327D8"
+            />
+            <SvgXml width={20} height={16 + (hoverState > 0 ? hoverState * 4 : 0)} xml={publicSvg} />
+          </View>
+        </ImageBackground>
       </View>}
       <View style={{ position: IsExpanded ? 'absolute' : 'relative', bottom: '6%', width: IsExpanded ? '100%' : 54, height: IsExpanded ? 76 : 54 }}>
         <Draggable
@@ -329,8 +329,8 @@ export const RecordIcon = ({
           onDragRelease={(event, gestureState, bounds) => {
             dragPos.current = gestureState.dx;
             if (gestureState.dx > 80) {
-              RNVibrationFeedback.vibrateWith(1519);
               onStopRecord(true);
+              RNVibrationFeedback.vibrateWith(1519);
             }
             else if (gestureState.dx < -80) {
               onStopRecord(false);
