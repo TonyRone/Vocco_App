@@ -18,6 +18,7 @@ import { BottomButtons } from '../component/BottomButtons';
 import { SearchLanguage } from '../component/SearchLanguage';
 import { MyButton } from '../component/MyButton';
 import { SvgXml } from 'react-native-svg';
+import OpenFile from 'react-native-doc-viewer';
 import chewronRightSvg from '../../assets/common/chewron_right.svg';
 import termsSvg from '../../assets/setting/terms.svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
@@ -98,6 +99,36 @@ const SettingScreen = (props) => {
         socketInstance.disconnect();
         dispatch(setSocketInstance(null));
         onNavigate("Welcome")
+    }
+
+    const pressTerms = () => {
+        if (Platform.OS === 'ios') {
+            //IOS
+            OpenFile.openDoc([{
+                url: "https://storage.googleapis.com/vocco-2022-s/VOCCO.docx",
+                fileNameOptional: "Terms and conditions"
+            }], (error, url) => {
+                if (error) {
+                    console.error(error);
+                } else {
+                    console.log(url)
+                }
+            })
+        } else {
+            //Android
+            OpenFile.openDoc([{
+                url: "https://storage.googleapis.com/vocco-2022-s/VOCCO.docx", // Local "file://" + filepath
+                fileName: "Terms and conditions",
+                cache: false,
+                fileType: "jpg"
+            }], (error, url) => {
+                if (error) {
+                    console.error(error);
+                } else {
+                    console.log(url)
+                }
+            })
+        }
     }
 
     useEffect(() => {
@@ -192,7 +223,7 @@ const SettingScreen = (props) => {
                     svgRoute={termsSvg}
                     svgRight={chewronRightSvg}
                     titleContent={t("Terms and Conditions")}
-                // onPressList = {()=>props.navigation.navigate('ChangePassword')}
+                    onPressList={() => pressTerms()}
                 />
                 <SettingList
                     svgRoute={contactsSvg}

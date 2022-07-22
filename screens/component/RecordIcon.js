@@ -324,19 +324,20 @@ export const RecordIcon = ({
             // activeOpactiy: 1,
           }}
           onDrag={(event, gestureState) => {
+
           }}
           onDragRelease={(event, gestureState, bounds) => {
             dragPos.current = gestureState.dx;
             if (gestureState.dx > 80) {
-              onStopRecord(true);
               RNVibrationFeedback.vibrateWith(1519);
+              onStopRecord(true);
             }
             else if (gestureState.dx < -80) {
-              onStopRecord(false);
               RNVibrationFeedback.vibrateWith(1519);
               setTimeout(() => {
                 RNVibrationFeedback.vibrateWith(1519);
               }, 300);
+              onStopRecord(false);
             }
           }}
           onReverse={() => {

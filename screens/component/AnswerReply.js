@@ -316,11 +316,11 @@ export const AnswerReply = ({
                       onStopRecord(true);
                     }
                     else if (gestureState.dx < -80) {
-                      onStopRecord(false);
                       RNVibrationFeedback.vibrateWith(1519);
                       setTimeout(() => {
                         RNVibrationFeedback.vibrateWith(1519);
                       }, 300);
+                      onStopRecord(false);
                     }
                   }}
                   onReverse={() => {
