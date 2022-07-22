@@ -38,6 +38,8 @@ export const ChatListItem = ({
 
     let otherUser = user.id == info.sender.id ? info.receiver : info.sender;
 
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
     const { t, i18n } = useTranslation();
 
     const renderTime = () => {
@@ -47,10 +49,10 @@ export const ChatListItem = ({
             return updatedTime.toDateString().substring(4);
         }
         else if (nowTime.getDate() - updatedTime.getDate() > nowTime.getDay()) {
-            return updatedTime.toDateString().substring(4, 10);
+            return t(months[updatedTime.getMonth()])+' '+updatedTime.getDate().toString();
         }
         else if (nowTime.getDate() > updatedTime.getDate()) {
-            return updatedTime.toDateString().substring(0, 3);
+            return t(updatedTime.toDateString().substring(0, 3));
         }
         else {
             return updatedTime.toString().substr(16, 5);

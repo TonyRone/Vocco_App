@@ -89,7 +89,7 @@ const PremiumScreen = (props) => {
           <View style={{ height: 24, width: 24 }}>
           </View>
         </View>
-        <View style={{ position: 'absolute', width: '100%', bottom: 108, paddingHorizontal: 16 }}>
+        <View style={{ position: 'absolute', width: '100%', bottom: 258, paddingHorizontal: 16 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 15 }}>
             <SvgXml
               width={24}
@@ -147,7 +147,7 @@ const PremiumScreen = (props) => {
           >
             <View style={styles.rowSpaceBetween}>
               <DescriptionText
-                text={t("MONTHLY")}
+                text={t("FOR THE FIRST 1,000 VOCCO MEMBERS")}
                 fontSize={11}
                 lineHeight={12}
                 color='rgba(59, 31, 82, 0.6)'
@@ -159,21 +159,21 @@ const PremiumScreen = (props) => {
               />
             </View>
             <DescriptionText
-              text={'$4.99/' + t("month")}
+              text={t("Free")}
               fontSize={20}
               lineHeight={24}
               color='#281E30'
               marginTop={9}
             />
             <DescriptionText
-              text={t("then 20.99 per month. Cancel anytime")}
+              text={t("Lifetime")}
               fontSize={13}
               lineHeight={21}
               marginTop={5}
               color='rgba(59, 31, 82, 0.6)'
             />
           </TouchableOpacity>
-          <TouchableOpacity style={{
+          {/* <TouchableOpacity style={{
             width: windowWidth - 32,
             height: 101,
             borderRadius: 12,
@@ -223,7 +223,7 @@ const PremiumScreen = (props) => {
               marginTop={5}
               color='rgba(59, 31, 82, 0.6)'
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ImageBackground>
       <View

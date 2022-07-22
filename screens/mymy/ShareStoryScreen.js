@@ -130,7 +130,7 @@ const ShareStoryScreen = (props) => {
               />
             </View>
             <View style={{ alignItems: 'center' }}>
-              <TouchableOpacity onPress={() => {
+              <TouchableOpacity onPress={async () => {
                 await singleShare({
                   title: "Share via message",
                   message: "some awesome dangerous message",
@@ -187,6 +187,7 @@ const ShareStoryScreen = (props) => {
                 await singleShare({
                   title: "Share via message",
                   message: "some awesome dangerous message",
+                  whatsAppNumber: "9199999999",
                   url: info.file.url,
                   social: socialShare.Social.WHATSAPP,
                   filename: info.title,
