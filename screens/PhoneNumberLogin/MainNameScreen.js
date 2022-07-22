@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, ImageBackground, TouchableOpacity, Platform } from 'react-native';
+import { View, ImageBackground, TouchableOpacity, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import PhoneInput from "react-native-phone-number-input";
 import { SvgXml } from 'react-native-svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
@@ -27,103 +27,105 @@ const MainNameScreen = (props) => {
     }, [])
 
     return (
-        <ImageBackground
-            source={require('../../assets/phoneNumber/background.png')}
-            resizeMode="cover"
-            style={styles.background}
-        >
-            <View
-                style={[
-                    { marginTop: Platform.OS == 'ios' ? 50 : 20, paddingHorizontal: 12, marginBottom: 47, height: 30 },
-                    styles.rowSpaceBetween
-                ]}
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <ImageBackground
+                source={require('../../assets/phoneNumber/background.png')}
+                resizeMode="cover"
+                style={styles.background}
             >
-                <TouchableOpacity
-                    onPress={() => props.navigation.goBack()}
+                <View
+                    style={[
+                        { marginTop: Platform.OS == 'ios' ? 50 : 20, paddingHorizontal: 12, marginBottom: 47, height: 30 },
+                        styles.rowSpaceBetween
+                    ]}
                 >
-                    <SvgXml
-                        width="24"
-                        height="24"
-                        xml={arrowBendUpLeft}
+                    <TouchableOpacity
+                        onPress={() => props.navigation.goBack()}
+                    >
+                        <SvgXml
+                            width="24"
+                            height="24"
+                            xml={arrowBendUpLeft}
+                        />
+                    </TouchableOpacity>
+                    <MyProgressBar
+                        progress={0}
                     />
-                </TouchableOpacity>
-                <MyProgressBar
-                    progress={0}
-                />
-                <View>
+                    <View>
+                    </View>
                 </View>
-            </View>
-            <TitleText
-                text={t("Hi! What's your name?")}
-                textAlign='center'
-            />
-            <DescriptionText
-                text={t("This name will show in the chat")}
-                fontSize={15}
-                lineHeight={24}
-                textAlign='center'
-                marginTop={8}
-            />
-            <View style={{
-                width:windowWidth,
-                alignItems:'center',
-                marginTop: 53
-            }}>
+                <TitleText
+                    text={t("Hi! What's your name?")}
+                    textAlign='center'
+                />
+                <DescriptionText
+                    text={t("This name will show in the chat")}
+                    fontSize={15}
+                    lineHeight={24}
+                    textAlign='center'
+                    marginTop={8}
+                />
                 <View style={{
-                    // paddingVertical: 14,
-                    borderRadius: 8,
-                    paddingHorizontal: 24,
-                    borderWidth: 3,
-                    borderColor: '#FFF',
-                    backgroundColor: 'rgba(255, 255, 255, 0.6)'
+                    width: windowWidth,
+                    alignItems: 'center',
+                    marginTop: 53
                 }}>
-                    <TextInput
+                    <View style={{
+                        // paddingVertical: 14,
+                        borderRadius: 8,
+                        paddingHorizontal: 24,
+                        borderWidth: 3,
+                        borderColor: '#FFF',
+                        backgroundColor: 'rgba(255, 255, 255, 0.6)'
+                    }}>
+                        <TextInput
+                            style={
+                                {
+                                    fontSize: 28,
+                                    lineHeight: 34,
+                                    color: '#281E30',
+                                    width: windowWidth - 60
+                                }
+                            }
+                            textAlign='center'
+                            maxWidth={250}
+                            value={value}
+                            autoCapitalize='words'
+                            onChangeText={e => setValue(e)}
+                        />
+                    </View>
+                </View>
+                <TouchableOpacity style={{
+                    position: 'absolute',
+                    right: 16,
+                    bottom: 16,
+                }}
+                    onPress={() => props.navigation.navigate('PhoneRegister')}
+                    disabled={value.length < 3}
+                >
+                    <LinearGradient
                         style={
                             {
-                                fontSize: 28,
-                                lineHeight: 34,
-                                color: '#281E30',
-                                width: windowWidth - 60
+                                height: 56,
+                                width: 56,
+                                borderRadius: 28,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexDirection: 'row'
                             }
                         }
-                        textAlign='center'
-                        maxWidth={250}
-                        value={value}
-                        autoCapitalize='words'
-                        onChangeText={e => setValue(e)}
-                    />
-                </View>
-            </View>
-            <TouchableOpacity style={{
-                position: 'absolute',
-                right: 16,
-                bottom: 16,
-            }}
-                onPress={() => props.navigation.navigate('PhoneRegister')}
-                disabled={value.length<3}
-            >
-                <LinearGradient
-                    style={
-                        {
-                            height: 56,
-                            width: 56,
-                            borderRadius: 28,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'row'
-                        }
-                    }
-                    start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-                    colors={value.length > 2 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#FBF2FF', '#F7E5FF', '#E5D1FF']}
-                >
-                    <SvgXml
-                        width={32}
-                        height={32}
-                        xml={rightArrowSvg}
-                    />
-                </LinearGradient>
-            </TouchableOpacity>
-        </ImageBackground>
+                        start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                        colors={value.length > 2 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#FBF2FF', '#F7E5FF', '#E5D1FF']}
+                    >
+                        <SvgXml
+                            width={32}
+                            height={32}
+                            xml={rightArrowSvg}
+                        />
+                    </LinearGradient>
+                </TouchableOpacity>
+            </ImageBackground>
+        </TouchableWithoutFeedback>
     );
 };
 

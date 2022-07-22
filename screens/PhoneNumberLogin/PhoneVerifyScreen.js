@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, ImageBackground, TouchableOpacity, Platform, Text } from 'react-native';
+import { View, ImageBackground, TouchableOpacity, Platform, Text, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import * as Progress from "react-native-progress";
 import { NavigationActions, StackActions } from 'react-navigation';
 import { SvgXml } from 'react-native-svg';
@@ -188,130 +188,132 @@ const PhoneVerifyScreen = (props) => {
 
     useEffect(() => {
         mounted.current = true;
-        return ()=>{
+        return () => {
             mounted.current = false;
         }
     }, [])
 
     return (
-        <ImageBackground
-            source={require('../../assets/phoneNumber/background.png')}
-            resizeMode="cover"
-            style={styles.background}
-        >
-            <View
-                style={[
-                    { marginTop: Platform.OS == 'ios' ? 50 : 20, paddingHorizontal: 12, marginBottom: 47, height: 30 },
-                    styles.rowSpaceBetween
-                ]}
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <ImageBackground
+                source={require('../../assets/phoneNumber/background.png')}
+                resizeMode="cover"
+                style={styles.background}
             >
-                <TouchableOpacity
-                    onPress={() => props.navigation.goBack()}
+                <View
+                    style={[
+                        { marginTop: Platform.OS == 'ios' ? 50 : 20, paddingHorizontal: 12, marginBottom: 47, height: 30 },
+                        styles.rowSpaceBetween
+                    ]}
                 >
-                    <SvgXml
-                        width="24"
-                        height="24"
-                        xml={arrowBendUpLeft}
-                    />
-                </TouchableOpacity>
-            </View>
-            <TitleText
-                text={t("Enter your code")}
-                textAlign='center'
-            />
-            <DescriptionText
-                text={t("I sent a code to " + phoneNumber)}
-                fontSize={15}
-                lineHeight={24}
-                textAlign='center'
-                marginTop={8}
-            />
-            <View
-                style={
-                    {
-                        padding: 16,
-                        alignItems: 'center'
-                    }
-                }
-            >
-                <OTPInputView
-                    style={{ width: '80%', height: 100 }}
-                    pinCount={6}
-                    code={pseudo}
-                    onCodeChanged={code => { setPseudo(code); setError(''); }}
-                    autoFocusOnLoad
-                    codeInputFieldStyle={styles.underlineStyleBase}
-                    codeInputHighlightStyle={styles.underlineStyleHighLighted}
-                    onCodeFilled={(code) => {
-                        setPseudo(code)
-                    }}
-                />
-                {error != '' && <View style={[styles.rowAlignItems, { marginTop: 0 }]}>
-                    <SvgXml
-                        width={24}
-                        height={24}
-                        xml={errorSvg}
-                    />
-                    <DescriptionText
-                        text={t(error)}
-                        fontSize={12}
-                        lineHeigh={16}
-                        marginLeft={8}
-                        color='#E41717'
-                    />
-                </View>}
-            </View>
-            <TouchableOpacity onPress={() => resendCode()}>
-                <DescriptionText
-                    text={t("Resend code")}
-                    fontSize={15}
-                    lineHeight={24}
-                    color='#8327D8'
+                    <TouchableOpacity
+                        onPress={() => props.navigation.goBack()}
+                    >
+                        <SvgXml
+                            width="24"
+                            height="24"
+                            xml={arrowBendUpLeft}
+                        />
+                    </TouchableOpacity>
+                </View>
+                <TitleText
+                    text={t("What's the code")}
                     textAlign='center'
                 />
-            </TouchableOpacity>
-            <TouchableOpacity style={{
-                position: 'absolute',
-                right: 16,
-                bottom: 16,
-            }}
-                onPress={() => confirmCode()}
-                disabled={pseudo.length < 6}
-            >
-                <LinearGradient
+                <DescriptionText
+                    text={t("I sent a code to " + phoneNumber)}
+                    fontSize={15}
+                    lineHeight={24}
+                    textAlign='center'
+                    marginTop={8}
+                />
+                <View
                     style={
                         {
-                            height: 56,
-                            width: 56,
-                            borderRadius: 28,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'row'
+                            padding: 16,
+                            alignItems: 'center'
                         }
                     }
-                    start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-                    colors={pseudo.length == 6 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#FBF2FF', '#F7E5FF', '#E5D1FF']}
                 >
-                    <SvgXml
-                        width={32}
-                        height={32}
-                        xml={rightArrowSvg}
+                    <OTPInputView
+                        style={{ width: '80%', height: 100 }}
+                        pinCount={6}
+                        code={pseudo}
+                        onCodeChanged={code => { setPseudo(code); setError(''); }}
+                        autoFocusOnLoad
+                        codeInputFieldStyle={styles.underlineStyleBase}
+                        codeInputHighlightStyle={styles.underlineStyleHighLighted}
+                        onCodeFilled={(code) => {
+                            setPseudo(code)
+                        }}
                     />
-                </LinearGradient>
-            </TouchableOpacity>
-            {loading &&
-                <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(1,1,1,0.3)' }}>
-                    <View style={{ marginTop: windowHeight / 2.5, alignItems: 'center', width: windowWidth }}>
-                        <Progress.Circle
-                            indeterminate
-                            size={30}
-                            color="rgba(0, 0, 255, 0.7)"
-                            style={{ alignSelf: "center" }}
+                    {error != '' && <View style={[styles.rowAlignItems, { marginTop: 0 }]}>
+                        <SvgXml
+                            width={24}
+                            height={24}
+                            xml={errorSvg}
                         />
-                    </View>
+                        <DescriptionText
+                            text={t(error)}
+                            fontSize={12}
+                            lineHeigh={16}
+                            marginLeft={8}
+                            color='#E41717'
+                        />
+                    </View>}
                 </View>
-            }
-        </ImageBackground>
+                <TouchableOpacity onPress={() => resendCode()}>
+                    <DescriptionText
+                        text={t("Resend code")}
+                        fontSize={15}
+                        lineHeight={24}
+                        color='#8327D8'
+                        textAlign='center'
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity style={{
+                    position: 'absolute',
+                    right: 16,
+                    bottom: 16,
+                }}
+                    onPress={() => confirmCode()}
+                    disabled={pseudo.length < 6}
+                >
+                    <LinearGradient
+                        style={
+                            {
+                                height: 56,
+                                width: 56,
+                                borderRadius: 28,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexDirection: 'row'
+                            }
+                        }
+                        start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                        colors={pseudo.length == 6 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#FBF2FF', '#F7E5FF', '#E5D1FF']}
+                    >
+                        <SvgXml
+                            width={32}
+                            height={32}
+                            xml={rightArrowSvg}
+                        />
+                    </LinearGradient>
+                </TouchableOpacity>
+                {loading &&
+                    <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(1,1,1,0.3)' }}>
+                        <View style={{ marginTop: windowHeight / 2.5, alignItems: 'center', width: windowWidth }}>
+                            <Progress.Circle
+                                indeterminate
+                                size={30}
+                                color="rgba(0, 0, 255, 0.7)"
+                                style={{ alignSelf: "center" }}
+                            />
+                        </View>
+                    </View>
+                }
+            </ImageBackground>
+        </TouchableWithoutFeedback>
     );
 };
 

@@ -349,21 +349,6 @@ const PostingVoiceScreen = (props) => {
             />
           </TouchableOpacity>
         </View>
-        <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 12, marginBottom: 30 }]}>
-          <TitleText
-            text={t("Temporary Story")}
-            fontSize={17}
-            lineHeight={28}
-            color="#281E30"
-          />
-          <TouchableOpacity onPress={() => setTemporaryStatus(!temporaryStatus)}>
-            <SvgXml
-              width={55}
-              height={35}
-              xml={temporaryStatus ? yesSwitchSvg : noSwitchSvg}
-            />
-          </TouchableOpacity>
-        </View>
       </ScrollView>
       <View
         style={{

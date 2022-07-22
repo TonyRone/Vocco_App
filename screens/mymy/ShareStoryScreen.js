@@ -26,6 +26,7 @@ import { SHARE_CHECK, windowWidth } from '../../config/config';
 import { styles } from '../style/Login';
 import { TitleText } from '../component/TitleText';
 import { ScrollView } from 'react-native-gesture-handler';
+import VoiceService from '../../services/VoiceService';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
 
 const ShareStoryScreen = (props) => {
@@ -129,7 +130,14 @@ const ShareStoryScreen = (props) => {
               />
             </View>
             <View style={{ alignItems: 'center' }}>
-              <TouchableOpacity onPress={() => {
+              <TouchableOpacity onPress={async() => {
+                await singleShare({
+                  title: "Share via message",
+                  message: "some awesome dangerous message",
+                  url: info.file.url,
+                  social: 'tiktok',
+                  filename: info.title,
+                });
                 VoiceService.shareStory(info.id, 'record');
               }}>
                 <Image

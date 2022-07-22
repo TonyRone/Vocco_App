@@ -244,10 +244,6 @@ const ProfileScreen = (props) => {
           </TouchableOpacity>
         </LinearGradient>
       </Pressable>
-      <TemporaryStories
-        props={props}
-        userId={user.id}
-      />
       <ScrollView
         style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 16 }}
         refreshControl={
