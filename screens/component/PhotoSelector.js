@@ -66,8 +66,7 @@ export const PhotoSelector = ({
         skipBackup: true,
         path: 'images',
       },
-      maxWidth: 200,
-      maxHeight: 500,
+      maxWidth: 400,
     };
 
     launchImageLibrary(options, res => {
@@ -146,7 +145,7 @@ export const PhotoSelector = ({
               }}
               onPress={() => { setModalVisible(true); setErrorText(null) }}
             >
-              <Image source={{ uri: photoResourcePath.assets ? photoResourcePath.assets[0].uri : '' }}
+              {photoResourcePath.assets&&<Image source={{ uri: photoResourcePath.assets[0].uri }}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -154,7 +153,7 @@ export const PhotoSelector = ({
                   borderColor: '#F2F0F5',
                   borderRadius: 24,
                 }}
-              />
+              />}
             </View>
             <View style={{
               marginLeft: 50

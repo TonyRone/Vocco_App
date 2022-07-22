@@ -1,1 +1,0 @@
-../../../../../node_modules/react-native-utils-scale/ios/UtilsScale.h

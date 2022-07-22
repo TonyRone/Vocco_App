@@ -1,1 +1,0 @@
-../../../../../node_modules/react-native-text-gradient/ios/RNLinearTextGradientViewManager.h
