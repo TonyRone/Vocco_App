@@ -46,7 +46,7 @@ const WelcomeScreen = (props) => {
                         <View style={[styles.rowSpaceEvenly, { marginBottom: 25, marginTop: 50 }]}>
                             <TouchableOpacity
                                 style={styles.registerButton}
-                                onPress={() => props.navigation.navigate("PhoneRegister")}
+                                onPress={() => props.navigation.navigate("MainName")}
                             >
                                 <Text style={styles.registerText} >{t("Get Started")}</Text>
                             </TouchableOpacity>

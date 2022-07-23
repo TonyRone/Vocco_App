@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { KeyboardAvoidingView, Image, PermissionsAndroid, Platform } from 'react-native';
+import { KeyboardAvoidingView, Image, PermissionsAndroid, Platform, NativeModules } from 'react-native';
 import io from "socket.io-client";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,15 +25,23 @@ const LogoScreen = (props) => {
 
     const dispatch = useDispatch();
 
+    const deviceLanguage =
+        Platform.OS === 'ios'
+            ? NativeModules.SettingsManager.settings.AppleLocale ||
+            NativeModules.SettingsManager.settings.AppleLanguages[0] //iOS 13
+            : NativeModules.I18nManager.localeIdentifier;
+
+    console.log(deviceLanguage); //en_US
+
     const onGoScreen = async (jsonRes, prevOpenCount) => {
         let openCount = await AsyncStorage.getItem(OPEN_COUNT);
-        if (openCount != prevOpenCount){
+        if (openCount != prevOpenCount) {
             return;
         }
-        if(prevOpenCount == null)
+        if (prevOpenCount == null)
             openCount = "1";
         else
-            openCount =  (Number(prevOpenCount) + 1).toString();
+            openCount = (Number(prevOpenCount) + 1).toString();
         await AsyncStorage.setItem(
             OPEN_COUNT,
             openCount
@@ -87,17 +95,29 @@ const LogoScreen = (props) => {
     const checkLogin = async () => {
         let mainLanguage = await AsyncStorage.getItem(MAIN_LANGUAGE);
         if (mainLanguage == null) {
-            await AsyncStorage.setItem(
-                MAIN_LANGUAGE,
-                'English'
-            );
-            mainLanguage = 'English';
+            if (deviceLanguage == 'en_US') {
+                await AsyncStorage.setItem(
+                    MAIN_LANGUAGE,
+                    'English'
+                );
+                mainLanguage = 'English';
+            }
+            else{
+                await AsyncStorage.setItem(
+                    MAIN_LANGUAGE,
+                    'French'
+                );
+                mainLanguage = 'French';
+            }
         }
         i18n.changeLanguage(mainLanguage).then(async () => {
             const aToken = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
             if (aToken != null) {
+                console.log("SSSSSSSSSSSSSSSSSSSS");
                 AuthService.getUserInfo().then(async res => {
+                    console.log(res.respInfo.status);
                     const jsonRes = await res.json();
+                    console.log(jsonRes);
                     const nav = await AsyncStorage.getItem(APP_NAV);
                     if (nav == 'stop') {
                         await AsyncStorage.setItem(

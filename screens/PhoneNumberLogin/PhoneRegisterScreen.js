@@ -103,7 +103,7 @@ const PhoneRegisterScreen = (props) => {
                         defaultValue={value}
                         defaultCode="FR"
                         //layout="second"
-                        placeholder="Phone Number"
+                        placeholder="95 123 4567"
                         // containerStyle={{
                         //     borderRadius: 8,
                         //     height: 60,

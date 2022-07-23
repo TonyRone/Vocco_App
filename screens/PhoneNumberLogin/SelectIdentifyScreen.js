@@ -98,7 +98,7 @@ const SelectIdentifyScreen = (props) => {
                 textAlign='center'
             />
             <DescriptionText
-                text={t("How do you identify?")}
+                text={t("How do you identify ?")}
                 fontSize={15}
                 lineHeight={24}
                 textAlign='center'

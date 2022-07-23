@@ -71,7 +71,7 @@ const InputBirthdayScreen = (props) => {
                     </View>
                 </View>
                 <TitleText
-                    text={t("When's your birthday?")}
+                    text={t("When's your birthday ?")}
                     textAlign='center'
                 />
                 <DescriptionText
@@ -118,7 +118,7 @@ const InputBirthdayScreen = (props) => {
                             />
                         </View>
                         <DescriptionText
-                            text='DAY'
+                            text={t("DAY")}
                             color='rgba(59, 31, 82, 0.6)'
                             fontSize={15}
                             lineHeight={24}
@@ -155,7 +155,7 @@ const InputBirthdayScreen = (props) => {
                             />
                         </View>
                         <DescriptionText
-                            text='MONTH'
+                            text={t("MONTH")}
                             color='rgba(59, 31, 82, 0.6)'
                             fontSize={15}
                             lineHeight={24}
@@ -192,7 +192,7 @@ const InputBirthdayScreen = (props) => {
                             />
                         </View>
                         <DescriptionText
-                            text='YEAR'
+                            text= {t("YEAR")}
                             color='rgba(59, 31, 82, 0.6)'
                             fontSize={15}
                             lineHeight={24}

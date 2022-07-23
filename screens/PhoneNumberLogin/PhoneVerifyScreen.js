@@ -217,11 +217,11 @@ const PhoneVerifyScreen = (props) => {
                     </TouchableOpacity>
                 </View>
                 <TitleText
-                    text={t("What's the code")}
+                    text={t("What's the code ?")}
                     textAlign='center'
                 />
                 <DescriptionText
-                    text={t("I sent a code to " + phoneNumber)}
+                    text={t("I sent a code to ") + phoneNumber.toString()}
                     fontSize={15}
                     lineHeight={24}
                     textAlign='center'

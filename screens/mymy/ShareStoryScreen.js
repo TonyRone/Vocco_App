@@ -102,8 +102,8 @@ const ShareStoryScreen = (props) => {
             paddingHorizontal: 24
           }}
         >
-          <View style={styles.rowSpaceBetween}>
-            <View style={{ alignItems: 'center' }}>
+          <View style={styles.rowSpaceEvenly}>
+            {/* <View style={{ alignItems: 'center' }}>
               <TouchableOpacity onPress={async () => {
                 await singleShare({
                   title: "Share via message",
@@ -154,7 +154,7 @@ const ShareStoryScreen = (props) => {
                 lineHeight={16}
                 color='rgba(54, 36, 68, 0.8)'
               />
-            </View>
+            </View> */}
             <View style={{ alignItems: 'center' }}>
               <TouchableOpacity onPress={async () => {
                 await singleShare({

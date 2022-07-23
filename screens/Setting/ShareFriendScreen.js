@@ -131,7 +131,7 @@ const ShareFriendScreen = (props) => {
                     lineHeight={28}
                     marginBottom={24}
                 />
-                <View style={styles.rowSpaceBetween}>
+                <View style={styles.rowSpaceEvenly}>
                     <View style={{ alignItems: 'center' }}>
                         <TouchableOpacity onPress={shareMessage}
                             style={styles.boxContainer}>
@@ -149,7 +149,7 @@ const ShareFriendScreen = (props) => {
                             marginTop={18}
                         />
                     </View>
-                    <View style={{ alignItems: 'center' }}>
+                    {/* <View style={{ alignItems: 'center' }}>
                         <TouchableOpacity onPress={async () => {
                             await singleShare({
                                 title: "Share via message",
@@ -174,7 +174,7 @@ const ShareFriendScreen = (props) => {
                             color='#281E30'
                             marginTop={18}
                         />
-                    </View>
+                    </View> */}
                     <View style={{ alignItems: 'center' }}>
                         <TouchableOpacity onPress={async () => {
                             await singleShare({
