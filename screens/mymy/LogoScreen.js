@@ -95,7 +95,7 @@ const LogoScreen = (props) => {
     const checkLogin = async () => {
         let mainLanguage = await AsyncStorage.getItem(MAIN_LANGUAGE);
         if (mainLanguage == null) {
-            if (deviceLanguage == 'en_US') {
+            if (deviceLanguage[0] == 'e') {
                 await AsyncStorage.setItem(
                     MAIN_LANGUAGE,
                     'English'
