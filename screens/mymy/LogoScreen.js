@@ -31,8 +31,6 @@ const LogoScreen = (props) => {
             NativeModules.SettingsManager.settings.AppleLanguages[0] //iOS 13
             : NativeModules.I18nManager.localeIdentifier;
 
-    console.log(deviceLanguage); //en_US
-
     const onGoScreen = async (jsonRes, prevOpenCount) => {
         let openCount = await AsyncStorage.getItem(OPEN_COUNT);
         if (openCount != prevOpenCount) {
@@ -102,7 +100,7 @@ const LogoScreen = (props) => {
                 );
                 mainLanguage = 'English';
             }
-            else{
+            else {
                 await AsyncStorage.setItem(
                     MAIN_LANGUAGE,
                     'French'
@@ -113,11 +111,8 @@ const LogoScreen = (props) => {
         i18n.changeLanguage(mainLanguage).then(async () => {
             const aToken = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
             if (aToken != null) {
-                console.log("SSSSSSSSSSSSSSSSSSSS");
                 AuthService.getUserInfo().then(async res => {
-                    console.log(res.respInfo.status);
                     const jsonRes = await res.json();
-                    console.log(jsonRes);
                     const nav = await AsyncStorage.getItem(APP_NAV);
                     if (nav == 'stop') {
                         await AsyncStorage.setItem(
