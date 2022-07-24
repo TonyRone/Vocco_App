@@ -124,7 +124,7 @@ export const AnswerRecordIcon = ({
   };
 
   const onChangeRecord = async (e, v = false) => {
-    if (v == true){
+    if (v == true) {
       RNVibrationFeedback.vibrateWith(1519);
     }
     if (v == true && isRecording == false) {
@@ -139,8 +139,13 @@ export const AnswerRecordIcon = ({
       else if (v == false && isRecording == true) {
         let delta = Math.abs(dragPos.current);
         if (delta < 80) {
-          await recorderPlayer.pauseRecorder();
           setIsPaused(true);
+          await recorderPlayer.pauseRecorder().then(res => {
+          })
+            .catch(err => {
+              console.log(err);
+              onStopRecord(false);
+            });
         }
       }
     }
@@ -181,10 +186,10 @@ export const AnswerRecordIcon = ({
                 height: 56,
                 width: 281.22,
                 right: (windowWidth - 281.22) / 2,
-                flexDirection:'row',
-                justifyContent:'space-between',
-                alignItems:'center',
-                paddingHorizontal:20
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                paddingHorizontal: 20
               }}
               resizeMode="stretch"
               source={require('../../assets/post/answerReply.png')}
@@ -204,7 +209,7 @@ export const AnswerRecordIcon = ({
                 />
               </View>
               <View style={styles.rowAlignItems}>
-              <DescriptionText
+                <DescriptionText
                   text={t("Publish")}
                   fontSize={13}
                   lineHeight={21}
@@ -310,7 +315,7 @@ export const AnswerRecordIcon = ({
             onTouchStart={(e) => onChangeRecord(e, true)}
             onTouchEnd={(e) => onChangeRecord(e, false)}
             style={{
-              opacity:isPaused?1:0.1
+              opacity: isPaused ? 1 : 0.1
             }}
           >
             <SvgXml

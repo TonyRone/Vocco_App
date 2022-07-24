@@ -143,14 +143,14 @@ export const RecordIcon = ({
       else if (v == false && isRecording == true) {
         let delta = Math.abs(dragPos.current);
         if (delta < 80) {
+          setIsPaused(true);
           await recorderPlayer.pauseRecorder().then(res => {
-
           })
             .catch(err => {
               console.log(err);
-            })
-            ;
-          setIsPaused(true);
+              onStopRecord(false);
+            });
+
         }
       }
     }

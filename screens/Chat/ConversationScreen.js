@@ -233,7 +233,12 @@ const ConversationScreen = (props) => {
 
     const clearRecorder = async () => {
         wasteTime.current = 0;
-        await recorderPlayer.stopRecorder();
+        await recorderPlayer.stopRecorder()
+        .then(res => {
+        })
+          .catch(err => {
+            console.log(err);
+          });
         recorderPlayer.removeRecordBackListener();
     }
 
@@ -243,7 +248,7 @@ const ConversationScreen = (props) => {
             onStartRecord();
         }
         if (v == false && isRecording == true) {
-            onStopRecord(dragPos.current > -100)
+            onStopRecord(dragPos.current > -100&&wasteTime.current>0)
         }
     }
 
@@ -277,7 +282,11 @@ const ConversationScreen = (props) => {
             };
             dispatch(setVoiceState(voiceState + 1));
             socketInstance.emit("chatState", { fromUserId: user.id, toUserId: info.user.id, state: 'start' });
-            await recorderPlayer.startRecorder(path, audioSet);
+            await recorderPlayer.startRecorder(path, audioSet).then(res => {
+            })
+              .catch(err => {
+                console.log(err);
+              });
             recorderPlayer.addRecordBackListener((e) => {
                 wasteTime.current = e.currentPosition;
                 if (e.currentPosition >= fill * 1000) {

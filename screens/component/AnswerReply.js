@@ -151,8 +151,13 @@ export const AnswerReply = ({
       }
       else if (v == false && isRecording == true) {
         if (Math.abs(dragPos.current) < 80) {
-          await recorderPlayer.pauseRecorder();
           setIsPaused(true);
+          await recorderPlayer.pauseRecorder().then(res => {
+          })
+            .catch(err => {
+              console.log(err);
+              onStopRecord(false);
+            });
         }
       }
     }
