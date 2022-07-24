@@ -104,11 +104,6 @@ const PostingVoiceScreen = (props) => {
   }
 
   const handleSubmit = async () => {
-    const post_check = await AsyncStorage.getItem(POST_CHECK);
-    if (!post_check) {
-      setShowHint(true);
-      return;
-    }
     if (path) {
       let voiceFile = [
         {
@@ -129,7 +124,7 @@ const PostingVoiceScreen = (props) => {
           } else {
             socketInstance.emit("newVoice", { uid: user.id });
             //setShowShareVoice(true);
-            props.navigation.navigate("ShareStory", {info:jsonRes});
+            props.navigation.navigate("ShareStory", { info: jsonRes });
             // dispatch(setRefreshState(!refreshState));
           }
           setIsLoading(false);
@@ -176,7 +171,7 @@ const PostingVoiceScreen = (props) => {
     mounted.current = true;
     if (param.info)
       dispatch(setVoiceState(voiceState + 1));
-    return ()=>{
+    return () => {
       mounted.current = false;
     }
   }, [])
@@ -360,7 +355,19 @@ const PostingVoiceScreen = (props) => {
         <MyButton
           label={param.info ? t("Change my story") : t("Share my story")}
           loading={isLoading}
-          onPress={param.info ? changeStory : handleSubmit}
+          onPress={async() => {
+            if (param.info)
+              changeStory();
+            else {
+              let post_check = await AsyncStorage.getItem(POST_CHECK);
+              if (!post_check) {
+                setShowHint(true);
+              }
+              else {
+                handleSubmit();
+              }
+            }
+          }}
           active={voiceTitle != ''}
         />
       </View>

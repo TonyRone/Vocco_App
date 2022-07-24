@@ -67,14 +67,14 @@
     "Date of Birth": "Date de naissance",
     "Search": "Rechercher",
     "Bad grades again": "Encore de mauvaises notes",
-    "Search new stories": "Rechercher de nouvelles histoires",
+    "Search new stories": "Découvre les histoires",
     "This text for description search": "Ce texte pour la recherche de description",
-    "What happened to your friends?": "Qu'est-il arrivé à tes amis ?",
+    "What happened to your friends?": "Tes ami(e)s racontent quoi ?",
     "Discover stories from all around the world.": "Découvre les histoires du monde entier.",
     "Like, answer & share them to your friends!": "Aime, réponds et partage-les avec tes amis !",
     "Welcome": "Bienvenue",
     "You can now talk to the world. Tell your story, ask a quetion or simply share whatever you have in mind!": "Tu peux maintenant parler au monde entier. Raconter tes histoires, poser une question ou partager tout simplement ce que tu as en tête !",
-    "Click & hold on the microphone to start recording your first story.": "Clique sur le microphone puis maintient le pour enregistrer ta première histoire.",
+    "Click & hold on the microphone to start recording your first story.": "Appuies et maintiens le microphone pour partager ta première histoire.",
     "You have 1:00 maximum": "Tu as 1:00 maximum",
     "Tap here to answer": "Appuyer ici pour répondre",
     "Discover": "Découvrir",
@@ -332,6 +332,14 @@
     "Invited":"Invité(e)",
     "Invite":"Inviter",
     "Continue":"Continuer",
-    "Hi again! What's your number?":"Hey ! On est content dete revoir !"
+    "Hi again! What's your number?":"Hey ! On est content dete revoir !",
+    "Discover the community’s stories!":"Découvre les histoires de la communauté !",
+    "You can also discover all the categories!":"Tu peux aussi découvrir l’ensemble des catégories. Il y en a pour tous les goûts !",
+    "Discover your friends’ stories or the ones from the community.":"Découvre leurs histoires et celle de la communauté.",
+    "Like, answer & share with the community!":"Aime, commente et partage tes histoires !",
+    "Change your QR-code":"Partager mon QR-code",
+    "Share QR-code":"Partager QR-code",
+    "All Categories":"Toutes les catégories",
+    "You'll love these stories 🤣👀🙈. Download Vocco app for free on www.vocco.ai":"Il est fort probable que ces histoires te plaisent 🤣👀🙈. Télécharge Vocco gratuitement sur www.vocco.ai"
   }
 }

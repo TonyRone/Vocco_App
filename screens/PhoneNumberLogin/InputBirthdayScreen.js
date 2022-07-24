@@ -39,6 +39,8 @@ const InputBirthdayScreen = (props) => {
         props.navigation.navigate('SelectIdentify');
     }
 
+    const re = /^[0-9\b]+$/;
+
     useEffect(() => {
     }, [])
 
@@ -111,10 +113,15 @@ const InputBirthdayScreen = (props) => {
                                 }
                                 placeholder="dd"
                                 textAlign='center'
+                                keyboardType='numeric'
                                 maxWidth={250}
                                 value={day}
                                 autoCapitalize='words'
-                                onChangeText={e => setDay(e)}
+                                onChangeText={e => {
+                                    if (e === '' || re.test(e)) {
+                                        setDay(e)
+                                    }
+                                }}
                             />
                         </View>
                         <DescriptionText
@@ -147,11 +154,16 @@ const InputBirthdayScreen = (props) => {
                                     }
                                 }
                                 placeholder="mm"
+                                keyboardType='numeric'
                                 textAlign='center'
                                 maxWidth={250}
                                 value={month}
                                 autoCapitalize='words'
-                                onChangeText={e => setMonth(e)}
+                                onChangeText={e => {
+                                    if (e === '' || re.test(e)) {
+                                        setMonth(e)
+                                    }
+                                }}
                             />
                         </View>
                         <DescriptionText
@@ -184,15 +196,20 @@ const InputBirthdayScreen = (props) => {
                                     }
                                 }
                                 placeholder="yyyy"
+                                keyboardType='numeric'
                                 textAlign='center'
                                 maxWidth={250}
                                 value={year}
                                 autoCapitalize='words'
-                                onChangeText={e => setYear(e)}
+                                onChangeText={e => {
+                                    if (e=== '' || re.test(e)) {
+                                        setYear(e)
+                                    }
+                                }}
                             />
                         </View>
                         <DescriptionText
-                            text= {t("YEAR")}
+                            text={t("YEAR")}
                             color='rgba(59, 31, 82, 0.6)'
                             fontSize={15}
                             lineHeight={24}

@@ -113,23 +113,12 @@ const LogoScreen = (props) => {
             if (aToken != null) {
                 AuthService.getUserInfo().then(async res => {
                     const jsonRes = await res.json();
-                    const nav = await AsyncStorage.getItem(APP_NAV);
-                    if (nav == 'stop') {
-                        await AsyncStorage.setItem(
-                            APP_NAV,
-                            'no'
-                        );
-                        return;
+                    if (res.respInfo.status == 200 && jsonRes != null) {
+                        onCreateSocket(jsonRes);
                     }
                     else {
-                        if (res.respInfo.status == 200 && jsonRes != null) {
-                            onCreateSocket(jsonRes);
-                        }
-                        else {
-                            props.navigation.navigate('Welcome');
-                        }
+                        props.navigation.navigate('Welcome');
                     }
-
                 })
                     .catch(err => {
                         console.log(err);

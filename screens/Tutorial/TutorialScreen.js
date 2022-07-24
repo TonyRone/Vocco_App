@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, KeyboardAvoidingView, Text, ImageBackground, TextInput, Platform, StatusBar } from 'react-native';
+import { View, KeyboardAvoidingView, Text, ImageBackground, TextInput, Platform, StatusBar, TouchableOpacity } from 'react-native';
 import Tooltip from 'react-native-walkthrough-tooltip';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -13,7 +13,6 @@ import searchSvg from '../../assets/login/search.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TUTORIAL_CHECK, windowWidth, windowHeight } from '../../config/config';
 import { styles } from '../style/Common';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 
 const TutorialScreen = (props) => {
@@ -35,6 +34,11 @@ const TutorialScreen = (props) => {
     reactions: [{ emoji: "🤣" }, { "emoji": "😍" }, { "emoji": "😡" }],
     likesCount: 740,
     answersCount: 65
+  }
+  const backFirstStep = () => {
+    setTip(true);
+    setSearchTip(false);
+    setVoiceItemTip(false);
   }
 
   const nextFirstStep = () => {
@@ -93,11 +97,11 @@ const TutorialScreen = (props) => {
               content={
                 <View>
                   <TitleText
-                    text={t("Search new voices")}
+                    text={t("Search new stories")}
                     fontSize={22}
                   />
                   <DescriptionText
-                    text={t("This text for description search")}
+                    text={t("You can also discover all the categories!")}
                     fontSize={15}
                     color="#281E30"
                     marginTop={16}
@@ -107,7 +111,7 @@ const TutorialScreen = (props) => {
                       flexDirection: 'row',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      marginTop: 20
+                      marginTop: 20,
                     }}
                   >
                     <View style={{ flexDirection: 'row' }}>
@@ -144,8 +148,33 @@ const TutorialScreen = (props) => {
                         height: 60,
                         justifyContent: 'center',
                         alignItems: 'center',
+                        borderRadius: 16,
+                        marginLeft: 40
+                      }}
+                      onPress={backFirstStep}
+                    >
+                      <Text
+                        style={
+                          {
+                            color: '#8327D8',
+                            fontFamily: "SFProDisplay-Semibold",
+                            fontSize: 17
+                          }
+                        }
+                      >
+                        {t("Back")}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: '#F8F0FF',
+                        width: 102,
+                        height: 60,
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         borderRadius: 16
                       }}
+                      onPress={() => secondStep()}
                     >
                       <Text
                         style={
@@ -175,7 +204,8 @@ const TutorialScreen = (props) => {
               contentStyle={{
                 marginTop: 40,
                 padding: 24,
-                borderRadius: 16
+                borderRadius: 16,
+                width: windowWidth - 48
               }}
             >
               <View
@@ -234,13 +264,13 @@ const TutorialScreen = (props) => {
                       fontSize={22}
                     />
                     <DescriptionText
-                      text={t("Discover stories from all around the world.")}
+                      text={t("Discover your friends’ stories or the ones from the community.")}
                       fontSize={15}
                       color="#281E30"
                       marginTop={16}
                     />
                     <DescriptionText
-                      text={t("Like, answer & share them to your friends!")}
+                      text={t("Like, answer & share with the community!")}
                       fontSize={15}
                       color="#281E30"
                       marginTop={16}
@@ -283,12 +313,14 @@ const TutorialScreen = (props) => {
                       <TouchableOpacity
                         style={{
                           backgroundColor: '#F8F0FF',
-                          width: 115,
+                          width: 102,
                           height: 60,
                           justifyContent: 'center',
                           alignItems: 'center',
-                          borderRadius: 16
+                          borderRadius: 16,
+                          marginLeft: 40
                         }}
+                        onPress={nextFirstStep}
                       >
                         <Text
                           style={
@@ -299,7 +331,30 @@ const TutorialScreen = (props) => {
                             }
                           }
                         >
-                          {t("Let's start")}
+                          {t("Back")}
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: '#F8F0FF',
+                          width: 102,
+                          height: 60,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          borderRadius: 16
+                        }}
+                        onPress={() => lastTutorial()}
+                      >
+                        <Text
+                          style={
+                            {
+                              color: '#8327D8',
+                              fontFamily: "SFProDisplay-Semibold",
+                              fontSize: 17
+                            }
+                          }
+                        >
+                          {t("Next")}
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -344,7 +399,7 @@ const TutorialScreen = (props) => {
                     fontSize={22}
                   />
                   <DescriptionText
-                    text={t("You can now talk to the world. Tell your story, ask a questions or simply share whatever you have in mind!")}
+                    text={t("Discover the community’s stories!")}
                     fontSize={15}
                     color="#281E30"
                     marginTop={16}
@@ -406,6 +461,7 @@ const TutorialScreen = (props) => {
                         alignItems: 'center',
                         borderRadius: 16
                       }}
+                      onPress={() => nextFirstStep()}
                     >
                       <Text
                         style={

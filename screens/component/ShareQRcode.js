@@ -29,10 +29,11 @@ export const ShareQRcode = ({
   let myQRCode = useRef();
 
   const shareQRCode = () => {
+    let msg = t("You'll love these stories 🤣👀🙈. Download Vocco app for free on www.vocco.ai")
     myQRCode.toDataURL((dataURL) => {
       let shareImageBase64 = {
         title: 'Vocco',
-        message: "Share the profile with QRcode",
+        message: msg,
         url: `data:image/png;base64,${dataURL}`,
         subject: 'Share Link', //  for email
       };
@@ -120,7 +121,7 @@ export const ShareQRcode = ({
               </LinearTextGradient>
               <QRCode
                 getRef={(ref) => (myQRCode = ref)}
-                value='https://testflight.apple.com/join/ztQ4TQlu'
+                value='www.vocco.ai'
                 size={208}
                 logo={require('../../assets/common/qr-logo.png')}
                 logoSize={51}

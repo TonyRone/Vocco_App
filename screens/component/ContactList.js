@@ -65,15 +65,15 @@ export const ContactList = ({
   useEffect(async () => {
     mounted.current = true;
     if (Platform.OS == 'ios') {
-      await Contacts.getAllWithoutPhotos()
-        .then((contacts) => {
-          // work with contacts
-          if (mounted.current)
-            setContactUsers(contacts);
-        })
-        .catch((err) => {
-          console.log(e)
-        })
+      // await Contacts.getAllWithoutPhotos()
+      //   .then((contacts) => {
+      //     // work with contacts
+      //     if (mounted.current)
+      //       setContactUsers(contacts);
+      //   })
+      //   .catch((err) => {
+      //     console.log(e)
+      //   })
     }
     else if (Platform.OS == 'android')
       requestPermission();

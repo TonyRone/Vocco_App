@@ -78,6 +78,7 @@ const ProfilePictureScreen = (props) => {
             .then(async res => {
                 AuthService.getUserInfo().then(async res => {
                     if (mounted.current) {
+                        setLoading(false);
                         const jsonRes = await res.json();
                         if (res.respInfo.status == 200) {
                             dispatch(setUser(jsonRes));

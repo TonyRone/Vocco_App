@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import DatePicker from 'react-native-date-picker';
 import { GoogleSignin } from 'react-native-google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -267,7 +268,10 @@ const EditProfileScreen = (props) => {
                             marginLeft={16}
                         />
                     </View>
-                    <TouchableOpacity onPress={() => setPrivateStatus(!privated)}>
+                    <TouchableOpacity onPress={() => {
+                        setPrivateStatus(!privated);
+                        RNVibrationFeedback.vibrateWith(1519);
+                    }}>
                         <SvgXml
                             width={51}
                             height={31}
