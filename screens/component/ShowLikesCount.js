@@ -62,7 +62,7 @@ export const ShowLikesCount = ({
             justifyContent: 'center'
           }}>
             <SemiBoldText
-              text={`${userInfo.user.name} has received over `}
+              text={`${userInfo.user.name} ${t("has received over")} `}
               fontSize={18}
               textAlign='center'
               lineHeight={23}
@@ -78,7 +78,7 @@ export const ShowLikesCount = ({
               <Text>{userInfo.likes}</Text>
             </LinearTextGradient>
             <SemiBoldText
-              text={' likes across all stories'}
+              text={" "+t("likes across all stories !")}
               fontSize={18}
               textAlign='center'
               lineHeight={23}
