@@ -438,7 +438,11 @@ const OnSetPushNotification = () => {
 }
 
 const OnIosPermission= async ()=>{
-  await recorderPlayer.setVolume(1);
+  await recorderPlayer.setVolume(1).then(res => {
+  })
+    .catch(err => {
+      console.log(err);
+    });
 }
 
 export default App = () => {
