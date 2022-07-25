@@ -3,7 +3,6 @@ import * as React from 'react';
 import { AppRegistry, Platform } from "react-native";
 import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from 'react-navigation'
-import { recorderPlayer } from './screens/Home/AudioRecorderPlayer';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import PushNotification from 'react-native-push-notification';
 import SplashScreen from 'react-native-splash-screen'
@@ -437,19 +436,10 @@ const OnSetPushNotification = () => {
   });
 }
 
-const OnIosPermission= async ()=>{
-  await recorderPlayer.setVolume(1).then(res => {
-  })
-    .catch(err => {
-      console.log(err);
-    });
-}
-
 export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
     OnSetPushNotification();
-    OnIosPermission();
   }, []);
   return (
     <Provider store={store}>

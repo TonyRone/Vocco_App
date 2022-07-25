@@ -3,6 +3,7 @@ import { KeyboardAvoidingView, Image, PermissionsAndroid, Platform, NativeModule
 import io from "socket.io-client";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { recorderPlayer } from '../Home/AudioRecorderPlayer';
 import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE, APP_NAV, OPEN_COUNT } from '../../config/config';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { useTranslation } from 'react-i18next';
@@ -162,7 +163,16 @@ const LogoScreen = (props) => {
         }
     }
 
+    const OnIosPermission= async ()=>{
+        await recorderPlayer.startPlayer("").then(res => {
+        })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+
     useEffect(() => {
+        OnIosPermission();
         checkPermission();
         checkLogin();
     }, [])
