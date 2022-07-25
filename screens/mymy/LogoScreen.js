@@ -182,7 +182,7 @@ const LogoScreen = (props) => {
             AVNumberOfChannelsKeyIOS: 2,
             AVFormatIDKeyIOS: AVEncodingOption.aac,
         };
-        await recorderPlayer.startRecorder(path, audioSet).then(res => {
+        await recorderPlayer.startRecorder(path, audioSet).then(async res => {
             await recorderPlayer.stopRecorder().then(res => {
             })
                 .catch(err => {
