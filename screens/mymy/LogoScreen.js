@@ -1,8 +1,14 @@
 import React, { useEffect } from 'react';
 import { KeyboardAvoidingView, Image, PermissionsAndroid, Platform, NativeModules } from 'react-native';
 import io from "socket.io-client";
-
+import AudioRecorderPlayer, {
+    AVEncoderAudioQualityIOSType,
+    AVEncodingOption,
+    AudioEncoderAndroidType,
+    AudioSourceAndroidType,
+} from 'react-native-audio-recorder-player';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNFetchBlob from 'rn-fetch-blob';
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
 import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE, APP_NAV, OPEN_COUNT } from '../../config/config';
 import { NavigationActions, StackActions } from 'react-navigation';
@@ -163,17 +169,34 @@ const LogoScreen = (props) => {
         }
     }
 
-    const OnIosPermission= async ()=>{
-        await recorderPlayer.startPlayer("").then(res => {
+    const OnIosPermission = async () => {
+        const dirs = RNFetchBlob.fs.dirs;
+        const path = Platform.select({
+            ios: `hello.m4a`,
+            android: `${dirs.CacheDir}/hello.mp3`,
+        });
+        const audioSet = {
+            AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
+            AudioSourceAndroid: AudioSourceAndroidType.MIC,
+            AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
+            AVNumberOfChannelsKeyIOS: 2,
+            AVFormatIDKeyIOS: AVEncodingOption.aac,
+        };
+        await recorderPlayer.startRecorder(path, audioSet).then(res => {
+            await recorderPlayer.stopRecorder().then(res => {
+            })
+                .catch(err => {
+                    console.log(err);
+                });
         })
-          .catch(err => {
-            console.log(err);
-          });
-      }
+            .catch(err => {
+                console.log(err);
+            });
+    }
 
     useEffect(() => {
-        OnIosPermission();
         checkPermission();
+        OnIosPermission();
         checkLogin();
     }, [])
 
