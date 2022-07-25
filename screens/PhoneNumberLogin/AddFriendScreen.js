@@ -89,6 +89,7 @@ const AddFriendScreen = (props) => {
                 <View></View>
                 <TitleText
                     text={t("Add friends")}
+                    marginLeft={40}
                     fontSize={20}
                     lineHeight={24}
                 />

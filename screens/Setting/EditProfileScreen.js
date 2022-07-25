@@ -538,19 +538,20 @@ const EditProfileScreen = (props) => {
                                     text={t("Delete account")}
                                     fontSize={17}
                                     lineHeight={28}
+                                    marginRight={15}
                                     color='#263449'
                                 />
                                 <TouchableOpacity disabled={!password} onPress={() => deleteAccount()}>
-                                    <DescriptionText
+                                    {/* <DescriptionText
                                         text={t('Delete')}
                                         fontSize={17}
                                         lineHeight={28}
                                         color='#E41717'
-                                    />
+                                    /> */}
                                 </TouchableOpacity>
                             </View>
                             <DescriptionText
-                                text={t("Enter your password for confirm deleting your account")}
+                                text={t("Are you sure about deleting your account?")}
                                 fontSize={17}
                                 lineHeight={28}
                                 color='rgba(54, 36, 68, 0.8)'
@@ -559,7 +560,7 @@ const EditProfileScreen = (props) => {
                                 marginLeft={18}
                                 marginRight={16}
                             />
-                            <View style={{ paddingHorizontal: 16, marginTop: 25 }}>
+                            {/* <View style={{ paddingHorizontal: 16, marginTop: 25 }}>
                                 <MyTextField
                                     label={t("Enter your password")}
                                     refer={passwordRef}
@@ -572,7 +573,7 @@ const EditProfileScreen = (props) => {
                                     showEye={() => showEye()}
                                     isPassword={true}
                                 />
-                            </View>
+                            </View> */}
                             <View style={{ position: 'absolute', paddingHorizontal: 16, bottom: 0, width: windowWidth }}>
                                 <MyColorButton
                                     label={t("Delete account")}

@@ -400,7 +400,7 @@ const AppNavigator = createStackNavigator({
   },
 },
   {
-    //initialRouteName:'InputBirthday'
+    //initialRouteName:'AddFriend'
   }
 );
 
