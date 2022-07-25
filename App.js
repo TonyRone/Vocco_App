@@ -445,7 +445,7 @@ export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
     OnSetPushNotification();
-    //OnIosPermission();
+    OnIosPermission();
   }, []);
   return (
     <Provider store={store}>
