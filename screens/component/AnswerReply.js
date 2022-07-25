@@ -76,8 +76,16 @@ export const AnswerReply = ({
 
   const clearRecorder = async () => {
     wasteTime.current = 0;
-    await recorderPlayer.resumeRecorder();
-    await recorderPlayer.stopRecorder();
+    await recorderPlayer.resumeRecorder().then(res => {
+    })
+      .catch(err => {
+        console.log(err);
+      });
+    await recorderPlayer.stopRecorder().then(res => {
+    })
+      .catch(err => {
+        console.log(err);
+      });
     recorderPlayer.removeRecordBackListener();
   }
 
@@ -114,7 +122,11 @@ export const AnswerReply = ({
         AVFormatIDKeyIOS: AVEncodingOption.aac,
       };
       dispatch(setVoiceState(voiceState + 1));
-      await recorderPlayer.startRecorder(path, audioSet);
+      await recorderPlayer.startRecorder(path, audioSet).then(res => {
+      })
+        .catch(err => {
+          console.log(err);
+        });
       recorderPlayer.addRecordBackListener((e) => {
         wasteTime.current = e.currentPosition;
         if (e.currentPosition >= fill * 1000) {
@@ -146,7 +158,11 @@ export const AnswerReply = ({
     }
     else {
       if (v == true && isPaused) {
-        await recorderPlayer.resumeRecorder();
+        await recorderPlayer.resumeRecorder().then(res => {
+        })
+          .catch(err => {
+            console.log(err);
+          });
         setIsPaused(false);
       }
       else if (v == false && isRecording == true) {

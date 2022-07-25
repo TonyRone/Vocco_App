@@ -74,8 +74,16 @@ export const RecordIcon = ({
 
   const clearRecorder = async () => {
     wasteTime.current = 0;
-    await recorderPlayer.resumeRecorder();
-    await recorderPlayer.stopRecorder()
+    await recorderPlayer.resumeRecorder().then(res => {
+    })
+      .catch(err => {
+        console.log(err);
+      });
+    await recorderPlayer.stopRecorder().then(res => {
+    })
+      .catch(err => {
+        console.log(err);
+      });
     recorderPlayer.removeRecordBackListener();
   }
 
@@ -137,7 +145,11 @@ export const RecordIcon = ({
     }
     else {
       if (v == true && isPaused) {
-        await recorderPlayer.resumeRecorder();
+        await recorderPlayer.resumeRecorder().then(res => {
+        })
+          .catch(err => {
+            console.log(err);
+          });;
         setIsPaused(false);
       }
       else if (v == false && isRecording == true) {
