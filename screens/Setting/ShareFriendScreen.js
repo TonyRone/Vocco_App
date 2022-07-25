@@ -23,14 +23,21 @@ import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import VoiceService from '../../services/VoiceService';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
+import { useDispatch, useSelector } from 'react-redux';
 
 const ShareFriendScreen = (props) => {
 
     const { t, i18n } = useTranslation();
 
     const [statetype, setStatetype] = useState('current');
-    const [referLink, setReferLink] = useState('https://testflight.apple.com/join/ztQ4TQlu')
+    const [referLink, setReferLink] = useState('https://bit.ly/3S9VVsu');
 
+    let { user } = useSelector((state) => {
+        return (
+          state.user
+        )
+      });
+    
     const handleSubmit = () => {
         if (statetype == 'current') {
             setStatetype('match');
@@ -43,7 +50,7 @@ const ShareFriendScreen = (props) => {
     const shareMessage = async () => {
         const options = {
             title: 'Sharing!',
-            message: "Heyyy! I’m sure you’ll love these stories on Vocco app. Download the app now! It’s free! link/download.app",
+            message: msg,
             url: referLink,
         };
         const respose = await Share.share(options);
@@ -62,6 +69,9 @@ const ShareFriendScreen = (props) => {
         Clipboard.setString(referLink);
         RNVibrationFeedback.vibrateWith(1519);
     }
+
+    let msg = t("You'll love these stories 🤣👀🙈. Download Vocco app for free on https://bit.ly/3S9VVsu")
+
     useEffect(() => {
     }, [])
     return (
@@ -179,10 +189,10 @@ const ShareFriendScreen = (props) => {
                         <TouchableOpacity onPress={async () => {
                             await singleShare({
                                 title: "Share via message",
-                                message: "",
+                                message: msg,
                                 url: referLink,
                                 social: socialShare.Social.WHATSAPP,
-                                whatsAppNumber: "9199999999",
+                                whatsAppNumber: user.phoneNumber?user.phoneNumber:"91999999",
                                 filename: "Vocco",
                             });
                         }}

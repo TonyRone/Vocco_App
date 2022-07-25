@@ -134,7 +134,7 @@ const ConversationScreen = (props) => {
             return updatedTime.toDateString().substring(4);
         }
         else if (nowTime.getMonth() != updatedTime.getMonth() || (nowTime.getDate() - updatedTime.getDate() > nowTime.getDay())) {
-            return t(months[updatedTime.getMonth()])+' '+updatedTime.getDate().toString();
+            return t(months[updatedTime.getMonth()]) + ' ' + updatedTime.getDate().toString();
         }
         else if (nowTime.getDate() - 1 > updatedTime.getDate()) {
             return t(days[updatedTime.getDay()]);
@@ -234,11 +234,11 @@ const ConversationScreen = (props) => {
     const clearRecorder = async () => {
         wasteTime.current = 0;
         await recorderPlayer.stopRecorder()
-        .then(res => {
-        })
-          .catch(err => {
-            console.log(err);
-          });
+            .then(res => {
+            })
+            .catch(err => {
+                console.log(err);
+            });
         recorderPlayer.removeRecordBackListener();
     }
 
@@ -248,7 +248,7 @@ const ConversationScreen = (props) => {
             onStartRecord();
         }
         if (v == false && isRecording == true) {
-            onStopRecord(dragPos.current > -100&&wasteTime.current>0)
+            onStopRecord(dragPos.current > -100 && wasteTime.current > 0)
         }
     }
 
@@ -284,9 +284,9 @@ const ConversationScreen = (props) => {
             socketInstance.emit("chatState", { fromUserId: user.id, toUserId: info.user.id, state: 'start' });
             await recorderPlayer.startRecorder(path, audioSet).then(res => {
             })
-              .catch(err => {
-                console.log(err);
-              });
+                .catch(err => {
+                    console.log(err);
+                });
             recorderPlayer.addRecordBackListener((e) => {
                 wasteTime.current = e.currentPosition;
                 if (e.currentPosition >= fill * 1000) {
@@ -726,15 +726,24 @@ const ConversationScreen = (props) => {
                         flexDirection: 'row',
                         alignItems: 'center'
                     }}>
-                        <Image
+                        <ImageBackground
                             style={{
                                 position: 'absolute',
                                 height: 56,
                                 width: 328,
+                                justifyContent:'center'
                             }}
                             resizeMode="stretch"
                             source={require('../../assets/chat/chatRecord.png')}
-                        />
+                        >
+                            <DescriptionText
+                                text={t("Swipe to Cancel")}
+                                fontSize={13}
+                                lineHeight={13}
+                                color='#E41717'
+                                marginLeft={188}
+                            />
+                        </ImageBackground>
                         <View
                             style={{
                                 width: 8,

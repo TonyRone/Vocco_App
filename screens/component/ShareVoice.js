@@ -11,6 +11,7 @@ import { DescriptionText } from "./DescriptionText";
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import VoiceService from "../../services/VoiceService";
+import { useDispatch, useSelector } from 'react-redux';
 
 export const ShareVoice = ({
   onCloseModal = () => { },
@@ -20,6 +21,12 @@ export const ShareVoice = ({
   const { t, i18n } = useTranslation();
 
   const [showModal, setShowModal] = useState(true);
+
+  let { user } = useSelector((state) => {
+    return (
+      state.user
+    )
+  });
 
   const closeModal = () => {
     setShowModal(false);
@@ -169,6 +176,7 @@ export const ShareVoice = ({
                     message: "some awesome dangerous message",
                     url: info.file.url,
                     social: socialShare.Social.WHATSAPP,
+                    whatsAppNumber: user.phoneNumber?user.phoneNumber:"91999999",
                     filename: info.title,
                   });
                   VoiceService.shareStory(info.id, 'record');

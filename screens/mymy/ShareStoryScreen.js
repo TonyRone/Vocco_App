@@ -27,11 +27,20 @@ import { styles } from '../style/Login';
 import { TitleText } from '../component/TitleText';
 import { ScrollView } from 'react-native-gesture-handler';
 import VoiceService from '../../services/VoiceService';
+import { useDispatch, useSelector } from 'react-redux';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
 
 const ShareStoryScreen = (props) => {
 
   let info = props.navigation.state.params?.info;
+
+  let { user } = useSelector((state) => {
+    return (
+      state.user
+    )
+  });
+
+  console.log(user);
 
   const { t, i18n } = useTranslation();
 
@@ -187,7 +196,7 @@ const ShareStoryScreen = (props) => {
                 await singleShare({
                   title: "Share via message",
                   message: "some awesome dangerous message",
-                  whatsAppNumber: "9199999999",
+                  whatsAppNumber: user.phoneNumber?user.phoneNumber:"91999999",
                   url: info.file.url,
                   social: socialShare.Social.WHATSAPP,
                   filename: info.title,

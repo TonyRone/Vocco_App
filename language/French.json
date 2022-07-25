@@ -122,7 +122,7 @@
     "day": "jour",
     "hour": "heure",
     "minute": "minute",
-    "ago": "depuis",
+    "ago": "",
     "Category": "Catégorie",
     "Recent": "Récente",
     "Popular": "Populaire",
@@ -340,10 +340,14 @@
     "Change your QR-code":"Partager mon QR-code",
     "Share QR-code":"Partager QR-code",
     "All Categories":"Toutes les catégories",
-    "You'll love these stories 🤣👀🙈. Download Vocco app for free on www.vocco.ai":"Il est fort probable que ces histoires te plaisent 🤣👀🙈. Télécharge Vocco gratuitement sur www.vocco.ai",
+    "You'll love these stories 🤣👀🙈. Download Vocco app for free on https://bit.ly/3S9VVsu":"Il est fort probable que ces histoires te plaisent 🤣👀🙈. Télécharge Vocco gratuitement sur https://bit.ly/3S9VVsu",
     "You have no conversations yet":"Tu n’as pas encore de conversation",
     "has received over":"a reçu plus de",
     "likes across all stories !":"likes pour toutes ses histoires !",
-    "Are you sure about deleting your account?":"Es-tu certain(e) de vouloir supprimer ton compte ?"
+    "Are you sure about deleting your account?":"Es-tu certain(e) de vouloir supprimer ton compte ?",
+    "":"Il y a ",
+    "Add":"Ajouter",
+    "Added":"Ajouté",
+    "Swipe to Cancel":"Swipe pour annuler"
   }
 }
