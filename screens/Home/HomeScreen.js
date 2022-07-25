@@ -235,7 +235,7 @@ const HomeScreen = (props) => {
                     }}
                 >
                     <DescriptionText
-                        text={noticeCount < 0 ? t("Successful upload") : (noticeCount + ' ' + t("new voices"))}
+                        text={noticeCount < 0 ? t("Successful upload!") : (noticeCount + ' ' + t("new stories !"))}
                         color='#F6EFFF'
                         marginLeft={16}
                         fontSize={15}

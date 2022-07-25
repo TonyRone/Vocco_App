@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Image, Modal, Pressable } from "react-native";
+import { View, TouchableOpacity, Image, Modal, Pressable, Share } from "react-native";
 import { SvgXml } from 'react-native-svg';
 import { windowWidth } from '../../config/config';
 import Clipboard from '@react-native-community/clipboard';
 import socialShare from 'react-native-share';
 import { styles } from '../style/Common';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
+import messageSvg from '../../assets/setting/message.svg';
 import copySvg from '../../assets/post/copy.svg';
 import { DescriptionText } from "./DescriptionText";
 import { useTranslation } from 'react-i18next';
@@ -40,6 +41,15 @@ export const ShareVoice = ({
       console.log(err);
     }
   };
+
+  const shareMessage = async (shareUrl) => {
+    const options = {
+        title: 'Sharing!',
+        message: "",
+        url: shareUrl,
+    };
+    await Share.share(options);
+  }
 
   const onCopyLink = () => {
     Clipboard.setString(info.file.url);
@@ -96,8 +106,8 @@ export const ShareVoice = ({
                 </View>
               </TouchableOpacity>
             </View>
-            <View style={styles.rowSpaceEvenly}>
-              {/* <View style={{ alignItems: 'center' }}>
+            {/* <View style={styles.rowSpaceEvenly}>
+              <View style={{ alignItems: 'center' }}>
                 <TouchableOpacity onPress={async () => {
                   await singleShare({
                     title: "Share via message",
@@ -141,7 +151,7 @@ export const ShareVoice = ({
                   lineHeight={16}
                   color='rgba(54, 36, 68, 0.8)'
                 />
-              </View> */}
+              </View>
               <View style={{ alignItems: 'center' }}>
                 <TouchableOpacity onPress={async () => {
                   await singleShare({
@@ -176,7 +186,7 @@ export const ShareVoice = ({
                     message: "some awesome dangerous message",
                     url: info.file.url,
                     social: socialShare.Social.WHATSAPP,
-                    whatsAppNumber: user.phoneNumber?user.phoneNumber:"91999999",
+                    //whatsAppNumber: user.phoneNumber?user.phoneNumber:"91999999",
                     filename: info.title,
                   });
                   VoiceService.shareStory(info.id, 'record');
@@ -196,10 +206,27 @@ export const ShareVoice = ({
                   color='rgba(54, 36, 68, 0.8)'
                 />
               </View>
+            </View> */}
+            <View style={{ alignItems: 'center' }}>
+              <TouchableOpacity onPress={() => shareMessage(info.file.url)}
+                style={styles.boxContainer}>
+                <SvgXml
+                  width={39}
+                  height={39}
+                  xml={messageSvg}
+                />
+              </TouchableOpacity>
+              <DescriptionText
+                text='Message'
+                fontSize={11}
+                lineHeight={12}
+                color='#281E30'
+                marginTop={12}
+              />
             </View>
             <View style={{ backgroundColor: '#F2F0F5', height: 1, width: '100%', marginTop: 20, marginBottom: 16 }}></View>
             <DescriptionText
-              text={t("Story Link")+":"}
+              text={t("Story Link") + ":"}
               color="#281E30"
               fontSize={17}
               lineHeight={28}
@@ -228,4 +255,4 @@ export const ShareVoice = ({
       </Pressable>
     </Modal>
   );
-};
+}

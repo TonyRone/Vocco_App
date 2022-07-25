@@ -235,7 +235,7 @@ const PremiumScreen = (props) => {
         }}
       >
         <MyButton
-          label={t("Continue to checkout")}
+          label={t("Proceed to Paiment")}
           onPress={changePremiumState}
           active={user.premium == 'none'}
           loading={loading}

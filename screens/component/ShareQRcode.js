@@ -29,7 +29,7 @@ export const ShareQRcode = ({
   let myQRCode = useRef();
 
   const shareQRCode = () => {
-    let msg = t("You'll love these stories 🤣👀🙈. Download Vocco app for free on https://bit.ly/3S9VVsu")
+    let msg = t("You'll love these stories 🤣👀🙈. Download Vocco app for free on ")
     myQRCode.toDataURL((dataURL) => {
       let shareImageBase64 = {
         title: 'Vocco',

@@ -53,7 +53,7 @@ const ShareFriendScreen = (props) => {
             message: msg,
             url: referLink,
         };
-        const respose = await Share.share(options);
+        await Share.share(options);
         VoiceService.shareLink();
     }
 
@@ -70,7 +70,7 @@ const ShareFriendScreen = (props) => {
         RNVibrationFeedback.vibrateWith(1519);
     }
 
-    let msg = t("You'll love these stories 🤣👀🙈. Download Vocco app for free on https://bit.ly/3S9VVsu")
+    let msg = t("You'll love these stories 🤣👀🙈. Download Vocco app for free on ")
 
     useEffect(() => {
     }, [])
@@ -156,7 +156,7 @@ const ShareFriendScreen = (props) => {
                             fontSize={11}
                             lineHeight={12}
                             color='#281E30'
-                            marginTop={18}
+                            marginTop={12}
                         />
                     </View>
                     {/* <View style={{ alignItems: 'center' }}>
@@ -185,14 +185,14 @@ const ShareFriendScreen = (props) => {
                             marginTop={18}
                         />
                     </View> */}
-                    <View style={{ alignItems: 'center' }}>
+                    {/* <View style={{ alignItems: 'center' }}>
                         <TouchableOpacity onPress={async () => {
                             await singleShare({
                                 title: "Share via message",
                                 message: msg,
                                 url: referLink,
                                 social: socialShare.Social.WHATSAPP,
-                                whatsAppNumber: user.phoneNumber?user.phoneNumber:"91999999",
+                                //whatsAppNumber: user.phoneNumber?user.phoneNumber:"91999999",
                                 filename: "Vocco",
                             });
                         }}
@@ -210,7 +210,7 @@ const ShareFriendScreen = (props) => {
                             color='#281E30'
                             marginTop={18}
                         />
-                    </View>
+                    </View> */}
                     <View style={{ alignItems: 'center' }}>
                         <TouchableOpacity style={styles.boxContainer} onPress={onCopyLink}>
                             <SvgXml

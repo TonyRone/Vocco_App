@@ -129,7 +129,7 @@ export const NotificationItem = ({
                             </TouchableOpacity>
                             {!accepted && <TouchableOpacity onPress={() => onAcceptUser()} style={[styles.contentCenter, { width: 99, height: 40, borderRadius: 12, backgroundColor: '#F8F0FF', marginLeft: 8 }]}>
                                 <SemiBoldText
-                                    text='Accept'
+                                    text={t("Accept")}
                                     fontSize={15}
                                     lineHeight={24}
                                     color='#8327D8'

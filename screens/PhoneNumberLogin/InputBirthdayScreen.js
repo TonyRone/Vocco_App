@@ -111,7 +111,7 @@ const InputBirthdayScreen = (props) => {
                                         width: 42
                                     }
                                 }
-                                placeholder="dd"
+                                placeholder={t("DD")}
                                 textAlign='center'
                                 keyboardType='numeric'
                                 maxWidth={250}
@@ -153,7 +153,7 @@ const InputBirthdayScreen = (props) => {
                                         width: 56
                                     }
                                 }
-                                placeholder="mm"
+                                placeholder={t("MM")}
                                 keyboardType='numeric'
                                 textAlign='center'
                                 maxWidth={250}
@@ -195,7 +195,7 @@ const InputBirthdayScreen = (props) => {
                                         width: 84
                                     }
                                 }
-                                placeholder="yyyy"
+                                placeholder={t("YYYY")}
                                 keyboardType='numeric'
                                 textAlign='center'
                                 maxWidth={250}

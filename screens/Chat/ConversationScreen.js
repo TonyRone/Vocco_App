@@ -531,7 +531,7 @@ const ConversationScreen = (props) => {
                             />
                         </TouchableOpacity>
                         <SemiBoldText
-                            text={`${selectedItems.length}` + t("selected")}
+                            text={`${selectedItems.length} ` + t("selected")}
                             fontSize={17}
                             lineHeight={28}
                         />
@@ -792,7 +792,7 @@ const ConversationScreen = (props) => {
                             minY={0}
                             maxY={0}
                             touchableOpacityProps={{
-                                activeOpactiy: 0.1,
+                                activeOpactiy: 1,
                             }}
                             onDrag={(event, gestureState) => {
                             }}
@@ -814,7 +814,7 @@ const ConversationScreen = (props) => {
                                 onTouchStart={(e) => onChangeRecord(e, true)}
                                 onTouchEnd={(e) => onChangeRecord(e, false)}
                                 style={{
-                                    opacity: isRecording ? 0.1 : 1
+                                    opacity: isRecording ? 5 : 1
                                 }}
                             >
                                 <SvgXml

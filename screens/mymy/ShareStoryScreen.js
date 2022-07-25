@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   SafeAreaView,
+  Share,
   Vibration
 } from 'react-native';
 
@@ -18,6 +19,7 @@ import Clipboard from '@react-native-community/clipboard';
 import socialShare from 'react-native-share';
 import { MyButton } from '../component/MyButton';
 import { ShareVoice } from '../component/ShareVoice';
+import messageSvg from '../../assets/setting/message.svg';
 import { SvgXml } from 'react-native-svg';
 import shareTextSvg from '../../assets/post/ShareText.svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
@@ -63,6 +65,15 @@ const ShareStoryScreen = (props) => {
     });
     props.navigation.dispatch(resetActionTrue);
   }
+
+  const shareMessage = async (shareUrl) => {
+    const options = {
+        title: 'Sharing!',
+        message: "",
+        url: shareUrl,
+    };
+    await Share.share(options);
+}
 
   useEffect(() => {
 
@@ -111,8 +122,8 @@ const ShareStoryScreen = (props) => {
             paddingHorizontal: 24
           }}
         >
-          <View style={styles.rowSpaceEvenly}>
-            {/* <View style={{ alignItems: 'center' }}>
+          {/* <View style={styles.rowSpaceEvenly}>
+            <View style={{ alignItems: 'center' }}>
               <TouchableOpacity onPress={async () => {
                 await singleShare({
                   title: "Share via message",
@@ -163,7 +174,7 @@ const ShareStoryScreen = (props) => {
                 lineHeight={16}
                 color='rgba(54, 36, 68, 0.8)'
               />
-            </View> */}
+            </View>
             <View style={{ alignItems: 'center' }}>
               <TouchableOpacity onPress={async () => {
                 await singleShare({
@@ -196,7 +207,7 @@ const ShareStoryScreen = (props) => {
                 await singleShare({
                   title: "Share via message",
                   message: "some awesome dangerous message",
-                  whatsAppNumber: user.phoneNumber?user.phoneNumber:"91999999",
+                  //whatsAppNumber: user.phoneNumber?user.phoneNumber:"91999999",
                   url: info.file.url,
                   social: socialShare.Social.WHATSAPP,
                   filename: info.title,
@@ -218,6 +229,23 @@ const ShareStoryScreen = (props) => {
                 color='rgba(54, 36, 68, 0.8)'
               />
             </View>
+          </View> */}
+          <View style={{ alignItems: 'center' }}>
+            <TouchableOpacity onPress={()=>shareMessage(info.file.url)}
+              style={styles.boxContainer}>
+              <SvgXml
+                width={39}
+                height={39}
+                xml={messageSvg}
+              />
+            </TouchableOpacity>
+            <DescriptionText
+              text='Message'
+              fontSize={11}
+              lineHeight={12}
+              color='#281E30'
+              marginTop={18}
+            />
           </View>
           <DescriptionText
             text={t("Share Link") + ":"}
