@@ -437,7 +437,7 @@ const OnSetPushNotification = () => {
   });
 }
 
-const OnIosPermission=()=>{
+const OnIosPermission= async ()=>{
   await recorderPlayer.setVolume(1);
 }
 
