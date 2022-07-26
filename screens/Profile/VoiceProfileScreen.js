@@ -310,7 +310,7 @@ const VoiceProfileScreen = (props) => {
           </View>
         </View>
         <SemiBoldText
-          text={t('Answers') + ' (' + (loading ? ' ' : (answerVoices.length - (answerId == '' ? 0 : 1))) + ')'}
+          text={t('Answers') + ' (' + (loading ? ' ' : answerVoices.length) + ')'}
           marginTop={19}
           marginLeft={16}
           marginBottom={15}

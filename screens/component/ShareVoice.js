@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 export const ShareVoice = ({
   onCloseModal = () => { },
-  info = { file: { url: 'https://storage.googleapis.com/' }, title: 'Hello' }
+  info = { file: { url: "https://bit.ly/3S9VVsu" }, title: 'Hello' }
 }) => {
 
   const { t, i18n } = useTranslation();
@@ -52,7 +52,7 @@ export const ShareVoice = ({
   }
 
   const onCopyLink = () => {
-    Clipboard.setString(info.file.url);
+    Clipboard.setString("https://bit.ly/3S9VVsu");
   }
 
   return (
@@ -234,7 +234,7 @@ export const ShareVoice = ({
             <View style={[styles.rowSpaceBetween, { width: '100%', height: 40, marginTop: 8, borderWidth: 1, borderColor: '#F2F0F5', borderRadius: 12 }]}>
               <View style={{ width: windowWidth - 115, height: 26 }}>
                 <DescriptionText
-                  text={info.file.url}
+                  text={"https://bit.ly/3S9VVsu"}
                   color="#281E30"
                   fontSize={22}
                   lineHeight={26}
