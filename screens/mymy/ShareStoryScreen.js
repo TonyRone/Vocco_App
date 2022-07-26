@@ -70,7 +70,7 @@ const ShareStoryScreen = (props) => {
     const options = {
         title: 'Sharing!',
         message: "",
-        url: shareUrl,
+        url: 'https://bit.ly/3S9VVsu',
     };
     await Share.share(options);
 }

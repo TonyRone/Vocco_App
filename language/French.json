@@ -259,7 +259,7 @@
     "November": "Novembre",
     "December": "Décembre",
     "English": "Anglais",
-    "French": "Francais",
+    "French": "Français",
     "Remove": "Retirer",
     "Tagged you in a story": "t’as tagué dans une histoire",
     "No answers": "Pas encore de réponse !",
@@ -358,6 +358,8 @@
     "Proceed to Paiment":"Activer gratuitement",
     "Update your profile picture":"Mets à jour ta photo de profil",
     "Successful upload!":"Histoire publiée !",
-    "new stories !":"nouvelles histoires !"
+    "new stories !":"nouvelles histoires !",
+    "And make they know about the best stories":"Et tiens les au courant des meilleures histoires",
+    "Make your friends discover Vocco !":"Fais découvrir Vocco à tes amis !"
   }
 }

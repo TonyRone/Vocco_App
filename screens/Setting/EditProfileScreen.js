@@ -331,12 +331,12 @@ const EditProfileScreen = (props) => {
                         onPressChange={() => openModal('gender')}
                         isCheck={true}
                     />
-                    <SelectForm
+                    {/* <SelectForm
                         label={t("Your email")}
                         contentText={userEmail}
                         onPressChange={() => props.navigation.navigate('ChangeEmail')}
                         isCheck={true}
-                    />
+                    /> */}
                     <SelectForm
                         label={t("Your country")}
                         contentText={userCountry.country}

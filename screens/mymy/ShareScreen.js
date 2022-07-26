@@ -56,21 +56,28 @@ const ShareScreen = (props) => {
           </TouchableOpacity>
         </View>
         <View style={{ position: 'absolute', width: '100%', bottom: 68, flex: 1, alignItems: 'center' }}>
-          <SvgXml
+          {/* <SvgXml
             xml={shareTextSvg}
             height={28}
+          /> */}
+          <DescriptionText
+            fontSize={22}
+            lineHeight={28}
+            color='#281E30'
+            text={t("Make your friends discover Vocco !")}
+            marginTop={10}
           />
           <DescriptionText
             fontSize={15}
             lineHeight={24}
             color='rgba(54, 36, 68, 0.8)'
-            text={t("Make you friends aware of the best stories!")}
+            text={t("And make they know about the best stories")}
             marginTop={10}
           />
           <View style={{ width: '100%', paddingHorizontal: 16 }}>
             <MyButton
               marginTop={51}
-              label={t("Let's share")}
+              label={t("Share")}
               onPress={() => OnShareVoice()}
             />
           </View>
