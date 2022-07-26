@@ -342,7 +342,7 @@ PODS:
     - React-Core
   - RNSoundPlayer (0.11.3):
     - React
-  - RNSVG (12.4.0):
+  - RNSVG (12.4.1):
     - React-Core
   - RNTextGradientView (0.1.7):
     - React
@@ -601,7 +601,7 @@ SPEC CHECKSUMS:
   RNScreens: 4a1af06327774490d97342c00aee0c2bafb497b7
   RNShare: d56424e3926cbc239db1cc1c168adcb051aad50b
   RNSoundPlayer: 6b5532fb8e9afe17af48e62813c80ad568aea5d3
-  RNSVG: 3dd44d99d1c18e1342aee4bfa53ab3f6a8c4865f
+  RNSVG: f2bbcdece1e7d8e5f2f94536ed2a2dcf8f95ea4f
   RNTextGradientView: 3eb4744303f801546fad35ac47a53cc82257cb25
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   RNVibrationFeedback: 27e2cc1d275c1c2e6e61bcdaf0e283ab3121e64f
