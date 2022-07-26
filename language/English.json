@@ -364,6 +364,8 @@
     "Invite friends":"Invite friends",
     "User with current phone number already registered":"User with current phone number already registered",
     "Disable Notification":"Disable Notification",
-    "Likes":"Likes"
+    "Likes":"Likes",
+    "This account is private. Follow ":"This account is private. Follow ",
+    " to discover the stories":" to discover the stories"
   }
 }
