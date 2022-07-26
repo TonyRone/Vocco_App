@@ -132,7 +132,7 @@
     "Liked your story": "A aimé ton histoire",
     "Answered your story": "A répondu à ton histoire",
     "Delete": "Supprimer",
-    "Notifications": "Avis",
+    "Notifications": "Notifications",
     "Activities": "Activités",
     "Requests": "Demandes",
     "You have no notifications yet": "Tu n’as pas encore de notifications",
@@ -364,6 +364,8 @@
     "Invite friends":"Inviter des amis",
     "User with current phone number already registered":"L'utilisateur est déjà enregistré avec ce numéro",
     "Disable Notification":"Désactiver les notfications",
-    "Likes":"J'aime"
+    "Likes":"J'aime",
+    "This account is private. Follow ":"Ce compte est privé. Ajoute ",
+    " to discover the stories":" pour découvrir ses histoires"
   }
 }

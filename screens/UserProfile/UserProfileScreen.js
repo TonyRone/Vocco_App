@@ -387,7 +387,7 @@ const UserProfileScreen = (props) => {
                   xml={blackPrivacySvg}
                 />
                 <DescriptionText
-                  text={t("This account is private. Follow on user for see voices")}
+                  text={t("This account is private. Follow ")+userInfo.user.name+t(" to discover the stories")}
                   fontSize={17}
                   lineHeight={28}
                   textAlign='center'
@@ -464,7 +464,7 @@ const UserProfileScreen = (props) => {
               </View>
             </View>
             <View style={{ height: 267, borderRadius: 20, borderWidth: 0, borderColor: '#F0F4FC', marginTop: 16, marginBottom: 50, marginHorizontal: 16 }}>
-              <TouchableOpacity onPress={() => setShowShareVoice(true)}>
+              {/* <TouchableOpacity onPress={() => setShowShareVoice(true)}>
                 <View style={[styles.rowSpaceBetween, { padding: 16, borderBottomWidth: 1, borderBottomColor: '#F0F4FC' }]}>
                   <DescriptionText
                     text={t("Share")}
@@ -478,7 +478,7 @@ const UserProfileScreen = (props) => {
                     />
                   </View>
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity onPress={() => {
                 setShowModal(false);
                 if (followState == 'none')
