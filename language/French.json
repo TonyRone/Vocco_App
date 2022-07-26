@@ -83,7 +83,7 @@
     "World stories": "Histoires du monde",
     "No stories yet": "Pas encore d'histoire",
     "All": "Tout",
-    "Fun": "Amusement",
+    "Fun": "Fun",
     "Education": "Éducation",
     "For adults": "Pour adultes",
     "Horror": "Horreur",
@@ -113,7 +113,7 @@
     "Unfollow": "Ne plus suivre",
     "Follow": "Suivre",
     "Block this user": "Bloquer cet utilisateur",
-    "Report User": "Reporter un utilisateur",
+    "Report User": "Signaler un utilisateur",
     "Answers": "Réponses",
     "Edit story": "Modifier mon histoire",
     "Delete story": "Supprimer l'histoire",
@@ -152,7 +152,7 @@
     "Refer to a Friend": "Partager à un ami",
     "Terms and Conditions": "Termes et conditions",
     "Contacts": "Contacts",
-    "Language": "Language",
+    "Language": "Langue",
     "Logout": "Se déconnecter",
     "Log out?": "Se déconnecter?",
     "Are you sure you want to log out?": "Es-tu sûr de vouloir te déconnecter?",
@@ -343,7 +343,7 @@
     "You'll love these stories 🤣👀🙈. Download Vocco app for free on ":"Il est fort probable que ces histoires te plaisent 🤣👀🙈. Télécharge Vocco gratuitement sur ",
     "You have no conversations yet":"Tu n’as pas encore de conversation",
     "has received over":"a reçu plus de",
-    "likes across all stories !":"likes pour toutes ses histoires !",
+    "likes across all stories !":"j’aime pour toutes ses histoires !",
     "Are you sure about deleting your account?":"Es-tu certain(e) de vouloir supprimer ton compte ?",
     "":"Il y a ",
     "Add":"Ajouter",
@@ -360,6 +360,10 @@
     "Successful upload!":"Histoire publiée !",
     "new stories !":"nouvelles histoires !",
     "And make they know about the best stories":"Et tiens les au courant des meilleures histoires",
-    "Make your friends discover Vocco !":"Fais découvrir Vocco à tes amis !"
+    "Make your friends discover Vocco !":"Fais découvrir Vocco à tes amis !",
+    "Invite friends":"Inviter des amis",
+    "User with current phone number already registered":"L'utilisateur est déjà enregistré avec ce numéro",
+    "Disable Notification":"Désactiver les notfications",
+    "Likes":"J'aime"
   }
 }

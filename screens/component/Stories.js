@@ -150,7 +150,7 @@ export const Stories = ({
             {t("Invite your friends and connect with other people!")}
           </Text>
           <MyButton
-            label='Invite friends'
+            label={t("Invite friends")}
             onPress={() => setShowInviteList(true)}
           />
         </View> :
