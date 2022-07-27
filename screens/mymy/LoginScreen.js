@@ -3,7 +3,6 @@ import { View, Platform, ImageBackground, Text, TouchableOpacity } from 'react-n
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { GoogleSignin, statusCodes } from 'react-native-google-signin';
-import appleAuth, { appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { v4 as uuid } from 'uuid'
@@ -227,70 +226,6 @@ const LoginScreen = (props) => {
       });
   }
 
-  const OnIosAppleLogin = async () => {
-    try {
-      // performs login request
-      const { email, fullName, identityToken } = await appleAuth.performRequest({
-        requestedOperation: 1,
-        requestedScopes: [
-          0,
-          1
-        ],
-      });
-      AuthService.appleLogin({ email, fullName, identityToken }).then(async res => {
-        const jsonRes = await res.json();
-        if (res.respInfo.status === 201) {
-          _storeData(jsonRes.accessToken, jsonRes.refreshToken);
-          onSetUserInfo(jsonRes.accessToken, jsonRes.refreshToken, jsonRes.isRegister);
-        }
-        else {
-          setError({
-            email: jsonRes.message,
-          });
-        }
-        setLoading(false);
-      })
-        .catch(err => {
-          console.log(err);
-        })
-
-    } catch (error) {
-
-    }
-  }
-
-  const onAppleButtonPress = async () => {
-    // Generate secure, random values for state and nonce
-    const rawNonce = uuid();
-    const state = uuid();
-
-    // Configure the request
-    appleAuthAndroid.configure({
-      // The Service ID you registered with Apple
-      clientId: '8VYUDK97R2.org.RaiseYourVoice',
-
-      // Return URL added to your Apple dev console. We intercept this redirect, but it must still match
-      // the URL you provided to Apple. It can be an empty route on your backend as it's never called.
-      redirectUri: 'https://example.com/path/to/endpoint',
-
-      // The type of response requested - code, id_token, or both.
-      responseType: appleAuthAndroid.ResponseType.ALL,
-
-      // The amount of user information requested from Apple.
-      scope: appleAuthAndroid.Scope.ALL,
-
-      // Random nonce value that will be SHA256 hashed before sending to Apple.
-      nonce: rawNonce,
-
-      // Unique state value used to prevent CSRF attacks. A UUID will be generated if nothing is provided.
-      state,
-    });
-
-    // Open the browser window for user sign in
-    const response = await appleAuthAndroid.signIn();
-    // Send the authorization code to your backend for verification
-  }
-
   const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -490,7 +425,6 @@ const LoginScreen = (props) => {
               <View style={[styles.rowSpaceBetween, { marginTop: 20 }]}>
                 <TouchableOpacity
                   style={styles.externalButton}
-                  onPress={() => Platform.OS == 'ios' ? OnIosAppleLogin() : onAppleButtonPress()}
                 >
                   <SvgXml width="24" height="24" xml={appleSvg} />
                   <Text style={styles.externalButtonText}>Apple</Text>

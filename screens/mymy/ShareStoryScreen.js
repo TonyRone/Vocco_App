@@ -42,8 +42,6 @@ const ShareStoryScreen = (props) => {
     )
   });
 
-  console.log(user);
-
   const { t, i18n } = useTranslation();
 
   const singleShare = async (customOptions) => {

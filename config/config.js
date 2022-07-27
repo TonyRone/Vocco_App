@@ -4,7 +4,7 @@ export const windowHeight = Dimensions.get('window').height;
 
 //export const API_URL = 'https://pioneering-tome-342312.uc.r.appspot.com';
 export const API_URL = 'https://api.vocco.ai';
-//export const API_URL = 'http://192.168.111.196:3000';
+//export const API_URL = 'http://192.168.111.196:80';
 export const SOCKET_URL = 'https://voccosocket-i2tsf4hvaq-od.a.run.app';
 //export const SOCKET_URL = 'http://192.168.111.196:3000';
 export const ACCESSTOKEN_KEY = "@VoccoAT:2021";

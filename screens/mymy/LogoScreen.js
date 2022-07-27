@@ -196,7 +196,7 @@ const LogoScreen = (props) => {
 
     useEffect(() => {
         checkPermission();
-        OnIosPermission();
+        //OnIosPermission();
         checkLogin();
     }, [])
 

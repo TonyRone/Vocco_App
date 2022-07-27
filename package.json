@@ -10,7 +10,6 @@
         "lint": "eslint ."
     },
     "dependencies": {
-        "@invertase/react-native-apple-authentication": "^2.1.5",
         "@react-native-async-storage/async-storage": "^1.15.8",
         "@react-native-community/blur": "^3.6.0",
         "@react-native-community/clipboard": "^1.5.1",
@@ -45,7 +44,6 @@
         "react-native-countdown-circle-timer": "^2.5.4",
         "react-native-date-picker": "^4.1.1",
         "react-native-datepicker": "^1.7.2",
-        "react-native-doc-viewer": "^2.7.8",
         "react-native-draggable": "^3.3.0",
         "react-native-drawer": "^2.5.1",
         "react-native-dynamic-tab-view": "^1.0.7-0",
