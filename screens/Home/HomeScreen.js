@@ -148,7 +148,7 @@ const HomeScreen = (props) => {
                     />
                 </TouchableOpacity>
                 <View style={styles.rowSpaceBetween}>
-                    <TouchableOpacity onPress={() => { setIsActiveState(true); RNVibrationFeedback.vibrateWith(1519); }} style={[styles.contentCenter, { width: 97, height: 44 }]}>
+                    <TouchableOpacity onPress={() => { setIsActiveState(true); Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100); }} style={[styles.contentCenter, { width: 97, height: 44 }]}>
                         <SemiBoldText
                             text={t("Friends")}
                             fontFamily={isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
@@ -157,7 +157,7 @@ const HomeScreen = (props) => {
                             lineHeight={28}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { setIsActiveState(false); RNVibrationFeedback.vibrateWith(1519); }} style={[styles.contentCenter, { width: 97, height: 44, marginLeft: 16 }]}>
+                    <TouchableOpacity onPress={() => { setIsActiveState(false); Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100); }} style={[styles.contentCenter, { width: 97, height: 44, marginLeft: 16 }]}>
                         <SemiBoldText
 
                             text={t("Discover")}
@@ -228,7 +228,7 @@ const HomeScreen = (props) => {
                 }}
                     onPress={() => {
                         if (noticeCount > 0) {
-                            RNVibrationFeedback.vibrateWith(1519);
+                            Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                         }
                         noticeDispatch("reset");
                         dispatch(setRefreshState(!refreshState));

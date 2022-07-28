@@ -23,7 +23,7 @@ export const Warning = ({
         marginRight: marginRight,
         width: windowWidth - marginLeft - marginRight,
         //bottom: bottom,
-        marginBottom:70,
+        marginBottom:10,
         borderRadius: 16,
         borderColor: '#F58D8D',
         borderWidth: 1,

@@ -270,7 +270,7 @@ export const PostContext = ({
                 onPress={() => setShowReport(false)}
               >
                 <TitleText
-                  text="Back"
+                  text={t("Back")}
                   fontSize={17}
                   fontFamily="SFProDisplay-Regular"
                 />

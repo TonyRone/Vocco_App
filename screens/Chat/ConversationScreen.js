@@ -207,7 +207,7 @@ const ConversationScreen = (props) => {
             const jsonRes = await res.json();
             if (res.respInfo.status !== 201) {
             } else if (mounted.current) {
-                RNVibrationFeedback.vibrateWith(1519);
+                Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                 setIsPublish(false);
                 let tp = messages;
                 tp.push(jsonRes);
@@ -244,7 +244,7 @@ const ConversationScreen = (props) => {
 
     const onChangeRecord = async (e, v = false) => {
         if (v == true && isRecording == false) {
-            RNVibrationFeedback.vibrateWith(1519);
+            Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
             onStartRecord();
         }
         if (v == false && isRecording == true) {
@@ -799,9 +799,9 @@ const ConversationScreen = (props) => {
                             onDragRelease={(event, gestureState, bounds) => {
                                 dragPos.current = gestureState.dx;
                                 if (gestureState.dx <= -100) {
-                                    RNVibrationFeedback.vibrateWith(1519);
+                                    Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                                     setTimeout(() => {
-                                        RNVibrationFeedback.vibrateWith(1519);
+                                        Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                                     }, 300);
                                 }
                             }}

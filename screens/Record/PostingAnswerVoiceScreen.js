@@ -78,7 +78,7 @@ const PostingAnswerVoiceScreen = (props) => {
         const jsonRes = await res.json();
         if (res.respInfo.status !== 201) {
         } else {
-          RNVibrationFeedback.vibrateWith(1519);
+          Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
           dispatch(setRefreshState(!refreshState));
           props.navigation.navigate("VoiceProfile", { id: recordId });
         }

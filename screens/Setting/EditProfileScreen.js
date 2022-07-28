@@ -7,6 +7,8 @@ import {
     KeyboardAvoidingView,
     Modal,
     Pressable,
+    Vibration,
+    Platform
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -270,7 +272,7 @@ const EditProfileScreen = (props) => {
                     </View>
                     <TouchableOpacity onPress={() => {
                         setPrivateStatus(!privated);
-                        RNVibrationFeedback.vibrateWith(1519);
+                        Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                     }}>
                         <SvgXml
                             width={51}

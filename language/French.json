@@ -367,6 +367,12 @@
     "Likes":"J'aime",
     "This account is private. Follow ":"Ce compte est privé. Ajoute ",
     " to discover the stories":" pour découvrir ses histoires",
-    "User with current phone number not found":"Aucun utilisateur trouvé avec ce numéro"
+    "User with current phone number not found":"Aucun utilisateur trouvé avec ce numéro",
+    "Edit":"Éditer",
+    "Share with friends!":"Partage avec tes amis !",
+    "Share the stories to your friends and make them know about Vocco!":"Partage les histoires auprès e tes amis et fais leur connaitre Vocco !",
+    "Thanks for sharing!":"Merci pour ton partage. !",
+    "Let's share!":"Partager maintenant !",
+    "Swipe to the right to publish, to the left to cancel":"Swipe à droite pour valider, à gauche pour annuler"
   }
 }

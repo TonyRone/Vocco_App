@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, TouchableOpacity, Text, Image, Pressable, TextInput, Vibration, Modal } from "react-native";
+import { View, TouchableOpacity, Text, Image, Pressable, TextInput, Vibration, Modal, Platform } from "react-native";
 import { SvgXml } from 'react-native-svg';
 
 import { windowWidth, windowHeight, Avatars } from '../../config/config';
@@ -137,7 +137,7 @@ export const TagFriends = ({
     VoiceService.postTag(payload).then(async res => {
       if (res.respInfo.status !== 201) {
       } else {
-        RNVibrationFeedback.vibrateWith(1519);
+        Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
         dispatch(setRefreshState(!refreshState));
         if(mounted.current) setSubmitLoading(false);
       }
