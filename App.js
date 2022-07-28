@@ -21,8 +21,17 @@ import VoiceProfileScreen from './screens/Profile/VoiceProfileScreen';
 import ShareScreen from './screens/mymy/ShareScreen';
 import PremiumScreen from './screens/mymy/PremiumScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { DEVICE_TOKEN, DEVICE_OS} from './config/config';
+import { DEVICE_TOKEN, DEVICE_OS } from './config/config';
 import NavigationService from './services/NavigationService';
+import AudioRecorderPlayer, {
+  AVEncoderAudioQualityIOSType,
+  AVEncodingOption,
+  AudioEncoderAndroidType,
+  AudioSourceAndroidType,
+} from 'react-native-audio-recorder-player';
+
+import { recorderPlayer } from '../Home/AudioRecorderPlayer';
+import RNFetchBlob from 'rn-fetch-blob';
 
 //Setting
 
@@ -436,10 +445,36 @@ const OnSetPushNotification = () => {
   });
 }
 
+const OnIosPermission = () => {
+  const dirs = RNFetchBlob.fs.dirs;
+  const path = Platform.select({
+    ios: `hello.m4a`,
+    android: `${dirs.CacheDir}/hello.mp3`,
+  });
+  const audioSet = {
+    AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
+    AudioSourceAndroid: AudioSourceAndroidType.MIC,
+    AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
+    AVNumberOfChannelsKeyIOS: 2,
+    AVFormatIDKeyIOS: AVEncodingOption.aac,
+  };
+  await recorderPlayer.startRecorder(path, audioSet).then(res => {
+    await recorderPlayer.stopRecorder().then(res => {
+    })
+      .catch(err => {
+        console.log(err);
+      });
+  })
+    .catch(err => {
+      console.log(err);
+    });
+}
+
 export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
     OnSetPushNotification();
+    OnIosPermission();
   }, []);
   return (
     <Provider store={store}>
