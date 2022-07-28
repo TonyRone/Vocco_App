@@ -445,7 +445,7 @@ const OnSetPushNotification = () => {
   });
 }
 
-const OnIosPermission = () => {
+const OnIosPermission = async () => {
   const dirs = RNFetchBlob.fs.dirs;
   const path = Platform.select({
     ios: `hello.m4a`,
