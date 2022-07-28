@@ -151,7 +151,7 @@ export const AnswerReply = ({
 
   const onChangeRecord = async (e, v = false) => {
     if (v == true) {
-      RNVibrationFeedback.vibrateWith(1519);
+      Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
     if (v == true && isRecording == false) {
       onStartRecord();
@@ -192,7 +192,7 @@ export const AnswerReply = ({
         const jsonRes = await res.json();
         if (res.respInfo.status !== 201) {
         } else if (mounted.current) {
-          RNVibrationFeedback.vibrateWith(1519);
+          Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
           onPushReply();
           closeModal();
         }
@@ -334,14 +334,14 @@ export const AnswerReply = ({
                     dragPos.current = gestureState.dx;
                     if (gestureState.dx > 80) {
                       setTimeout(() => {
-                        RNVibrationFeedback.vibrateWith(1519);
+                        Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                       }, 100);
                       onStopRecord(true);
                     }
                     else if (gestureState.dx < -80) {
-                      RNVibrationFeedback.vibrateWith(1519);
+                      Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                       setTimeout(() => {
-                        RNVibrationFeedback.vibrateWith(1519);
+                        Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                       }, 300);
                       onStopRecord(false);
                     }

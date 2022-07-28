@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
@@ -30,6 +29,7 @@ import { Warning } from './Warning';
 import { windowHeight, windowWidth } from '../../config/config';
 import cancelSvg from '../../assets/record/cancel.svg';
 import publicSvg from '../../assets/record/public.svg';
+import fingerSvg from '../../assets/record/finger.svg';
 import { DescriptionText } from './DescriptionText';
 import { useDispatch, useSelector } from 'react-redux';
 import { setVoiceState } from '../../store/actions';
@@ -138,7 +138,7 @@ export const RecordIcon = ({
 
   const onChangeRecord = async (e, v = false) => {
     if (v == true)
-      RNVibrationFeedback.vibrateWith(1519);
+      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     if (v == true && isRecording == false) {
       setIsExpanded(true);
       onStartRecord();
@@ -206,7 +206,7 @@ export const RecordIcon = ({
           width: '100%',
           height: '100%',
           alignItems: 'center',
-          paddingTop:55
+          paddingTop: 55
         }}
       >
         <TitleText
@@ -228,7 +228,7 @@ export const RecordIcon = ({
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.5,
             shadowRadius: 5,
-            marginBottom:30
+            marginBottom: 30
           }}
         >
           <SemiBoldText
@@ -241,7 +241,7 @@ export const RecordIcon = ({
         </View>
         <View
           style={{
-            marginBottom:50
+            marginBottom: 40
           }}
         >
           <CountdownCircleTimer
@@ -291,36 +291,48 @@ export const RecordIcon = ({
         <Warning
           text={t("Hate, racism, sexism or any kind of violence is stricly prohibited")}
         />
-        <ImageBackground
-          source={require('../../assets/record/RecordControl.png')}
-          resizeMode="stretch"
-          style={{ width: 311, height: 76, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom:'12%' }}
-        >
-          <View
-            style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 18 }}
+        <View style={{
+          alignItems:'center'
+        }}>
+          <SvgXml
+            xml={fingerSvg}
+          />
+          <DescriptionText
+            text={t("Swipe to the right to publish, to the left to cancel")}
+            marginTop={5}
+            marginBottom={34}
+          />
+          <ImageBackground
+            source={require('../../assets/record/RecordControl.png')}
+            resizeMode="stretch"
+            style={{ width: 311, height: 76, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12%' }}
           >
-            <SvgXml width={20} height={16 - (hoverState < 0 ? r * 4 : 0)} xml={cancelSvg} />
-            <TitleText
-              text={t("Cancel")}
-              fontFamily="SFProDisplay-Regular"
-              fontSize={16}
-              marginLeft={8}
-              lineHeight={21}
-              color="#E41717"
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 18 }}>
-            <TitleText
-              text={t("Publish")}
-              fontFamily="SFProDisplay-Regular"
-              fontSize={16}
-              marginRight={8}
-              lineHeight={21}
-              color="#8327D8"
-            />
-            <SvgXml width={20} height={16 + (hoverState > 0 ? hoverState * 4 : 0)} xml={publicSvg} />
-          </View>
-        </ImageBackground>
+            <View
+              style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 18 }}
+            >
+              <SvgXml width={20} height={16 - (hoverState < 0 ? r * 4 : 0)} xml={cancelSvg} />
+              <TitleText
+                text={t("Cancel")}
+                fontFamily="SFProDisplay-Regular"
+                fontSize={16}
+                marginLeft={8}
+                lineHeight={21}
+                color="#E41717"
+              />
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 18 }}>
+              <TitleText
+                text={t("Publish")}
+                fontFamily="SFProDisplay-Regular"
+                fontSize={16}
+                marginRight={8}
+                lineHeight={21}
+                color="#8327D8"
+              />
+              <SvgXml width={20} height={16 + (hoverState > 0 ? hoverState * 4 : 0)} xml={publicSvg} />
+            </View>
+          </ImageBackground>
+        </View>
       </View>}
       <View style={{ position: IsExpanded ? 'absolute' : 'relative', bottom: '6%', width: IsExpanded ? '100%' : 54, height: IsExpanded ? 76 : 54 }}>
         <Draggable
@@ -342,14 +354,14 @@ export const RecordIcon = ({
             dragPos.current = gestureState.dx;
             if (gestureState.dx > 80) {
               setTimeout(() => {
-                RNVibrationFeedback.vibrateWith(1519);
+                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
               }, 100);
               onStopRecord(true);
             }
             else if (gestureState.dx < -80) {
-              RNVibrationFeedback.vibrateWith(1519);
+              Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
               setTimeout(() => {
-                RNVibrationFeedback.vibrateWith(1519);
+                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
               }, 300);
               onStopRecord(false);
             }

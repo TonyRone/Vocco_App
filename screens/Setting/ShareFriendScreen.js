@@ -4,6 +4,8 @@ import {
     TouchableOpacity,
     Share,
     KeyboardAvoidingView,
+    Vibration,
+    Platform
 } from 'react-native';
 
 import Clipboard from '@react-native-community/clipboard';
@@ -67,7 +69,7 @@ const ShareFriendScreen = (props) => {
     };
     const onCopyLink = () => {
         Clipboard.setString(referLink);
-        RNVibrationFeedback.vibrateWith(1519);
+        Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
 
     let msg = t("You'll love these stories 🤣👀🙈. Download Vocco app for free on ")

@@ -120,7 +120,7 @@ const SettingScreen = (props) => {
                 url: "https://storage.googleapis.com/vocco-2022-s/VOCCO.docx", // Local "file://" + filepath
                 fileName: "Terms and conditions",
                 cache: false,
-                fileType: "jpg"
+                fileType: "docx"
             }], (error, url) => {
                 if (error) {
                     console.error(error);

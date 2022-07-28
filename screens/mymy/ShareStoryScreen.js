@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Share,
-  Vibration
+  Vibration,
+  Platform
 } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
@@ -41,8 +42,6 @@ const ShareStoryScreen = (props) => {
       state.user
     )
   });
-
-  console.log(user);
 
   const { t, i18n } = useTranslation();
 
@@ -274,7 +273,7 @@ const ShareStoryScreen = (props) => {
             </TouchableOpacity>
           </View>
         </View>
-        <TouchableOpacity style={{ position: 'absolute', left: 16, top: 20 }} onPress={() => { onNavigate("Home"); RNVibrationFeedback.vibrateWith(1519); }}>
+        <TouchableOpacity style={{ position: 'absolute', left: 16, top: 20 }} onPress={() => { onNavigate("Home"); Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100); }}>
           <SvgXml width="24" height="24" xml={closeBlackSvg} />
         </TouchableOpacity>
       </ScrollView>

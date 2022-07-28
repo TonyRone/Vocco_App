@@ -114,7 +114,6 @@ const UserProfileScreen = (props) => {
         setFollowLoading(false);
         const jsonRes = await res.json();
         setUserInfo(jsonRes);
-        console.log(jsonRes);
         if (jsonRes.isFriend)
           setFollowState(jsonRes.isFriend.status);
         setIsPrivate(jsonRes.user.isPrivate);
@@ -129,7 +128,7 @@ const UserProfileScreen = (props) => {
     setFollowLoading(true);
     let repo = followState == 'none' ? VoiceService.followFriend(userId) : VoiceService.unfollowFriend(userId);
     if(followState == 'none'){
-      RNVibrationFeedback.vibrateWith(1519);
+      Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
     repo.then(async res => {
       if (mounted.current) {

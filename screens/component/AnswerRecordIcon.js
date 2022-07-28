@@ -137,7 +137,7 @@ export const AnswerRecordIcon = ({
 
   const onChangeRecord = async (e, v = false) => {
     if (v == true) {
-      RNVibrationFeedback.vibrateWith(1519);
+      Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
     if (v == true && isRecording == false) {
       setIsExpanded(true);
@@ -310,14 +310,14 @@ export const AnswerRecordIcon = ({
             dragPos.current = gestureState.dx;
             if (gestureState.dx > 80) {
               setTimeout(() => {
-                RNVibrationFeedback.vibrateWith(1519);
+                Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
               }, 100);
               onStopRecord(true);
             }
             else if (gestureState.dx < -80) {
-              RNVibrationFeedback.vibrateWith(1519);
+              Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
               setTimeout(() => {
-                RNVibrationFeedback.vibrateWith(1519);
+                Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
               }, 300);
               onStopRecord(false);
             }
