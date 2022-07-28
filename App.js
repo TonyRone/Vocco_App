@@ -30,7 +30,7 @@ import AudioRecorderPlayer, {
   AudioSourceAndroidType,
 } from 'react-native-audio-recorder-player';
 
-import { recorderPlayer } from '../Home/AudioRecorderPlayer';
+import { recorderPlayer } from './screens/Home/AudioRecorderPlayer';
 import RNFetchBlob from 'rn-fetch-blob';
 
 //Setting
