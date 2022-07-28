@@ -301,8 +301,6 @@ PODS:
     - React-perflogger (= 0.64.2)
   - rn-fetch-blob (0.12.0):
     - React-Core
-  - RNAppleAuthentication (2.2.2):
-    - React-Core
   - RNAudio (4.3.0):
     - React
   - RNAudioRecorderPlayer (3.5.1):
@@ -393,7 +391,6 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
-  - "RNAppleAuthentication (from `../node_modules/@invertase/react-native-apple-authentication`)"
   - RNAudio (from `../node_modules/react-native-audio`)
   - RNAudioRecorderPlayer (from `../node_modules/react-native-audio-recorder-player`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
@@ -499,8 +496,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   rn-fetch-blob:
     :path: "../node_modules/rn-fetch-blob"
-  RNAppleAuthentication:
-    :path: "../node_modules/@invertase/react-native-apple-authentication"
   RNAudio:
     :path: "../node_modules/react-native-audio"
   RNAudioRecorderPlayer:
@@ -585,7 +580,6 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: a9904c6d0218fb9f8b19d6dd88607225927668f9
   ReactCommon: 149906e01aa51142707a10665185db879898e966
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNAppleAuthentication: 0571c08da8c327ae2afc0261b48b4a515b0286a6
   RNAudio: cae2991f2dccb75163f260b60da8051717b959fa
   RNAudioRecorderPlayer: 308940de4f9d1448a064874fd9d83479ae47c7a7
   RNCAsyncStorage: d81ee5c3db1060afd49ea7045ad460eff82d2b7d
