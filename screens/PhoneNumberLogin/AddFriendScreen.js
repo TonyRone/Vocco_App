@@ -106,7 +106,7 @@ const AddFriendScreen = (props) => {
             </View>
             <ScrollView
                 style={{
-                    maxHeight: windowHeight / 2
+                    //maxHeight: windowHeight / 2
                 }}
             >
                 <SemiBoldText
@@ -134,18 +134,18 @@ const AddFriendScreen = (props) => {
                                     }}
                                 />
                                 <View style={{
-                                    marginLeft: 12
+                                    marginLeft: 16
                                 }}>
                                     <SemiBoldText
                                         text={item.name}
                                         fontSize={15}
                                         lineHeight={24}
                                     />
-                                    <DescriptionText
+                                    {/* <DescriptionText
                                         text={item.phoneNumber}
                                         fontSize={13}
                                         lineHeight={21}
-                                    />
+                                    /> */}
                                 </View>
                             </View>
                             <TouchableOpacity style={{
@@ -178,6 +178,8 @@ const AddFriendScreen = (props) => {
                         </View>
                     })
                 }
+                <View style={{height:100,width:10}}>
+                </View>
             </ScrollView>
             {/* <ScrollView>
                 <SemiBoldText
