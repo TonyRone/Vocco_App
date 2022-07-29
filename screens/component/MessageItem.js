@@ -29,17 +29,17 @@ export const MessageItem = ({
   const { user } = useSelector((state) => state.user);
 
   const [showContext, setShowContext] = useState(false);
-  const [isSelected, setIsSelected] = useState(false);
+  const [photoUrl, setPhotoUrl] = useState('');
 
   const { t, i18n } = useTranslation();
 
   const isSender = (user.id == info.user.id);
 
-  const onPressContent = () => {
+  const onPressContent = (url) => {
     if (isSelect >= 0)
       onSelectItem();
     else {
-      setIsSelected(true);
+      setPhotoUrl(url);
     }
   }
 
@@ -77,7 +77,7 @@ export const MessageItem = ({
               <View>
                 <MessageContent
                   info={ancestorInfo}
-                  onPressContent={onPressContent}
+                  onPressContent={(url)=>onPressContent(url)}
                   onLongPressContent={onLongPressContent}
                 />
                 <View style={{
@@ -88,7 +88,7 @@ export const MessageItem = ({
                   <MessageContent
                     info={info}
                     isAnswer={true}
-                    onPressContent={onPressContent}
+                    onPressContent={(url)=>onPressContent(url)}
                     onLongPressContent={onLongPressContent}
                   />
                   <SvgXml
@@ -103,7 +103,7 @@ export const MessageItem = ({
             :
             <MessageContent
               info={info}
-              onPressContent={onPressContent}
+              onPressContent={(url)=>onPressContent(url)}
               onLongPressContent={onLongPressContent}
             />
           }
@@ -120,15 +120,15 @@ export const MessageItem = ({
           onCloseModal={() => setShowContext(false)}
         />
       }
-      {isSelected && <Modal
+      {photoUrl!='' && <Modal
         animationType="slide"
         transparent={true}
-        visible={isSelected}
+        visible={photoUrl!=''}
         onRequestClose={() => {
-          setIsSelected(false);
+          setPhotoUrl('');
         }}
       >
-        <Pressable onPressOut={() => setIsSelected(false)} style={[styles.swipeModal, { alignItems: 'center', justifyContent: 'center' }]}>
+        <Pressable onPressOut={() => setPhotoUrl('')} style={[styles.swipeModal, { alignItems: 'center', justifyContent: 'center' }]}>
           <View style={{
             width: windowWidth,
             flexDirection: 'row',
@@ -145,7 +145,7 @@ export const MessageItem = ({
           </View>
           <View>
             <AutoHeightImage
-              source={{ uri: info.file.url }}
+              source={{ uri: photoUrl }}
               width={windowWidth - 48}
               style={{
                 borderRadius: 20,
