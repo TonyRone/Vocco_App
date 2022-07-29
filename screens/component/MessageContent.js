@@ -258,7 +258,7 @@ export const MessageContent = ({
           :
           <View>
             <Pressable
-              onPress={onPressContent}
+              onPress={()=>onPressContent(info.file.url)}
               onLongPress={onLongPressContent}
             >
               <AutoHeightImage
