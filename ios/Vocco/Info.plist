@@ -32,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fb</string>
@@ -69,17 +69,17 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Vocco would like to use your camera</string>
+	<string>The access to your camera is needed to take a picture if you’re willing to change your profile picture or send a picture to another user.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Access to contact list is used to allow your contacts join you in the application if you invite them.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Give Vocco permission to use your microphone. Your record wont be shared without your permission.</string>
+	<string>The access to your microphone is needed to share your vocal stories and/or send a voice message to another user in the audio chat.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Vocco would like to save photos to your photo gallery</string>
+	<string>The access to your photos is needed if you plan to change your profile picture and choose one from your gallery or send a picture from your gallery to another user.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Vocco would like access to your photo gallery</string>
+	<string>The access to your photos is needed if you plan to change your profile picture and choose one from your gallery or send a picture from your gallery to another user.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
