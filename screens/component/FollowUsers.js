@@ -12,12 +12,14 @@ import { TitleText } from './TitleText';
 import { SvgXml } from 'react-native-svg';
 import VoiceService from '../../services/VoiceService';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
+import greenCheckSvg from '../../assets/friend/green-check.svg';
 import { useSelector } from 'react-redux';
 import { styles } from '../style/Common';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Avatars } from '../../config/config';
+import { SemiBoldText } from './SemiBoldText';
 
 export const FollowUsers = ({
   props,
@@ -48,7 +50,7 @@ export const FollowUsers = ({
   const getFollowUsers = () => {
     setIsLoading(true);
     VoiceService.getFollows(userId, followType).then(async res => {
-      if (res.respInfo.status === 200&&mounted.current) {
+      if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
         setFollows(jsonRes);
         setIsLoading(false);
@@ -59,10 +61,18 @@ export const FollowUsers = ({
       });
   }
 
+  const onSendRequest = (index) => {
+    VoiceService.followFriend(follows[index].user.id);
+    setFollows(prev => {
+      prev[index].isNewUser = 2;
+      return [...prev];
+    })
+  }
+
   useEffect(() => {
     mounted.current = true;
     getFollowUsers();
-    return ()=>{
+    return () => {
       mounted.current = false;
     }
   }, [])
@@ -70,13 +80,17 @@ export const FollowUsers = ({
   return (
     <Modal
       animationType="slide"
+      swipeDirection="down"
+      onSwipeComplete={() => {
+        closeModal();
+      }}
       transparent={true}
       visible={showModal}
       onRequestClose={() => {
         closeModal();
       }}
     >
-      <Pressable onPressOut={closeModal} style={styles.swipeModal}>
+      <Pressable onPress={closeModal} style={styles.swipeModal}>
         <View style={styles.swipeContainerContent}>
           <View style={[styles.rowSpaceBetween, { paddingLeft: 16, paddingRight: 14, paddingTop: 14, paddingBottom: 11, borderBottomWidth: 1, borderBottomColor: '#F0F4FC' }]}>
             <TitleText
@@ -99,7 +113,7 @@ export const FollowUsers = ({
             indeterminate
             size={30}
             color="rgba(0, 0, 255, .7)"
-            style={{ alignSelf: "center", marginTop: 50 }}
+            style={{ alignSelf: "center", top: 100, position: 'absolute' }}
           />}
           <ScrollView>
             {
@@ -111,18 +125,46 @@ export const FollowUsers = ({
                 closeModal();
               }}
                 key={index + item.user.id + "likes"}
-                style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 16, marginTop: 10, marginBottom: 10 }}
+                style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, marginTop: 10, marginBottom: 10 }}
               >
-                <Image
-                  source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
-                  style={{ width: 50, height: 50, borderRadius: 25, borderColor: '#FFA002', borderWidth: item.user.premium == 'none' ? 0 : 2 }}
-                  resizeMode='cover'
-                />
-                <TitleText
-                  text={item.user.name}
-                  fontSize={17}
-                  marginLeft={16}
-                />
+                <View style={styles.rowAlignItems}>
+                  <Image
+                    source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
+                    style={{ width: 50, height: 50, borderRadius: 25, borderColor: '#FFA002', borderWidth: item.user.premium == 'none' ? 0 : 2 }}
+                    resizeMode='cover'
+                  />
+                  <TitleText
+                    text={item.user.name}
+                    fontSize={17}
+                    marginLeft={16}
+                  />
+                </View>
+                {(item.isNewUser > 0) && <TouchableOpacity style={{
+                  backgroundColor: item.isNewUser > 1 ? '#ECF8EE' : '#F2F0F5',
+                  paddingHorizontal: 16,
+                  paddingVertical: 9,
+                  borderRadius: 8,
+                }}
+                  onPress={() => onSendRequest(index)}
+                  disabled={item.isNewUser > 1}
+                >
+                  <View style={styles.rowAlignItems}>
+                    {item.isNewUser > 1 && <SvgXml
+                      width={20}
+                      height={20}
+                      style={{
+                        marginRight: 4
+                      }}
+                      xml={greenCheckSvg}
+                    />}
+                    <SemiBoldText
+                      text={t(item.isNewUser > 1 ? "Added" : "Add")}
+                      fontSize={13}
+                      lineHeight={21}
+                      color={item.isNewUser > 1 ? '#1A4C22' : '#8327D8'}
+                    />
+                  </View>
+                </TouchableOpacity>}
               </TouchableOpacity>
               )
             }

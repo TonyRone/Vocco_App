@@ -6,7 +6,9 @@ import {
     KeyboardAvoidingView,
     Image,
     RefreshControl,
-    Text
+    Text,
+    TextInput,
+    Pressable
 } from 'react-native';
 
 import * as Progress from "react-native-progress";
@@ -16,6 +18,7 @@ import black_settingsSvg from '../../assets/notification/black_settings.svg';
 import searchSvg from '../../assets/login/search.svg';
 import new_messageSvg from '../../assets/chat/new_message.svg';
 import black_new_messageSvg from '../../assets/chat/black_new_message.svg';
+import closeCircleSvg from '../../assets/common/close-circle.svg';
 
 import { windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
@@ -48,6 +51,8 @@ const ChatScreen = (props) => {
     const [showFriendsList, setShowFriendsList] = useState(false);
     const [conversations, setConversations] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+    const [isSearch, setIsSearch] = useState(false);
+    const [label, setLabel] = useState('');
 
     const getFollowUsers = () => {
         VoiceService.getFollows(user.id, "Following")
@@ -72,6 +77,8 @@ const ChatScreen = (props) => {
                             return item.receiver.id;
                         return item.sender.id;
                     });
+                    setConversations(jsonRes);
+                    setIsLoading(false);
                     socketInstance.emit("getUsersState", userIds, (res) => {
                         let tp = jsonRes.map((item, index) => {
                             let temp = item;
@@ -80,7 +87,6 @@ const ChatScreen = (props) => {
                             return temp;
                         })
                         setConversations([...tp]);
-                        setIsLoading(false);
                     })
                 }
             })
@@ -135,15 +141,19 @@ const ChatScreen = (props) => {
         })
     }
 
+    const onSetLabel = (v) => {
+        setLabel(v);
+    }
+
     const onRefresh = () => {
         setRefreshing(true);
         getFollowUsers();
         getConversations();
         setTimeout(() => {
-          if(mounted.current)
-            setRefreshing(false)
+            if (mounted.current)
+                setRefreshing(false)
         }, 1000);
-      };
+    };
 
     useEffect(() => {
         mounted.current = true;
@@ -224,6 +234,80 @@ const ChatScreen = (props) => {
                     borderTopRightRadius: 30,
                     alignItems: 'center'
                 }}>
+                    {!isSearch ?
+                        <>
+                            <View style={[styles.paddingH16, { marginTop: 8 }]}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <SvgXml
+                                        width="20"
+                                        height="20"
+                                        xml={searchSvg}
+                                        style={styles.searchIcon}
+                                    />
+                                    <Pressable
+                                        style={styles.searchBox}
+                                        onPress={() => setIsSearch(true)}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontSize: 17,
+                                                color: 'grey'
+                                            }}
+                                        >{t("Enter") + ' @username'}</Text>
+                                    </Pressable>
+                                </View>
+                            </View>
+                        </> :
+                        <View style={{width:windowWidth-32,  marginTop: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                backgroundColor: '#F2F0F5',
+                                borderRadius: 24,
+                                borderWidth: 1,
+                                borderColor: '#CC9BF9',
+                                height: 44,
+                                width: windowWidth - 95,
+                                paddingHorizontal: 12
+                            }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <SvgXml
+                                        width="20"
+                                        height="20"
+                                        xml={searchSvg}
+                                    />
+                                    <TextInput
+                                        style={[styles.searchInput, { paddingLeft: 12, width: windowWidth - 175 }]}
+                                        value={label}
+                                        color='#281E30'
+                                        autoFocus={true}
+                                        placeholder={t("Search")}
+                                        onChangeText={(v) => onSetLabel(v)}
+                                        placeholderTextColor="rgba(59, 31, 82, 0.6)"
+                                    />
+                                </View>
+                                {label != '' &&
+                                    <TouchableOpacity
+                                        onPress={() => onSetLabel('')}
+                                    >
+                                        <SvgXml
+                                            width="30"
+                                            height="30"
+                                            xml={closeCircleSvg}
+                                        />
+                                    </TouchableOpacity>}
+                            </View>
+                            <TouchableOpacity onPress={() => { setIsSearch(false); onSetLabel('') }}>
+                                <TitleText
+                                    text={t('Cancel')}
+                                    fontSize={17}
+                                    fontFamily='SFProDisplay-Regular'
+                                    color='#8327D8'
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    }
                     {(isLoading == false && conversations.length == 0) && <>
                         <Image
                             source={require('../../assets/chat/illustration.png')}
@@ -265,6 +349,9 @@ const ChatScreen = (props) => {
                                 onRefresh={onRefresh}
                             />
                         }
+                        style={{
+                            marginBottom: 75
+                        }}
                     >
                         {
                             conversations.map((item, index) =>
@@ -272,6 +359,7 @@ const ChatScreen = (props) => {
                                     key={"chatListItem" + index.toString()}
                                     props={props}
                                     info={item}
+                                    label={label}
                                 />
                             )
                         }

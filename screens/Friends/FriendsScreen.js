@@ -296,7 +296,7 @@ const FriendsScreen = (props) => {
                             text={t("Requests")}
                             lineHeight={24}
                             fontSize={15}
-                            marginLeft={16}
+                            marginLeft={20}
                         />
                         {!isSearch && <View style={{
                             borderRadius: 12,
@@ -524,7 +524,7 @@ const FriendsScreen = (props) => {
                             text={t("Followers")}
                             fontSize={15}
                             lineHeight={24}
-                            marginLeft={8}
+                            marginLeft={4}
                             fontFamily={isFollowers ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
                         />
                         {!isSearch && <View style={{

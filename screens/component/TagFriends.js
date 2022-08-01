@@ -180,7 +180,7 @@ export const TagFriends = ({
         closeModal();
       }}
     >
-      <Pressable onPressOut={closeModal} style={styles.swipeModal}>
+      <Pressable onPress={closeModal} style={styles.swipeModal}>
         <View style={styles.swipeInputContainerContent}>
           {!isSearch ?
             <>

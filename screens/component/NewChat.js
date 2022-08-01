@@ -173,7 +173,7 @@ export const NewChat = ({
                         fontSize: 17,
                         color: 'grey'
                       }}
-                    >{t("Search") + '...'}</Text>
+                    >{t("Enter") + ' @username'}</Text>
                   </Pressable>
                 </View>
               </View>

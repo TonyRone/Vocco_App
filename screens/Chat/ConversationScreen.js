@@ -78,7 +78,7 @@ const ConversationScreen = (props) => {
     const [replyIdx, setReplyIdx] = useState(-1);
     const [fill, setFill] = useState(0);
     const [isPublish, setIsPublish] = useState(false);
-    const [isOnline, setIsOnline] = useState(info.lastSeen);
+    const [isOnline, setIsOnline] = useState(null);
     const [visible, setVisible] = useState(false);
     const [isSelectingPhoto, setIsSelectingPhoto] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
@@ -382,6 +382,12 @@ const ConversationScreen = (props) => {
         socketInstance.on("chatState", stateListener);
         socketInstance.on("user_login", loginListener);
         socketInstance.emit("chatState", { fromUserId: user.id, toUserId: info.user.id, state: 'confirm' });
+        let userIds = [];
+        userIds.push(info.user.id);
+        socketInstance.emit("getUsersState", userIds, (res) => {
+            if(mounted.current)
+                setIsOnline(res[0]);
+        })
         // if (Platform.OS === 'android')
         //     requestCameraPermission();
         return () => {

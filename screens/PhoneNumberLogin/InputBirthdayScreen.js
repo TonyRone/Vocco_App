@@ -29,6 +29,10 @@ const InputBirthdayScreen = (props) => {
     const [month, setMonth] = useState(null);
     const [year, setYear] = useState(null);
 
+    const dayRef = useRef();
+    const monthRef = useRef();
+    const yearRef = useRef();
+
     const { t, i18n } = useTranslation();
 
     const handleSubmit = () => {
@@ -111,6 +115,7 @@ const InputBirthdayScreen = (props) => {
                                         width: 42
                                     }
                                 }
+                                ref = {dayRef}
                                 placeholder={t("DD")}
                                 textAlign='center'
                                 keyboardType='numeric'
@@ -120,6 +125,9 @@ const InputBirthdayScreen = (props) => {
                                 onChangeText={e => {
                                     if (e === '' || re.test(e)) {
                                         setDay(e)
+                                    }
+                                    if(e.length == 2){
+                                        monthRef.current.focus();
                                     }
                                 }}
                             />
@@ -153,6 +161,7 @@ const InputBirthdayScreen = (props) => {
                                         width: 56
                                     }
                                 }
+                                ref = {monthRef}
                                 placeholder={t("MM")}
                                 keyboardType='numeric'
                                 textAlign='center'
@@ -162,6 +171,9 @@ const InputBirthdayScreen = (props) => {
                                 onChangeText={e => {
                                     if (e === '' || re.test(e)) {
                                         setMonth(e)
+                                    }
+                                    if(e.length == 2){
+                                        yearRef.current.focus();
                                     }
                                 }}
                             />
@@ -195,6 +207,7 @@ const InputBirthdayScreen = (props) => {
                                         width: 84
                                     }
                                 }
+                                ref = {yearRef}
                                 placeholder={t("YYYY")}
                                 keyboardType='numeric'
                                 textAlign='center'

@@ -27,7 +27,8 @@ import { useSelector } from 'react-redux';
 
 export const ChatListItem = ({
     props,
-    info
+    info,
+    label=''
 }) => {
 
     let { user } = useSelector((state) => {
@@ -48,8 +49,8 @@ export const ChatListItem = ({
         if (updatedTime.getFullYear() != nowTime.getFullYear()) {
             return updatedTime.toDateString().substring(4);
         }
-        else if (nowTime.getDate() - updatedTime.getDate() > nowTime.getDay()) {
-            return t(months[updatedTime.getMonth()])+' '+updatedTime.getDate().toString();
+        else if (nowTime.getMonth()!=updatedTime.getMonth()||nowTime.getDate() - updatedTime.getDate() > nowTime.getDay()) {
+            return t(months[updatedTime.getMonth()]) + ' ' + updatedTime.getDate().toString();
         }
         else if (nowTime.getDate() > updatedTime.getDate()) {
             return t(updatedTime.toDateString().substring(0, 3));
@@ -108,81 +109,82 @@ export const ChatListItem = ({
     }
 
     return (
-        <TouchableOpacity
-            style={[styles.rowSpaceBetween, {
-                padding: 16,
-                backgroundColor: '#FFF',
-                width: windowWidth,
-                borderBottomWidth: 1,
-                borderColor: '#F2F0F5'
-            }]}
-            onPress={() => {
-                let tp = {
-                    user: otherUser,
-                    lastSeen: info.lastSeen
-                }
-                props.navigation.navigate("Conversation", { info: tp });
-            }}
-        >
-            <View style={styles.rowAlignItems}>
-                <Image
-                    style={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: 24,
-                        borderColor: '#FFA002',
-                        borderWidth: otherUser.premium == 'none' ? 0 : 2
+        <>
+            {(otherUser.name.toLowerCase().indexOf(label.toLowerCase()) != -1) &&
+                <TouchableOpacity
+                    style={[styles.rowSpaceBetween, {
+                        padding: 16,
+                        backgroundColor: '#FFF',
+                        width: windowWidth,
+                        borderBottomWidth: 1,
+                        borderColor: '#F2F0F5'
+                    }]}
+                    onPress={() => {
+                        let tp = {
+                            user: otherUser
+                        }
+                        props.navigation.navigate("Conversation", { info: tp });
                     }}
-                    source={otherUser.avatar ? { uri: otherUser.avatar.url } : Avatars[otherUser.avatarNumber].uri}
-                />
-                {info.lastSeen == 'onSession' && <View
-                    style={{
-                        position: 'absolute', width: 12, height: 12, left: 36, top: 36, borderRadius: 6,
-                        borderWidth: 2, borderColor: '#FFF', backgroundColor: '#45BF58'
-                    }}>
-                </View>}
-                <View style={{ marginLeft: 16 }}>
-                    <SemiBoldText
-                        text={otherUser.name}
-                        fontSize={15}
-                        lineHeight={24}
-                    />
+                >
                     <View style={styles.rowAlignItems}>
-                        {info.type == 'emoji' ?
-                            <Text
-                                style={{
-                                    fontSize: 16,
-                                    color: 'white',
-                                }}
-                            >
-                                {info.emoji}
-                            </Text>
-                            :
-                            <SvgXml
-                                width={16}
-                                height={16}
-                                xml={info.state == 'start' ? activeVoiceMessageSvg : info.type == 'photo' ? imageMessageSvg : voiceMessageSvg}
-                            />}
+                        <Image
+                            style={{
+                                width: 48,
+                                height: 48,
+                                borderRadius: 24,
+                                borderColor: '#FFA002',
+                                borderWidth: otherUser.premium == 'none' ? 0 : 2
+                            }}
+                            source={otherUser.avatar ? { uri: otherUser.avatar.url } : Avatars[otherUser.avatarNumber].uri}
+                        />
+                        {info.lastSeen == 'onSession' && <View
+                            style={{
+                                position: 'absolute', width: 12, height: 12, left: 36, top: 36, borderRadius: 6,
+                                borderWidth: 2, borderColor: '#FFF', backgroundColor: '#45BF58'
+                            }}>
+                        </View>}
+                        <View style={{ marginLeft: 16 }}>
+                            <SemiBoldText
+                                text={otherUser.name}
+                                fontSize={15}
+                                lineHeight={24}
+                            />
+                            <View style={styles.rowAlignItems}>
+                                {info.type == 'emoji' ?
+                                    <Text
+                                        style={{
+                                            fontSize: 16,
+                                            color: 'white',
+                                        }}
+                                    >
+                                        {info.emoji}
+                                    </Text>
+                                    :
+                                    <SvgXml
+                                        width={16}
+                                        height={16}
+                                        xml={info.state == 'start' ? activeVoiceMessageSvg : info.type == 'photo' ? imageMessageSvg : voiceMessageSvg}
+                                    />}
+                                <DescriptionText
+                                    text={t(info.state == 'start' ? "recording audio..." : info.type == 'photo' ? t("Image") : info.type == 'emoji' ? "reaction" : t("Message vocal"))}
+                                    fontSize={13}
+                                    lineHeight={21}
+                                    marginLeft={6}
+                                    color={info.state == 'start' ? '#A24EE4' : 'rgba(54, 36, 68, 0.8)'}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                    <View style={{ alignItems: 'flex-end' }}>
                         <DescriptionText
-                            text={t(info.state == 'start' ? "recording audio..." : info.type == 'photo' ? t("Image") : info.type == 'emoji' ? "reaction" : t("Message vocal"))}
+                            text={renderTime()}
                             fontSize={13}
                             lineHeight={21}
-                            marginLeft={6}
-                            color={info.state == 'start' ? '#A24EE4' : 'rgba(54, 36, 68, 0.8)'}
+                            marginBottom={3}
+                            color='rgba(54, 36, 68, 0.8)'
                         />
+                        {renderState()}
                     </View>
-                </View>
-            </View>
-            <View style={{ alignItems: 'flex-end' }}>
-                <DescriptionText
-                    text={renderTime()}
-                    fontSize={13}
-                    lineHeight={21}
-                    marginBottom={3}
-                    color='rgba(54, 36, 68, 0.8)'
-                />
-                {renderState()}
-            </View>
-        </TouchableOpacity>
-    );
+                </TouchableOpacity>
+            }</>);
 };
