@@ -3,7 +3,8 @@ import {
     View,
     TouchableOpacity,
     Image,
-    Text
+    Text,
+    ScrollView
 } from "react-native";
 
 import { useTranslation } from 'react-i18next';
@@ -18,7 +19,7 @@ import singleCheckSvg from '../../assets/chat/single-check.svg';
 import doubleCheckSvg from '../../assets/chat/double-check.svg';
 import lightSingleCheckSvg from '../../assets/chat/light-single-check.svg';
 import lightDoubleCheckSvg from '../../assets/chat/light-double-check.svg';
-
+import whiteTrashSvg from '../../assets/notification/white_trash.svg'
 
 import { styles } from '../style/Common';
 import { SemiBoldText } from "./SemiBoldText";
@@ -28,7 +29,8 @@ import { useSelector } from 'react-redux';
 export const ChatListItem = ({
     props,
     info,
-    label=''
+    label = '',
+    onDeleteItem = () => { }
 }) => {
 
     let { user } = useSelector((state) => {
@@ -49,7 +51,7 @@ export const ChatListItem = ({
         if (updatedTime.getFullYear() != nowTime.getFullYear()) {
             return updatedTime.toDateString().substring(4);
         }
-        else if (nowTime.getMonth()!=updatedTime.getMonth()||nowTime.getDate() - updatedTime.getDate() > nowTime.getDay()) {
+        else if (nowTime.getMonth() != updatedTime.getMonth() || nowTime.getDate() - updatedTime.getDate() > nowTime.getDay()) {
             return t(months[updatedTime.getMonth()]) + ' ' + updatedTime.getDate().toString();
         }
         else if (nowTime.getDate() > updatedTime.getDate()) {
@@ -111,80 +113,103 @@ export const ChatListItem = ({
     return (
         <>
             {(otherUser.name.toLowerCase().indexOf(label.toLowerCase()) != -1) &&
-                <TouchableOpacity
-                    style={[styles.rowSpaceBetween, {
-                        padding: 16,
-                        backgroundColor: '#FFF',
-                        width: windowWidth,
-                        borderBottomWidth: 1,
-                        borderColor: '#F2F0F5'
-                    }]}
-                    onPress={() => {
-                        let tp = {
-                            user: otherUser
-                        }
-                        props.navigation.navigate("Conversation", { info: tp });
-                    }}
-                >
-                    <View style={styles.rowAlignItems}>
-                        <Image
-                            style={{
-                                width: 48,
-                                height: 48,
-                                borderRadius: 24,
-                                borderColor: '#FFA002',
-                                borderWidth: otherUser.premium == 'none' ? 0 : 2
-                            }}
-                            source={otherUser.avatar ? { uri: otherUser.avatar.url } : Avatars[otherUser.avatarNumber].uri}
-                        />
-                        {info.lastSeen == 'onSession' && <View
-                            style={{
-                                position: 'absolute', width: 12, height: 12, left: 36, top: 36, borderRadius: 6,
-                                borderWidth: 2, borderColor: '#FFF', backgroundColor: '#45BF58'
-                            }}>
-                        </View>}
-                        <View style={{ marginLeft: 16 }}>
-                            <SemiBoldText
-                                text={otherUser.name}
-                                fontSize={15}
-                                lineHeight={24}
+                <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={{ maxWidth: windowWidth, borderBottomColor: '#F2F0F5', borderBottomWidth: 1 }}>
+                    <TouchableOpacity
+                        style={[styles.rowSpaceBetween, {
+                            padding: 16,
+                            backgroundColor: '#FFF',
+                            width: windowWidth,
+                            borderBottomWidth: 1,
+                            borderColor: '#F2F0F5'
+                        }]}
+                        onPress={() => {
+                            let tp = {
+                                user: otherUser
+                            }
+                            props.navigation.navigate("Conversation", { info: tp });
+                        }}
+                    >
+                        <View style={styles.rowAlignItems}>
+                            <Image
+                                style={{
+                                    width: 48,
+                                    height: 48,
+                                    borderRadius: 24,
+                                    borderColor: '#FFA002',
+                                    borderWidth: otherUser.premium == 'none' ? 0 : 2
+                                }}
+                                source={otherUser.avatar ? { uri: otherUser.avatar.url } : Avatars[otherUser.avatarNumber].uri}
                             />
-                            <View style={styles.rowAlignItems}>
-                                {info.type == 'emoji' ?
-                                    <Text
-                                        style={{
-                                            fontSize: 16,
-                                            color: 'white',
-                                        }}
-                                    >
-                                        {info.emoji}
-                                    </Text>
-                                    :
-                                    <SvgXml
-                                        width={16}
-                                        height={16}
-                                        xml={info.state == 'start' ? activeVoiceMessageSvg : info.type == 'photo' ? imageMessageSvg : voiceMessageSvg}
-                                    />}
-                                <DescriptionText
-                                    text={t(info.state == 'start' ? "recording audio..." : info.type == 'photo' ? t("Image") : info.type == 'emoji' ? "reaction" : t("Message vocal"))}
-                                    fontSize={13}
-                                    lineHeight={21}
-                                    marginLeft={6}
-                                    color={info.state == 'start' ? '#A24EE4' : 'rgba(54, 36, 68, 0.8)'}
+                            {info.lastSeen == 'onSession' && <View
+                                style={{
+                                    position: 'absolute', width: 12, height: 12, left: 36, top: 36, borderRadius: 6,
+                                    borderWidth: 2, borderColor: '#FFF', backgroundColor: '#45BF58'
+                                }}>
+                            </View>}
+                            <View style={{ marginLeft: 16 }}>
+                                <SemiBoldText
+                                    text={otherUser.name}
+                                    fontSize={15}
+                                    lineHeight={24}
                                 />
+                                <View style={styles.rowAlignItems}>
+                                    {info.type == 'emoji' ?
+                                        <Text
+                                            style={{
+                                                fontSize: 16,
+                                                color: 'white',
+                                            }}
+                                        >
+                                            {info.emoji}
+                                        </Text>
+                                        :
+                                        <SvgXml
+                                            width={16}
+                                            height={16}
+                                            xml={info.state == 'start' ? activeVoiceMessageSvg : info.type == 'photo' ? imageMessageSvg : voiceMessageSvg}
+                                        />}
+                                    <DescriptionText
+                                        text={t(info.state == 'start' ? "recording audio..." : info.type == 'photo' ? t("Image") : info.type == 'emoji' ? "reaction" : t("Message vocal"))}
+                                        fontSize={13}
+                                        lineHeight={21}
+                                        marginLeft={6}
+                                        color={info.state == 'start' ? '#A24EE4' : 'rgba(54, 36, 68, 0.8)'}
+                                    />
+                                </View>
                             </View>
                         </View>
-                    </View>
-                    <View style={{ alignItems: 'flex-end' }}>
-                        <DescriptionText
-                            text={renderTime()}
-                            fontSize={13}
-                            lineHeight={21}
-                            marginBottom={3}
-                            color='rgba(54, 36, 68, 0.8)'
+                        <View style={{ alignItems: 'flex-end' }}>
+                            <DescriptionText
+                                text={renderTime()}
+                                fontSize={13}
+                                lineHeight={21}
+                                marginBottom={3}
+                                color='rgba(54, 36, 68, 0.8)'
+                            />
+                            {renderState()}
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => { onDeleteItem();}} style={[styles.rowAlignItems, {
+                        width: windowWidth,
+                        paddingVertical: 24,
+                        backgroundColor: '#E41717',
+                        borderTopLeftRadius: 24,
+                        borderBottomLeftRadius: 24
+                    }]}>
+                        <View style={{ width: 2, height: 16, marginLeft: 4, backgroundColor: '#B91313', borderRadius: 1 }}></View>
+                        <SvgXml
+                            marginLeft={10}
+                            xml={whiteTrashSvg}
                         />
-                        {renderState()}
-                    </View>
-                </TouchableOpacity>
+                        <DescriptionText
+                            text={t("Delete")}
+                            fontSize={17}
+                            lineHeight={22}
+                            color='white'
+                            marginLeft={16}
+                        />
+                    </TouchableOpacity>
+                </ScrollView>
+
             }</>);
 };

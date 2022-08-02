@@ -14,6 +14,7 @@ import '../../language/i18n';
 import { MessageContext } from "./MessageContext";
 import { MessageContent } from "./MessageContent";
 import { DescriptionText } from "./DescriptionText";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export const MessageItem = ({
   props,
@@ -36,11 +37,7 @@ export const MessageItem = ({
   const isSender = (user.id == info.user.id);
 
   const onPressContent = (url) => {
-    if (isSelect >= 0)
-      onSelectItem();
-    else {
-      setPhotoUrl(url);
-    }
+    setPhotoUrl(url);
   }
 
   const onLongPressContent = () => {
@@ -51,16 +48,18 @@ export const MessageItem = ({
     <>
       <View style={[styles.rowAlignItems, { width: windowWidth }]}>
         {isSelect >= 0 &&
-          <SvgXml
-            width={24}
-            height={24}
-            style={{
-              marginRight: 16
-            }}
-            xml={isSelect > 0 ? selectedSvg : unSelectedSvg}
-          />
+          <TouchableOpacity onPress={()=>onSelectItem()}>
+            <SvgXml
+              width={24}
+              height={24}
+              style={{
+                marginRight: 16
+              }}
+              xml={isSelect > 0 ? selectedSvg : unSelectedSvg}
+            />
+          </TouchableOpacity>
         }
-        <Pressable onPress={() => isSelect >= 0 ? onSelectItem() : null} onLongPress={() => isSelect == -1 ? setShowContext(true) : null} style={{
+        <Pressable onLongPress={() => isSelect == -1 ? setShowContext(true) : null} style={{
           flexDirection: 'row',
           width: windowWidth - (isSelect >= 0 ? 56 : 16),
           justifyContent: isSender ? 'flex-end' : 'flex-start', marginTop: 8
@@ -77,7 +76,7 @@ export const MessageItem = ({
               <View>
                 <MessageContent
                   info={ancestorInfo}
-                  onPressContent={(url)=>onPressContent(url)}
+                  onPressContent={(url) => onPressContent(url)}
                   onLongPressContent={onLongPressContent}
                 />
                 <View style={{
@@ -88,7 +87,7 @@ export const MessageItem = ({
                   <MessageContent
                     info={info}
                     isAnswer={true}
-                    onPressContent={(url)=>onPressContent(url)}
+                    onPressContent={(url) => onPressContent(url)}
                     onLongPressContent={onLongPressContent}
                   />
                   <SvgXml
@@ -103,7 +102,7 @@ export const MessageItem = ({
             :
             <MessageContent
               info={info}
-              onPressContent={(url)=>onPressContent(url)}
+              onPressContent={(url) => onPressContent(url)}
               onLongPressContent={onLongPressContent}
             />
           }
@@ -120,10 +119,10 @@ export const MessageItem = ({
           onCloseModal={() => setShowContext(false)}
         />
       }
-      {photoUrl!='' && <Modal
+      {photoUrl != '' && <Modal
         animationType="slide"
         transparent={true}
-        visible={photoUrl!=''}
+        visible={photoUrl != ''}
         onRequestClose={() => {
           setPhotoUrl('');
         }}

@@ -155,6 +155,14 @@ const ChatScreen = (props) => {
         }, 1000);
     };
 
+    const OnDeleteChat = (index) => {
+        VoiceService.deleteChat(conversations[index].id);
+        setConversations(prev => {
+            prev.splice(index,1);
+            return [...prev];
+        })
+    }
+
     useEffect(() => {
         mounted.current = true;
         getFollowUsers();
@@ -253,12 +261,12 @@ const ChatScreen = (props) => {
                                                 fontSize: 17,
                                                 color: 'grey'
                                             }}
-                                        >{t("Enter") + ' @username'}</Text>
+                                        >{t("Enter username")}</Text>
                                     </Pressable>
                                 </View>
                             </View>
                         </> :
-                        <View style={{width:windowWidth-32,  marginTop: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <View style={{ width: windowWidth - 32, marginTop: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <View style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
@@ -356,10 +364,11 @@ const ChatScreen = (props) => {
                         {
                             conversations.map((item, index) =>
                                 <ChatListItem
-                                    key={"chatListItem" + index.toString()}
+                                    key={"chatListItem" +item.id+index.toString()}
                                     props={props}
                                     info={item}
                                     label={label}
+                                    onDeleteItem={() => OnDeleteChat(index)}
                                 />
                             )
                         }

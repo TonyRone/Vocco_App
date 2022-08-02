@@ -417,6 +417,8 @@ class VoiceService {
             );
     }
 
+
+
     async deleteVoice(id) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
@@ -445,6 +447,17 @@ class VoiceService {
             fetch(
                 'DELETE',
                 `${API_URL}/actions/deleteTag?id=${id}`, {
+                'Authorization': `Bearer ${token}`
+            }
+            );
+    }
+
+    async deleteChat(id) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'DELETE',
+                `${API_URL}/actions/deleteChat?id=${id}`, {
                 'Authorization': `Bearer ${token}`
             }
             );
