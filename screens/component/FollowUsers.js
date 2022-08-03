@@ -139,7 +139,7 @@ export const FollowUsers = ({
                     marginLeft={16}
                   />
                 </View>
-                {(item.isNewUser > 0) && <TouchableOpacity style={{
+                {(item.isNewUser > 0 && item.user.id != user.id) && <TouchableOpacity style={{
                   backgroundColor: item.isNewUser > 1 ? '#ECF8EE' : '#F2F0F5',
                   paddingHorizontal: 16,
                   paddingVertical: 9,

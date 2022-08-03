@@ -543,7 +543,7 @@ const ConversationScreen = (props) => {
                         />
                         <TouchableOpacity onPress={() => { setSelectedItems([]); setIsSelecting(false); }}>
                             <DescriptionText
-                                text={t("Clean")}
+                                text={t("     ")}
                                 fontSize={17}
                                 lineHeight={28}
                                 color='#8327D8'
