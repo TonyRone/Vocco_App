@@ -377,6 +377,7 @@ const NotificationScreen = (props) => {
                                 key={index + item.id + 'activities'}
                                 isNew={!item.seen && !allSeen}
                                 userInfo={item.fromUser}
+                                recordInfo={item.record}
                                 details={item.type}
                                 notificationTime={item.createdAt}
                                 isActivity={true}

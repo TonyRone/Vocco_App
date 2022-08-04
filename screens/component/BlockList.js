@@ -1,13 +1,15 @@
 import React from "react";
 import { TitleText } from "./TitleText";
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
+import { DescriptionText } from "./DescriptionText";
 
 export const BlockList = ({
   marginTop,
   blockName,
-  items
+  items,
+  onLoadHistory = () => { }
 }) => {
 
   const { t, i18n } = useTranslation();
@@ -31,14 +33,16 @@ export const BlockList = ({
       <View style={{ width: '100%', height: 1, backgroundColor: '#F0F4FC', marginTop: 9, marginBottom: 18 }}></View>
       {items.map((item, index) => {
         return (
-          <TitleText
-            text={item.title}
-            key={index + 'blocklist'}
-            fontSize={15}
-            fontFamily='SFProDisplay-Regular'
-            color='#281E30'
-            marginBottom={20}
-          />
+          <TouchableOpacity onPress={() => onLoadHistory(item.title)}>
+            <DescriptionText
+              text={item.title}
+              key={index + 'blocklist'}
+              fontSize={15}
+              fontFamily='SFProDisplay-Regular'
+              color='#281E30'
+              marginBottom={20}
+            />
+          </TouchableOpacity>
         )
       })}
     </View>

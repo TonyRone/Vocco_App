@@ -22,6 +22,7 @@ import { Avatars, windowWidth } from "../../config/config";
 
 export const NotificationItem = ({
     userInfo,
+    recordInfo,
     details,
     isNew = false,
     notificationTime,
@@ -43,18 +44,19 @@ export const NotificationItem = ({
     let hour = num % 24;
     let day = (num - hour) / 24
     let time = (day > 0 ? (day.toString() + ' ' + t("day") + (day > 1 ? 's' : '')) : (hour > 0 ? (hour.toString() + ' ' + t("hour") + (hour > 1 ? 's' : '')) : (minute > 0 ? (minute.toString() + ' ' + t("minute") + (minute > 1 ? 's' : '')) : '')));
+    let label = '';
     if (details == 'friendAccept')
-        details = t("Followed you");
+        label = t("Followed you");
     if (details == 'friendDelete')
-        details = t("Stopped following");
+        label = t("Stopped following");
     if (details == 'likeRecord')
-        details = t("Liked your story");
+        label = t("Liked your story");
     if (details == 'newAnswer')
-        details = t("Answered your story");
+        label = t("Answered your story");
     if (details == 'likeAnswer')
-        details = t("Liked your answer");
+        label = t("Liked your answer");
     if (details == 'tagFriend')
-        details = t("Tagged you in a story");
+        label = t("Tagged you in a story");
 
     return (
         !isDeleted ?
@@ -101,13 +103,23 @@ export const NotificationItem = ({
                                     lineHeight={24}
                                 />
                             </View>
-                            <DescriptionText
-                                text={details}
-                                fontSize={13}
-                                lineHeight={21}
-                                color='rgba(54, 36, 68, 0.8)'
-                                marginTop={2}
-                            />
+                            <View style={styles.rowAlignItems}>
+                                <DescriptionText
+                                    text={label}
+                                    fontSize={13}
+                                    lineHeight={21}
+                                    color='rgba(54, 36, 68, 0.8)'
+                                    marginTop={2}
+                                />
+                                {(details == 'likeRecord' || details == 'newAnswer') &&
+                                    <SemiBoldText
+                                        text={": "+recordInfo.title}
+                                        fontSize={16}
+                                        lineHeight={24}
+                                        marginLeft={6}
+                                    />
+                                }
+                            </View>
                         </View>
                     </View>
                     {(!isActivity) ?

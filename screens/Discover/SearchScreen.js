@@ -54,6 +54,7 @@ const SearchScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(0);
+  const [recentList, setRecentList] = useState([]);
 
   const { t, i18n } = useTranslation();
 
@@ -101,10 +102,13 @@ const SearchScreen = (props) => {
     setLabel(title);
     setSearchStory(recordId);
     setShowVoices(true);
-    // await AsyncStorage.setItem(
-    //   RECENT_LIST,
-    //   token
-    // );
+    if (recentList.length > 4)
+      recentList.splice(0, 1);
+    recentList.push(title);
+    await AsyncStorage.setItem(
+      RECENT_LIST,
+      JSON.stringify(recentList)
+    );
   }
 
   const setLiked = () => {
@@ -122,12 +126,17 @@ const SearchScreen = (props) => {
     VoiceService.followFriend(filterTitles.user[index].id);
     setFilterTitles(prev => {
       prev.user[index].isNewUser = 2;
-      return {...prev};
+      return { ...prev };
     })
   }
 
-  useEffect(() => {
+  useEffect(async () => {
     mounted.current = true;
+    let tp = await AsyncStorage.getItem(RECENT_LIST);
+    if (tp) {
+      if (mounted.current)
+        setRecentList(JSON.parse(tp));
+    }
     return () => {
       mounted.current = false;
     }
@@ -273,7 +282,7 @@ const SearchScreen = (props) => {
                       marginLeft={10}
                     />
                   </View>
-                  {(item.id!=user.id&&item.isNewUser > 0) && <TouchableOpacity style={{
+                  {(item.id != user.id && item.isNewUser > 0) && <TouchableOpacity style={{
                     backgroundColor: item.isNewUser > 1 ? '#ECF8EE' : '#F2F0F5',
                     paddingHorizontal: 16,
                     paddingVertical: 9,
@@ -454,7 +463,7 @@ const SearchScreen = (props) => {
           />
         </View>
         <ScrollView style={{ paddingLeft: 16, marginTop: 31 }}>
-          <BlockList marginTop={0} blockName={t("Recent")} items={[]} />
+          <BlockList marginTop={0} blockName={t("Recent")} items={recentList} onLoadHistory={(title)=>setLabel(title)} />
           <BlockList marginTop={26} blockName={t("Popular")} items={[]} />
         </ScrollView>
       </View>}

@@ -158,7 +158,10 @@ const ChatScreen = (props) => {
     const OnDeleteChat = (index) => {
         VoiceService.deleteChat(conversations[index].id);
         setConversations(prev => {
-            prev.splice(index,1);
+            if(prev[index].receiver.id == user.id)
+                prev[index].visible = false;
+            else
+                prev.splice(index,1);
             return [...prev];
         })
     }

@@ -112,7 +112,7 @@ export const ChatListItem = ({
 
     return (
         <>
-            {(otherUser.name.toLowerCase().indexOf(label.toLowerCase()) != -1) &&
+            {(otherUser.name.toLowerCase().indexOf(label.toLowerCase()) != -1&&!(info.visible==false&&info.receiver.id==user.id)) &&
                 <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={{ maxWidth: windowWidth, borderBottomColor: '#F2F0F5', borderBottomWidth: 1 }}>
                     <TouchableOpacity
                         style={[styles.rowSpaceBetween, {
