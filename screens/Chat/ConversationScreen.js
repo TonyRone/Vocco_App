@@ -116,6 +116,7 @@ const ConversationScreen = (props) => {
     }
 
     const renderState = (lastSeen) => {
+        console.log(lastSeen);
         if (lastSeen == "onSession") {
             if (otherState == 'start')
                 return t("Recording...");

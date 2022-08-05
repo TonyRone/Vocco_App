@@ -33,9 +33,9 @@ export const BlockList = ({
       <View style={{ width: '100%', height: 1, backgroundColor: '#F0F4FC', marginTop: 9, marginBottom: 18 }}></View>
       {items.map((item, index) => {
         return (
-          <TouchableOpacity onPress={() => onLoadHistory(item.title)}>
+          <TouchableOpacity onPress={() => onLoadHistory(item)} key={item.title+index.toString()}>
             <DescriptionText
-              text={item.title}
+              text={item}
               key={index + 'blocklist'}
               fontSize={15}
               fontFamily='SFProDisplay-Regular'

@@ -102,12 +102,22 @@ const SearchScreen = (props) => {
     setLabel(title);
     setSearchStory(recordId);
     setShowVoices(true);
-    if (recentList.length > 4)
-      recentList.splice(0, 1);
-    recentList.push(title);
+  }
+
+  const onSetHistory = async (title) => {
+    if (title == '')
+      return;
+    let tp = recentList;
+    let exist = tp.find(e => e == title);
+    if (exist)
+      return ;
+    if (tp.length > 4)
+      tp.splice(4, 1);
+    tp.unshift(title);
+    setRecentList([...tp])
     await AsyncStorage.setItem(
       RECENT_LIST,
-      JSON.stringify(recentList)
+      JSON.stringify(tp)
     );
   }
 
@@ -130,13 +140,17 @@ const SearchScreen = (props) => {
     })
   }
 
-  useEffect(async () => {
-    mounted.current = true;
+  const onSetRecentHistory = async () => {
     let tp = await AsyncStorage.getItem(RECENT_LIST);
     if (tp) {
       if (mounted.current)
         setRecentList(JSON.parse(tp));
     }
+  }
+
+  useEffect(() => {
+    mounted.current = true;
+    onSetRecentHistory();
     return () => {
       mounted.current = false;
     }
@@ -193,6 +207,10 @@ const SearchScreen = (props) => {
               autoFocus={true}
               placeholder={t("Search")}
               onChangeText={getLabel}
+              onEndEditing={(e) => {
+                console.log(label, "  kkkkkkkkkkkkk")
+                onSetHistory(label);
+              }}
               placeholderTextColor="rgba(59, 31, 82, 0.6)"
             />
           </View>
@@ -463,8 +481,8 @@ const SearchScreen = (props) => {
           />
         </View>
         <ScrollView style={{ paddingLeft: 16, marginTop: 31 }}>
-          <BlockList marginTop={0} blockName={t("Recent")} items={recentList} onLoadHistory={(title)=>setLabel(title)} />
-          <BlockList marginTop={26} blockName={t("Popular")} items={[]} />
+          <BlockList key='1' marginTop={0} blockName={t("Recent")} items={recentList} onLoadHistory={(title) => getLabel(title)} />
+          <BlockList key='2' marginTop={26} blockName={t("Popular")} items={[]} />
         </ScrollView>
       </View>}
       <Modal

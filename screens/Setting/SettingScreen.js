@@ -38,6 +38,8 @@ import { NavigationActions, StackActions } from 'react-navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { RecordIcon } from '../component/RecordIcon';
 import { setSocketInstance, setUser } from '../../store/actions';
+import VoiceService from '../../services/VoiceService';
+import EditService from '../../services/EditService';
 
 const SettingScreen = (props) => {
 
@@ -68,6 +70,7 @@ const SettingScreen = (props) => {
     }
 
     const OnSelectLanguage = async () => {
+        EditService.changeLanguage(language.language);
         i18n.changeLanguage(language.language).then(async () => {
             await AsyncStorage.setItem(
                 MAIN_LANGUAGE,
