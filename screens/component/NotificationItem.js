@@ -112,10 +112,10 @@ export const NotificationItem = ({
                                     marginTop={2}
                                 />
                                 {(details == 'likeRecord' || details == 'newAnswer') &&
-                                    <SemiBoldText
+                                    <DescriptionText
                                         text={": "+recordInfo.title}
-                                        fontSize={16}
-                                        lineHeight={24}
+                                        fontSize={13}
+                                        lineHeight={21}
                                         marginLeft={6}
                                     />
                                 }

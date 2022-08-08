@@ -610,7 +610,7 @@ const VoiceProfileScreen = (props) => {
             <View style={{ position: 'absolute', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, height: 122, borderRadius: 14, backgroundColor: '#E9EAEC' }}>
               <View style={{ paddingTop: 14, height: 65.5, width: '100%', borderBottomWidth: 1, borderBottomColor: '#B6C2DB', alignItems: 'center' }}>
                 <SemiBoldText
-                  text={t("Delete this voice?")}
+                  text={t("Do you want to delete this story?")}
                   fontSize={13}
                   lineHeight={21}
                   color='rgba(38, 52, 73, 0.7)'
