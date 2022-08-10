@@ -241,10 +241,10 @@
     "Tag friends": "Tag friends",
     "To chat": "To chat",
     "friend": "friend",
-    "online": "online",
+    "Online": "Online",
     "Friends": "Friends",
     "Chat": "Chat",
-    "offline": "offline",
+    "Offline": "Offline",
     "reading": "reading",
     "January": "January",
     "February": "February",
@@ -375,6 +375,8 @@
     "Let's share!":"Let's share!",
     "Swipe to the right to publish, to the left to cancel":"Swipe to the right to publish, to the left to cancel",
     "Enter username":"Enter username",
-    "Do you want to delete this story?":"Do you want to delete this story?"
+    "Do you want to delete this story?":"Do you want to delete this story?",
+    "Online ":"Online ",
+    " ago":" ago"
   }
 }

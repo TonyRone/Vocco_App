@@ -125,34 +125,6 @@ export const MessageContext = ({
                 xml={replySvg}
               />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.contextMenu}
-            >
-              <TitleText
-                text={t("Forward")}
-                fontSize={17}
-                fontFamily="SFProDisplay-Regular"
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                xml={forwardSvg}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.contextMenu}
-            >
-              <TitleText
-                text={t("Save as")}
-                fontSize={17}
-                fontFamily="SFProDisplay-Regular"
-              />
-              <SvgXml
-                width={20}
-                height={20}
-                xml={saveSvg}
-              />
-            </TouchableOpacity>
             <Pressable
               onPress={() => onDeleteItem()}
               style={[styles.contextMenu, { borderBottomWidth: 8 }]}

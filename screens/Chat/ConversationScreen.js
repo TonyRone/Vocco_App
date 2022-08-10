@@ -48,8 +48,8 @@ import moreSvg from '../../assets/common/more.svg';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import Draggable from 'react-native-draggable';
-import { use } from 'i18next';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import { use } from 'i18next';
 import VoicePlayer from '../Home/VoicePlayer';
 import { MessageItem } from '../component/MessageItem';
 import { TitleText } from '../component/TitleText';
@@ -116,16 +116,23 @@ const ConversationScreen = (props) => {
     }
 
     const renderState = (lastSeen) => {
-        console.log(lastSeen);
         if (lastSeen == "onSession") {
             if (otherState == 'start')
                 return t("Recording...");
-            return t("online")
+            return t("Online")
         }
         else if (lastSeen == null) {
             return ''
         }
-        return t("offline");
+        else {
+            let num = Math.ceil((new Date().getTime() - new Date(lastSeen).getTime()) / 60000);
+            let minute = num % 60;
+            num = (num - minute) / 60;
+            let hour = num % 24;
+            let day = (num - hour) / 24
+            let time = (day > 0 ? (day.toString() + ' ' + t("day") + (day > 1 ? 's' : '')) : (hour > 0 ? (hour.toString() + ' ' + t("hour") + (hour > 1 ? 's' : '')) : (minute > 0 ? (minute.toString() + ' ' + t("minute") + (minute > 1 ? 's' : '')) : '')));
+            return t("Online ")+time+t(" ago");
+        }
     }
 
     const renderTime = (v) => {
@@ -208,7 +215,7 @@ const ConversationScreen = (props) => {
             const jsonRes = await res.json();
             if (res.respInfo.status !== 201) {
             } else if (mounted.current) {
-                Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                 setIsPublish(false);
                 let tp = messages;
                 tp.push(jsonRes);
@@ -245,7 +252,7 @@ const ConversationScreen = (props) => {
 
     const onChangeRecord = async (e, v = false) => {
         if (v == true && isRecording == false) {
-            Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+            Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
             onStartRecord();
         }
         if (v == false && isRecording == true) {
@@ -386,7 +393,7 @@ const ConversationScreen = (props) => {
         let userIds = [];
         userIds.push(info.user.id);
         socketInstance.emit("getUsersState", userIds, (res) => {
-            if(mounted.current)
+            if (mounted.current)
                 setIsOnline(res[0]);
         })
         // if (Platform.OS === 'android')
@@ -699,20 +706,6 @@ const ConversationScreen = (props) => {
                             </View>
                         </View>
                         }
-                        {/* <TouchableOpacity style={{
-                            marginLeft: 12
-                        }}
-                            onPress={() => setVisibleReaction(true)}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 20,
-                                    color: 'white',
-                                }}
-                            >
-                                {"😁"}
-                            </Text>
-                        </TouchableOpacity> */}
                         <TouchableOpacity onPress={() => setIsSelectingPhoto(true)}>
                             <SvgXml
                                 width={24}
@@ -738,7 +731,7 @@ const ConversationScreen = (props) => {
                                 position: 'absolute',
                                 height: 56,
                                 width: 328,
-                                justifyContent:'center'
+                                justifyContent: 'center'
                             }}
                             resizeMode="stretch"
                             source={require('../../assets/chat/chatRecord.png')}
@@ -806,9 +799,9 @@ const ConversationScreen = (props) => {
                             onDragRelease={(event, gestureState, bounds) => {
                                 dragPos.current = gestureState.dx;
                                 if (gestureState.dx <= -100) {
-                                    Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                                    Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                                     setTimeout(() => {
-                                        Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                                        Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                                     }, 300);
                                 }
                             }}

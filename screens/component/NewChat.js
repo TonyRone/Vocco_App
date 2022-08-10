@@ -88,7 +88,7 @@ export const NewChat = ({
 
   const renderState = (lastSeen) => {
     if (lastSeen == "onSession") {
-      return t("online")
+      return t("Online")
     }
     else if (lastSeen == null) {
       return ''

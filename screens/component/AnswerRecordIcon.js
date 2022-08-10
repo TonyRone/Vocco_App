@@ -41,7 +41,7 @@ import { styles } from '../style/Common';
 
 export const AnswerRecordIcon = ({
   props,
-  dem = 54,
+  dem = 44,
   bottom,
   left,
 }) => {
@@ -58,7 +58,6 @@ export const AnswerRecordIcon = ({
   const [key, setKey] = useState(0);
   const [hoverState, setHoverState] = useState(0);
   const [isPaused, setIsPaused] = useState(true);
-  const [IsExpanded, setIsExpanded] = useState(false);
   const [expand, setExpand] = useState(0);
 
   const wasteTime = useRef(0);
@@ -126,46 +125,22 @@ export const AnswerRecordIcon = ({
         let tp = Math.max(wasteTime.current, 1);
         props.navigation.navigate('PostingAnswerVoice', { id: recordId, recordSecs: Math.ceil(tp / 1000.0) })
         clearRecorder();
-        setIsExpanded(false);
       }
       else {
         clearRecorder();
-        setIsExpanded(false);
       }
     }
   };
 
   const onChangeRecord = async (e, v = false) => {
-    if (v == true) {
-      Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-    }
     if (v == true && isRecording == false) {
-      setIsExpanded(true);
-      onStartRecord();
+        Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+        onStartRecord();
     }
-    else {
-      if (v == true && isPaused) {
-        await recorderPlayer.resumeRecorder().then(res => {
-        })
-          .catch(err => {
-            console.log(err);
-          });
-        setIsPaused(false);
-      }
-      else if (v == false && isRecording == true) {
-        let delta = Math.abs(dragPos.current);
-        if (delta < 80) {
-          setIsPaused(true);
-          await recorderPlayer.pauseRecorder().then(res => {
-          })
-            .catch(err => {
-              console.log(err);
-              onStopRecord(false);
-            });
-        }
-      }
+    if (v == false && isRecording == true) {
+        onStopRecord(dragPos.current >=  - 100 && wasteTime.current > 0)
     }
-  }
+}
 
   const onTimeEnd = () => {
     onStopRecord(true);
@@ -181,123 +156,84 @@ export const AnswerRecordIcon = ({
   }, [])
 
   return (
-    <Pressable
+    <View
       style={{
         position: 'absolute',
-        bottom: IsExpanded ? 0 : bottom,
-        left: IsExpanded ? 0 : left,
-        width: IsExpanded ? '100%' : dem,
-        height: IsExpanded ? '100%' : dem,
-        elevation: 11
+        bottom: isRecording ? 5 : 16,
+        right: isRecording ? 7 : 18,
+        width: isRecording ? windowWidth - 48 : 54,
+        height: isRecording ? 76 : 54,
       }}
       onPress={() => onStopRecord(false)}
     >
-      {IsExpanded &&
-        <Pressable onPressOut={() => onStopRecord(false)} style={[styles.swipeModal, { backgroundColor: 'rgba(0, 0, 0, 0.1)' }]}>
-          <>
-            <ImageBackground
-              style={{
-                position: 'absolute',
-                bottom: 20,
-                height: 56,
-                width: 281.22,
-                right: (windowWidth - 281.22) / 2,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                paddingHorizontal: 20
-              }}
-              resizeMode="stretch"
-              source={require('../../assets/post/answerReply.png')}
-            >
-              <View style={styles.rowAlignItems}>
-                <SvgXml
-                  width={16}
-                  height={16}
-                  xml={redCancelSvg}
-                />
-                <DescriptionText
-                  text={t("Cancel")}
-                  fontSize={13}
-                  lineHeight={21}
-                  color="#E41717"
-                  marginLeft={8}
-                />
-              </View>
-              <View style={styles.rowAlignItems}>
-                <DescriptionText
-                  text={t("Publish")}
-                  fontSize={13}
-                  lineHeight={21}
-                  color="#8327D8"
-                  marginRight={8}
-                />
-                <SvgXml
-                  width={18}
-                  height={18}
-                  xml={publishBlankSvg}
-                />
-              </View>
-            </ImageBackground>
-            <View style={{
+      <View style={{ width: isRecording ? '100%' : 54, height: isRecording ? 76 : 54 }}>
+        {isRecording && <View style={{
+          width: 328,
+          height: 76,
+          flexDirection: 'row',
+          alignItems: 'center'
+        }}>
+          <ImageBackground
+            style={{
               position: 'absolute',
-              bottom: 160,
-              right: (windowWidth - 105) / 2,
-              width: 105,
-              height: 48,
-              backgroundColor: "#FFF",
-              borderRadius: 16,
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingHorizontal: 16,
-            }}>
-              <View
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: 4,
-                  backgroundColor: "#E41717"
-                }}
-              >
-              </View>
-              <CountdownCircleTimer
-                key={key}
-                isPlaying={!isPaused}
-                duration={fill}
-                size={70}
-                strokeWidth={0}
-                trailColor="#D4C9DE"
-                trailStrokeWidth={0}
-                onComplete={() => onStopRecord(true)}
-                colors={[
-                  ['#B35CF8', 0.4],
-                  ['#8229F4', 0.4],
-                  ['#8229F4', 0.2],
-                ]}
-              >
-                {({ remainingTime, animatedColor }) => {
-                  return (
-                    <DescriptionText
-                      text={new Date(wasteTime.current).toISOString().substr(14, 5)}
-                      lineHeight={24}
-                      color="rgba(54, 36, 68, 0.8)"
-                      fontSize={15}
-                    />
-                  )
-                }}
-              </CountdownCircleTimer>
-            </View>
-          </>
-        </Pressable>
-      }
-      <View style={{ position: IsExpanded ? 'absolute' : 'relative', bottom: '6%', width: IsExpanded ? '100%' : 54, height: IsExpanded ? 76 : 54 }}>
+              height: 56,
+              width: 328,
+              justifyContent: 'center'
+            }}
+            resizeMode="stretch"
+            source={require('../../assets/chat/chatRecord.png')}
+          >
+            <DescriptionText
+              text={t("Swipe to Cancel")}
+              fontSize={13}
+              lineHeight={13}
+              color='#E41717'
+              marginLeft={188}
+            />
+          </ImageBackground>
+          <View
+            style={{
+              width: 8,
+              height: 8,
+              marginLeft: 24,
+              borderRadius: 4,
+              backgroundColor: "#E41717"
+            }}
+          ></View>
+          <CountdownCircleTimer
+            key={key}
+            isPlaying={isRecording}
+            duration={fill}
+            size={57}
+            strokeWidth={0}
+            trailColor="#D4C9DE"
+            trailStrokeWidth={0}
+            onComplete={() => onStopRecord(true)}
+            colors={[
+              ['#B35CF8', 0.4],
+              ['#8229F4', 0.4],
+              ['#8229F4', 0.2],
+            ]}
+          >
+            {({ remainingTime, animatedColor }) => {
+              return (
+                <DescriptionText
+                  text={new Date(wasteTime.current).toISOString().substr(14, 5)}
+                  lineHeight={24}
+                  color="rgba(54, 36, 68, 0.8)"
+                  fontSize={15}
+                />
+              )
+            }}
+          </CountdownCircleTimer>
+        </View>}
         <Draggable
           key={key}
-          x={IsExpanded ? windowWidth / 2 - 38 : 0}
+          x={isRecording ? windowWidth - 116 : 0}
           y={0}
           shouldReverse={true}
-          minX={windowWidth / 2 - 110}
-          maxX={windowWidth / 2 + 110}
+          minX={windowWidth - 250}
+          maxX={windowWidth - 50}
           minY={0}
           maxY={0}
           touchableOpacityProps={{
@@ -308,17 +244,10 @@ export const AnswerRecordIcon = ({
           }}
           onDragRelease={(event, gestureState, bounds) => {
             dragPos.current = gestureState.dx;
-            if (gestureState.dx > 80) {
+            if (gestureState.dx < - 100) {
               setTimeout(() => {
-                Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
               }, 100);
-              onStopRecord(true);
-            }
-            else if (gestureState.dx < -80) {
-              Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-              setTimeout(() => {
-                Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-              }, 300);
               onStopRecord(false);
             }
           }}
@@ -335,13 +264,13 @@ export const AnswerRecordIcon = ({
             }}
           >
             <SvgXml
-              width={IsExpanded ? 76 : 54}
-              height={IsExpanded ? 76 : 54}
+              width={isRecording ? 76 : 54}
+              height={isRecording ? 76 : 54}
               xml={recordSvg}
             />
           </View>
         </Draggable>
       </View>
-    </Pressable>
+    </View>
   );
 };

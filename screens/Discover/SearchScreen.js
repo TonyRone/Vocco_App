@@ -208,7 +208,6 @@ const SearchScreen = (props) => {
               placeholder={t("Search")}
               onChangeText={getLabel}
               onEndEditing={(e) => {
-                console.log(label, "  kkkkkkkkkkkkk")
                 onSetHistory(label);
               }}
               placeholderTextColor="rgba(59, 31, 82, 0.6)"

@@ -62,7 +62,7 @@ export const styles = StyleSheet.create({
     swipeModal: {
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
         marginTop:-10,
-        flex:1
+        flex:1,
     },
     cameraIcon: {
         width: 50,

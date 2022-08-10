@@ -1,16 +1,10 @@
 import React, { useEffect } from 'react';
 import { KeyboardAvoidingView, Image, PermissionsAndroid, Platform, NativeModules } from 'react-native';
 import io from "socket.io-client";
-import AudioRecorderPlayer, {
-    AVEncoderAudioQualityIOSType,
-    AVEncodingOption,
-    AudioEncoderAndroidType,
-    AudioSourceAndroidType,
-} from 'react-native-audio-recorder-player';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import RNFetchBlob from 'rn-fetch-blob';
-import { recorderPlayer } from '../Home/AudioRecorderPlayer';
-import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE, APP_NAV, OPEN_COUNT } from '../../config/config';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import PushNotification from 'react-native-push-notification';
+import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE, APP_NAV, OPEN_COUNT, DEVICE_TOKEN, DEVICE_OS } from '../../config/config';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -19,6 +13,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUser, setSocketInstance } from '../../store/actions/index';
 
 import AuthService from '../../services/AuthService';
+import EditService from '../../services/EditService';
+import NavigationService from '../../services/NavigationService';
 
 const LogoScreen = (props) => {
 
@@ -114,6 +110,7 @@ const LogoScreen = (props) => {
                 );
                 mainLanguage = 'French';
             }
+            EditService.changeLanguage(mainLanguage);
         }
         i18n.changeLanguage(mainLanguage).then(async () => {
             const aToken = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
@@ -169,35 +166,33 @@ const LogoScreen = (props) => {
         }
     }
 
-    const OnIosPermission = async () => {
-        const dirs = RNFetchBlob.fs.dirs;
-        const path = Platform.select({
-            ios: `hello.m4a`,
-            android: `${dirs.CacheDir}/hello.mp3`,
+    const OnSetPushNotification = () => {
+        PushNotification.requestPermissions();
+        PushNotification.configure({
+          onRegister: async ({ token, os }) => {
+            await AsyncStorage.setItem(
+              DEVICE_TOKEN,
+              token
+            );
+            await AsyncStorage.setItem(
+              DEVICE_OS,
+              os
+            );
+          },
+      
+          onNotification: async (notification) => {
+            if (notification.userInteraction)
+              NavigationService.navigate(notification.data.nav, notification.data.params);
+            notification.finish(PushNotificationIOS.FetchResult.NoData);
+          }
+      
         });
-        const audioSet = {
-            AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
-            AudioSourceAndroid: AudioSourceAndroidType.MIC,
-            AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
-            AVNumberOfChannelsKeyIOS: 2,
-            AVFormatIDKeyIOS: AVEncodingOption.aac,
-        };
-        await recorderPlayer.startRecorder(path, audioSet).then(async res => {
-            await recorderPlayer.stopRecorder().then(res => {
-            })
-                .catch(err => {
-                    console.log(err);
-                });
-        })
-            .catch(err => {
-                console.log(err);
-            });
-    }
+      }
 
     useEffect(() => {
         checkPermission();
-        //OnIosPermission();
         checkLogin();
+        OnSetPushNotification();
     }, [])
 
     return (

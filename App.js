@@ -473,7 +473,7 @@ const OnIosPermission = async () => {
 export default App = () => {
   useEffect(() => {
     SplashScreen.hide();
-    OnSetPushNotification();
+    //OnSetPushNotification();
     OnIosPermission();
   }, []);
   return (

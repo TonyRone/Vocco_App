@@ -21,6 +21,7 @@ import VoiceService from "../../services/VoiceService";
 import VoicePlayer from "../Home/VoicePlayer";
 import { Avatars, windowWidth } from "../../config/config";
 import { ReplyAnswerItem } from "./ReplyAnswerItem";
+import AutoHeightImage from "react-native-auto-height-image";
 
 export const AnswerVoiceItem = ({
   info,
@@ -124,7 +125,8 @@ export const AnswerVoiceItem = ({
 
   useEffect(() => {
     mounted.current = true;
-    getReplies();
+    if (info.type == 'voice')
+      getReplies();
     return () => {
       mounted.current = false;
     }
@@ -145,15 +147,14 @@ export const AnswerVoiceItem = ({
         onPress={() => onClickDouble()}
       >
         <View
-          style={[styles.rowSpaceBetween]}
+          style={[styles.rowSpaceBetween, { alignItems: 'flex-start' }]}
         >
-          <View style={styles.rowAlignItems}>
+          <View style={[styles.rowAlignItems, { alignItems: 'flex-start' }]}>
             <TouchableOpacity onPress={() => info.user.id == user.id ? props.navigation.navigate('Profile') : props.navigation.navigate('UserProfile', { userId: info.user.id })}>
               <Image
                 style={{
                   width: 40,
                   height: 40,
-                  marginBottom: 15,
                   borderRadius: 20,
                   borderColor: '#FFA002',
                   borderWidth: info.user.premium == 'none' ? 0 : 2
@@ -164,9 +165,25 @@ export const AnswerVoiceItem = ({
             <View style={{ marginLeft: 16 }}>
               <TitleText
                 text={userName}
+                marginBottom={6}
                 fontSize={15}
-                lineHeight={24}
               />
+              {info.type == 'bio' && <View style={{ width: 210 }}>
+                <DescriptionText
+                  color="#281E30"
+                  numberOfLines={3}
+                  text={info.bio}
+                />
+              </View>}
+              {info.type == 'gif' &&
+                <AutoHeightImage
+                  source={{ uri: info.gifLink }}
+                  width={200}
+                  style={{
+                    borderRadius: 10,
+                  }}
+                />
+              }
               <TouchableOpacity onPress={() => setAllLikes(true)}>
                 <DescriptionText
                   text={time + " • " + heartNum + ' like' + (heartNum > 1 ? 's' : '')}
@@ -187,29 +204,41 @@ export const AnswerVoiceItem = ({
             </View>
           </View>
           <View style={styles.rowAlignItems}>
+            {info.type == 'emoji' &&
+              <Text style={{
+                fontSize: 22,
+                marginRight: 26,
+                marginBottom: 20,
+                color: 'white'
+              }}>
+                {info.emoji}
+              </Text>
+            }
             <HeartIcon
               isLike={check}
-              marginRight={22}
+              marginRight={12}
               marginBottom={22}
               OnSetLike={() => onLikeVoice()}
             />
-            <View style={{ alignItems: 'center' }}>
-              <TouchableOpacity
-                onPress={() => setIsPlaying(!isPlaying)}
-              >
-                <SvgXml
-                  width={40}
-                  height={40}
-                  xml={isPlaying ? pauseSvg : playSvg}
+            {info.type == 'voice' &&
+              <View style={{ alignItems: 'center', marginLeft: 10 }}>
+                <TouchableOpacity
+                  onPress={() => setIsPlaying(!isPlaying)}
+                >
+                  <SvgXml
+                    width={40}
+                    height={40}
+                    xml={isPlaying ? pauseSvg : playSvg}
+                  />
+                </TouchableOpacity>
+                <DescriptionText
+                  text={new Date(info.duration * 1000).toISOString().substr(14, 5)}
+                  lineHeight={16}
+                  marginTop={6}
+                  fontSize={12}
                 />
-              </TouchableOpacity>
-              <DescriptionText
-                text={new Date(info.duration * 1000).toISOString().substr(14, 5)}
-                lineHeight={16}
-                marginTop={6}
-                fontSize={12}
-              />
-            </View>
+              </View>
+            }
           </View>
         </View>
         {

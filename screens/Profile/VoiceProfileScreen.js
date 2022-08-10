@@ -9,13 +9,19 @@ import {
   ImageBackground,
   Modal,
   TouchableOpacity,
+  TextInput,
   Vibration
 } from 'react-native';
 
+import {
+  GifSearch,
+  poweredByGiphyLogoGrey,
+} from 'react-native-gif-search'
+
 import { ScrollView } from 'react-native-gesture-handler';
 import * as Progress from "react-native-progress";
+import { Picker } from 'emoji-mart-native'
 import { useTranslation } from 'react-i18next';
-import { HeartIcon } from '../component/HeartIcon';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState, setVoiceState } from '../../store/actions';
 import { DescriptionText } from '../component/DescriptionText';
@@ -27,6 +33,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { SvgXml } from 'react-native-svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
+import emojiSymbolSvg from '../../assets/common/emoji_symbol.svg'
 import moreSvg from '../../assets/common/more.svg';
 import editSvg from '../../assets/common/edit.svg';
 import blueShareSvg from '../../assets/common/blue_share.svg';
@@ -42,15 +49,13 @@ import { TagFriends } from '../component/TagFriends';
 import { TagItem } from '../component/TagItem';
 import { NewChat } from '../component/NewChat';
 import { AnswerRecordIcon } from '../component/AnswerRecordIcon';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
+import SwipeDownModal from 'react-native-swipe-down';
 
 const VoiceProfileScreen = (props) => {
 
   let recordId = props.navigation.state.params.id, answerId = props.navigation.state.params.answerId ? props.navigation.state.params.answerId : '';
   const [showModal, setShowModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [answerVoices, setAnswerVoices] = useState([]);
-  const [tags, setTags] = useState([]);
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [info, setInfo] = useState();
@@ -61,6 +66,9 @@ const VoiceProfileScreen = (props) => {
   const [showTagFriends, setShowTagFriends] = useState(false);
   const [showFriendsList, setShowFriendsList] = useState(false)
   const [combines, setCombines] = useState([]);
+  const [answerType, setAnswerType] = useState('emoji');
+  const [label, setLabel] = useState('');
+  const [showComment, setShowComment] = useState(false);
 
   const mounted = useRef(false);
 
@@ -109,36 +117,29 @@ const VoiceProfileScreen = (props) => {
     let ar = [...ar0, ...ar1];
     ar.sort(onCompare);
     setCombines(ar);
+    setLoading(false);
   }
 
-  const getAnswerVoices = () => {
-    VoiceService.getAnswerVoices(recordId, answerId).then(async res => {
+  const getAnswers = async () => {
+    let stories = await VoiceService.getAnswers(recordId, answerId).then(async res => {
       if (res.respInfo.status === 200 && mounted.current) {
-        let answers = await res.json(), tags;
-        for (var i = 1; i < answers.length; i++) {
-          if (answers[i].id == answers[0].id) {
-            answers.splice(i, 1);
-            answers[0].createAt = new Date();
-            break;
-          }
-        }
-        setAnswerVoices(answers);
-        VoiceService.getTags(recordId, 'record').then(async res => {
-          if (res.respInfo.status === 200 && mounted.current) {
-            tags = await res.json();
-            setTags(tags);
-            onCombine(answers, tags);
-            setLoading(false);
-          }
-        })
-          .catch(err => {
-            console.log(err);
-          });
+        return await res.json();
       }
     })
       .catch(err => {
         console.log(err);
       });
+
+    let tags = await VoiceService.getTags(recordId, 'record').then(async res => {
+      if (res.respInfo.status === 200 && mounted.current) {
+        return await res.json();
+      }
+    })
+      .catch(err => {
+        console.log(err);
+      });
+
+    onCombine(stories, tags);
   }
 
   const editVoice = () => {
@@ -197,10 +198,60 @@ const VoiceProfileScreen = (props) => {
     rep.then(() => dispatch(setRefreshState(!refreshState)));
   }
 
+  const onAnswerBio = () => {
+    VoiceService.answerBio(info.id, { bio: label }).then(async res => {
+      if (res.respInfo.status == 200) {
+        const answerBio = await res.json();
+        answerBio.user = user;
+        let tp = combines;
+        tp.unshift(answerBio);
+        if (mounted.current)
+          setCombines([...tp]);
+      }
+    })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  const onAnswerEmoji = (emoji) => {
+    setShowComment(false);
+    VoiceService.answerEmoji(info.id, { emoji }).then(async res => {
+      if (res.respInfo.status == 200) {
+        const emojiAnswer = await res.json();
+        emojiAnswer.user = user;
+        let tp = combines;
+        tp.unshift(emojiAnswer);
+        if (mounted.current)
+          setCombines([...tp]);
+      }
+    })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  const onAnswerGif = (gif) => {
+    setShowComment(false);
+    VoiceService.answerGif(info.id, { link: gif }).then(async res => {
+      if (res.respInfo.status == 200) {
+        const gifAnswer = await res.json();
+        gifAnswer.user = user;
+        let tp = combines;
+        tp.unshift(gifAnswer);
+        if (mounted.current)
+          setCombines([...tp]);
+      }
+    })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
   useEffect(() => {
     mounted.current = true;
     getUserInfo();
-    getAnswerVoices();
+    getAnswers();
     dispatch(setVoiceState(voiceState + 1));
     return () => {
       mounted.current = false;
@@ -280,8 +331,8 @@ const VoiceProfileScreen = (props) => {
           style={{
             paddingHorizontal: 6,
             paddingVertical: 16,
-            backgroundColor: '#FFF',
             shadowColor: 'rgba(176, 148, 235, 1)',
+            backgroundColor: '#FFF',
             elevation: 10,
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.5,
@@ -304,20 +355,20 @@ const VoiceProfileScreen = (props) => {
           />
         </View>}
       </ImageBackground>
-      <View style={{ marginTop: Platform.OS == 'ios' ? -60 : -100, width: '100%', flex: 1, backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 30, marginBottom: 50 }}>
+      <View style={{ marginTop: Platform.OS == 'ios' ? -60 : -100, width: '100%', flex: 1, backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 30 }}>
         <View style={{ width: '100%', marginTop: 8, alignItems: 'center' }}>
           <View style={{ width: 48, height: 4, borderRadius: 2, backgroundColor: '#D4C9DE' }}>
           </View>
         </View>
         <SemiBoldText
-          text={t('Answers') + ' (' + (loading ? ' ' : answerVoices.length) + ')'}
+          text={t('Answers') + ' (' + (loading ? ' ' : combines.length) + ')'}
           marginTop={19}
           marginLeft={16}
           marginBottom={15}
         />
         <ScrollView>
           {!loading ? combines.length > 0 ? combines.map((item, index) =>
-            item.file ?
+            item.type ?
               <AnswerVoiceItem
                 key={index + item.id + 'answerVoice'}
                 props={props}
@@ -366,136 +417,131 @@ const VoiceProfileScreen = (props) => {
               style={{ alignSelf: "center", marginTop: windowHeight / 20 }}
             />
           }
-          <View style={{ height: 50 }}></View>
+          <View style={{ width: 10, height: 50 }}></View>
         </ScrollView>
-      </View>
-      {(info && isHolding == false) && <View
-        style={{
+        {info && <View style={{
           position: 'absolute',
-          bottom: 25,
-          width: '100%',
-          paddingHorizontal: 16,
-          alignItems: 'center',
-          flex: 1
-        }}
-      >
-        <View style={{
+          bottom: 0,
+          width: windowWidth,
+          height: 72,
+          borderTopLeftRadius: 24,
+          borderTopRightRadius: 24,
           backgroundColor: '#FFF',
-          shadowColor: 'rgba(50, 50, 50, 1)',
           elevation: 10,
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.5,
           shadowRadius: 8,
-          borderRadius: 27,
-          padding: 10,
-          width: windowWidth - 32,
-          height: 56,
-          alignItems: 'center',
-          flex: 1,
-          zIndex: 0
         }}>
           <View style={{
+            flexDirection: 'row',
             alignItems: 'center',
-            marginBottom: -42,
-            marginTop: -37,
-            zIndex: 10
+            marginTop: 6,
+            marginBottom: 12,
           }}>
-            <View style={{ width: 54, height: 54 }}>
-            </View>
-            <SemiBoldText
-              text=""
-              fontFamily="SFProDisplay-Semibold"
-              fontSize={12}
-              lineHeight={12}
-              marginTop={10}
-              color={'rgba(54, 36, 68, 0.8)'}
-            />
-          </View>
-          <View style={[{ width: windowWidth - 32, paddingHorizontal: 16 }, styles.rowSpaceBetween]}>
-            <View style={{ alignItems: 'center' }}>
-              <TouchableOpacity onPress={() => setShowTagFriends(true)}>
-                <View style={[styles.row, { alignItems: 'center' }]}>
-                  <Image
-                    style={{
-                      width: 24,
-                      height: 24
-                    }}
-                    source={require('../../assets/post/tagFriends.png')}
-                  />
-                </View>
-              </TouchableOpacity>
-              <SemiBoldText
-                text={t("Tag friends")}
-                fontFamily="SFProDisplay-Semibold"
-                fontSize={12}
-                lineHeight={12}
-                marginTop={6}
-                color={'rgba(54, 36, 68, 0.8)'}
+            <TouchableOpacity onPress={() => {
+              setShowComment(!showComment);
+            }}>
+              <SvgXml
+                style={{
+                  margin: 10
+                }}
+                xml={emojiSymbolSvg}
               />
-            </View>
-            <View style={{ alignItems: 'center', marginRight: 20 }}>
-              <HeartIcon
-                isLike={isLike}
-                height={24}
-                OnSetLike={() => OnSetLike()}
-              />
-              <TouchableOpacity onPress={() => setAllLikes(true)}>
-                <SemiBoldText
-                  text={likeCount}
-                  fontFamily="SFProDisplay-Semibold"
-                  fontSize={12}
-                  lineHeight={12}
-                  marginTop={6}
-                  color={'rgba(54, 36, 68, 0.8)'}
-                />
-              </TouchableOpacity>
-            </View>
-            <View></View>
-            <View style={{ alignItems: 'center', marginLeft: 20 }}>
-              <TouchableOpacity onPress={() => setShowFriendsList(true)}>
-                <View style={[styles.row, { alignItems: 'center' }]}>
-                  <Image
-                    style={{
-                      width: 24,
-                      height: 24
-                    }}
-                    source={require('../../assets/post/chat.png')}
-                  />
-                </View>
-              </TouchableOpacity>
-              <SemiBoldText
-                text={t("To chat")}
-                fontFamily="SFProDisplay-Semibold"
-                fontSize={12}
-                lineHeight={12}
-                marginTop={6}
-                color={'rgba(54, 36, 68, 0.8)'}
-              />
-            </View>
-            <View style={{ alignItems: 'center' }}>
-              <TouchableOpacity onPress={() => OnShareVoice()}>
-                <View style={[styles.row, { alignItems: 'center' }]}>
-                  <Image
-                    style={{
-                      width: 48,
-                      height: 24
-                    }}
-                    source={require('../../assets/post/socialShare.png')}
-                  />
-                </View>
-              </TouchableOpacity>
-              <SemiBoldText
-                text={t('Share')}
-                fontFamily="SFProDisplay-Semibold"
-                fontSize={12}
-                lineHeight={12}
-                marginTop={6}
-                color={'rgba(54, 36, 68, 0.8)'}
+            </TouchableOpacity>
+            <View
+              style={{
+                borderRadius: 40,
+                paddingHorizontal: 16,
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: '#F2F0F5',
+                width: windowWidth * 7 / 10
+              }}
+            >
+              <TextInput
+                style={
+                  {
+                    fontSize: 15,
+                    color: '#281E30',
+                  }
+                }
+                value={label}
+                autoCapitalize='none'
+                onChangeText={(e) => setLabel(e)}
+                onSubmitEditing={() => {
+                  onAnswerBio();
+                }}
+                placeholder={t("Type your answer or tag friends")}
+                placeholderTextColor="rgba(59, 31, 82, 0.6)"
               />
             </View>
           </View>
-        </View>
-      </View>}
+        </View>}
+      </View>
+      <AnswerRecordIcon
+        props={props}
+      />
+      <SwipeDownModal
+        modalVisible={showComment}
+        ContentModal={
+          <View style={{
+            position: 'absolute',
+            top: 100,
+            width: windowWidth,
+            alignItems: 'center'
+          }}>
+            <View style={{
+              height: 470,
+              backgroundColor: '#FFF',
+              shadowColor: 'rgba(88, 74, 117, 1)',
+              elevation: 10,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.5,
+              shadowRadius: 8,
+              borderRadius: 16,
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+            }}>
+              {answerType == 'emoji' && <Picker
+                style={{ height: 400, backgroundColor: '#FFF' }}
+                rows={6}
+                perLine={8}
+                color='#FFF'
+                onSelect={(e) => onAnswerEmoji(e.native)}
+              />}
+              {answerType != 'emoji' && <GifSearch
+                giphyApiKey={'lOPWZ8ORMutlKj0R1uqZV47rKbhuwrHt'}
+                onGifSelected={(gif_url) => onAnswerGif(gif_url)}
+                style={{ backgroundColor: '#FFF', height: 300, width: 368 }}
+                textInputStyle={{ fontWeight: 'bold', color: 'black' }}
+                loadingSpinnerColor={'black'}
+                placeholderTextColor={'grey'}
+                numColumns={3}
+                provider={"giphy"}
+                //providerLogo={poweredByGiphyLogoGrey}
+                showScrollBar={false}
+                noGifsFoundText={"No Gifs found :("}
+              />}
+              <View style={[styles.rowSpaceEvenly, { marginTop: 10, marginBottom: 10 }]}>
+                <TouchableOpacity onPress={() => setAnswerType('emoji')}>
+                  <Image
+                    source={answerType == 'emoji' ? require('../../assets/common/Emoji_light.png') : require('../../assets/common/Emoji_dark.png')}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setAnswerType('gif')}>
+                  <Image
+                    source={answerType == 'emoji' ? require('../../assets/common/Gif_dark.png') : require('../../assets/common/Gif_light.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        }
+        ContentModalStyle={styles.swipeModal}
+        onClose={() => {
+          setShowComment(false);
+        }}
+      />
       {info && <Modal
         animationType="slide"
         transparent={true}
@@ -624,7 +670,7 @@ const VoiceProfileScreen = (props) => {
               </View>
               <Pressable onPress={deleteVoice}>
                 <DescriptionText
-                  text={t("Delete Voice")}
+                  text={t("Delete")}
                   fontSize={20}
                   lineHeight={24}
                   color='#E41717'
@@ -654,11 +700,6 @@ const VoiceProfileScreen = (props) => {
           onCloseModal={() => setShowShareVoice(false)}
         />
       }
-      {info && isHolding == false && <AnswerRecordIcon
-        props={props}
-        bottom={50}
-        left={windowWidth / 2 - 27}
-      />}
       {allLikes &&
         <StoryLikes
           props={props}

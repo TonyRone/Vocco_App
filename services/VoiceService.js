@@ -505,7 +505,7 @@ class VoiceService {
             );
     }
 
-    async getAnswerVoices(id, answerId = '') {
+    async getAnswers(id, answerId = '') {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(
@@ -555,6 +555,39 @@ class VoiceService {
             fetch(
                 'GET',
                 `${API_URL}/actions/getTags?storyId=${storyId}&storyType=${storyType}`, {
+                'Authorization': `Bearer ${token}`
+            }
+            );
+    }
+    
+    async getAnswerBios(storyId) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'GET',
+                `${API_URL}/actions/getAnswerBio?storyId=${storyId}`, {
+                'Authorization': `Bearer ${token}`
+            }
+            );
+    }
+
+    async getAnswerEmojis(storyId) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'GET',
+                `${API_URL}/actions/getAnswerEmoji?storyId=${storyId}`, {
+                'Authorization': `Bearer ${token}`
+            }
+            );
+    }
+
+    async getAnswerGif(storyId) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'GET',
+                `${API_URL}/actions/getAnswerGif?storyId=${storyId}`, {
                 'Authorization': `Bearer ${token}`
             }
             );
@@ -648,6 +681,48 @@ class VoiceService {
                 `${API_URL}/actions/shareLink`, {
                 'Authorization': `Bearer ${token}`,
             }
+            );
+    }
+
+    async answerBio(id,data) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob
+            .config({ trusty: true })
+            .fetch(
+                'PUT',
+                `${API_URL}/actions/answerBio?id=${id}`, {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+                JSON.stringify(data)
+            );
+    }
+
+    async answerEmoji(id,data) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob
+            .config({ trusty: true })
+            .fetch(
+                'PUT',
+                `${API_URL}/actions/answerEmoji?id=${id}`, {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+                JSON.stringify(data)
+            );
+    }
+
+    async answerGif(id,data) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob
+            .config({ trusty: true })
+            .fetch(
+                'PUT',
+                `${API_URL}/actions/answerGif?id=${id}`, {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+                JSON.stringify(data)
             );
     }
 }
