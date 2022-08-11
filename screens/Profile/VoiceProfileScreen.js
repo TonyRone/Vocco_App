@@ -10,7 +10,8 @@ import {
   Modal,
   TouchableOpacity,
   TextInput,
-  Vibration
+  Vibration,
+  Keyboard
 } from 'react-native';
 
 import {
@@ -212,6 +213,7 @@ const VoiceProfileScreen = (props) => {
       .catch(err => {
         console.log(err);
       })
+    setLabel('');
   }
 
   const onAnswerEmoji = (emoji) => {
@@ -258,7 +260,7 @@ const VoiceProfileScreen = (props) => {
     }
   }, [refreshState])
   return (
-    <KeyboardAvoidingView
+    <View
       style={{
         backgroundColor: '#FFF',
         flex: 1
@@ -417,13 +419,13 @@ const VoiceProfileScreen = (props) => {
               style={{ alignSelf: "center", marginTop: windowHeight / 20 }}
             />
           }
-          <View style={{ width: 10, height: 50 }}></View>
+          <View style={{ width: 10, height: 58 }}></View>
         </ScrollView>
         {info && <View style={{
           position: 'absolute',
           bottom: 0,
           width: windowWidth,
-          height: 72,
+          height: 80,
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
           backgroundColor: '#FFF',
@@ -436,7 +438,7 @@ const VoiceProfileScreen = (props) => {
             flexDirection: 'row',
             alignItems: 'center',
             marginTop: 6,
-            marginBottom: 12,
+            marginBottom: 20,
           }}>
             <TouchableOpacity onPress={() => {
               setShowComment(!showComment);
@@ -452,28 +454,42 @@ const VoiceProfileScreen = (props) => {
               style={{
                 borderRadius: 40,
                 paddingHorizontal: 16,
+                paddingVertical: 8,
                 flexDirection: 'row',
                 alignItems: 'center',
                 backgroundColor: '#F2F0F5',
-                width: windowWidth * 7 / 10
+                flex: 1,
+                marginRight: 80,
+                paddingRight: 45
+                //width: windowWidth * 7 / 10
               }}
             >
               <TextInput
                 style={
                   {
                     fontSize: 15,
+                    lineHeight: 15,
                     color: '#281E30',
                   }
                 }
                 value={label}
                 autoCapitalize='none'
                 onChangeText={(e) => setLabel(e)}
-                onSubmitEditing={() => {
-                  onAnswerBio();
-                }}
                 placeholder={t("Type your answer or tag friends")}
                 placeholderTextColor="rgba(59, 31, 82, 0.6)"
               />
+              <TouchableOpacity disabled={label.length == 0} onPress={() => {
+                onAnswerBio();
+                Keyboard.dismiss();
+              }}>
+                <SemiBoldText
+                  text={t("Post")}
+                  marginLeft={5}
+                  fontSize={15}
+                  lineHeight={15}
+                  color="#AA53F8"
+                />
+              </TouchableOpacity>
             </View>
           </View>
         </View>}
@@ -719,7 +735,7 @@ const VoiceProfileScreen = (props) => {
         recordId={info.id}
         onCloseModal={() => setShowFriendsList(false)}
       />}
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 

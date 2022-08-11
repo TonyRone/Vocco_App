@@ -159,7 +159,7 @@ export const AnswerRecordIcon = ({
     <View
       style={{
         position: 'absolute',
-        bottom: isRecording ? 5 : 16,
+        bottom: isRecording ? 11 : 22,
         right: isRecording ? 7 : 18,
         width: isRecording ? windowWidth - 48 : 54,
         height: isRecording ? 76 : 54,
