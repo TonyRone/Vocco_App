@@ -528,7 +528,7 @@ const VoiceProfileScreen = (props) => {
               {answerType != 'emoji' && <GifSearch
                 giphyApiKey={'lOPWZ8ORMutlKj0R1uqZV47rKbhuwrHt'}
                 onGifSelected={(gif_url) => onAnswerGif(gif_url)}
-                style={{ backgroundColor: '#FFF', height: 300, width: 368 }}
+                style={{ backgroundColor: '#FFF', height: 300, width: 400 }}
                 textInputStyle={{ fontWeight: 'bold', color: 'black' }}
                 loadingSpinnerColor={'black'}
                 placeholderTextColor={'grey'}
