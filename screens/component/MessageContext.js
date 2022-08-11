@@ -127,7 +127,7 @@ export const MessageContext = ({
             </TouchableOpacity>
             <Pressable
               onPress={() => onDeleteItem()}
-              style={[styles.contextMenu, { borderBottomWidth: 8 }]}
+              style={styles.contextMenu}
             >
               <TitleText
                 text={t("Delete")}

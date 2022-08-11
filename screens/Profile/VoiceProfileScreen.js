@@ -34,7 +34,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { SvgXml } from 'react-native-svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
+import whitePostSvg from '../../assets/record/white_post.svg';
+import colorPostSvg from '../../assets/record/color_post.svg';
 import emojiSymbolSvg from '../../assets/common/emoji_symbol.svg'
+import gifSymbolSvg from '../../assets/common/gif_symbol.svg'
 import moreSvg from '../../assets/common/more.svg';
 import editSvg from '../../assets/common/edit.svg';
 import blueShareSvg from '../../assets/common/blue_share.svg';
@@ -51,6 +54,7 @@ import { TagItem } from '../component/TagItem';
 import { NewChat } from '../component/NewChat';
 import { AnswerRecordIcon } from '../component/AnswerRecordIcon';
 import SwipeDownModal from 'react-native-swipe-down';
+import EmojiPicker from 'rn-emoji-keyboard';
 
 const VoiceProfileScreen = (props) => {
 
@@ -62,6 +66,7 @@ const VoiceProfileScreen = (props) => {
   const [info, setInfo] = useState();
   const [showShareVoice, setShowShareVoice] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isHolding, setIsHolding] = useState(false);
   const [allLikes, setAllLikes] = useState(false);
   const [showTagFriends, setShowTagFriends] = useState(false);
@@ -70,6 +75,7 @@ const VoiceProfileScreen = (props) => {
   const [answerType, setAnswerType] = useState('emoji');
   const [label, setLabel] = useState('');
   const [showComment, setShowComment] = useState(false);
+  const [visibleReaction, setVisibleReaction] = useState(false);
 
   const mounted = useRef(false);
 
@@ -199,15 +205,28 @@ const VoiceProfileScreen = (props) => {
     rep.then(() => dispatch(setRefreshState(!refreshState)));
   }
 
+  const onAnswerStory = (res) => {
+    res.user = user;
+    let tp = combines;
+    tp.unshift(res);
+    if (mounted.current) {
+      setCombines([...tp]);
+      setIsLoading(false);
+    }
+  }
+
   const onAnswerBio = () => {
+    setIsLoading(true);
     VoiceService.answerBio(info.id, { bio: label }).then(async res => {
       if (res.respInfo.status == 200) {
         const answerBio = await res.json();
         answerBio.user = user;
         let tp = combines;
         tp.unshift(answerBio);
-        if (mounted.current)
+        if (mounted.current) {
           setCombines([...tp]);
+          setIsLoading(false);
+        }
       }
     })
       .catch(err => {
@@ -218,14 +237,17 @@ const VoiceProfileScreen = (props) => {
 
   const onAnswerEmoji = (emoji) => {
     setShowComment(false);
+    setIsLoading(true);
     VoiceService.answerEmoji(info.id, { emoji }).then(async res => {
       if (res.respInfo.status == 200) {
         const emojiAnswer = await res.json();
         emojiAnswer.user = user;
         let tp = combines;
         tp.unshift(emojiAnswer);
-        if (mounted.current)
+        if (mounted.current) {
           setCombines([...tp]);
+          setIsLoading(false);
+        }
       }
     })
       .catch(err => {
@@ -235,14 +257,17 @@ const VoiceProfileScreen = (props) => {
 
   const onAnswerGif = (gif) => {
     setShowComment(false);
+    setIsLoading(true);
     VoiceService.answerGif(info.id, { link: gif }).then(async res => {
       if (res.respInfo.status == 200) {
         const gifAnswer = await res.json();
         gifAnswer.user = user;
         let tp = combines;
         tp.unshift(gifAnswer);
-        if (mounted.current)
+        if (mounted.current) {
           setCombines([...tp]);
+          setIsLoading(false);
+        }
       }
     })
       .catch(err => {
@@ -260,7 +285,7 @@ const VoiceProfileScreen = (props) => {
     }
   }, [refreshState])
   return (
-    <View
+    <KeyboardAvoidingView
       style={{
         backgroundColor: '#FFF',
         flex: 1
@@ -421,81 +446,98 @@ const VoiceProfileScreen = (props) => {
           }
           <View style={{ width: 10, height: 58 }}></View>
         </ScrollView>
-        {info && <View style={{
-          position: 'absolute',
-          bottom: 0,
-          width: windowWidth,
-          height: 80,
-          borderTopLeftRadius: 24,
-          borderTopRightRadius: 24,
-          backgroundColor: '#FFF',
-          elevation: 10,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.5,
-          shadowRadius: 8,
+      </View>
+      {info && <View style={{
+        bottom: 0,
+        width: windowWidth,
+        height: 80,
+        borderTopLeftRadius: 24,
+        borderTopRightRadius: 24,
+        backgroundColor: '#FFF',
+        elevation: 10,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 8,
+      }}>
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginTop: 6,
+          marginBottom: 20,
         }}>
-          <View style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: 6,
-            marginBottom: 20,
+          <TouchableOpacity onPress={() => {
+            //setShowComment(!showComment);
+            setVisibleReaction(true);
           }}>
-            <TouchableOpacity onPress={() => {
-              setShowComment(!showComment);
+            <SvgXml
+              style={{
+                marginLeft: 16
+              }}
+              xml={emojiSymbolSvg}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            setShowComment(!showComment);
+          }}>
+            <SvgXml
+              style={{
+                marginLeft: 16
+              }}
+              xml={gifSymbolSvg}
+            />
+          </TouchableOpacity>
+          <View
+            style={{
+              borderRadius: 40,
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              backgroundColor: '#F2F0F5',
+              flex: 1,
+              marginRight: 80,
+              marginLeft: 16,
+            }}
+          >
+            <TextInput
+              style={
+                {
+                  fontSize: 15,
+                  width: 170,
+                  lineHeight: 15,
+                  color: '#281E30',
+                }
+              }
+              value={label}
+              autoCapitalize='none'
+              onSubmitEditing={()=>{
+                onAnswerBio();
+              }}
+              onChangeText={(e) => setLabel(e)}
+              placeholder={t("Type your answer")}
+              placeholderTextColor="rgba(59, 31, 82, 0.6)"
+            />
+            <TouchableOpacity disabled={label.length == 0} onPress={() => {
+              onAnswerBio();
+              Keyboard.dismiss();
             }}>
               <SvgXml
-                style={{
-                  margin: 10
-                }}
-                xml={emojiSymbolSvg}
+                xml={label == '' ? whitePostSvg : colorPostSvg}
               />
             </TouchableOpacity>
-            <View
-              style={{
-                borderRadius: 40,
-                paddingHorizontal: 16,
-                paddingVertical: 8,
-                flexDirection: 'row',
-                alignItems: 'center',
-                backgroundColor: '#F2F0F5',
-                flex: 1,
-                marginRight: 80,
-                paddingRight: 45
-                //width: windowWidth * 7 / 10
-              }}
-            >
-              <TextInput
-                style={
-                  {
-                    fontSize: 15,
-                    lineHeight: 15,
-                    color: '#281E30',
-                  }
-                }
-                value={label}
-                autoCapitalize='none'
-                onChangeText={(e) => setLabel(e)}
-                placeholder={t("Type your answer or tag friends")}
-                placeholderTextColor="rgba(59, 31, 82, 0.6)"
-              />
-              <TouchableOpacity disabled={label.length == 0} onPress={() => {
-                onAnswerBio();
-                Keyboard.dismiss();
-              }}>
-                <SemiBoldText
-                  text={t("Post")}
-                  marginLeft={5}
-                  fontSize={15}
-                  lineHeight={15}
-                  color="#AA53F8"
-                />
-              </TouchableOpacity>
-            </View>
           </View>
-        </View>}
-      </View>
-      <AnswerRecordIcon
-        props={props}
+        </View>
+        <AnswerRecordIcon
+          props={props}
+          onPublishStory={(res) => onAnswerStory(res)}
+          onStartPublish={() => setIsLoading(true)}
+        />
+      </View>}
+      <EmojiPicker
+        onEmojiSelected={(icon) => onAnswerEmoji(icon.emoji)}
+        open={visibleReaction}
+        onClose={() => setVisibleReaction(false)}
       />
       <SwipeDownModal
         modalVisible={showComment}
@@ -518,14 +560,7 @@ const VoiceProfileScreen = (props) => {
               flexDirection: 'column',
               justifyContent: 'space-between'
             }}>
-              {answerType == 'emoji' && <Picker
-                style={{ height: 400, backgroundColor: '#FFF' }}
-                rows={6}
-                perLine={8}
-                color='#FFF'
-                onSelect={(e) => onAnswerEmoji(e.native)}
-              />}
-              {answerType != 'emoji' && <GifSearch
+              <GifSearch
                 giphyApiKey={'lOPWZ8ORMutlKj0R1uqZV47rKbhuwrHt'}
                 onGifSelected={(gif_url) => onAnswerGif(gif_url)}
                 style={{ backgroundColor: '#FFF', height: 300, width: 400 }}
@@ -537,19 +572,7 @@ const VoiceProfileScreen = (props) => {
                 //providerLogo={poweredByGiphyLogoGrey}
                 showScrollBar={false}
                 noGifsFoundText={"No Gifs found :("}
-              />}
-              <View style={[styles.rowSpaceEvenly, { marginTop: 10, marginBottom: 10 }]}>
-                <TouchableOpacity onPress={() => setAnswerType('emoji')}>
-                  <Image
-                    source={answerType == 'emoji' ? require('../../assets/common/Emoji_light.png') : require('../../assets/common/Emoji_dark.png')}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setAnswerType('gif')}>
-                  <Image
-                    source={answerType == 'emoji' ? require('../../assets/common/Gif_dark.png') : require('../../assets/common/Gif_light.png')}
-                  />
-                </TouchableOpacity>
-              </View>
+              />
             </View>
           </View>
         }
@@ -735,7 +758,19 @@ const VoiceProfileScreen = (props) => {
         recordId={info.id}
         onCloseModal={() => setShowFriendsList(false)}
       />}
-    </View>
+      {isLoading &&
+        <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(1,1,1,0.3)' }}>
+          <View style={{ marginTop: windowHeight / 2.5, alignItems: 'center', width: windowWidth }}>
+            <Progress.Circle
+              indeterminate
+              size={30}
+              color="rgba(0, 0, 255, 0.7)"
+              style={{ alignSelf: "center" }}
+            />
+          </View>
+        </View>
+      }
+    </KeyboardAvoidingView>
   );
 };
 

@@ -176,7 +176,7 @@ const PostingVoiceScreen = (props) => {
     }
   }, [])
   return (
-    <KeyboardAvoidingView
+    <View
       style={{
         backgroundColor: '#FFF',
         flex: 1
@@ -402,7 +402,7 @@ const PostingVoiceScreen = (props) => {
           />
         </Pressable>
       </Modal>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
