@@ -7,8 +7,8 @@ import {
   Platform,
   Animated,
   Pressable,
-  Vibration,
   TouchableOpacity,
+  Vibration,
 } from 'react-native';
 
 import AudioRecorderPlayer, {
@@ -196,7 +196,7 @@ export const RecordIcon = ({
         height: IsExpanded ? windowHeight : dem,
         elevation: 11
       }}
-      onPress={() => onStopRecord(false)}
+    //onPress={() => onStopRecord(false)}
     >
       {IsExpanded && <View
         style={{
@@ -292,7 +292,7 @@ export const RecordIcon = ({
           text={t("Hate, racism, sexism or any kind of violence is stricly prohibited")}
         />
         <View style={{
-          alignItems:'center'
+          alignItems: 'center'
         }}>
           <SvgXml
             xml={fingerSvg}
@@ -307,8 +307,9 @@ export const RecordIcon = ({
             resizeMode="stretch"
             style={{ width: 311, height: 76, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12%' }}
           >
-            <View
+            <TouchableOpacity
               style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 18 }}
+              onPress={() => onStopRecord(false)}
             >
               <SvgXml width={20} height={16 - (hoverState < 0 ? r * 4 : 0)} xml={cancelSvg} />
               <TitleText
@@ -319,8 +320,11 @@ export const RecordIcon = ({
                 lineHeight={21}
                 color="#E41717"
               />
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 18 }}>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ flexDirection: 'row', alignItems: 'center', marginRight: 18 }}
+              onPress={() => onStopRecord(true)}
+            >
               <TitleText
                 text={t("Publish")}
                 fontFamily="SFProDisplay-Regular"
@@ -330,11 +334,11 @@ export const RecordIcon = ({
                 color="#8327D8"
               />
               <SvgXml width={20} height={16 + (hoverState > 0 ? hoverState * 4 : 0)} xml={publicSvg} />
-            </View>
+            </TouchableOpacity>
           </ImageBackground>
         </View>
       </View>}
-      <View style={{ position: IsExpanded ? 'absolute' : 'relative', bottom: '6%', width: IsExpanded ? '100%' : 54, height: IsExpanded ? 76 : 54 }}>
+      <View style={{ position: IsExpanded ? 'absolute' : 'relative', bottom: '6%', width: IsExpanded ? 76 : 54, height: IsExpanded ? 76 : 54 }}>
         <Draggable
           key={key}
           x={IsExpanded ? windowWidth / 2 - 38 : 0}

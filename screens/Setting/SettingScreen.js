@@ -108,7 +108,7 @@ const SettingScreen = (props) => {
         if (Platform.OS === 'ios') {
             //IOS
             OpenFile.openDoc([{
-                url: "https://storage.googleapis.com/voccosrg/CGU%20VOCCO.docx",
+                url: "https://storage.googleapis.com/voccosrg/CGUVOCCO.docx",
                 fileNameOptional: "Terms and conditions"
             }], (error, url) => {
                 if (error) {
@@ -120,7 +120,7 @@ const SettingScreen = (props) => {
         } else {
             //Android
             OpenFile.openDoc([{
-                url: "https://storage.googleapis.com/voccosrg/CGU%20VOCCO.docx", // Local "file://" + filepath
+                url: "https://storage.googleapis.com/voccosrg/CGUVOCCO.docx", // Local "file://" + filepath
                 fileName: "Terms and conditions",
                 cache: false,
                 fileType: "docx"
