@@ -287,14 +287,13 @@ const VoiceProfileScreen = (props) => {
     }
   }, [refreshState])
   return (
-    <TouchableWithoutFeedback
-      style={{
-        backgroundColor: '#FFF',
-        flex: 1
-      }}
-      onPress={() => Keyboard.dismiss()}
-    >
-      <>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <KeyboardAvoidingView
+        style={{
+          backgroundColor: '#FFF',
+          flex: 1
+        }}
+      >
         <ImageBackground
           source={require('../../assets/post/PostBackground.png')}
           resizeMode="stretch"
@@ -470,22 +469,11 @@ const VoiceProfileScreen = (props) => {
             marginBottom: 20,
           }}>
             <TouchableOpacity onPress={() => {
-              //setShowComment(!showComment);
-              setVisibleReaction(true);
-            }}>
-              <SvgXml
-                style={{
-                  marginLeft: 16
-                }}
-                xml={emojiSymbolSvg}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
               setShowComment(!showComment);
             }}>
               <SvgXml
                 style={{
-                  marginLeft: 16
+                  marginLeft: 14
                 }}
                 xml={gifSymbolSvg}
               />
@@ -500,15 +488,15 @@ const VoiceProfileScreen = (props) => {
                 alignItems: 'center',
                 backgroundColor: '#F2F0F5',
                 flex: 1,
-                marginRight: 80,
-                marginLeft: 16,
+                marginRight: 65,
+                marginLeft: 10,
               }}
             >
               <TextInput
                 style={
                   {
                     fontSize: 15,
-                    width: 170,
+                    width: 205,
                     lineHeight: 15,
                     color: '#281E30',
                   }
@@ -774,8 +762,8 @@ const VoiceProfileScreen = (props) => {
             </View>
           </View>
         }
-        <KeyboardSpacer />
-      </>
+        {Platform.OS == 'ios' && <KeyboardSpacer />}
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 };

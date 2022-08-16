@@ -61,7 +61,6 @@ export const Stories = ({
       OnShowEnd();
       return;
     }
-
     VoiceService.getStories(isNew ? 0 : stories.length, userId, category, searchTitle, recordId, screenName == 'Feed' ? 'friend' : '').then(async res => {
       if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();

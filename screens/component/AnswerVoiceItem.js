@@ -22,6 +22,7 @@ import VoicePlayer from "../Home/VoicePlayer";
 import { Avatars, windowWidth } from "../../config/config";
 import { ReplyAnswerItem } from "./ReplyAnswerItem";
 import AutoHeightImage from "react-native-auto-height-image";
+import { MoreOrLess } from "@rntext/more-or-less";
 
 export const AnswerVoiceItem = ({
   info,
@@ -168,12 +169,28 @@ export const AnswerVoiceItem = ({
                 marginBottom={6}
                 fontSize={15}
               />
-              {info.type == 'bio' && <View style={{ width: 210 }}>
-                <DescriptionText
-                  color="#281E30"
+              {info.type == 'bio' && <View style={{ width: 260 }}>
+                <MoreOrLess
                   numberOfLines={3}
-                  text={info.bio}
-                />
+                  moreText={t("more")}
+                  lessText={t("less")}
+                  textStyle={{
+                    fontFamily: "SFProDisplay-Regular",
+                    fontSize: 15,
+                    color: "#281E30",
+                    textAlign: "left",
+                    lineHeight: 24,
+                  }}
+                  textButtonStyle={{
+                    fontFamily: "SFProDisplay-Semibold",
+                    fontSize: 15,
+                    color: "#281E30",
+                    textAlign: "left",
+                    lineHeight: 24,
+                  }}
+                >
+                  {info.bio}
+                </MoreOrLess>
               </View>}
               {info.type == 'gif' &&
                 <AutoHeightImage

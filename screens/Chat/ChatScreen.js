@@ -8,7 +8,9 @@ import {
     RefreshControl,
     Text,
     TextInput,
-    Pressable
+    Pressable,
+    TouchableWithoutFeedback,
+    Keyboard
 } from 'react-native';
 
 import * as Progress from "react-native-progress";
@@ -158,10 +160,10 @@ const ChatScreen = (props) => {
     const OnDeleteChat = (index) => {
         VoiceService.deleteChat(conversations[index].id);
         setConversations(prev => {
-            if(prev[index].receiver.id == user.id)
+            if (prev[index].receiver.id == user.id)
                 prev[index].visible = false;
             else
-                prev.splice(index,1);
+                prev.splice(index, 1);
             return [...prev];
         })
     }
@@ -180,224 +182,226 @@ const ChatScreen = (props) => {
     }, [refreshState])
 
     return (
-        <KeyboardAvoidingView
-            style={{
-                backgroundColor: '#FFF',
-                flex: 1,
-            }}
-        >
-            <View style={{
-                backgroundColor: "#F8F0FF",
-                borderBottomLeftRadius: 30
-            }}>
-                <View
-                    style={[
-                        { marginTop: Platform.OS == 'ios' ? 50 : 20, paddingHorizontal: 20, marginBottom: 24 },
-                        styles.rowSpaceBetween
-                    ]}
-                >
-                    <TouchableOpacity onPress={() => props.navigation.navigate('Setting')}>
-                        <SvgXml
-                            width={24}
-                            height={24}
-                            xml={black_settingsSvg}
-                        />
-                    </TouchableOpacity>
-                    <TitleText
-                        text={t("Chat")}
-                        fontSize={20}
-                        color="#281E30"
-                    />
-                    <TouchableOpacity onPress={() => setShowFriendsList(true)}>
-                        <SvgXml
-                            width="24"
-                            height="24"
-                            xml={black_new_messageSvg}
-                        />
-                    </TouchableOpacity>
-                </View>
-                <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                    style={{
-                        paddingRight: 16,
-                        height: 95
-                    }}
-                >
-                    {friends.map((item, index) =>
-                        <FriendItem
-                            key={index + 'friendItem_chat'}
-                            props={props}
-                            info={item}
-                            type='chatUser'
-                            isUserName={true}
-                        />)
-                    }
-                </ScrollView>
-            </View>
-            <View style={{
-                flex: 1,
-                backgroundColor: "#F8F0FF",
-            }}>
-                <View style={{
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <KeyboardAvoidingView
+                style={{
+                    backgroundColor: '#FFF',
                     flex: 1,
-                    backgroundColor: "#FFF",
-                    borderTopRightRadius: 30,
-                    alignItems: 'center'
+                }}
+            >
+                <View style={{
+                    backgroundColor: "#F8F0FF",
+                    borderBottomLeftRadius: 30
                 }}>
-                    {!isSearch ?
-                        <>
-                            <View style={[styles.paddingH16, { marginTop: 8 }]}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <SvgXml
-                                        width="20"
-                                        height="20"
-                                        xml={searchSvg}
-                                        style={styles.searchIcon}
-                                    />
-                                    <Pressable
-                                        style={styles.searchBox}
-                                        onPress={() => setIsSearch(true)}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontSize: 17,
-                                                color: 'grey'
-                                            }}
-                                        >{t("Enter username")}</Text>
-                                    </Pressable>
-                                </View>
-                            </View>
-                        </> :
-                        <View style={{ width: windowWidth - 32, marginTop: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <View style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                backgroundColor: '#F2F0F5',
-                                borderRadius: 24,
-                                borderWidth: 1,
-                                borderColor: '#CC9BF9',
-                                height: 44,
-                                width: windowWidth - 95,
-                                paddingHorizontal: 12
-                            }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <SvgXml
-                                        width="20"
-                                        height="20"
-                                        xml={searchSvg}
-                                    />
-                                    <TextInput
-                                        style={[styles.searchInput, { paddingLeft: 12, width: windowWidth - 175 }]}
-                                        value={label}
-                                        color='#281E30'
-                                        autoFocus={true}
-                                        placeholder={t("Search")}
-                                        onChangeText={(v) => onSetLabel(v)}
-                                        placeholderTextColor="rgba(59, 31, 82, 0.6)"
-                                    />
-                                </View>
-                                {label != '' &&
-                                    <TouchableOpacity
-                                        onPress={() => onSetLabel('')}
-                                    >
-                                        <SvgXml
-                                            width="30"
-                                            height="30"
-                                            xml={closeCircleSvg}
-                                        />
-                                    </TouchableOpacity>}
-                            </View>
-                            <TouchableOpacity onPress={() => { setIsSearch(false); onSetLabel('') }}>
-                                <TitleText
-                                    text={t('Cancel')}
-                                    fontSize={17}
-                                    fontFamily='SFProDisplay-Regular'
-                                    color='#8327D8'
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    }
-                    {(isLoading == false && conversations.length == 0) && <>
-                        <Image
-                            source={require('../../assets/chat/illustration.png')}
-                            style={{ width: windowWidth, height: windowWidth / 2, marginTop: 50 }}
-                        />
-                        <Text
-                            numberOfLines={2}
-                            style={{
-                                fontFamily: "SFProDisplay-Regular",
-                                fontSize: 17,
-                                color: '#281E30',
-                                textAlign: 'center',
-                                lineHeight: 28,
-                                width: 182,
-                                marginTop: 22
-                            }}
-                        >
-                            {t("You have no conversations yet")}
-                        </Text>
-                        <TouchableOpacity onPress={() => setShowFriendsList(true)} style={[styles.rowAlignItems, { marginTop: 18 }]}>
+                    <View
+                        style={[
+                            { marginTop: Platform.OS == 'ios' ? 50 : 20, paddingHorizontal: 20, marginBottom: 24 },
+                            styles.rowSpaceBetween
+                        ]}
+                    >
+                        <TouchableOpacity onPress={() => props.navigation.navigate('Setting')}>
                             <SvgXml
                                 width={24}
                                 height={24}
-                                xml={new_messageSvg}
-                            />
-                            <SemiBoldText
-                                text={t("New message")}
-                                fontSize={15}
-                                lineHeight={24}
-                                color='#8327D8'
-                                marginLeft={10}
+                                xml={black_settingsSvg}
                             />
                         </TouchableOpacity>
-                    </>}
-                    <ScrollView
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={refreshing}
-                                onRefresh={onRefresh}
+                        <TitleText
+                            text={t("Chat")}
+                            fontSize={20}
+                            color="#281E30"
+                        />
+                        <TouchableOpacity onPress={() => setShowFriendsList(true)}>
+                            <SvgXml
+                                width="24"
+                                height="24"
+                                xml={black_new_messageSvg}
                             />
-                        }
+                        </TouchableOpacity>
+                    </View>
+                    <ScrollView
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
                         style={{
-                            marginBottom: 75
+                            paddingRight: 16,
+                            height: 95
                         }}
                     >
-                        {
-                            conversations.map((item, index) =>
-                                <ChatListItem
-                                    key={"chatListItem" +item.id+index.toString()}
-                                    props={props}
-                                    info={item}
-                                    label={label}
-                                    onDeleteItem={() => OnDeleteChat(index)}
-                                />
-                            )
+                        {friends.map((item, index) =>
+                            <FriendItem
+                                key={index + 'friendItem_chat'}
+                                props={props}
+                                info={item}
+                                type='chatUser'
+                                isUserName={true}
+                            />)
                         }
                     </ScrollView>
-                    {isLoading == true && <Progress.Circle
-                        indeterminate
-                        size={30}
-                        color="rgba(0, 0, 255, .7)"
-                        style={{ alignSelf: "center", marginTop: 70 }}
-                    />}
                 </View>
-            </View>
-            <BottomButtons
-                active='chat'
-                props={props}
-            />
-            <RecordIcon
-                props={props}
-                bottom={15.5}
-                left={windowWidth / 2 - 27}
-            />
-            {showFriendsList && <NewChat
-                props={props}
-                onCloseModal={() => setShowFriendsList(false)}
-            />}
-        </KeyboardAvoidingView>
+                <View style={{
+                    flex: 1,
+                    backgroundColor: "#F8F0FF",
+                }}>
+                    <View style={{
+                        flex: 1,
+                        backgroundColor: "#FFF",
+                        borderTopRightRadius: 30,
+                        alignItems: 'center'
+                    }}>
+                        {!isSearch ?
+                            <>
+                                <View style={[styles.paddingH16, { marginTop: 8 }]}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <SvgXml
+                                            width="20"
+                                            height="20"
+                                            xml={searchSvg}
+                                            style={styles.searchIcon}
+                                        />
+                                        <Pressable
+                                            style={styles.searchBox}
+                                            onPress={() => setIsSearch(true)}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontSize: 17,
+                                                    color: 'grey'
+                                                }}
+                                            >{t("Enter username")}</Text>
+                                        </Pressable>
+                                    </View>
+                                </View>
+                            </> :
+                            <View style={{ width: windowWidth - 32, marginTop: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <View style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    backgroundColor: '#F2F0F5',
+                                    borderRadius: 24,
+                                    borderWidth: 1,
+                                    borderColor: '#CC9BF9',
+                                    height: 44,
+                                    width: windowWidth - 95,
+                                    paddingHorizontal: 12
+                                }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <SvgXml
+                                            width="20"
+                                            height="20"
+                                            xml={searchSvg}
+                                        />
+                                        <TextInput
+                                            style={[styles.searchInput, { paddingLeft: 12, width: windowWidth - 175 }]}
+                                            value={label}
+                                            color='#281E30'
+                                            autoFocus={true}
+                                            placeholder={t("Search")}
+                                            onChangeText={(v) => onSetLabel(v)}
+                                            placeholderTextColor="rgba(59, 31, 82, 0.6)"
+                                        />
+                                    </View>
+                                    {label != '' &&
+                                        <TouchableOpacity
+                                            onPress={() => onSetLabel('')}
+                                        >
+                                            <SvgXml
+                                                width="30"
+                                                height="30"
+                                                xml={closeCircleSvg}
+                                            />
+                                        </TouchableOpacity>}
+                                </View>
+                                <TouchableOpacity onPress={() => { setIsSearch(false); onSetLabel('') }}>
+                                    <TitleText
+                                        text={t('Cancel')}
+                                        fontSize={17}
+                                        fontFamily='SFProDisplay-Regular'
+                                        color='#8327D8'
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        }
+                        {(isLoading == false && conversations.length == 0) && <>
+                            <Image
+                                source={require('../../assets/chat/illustration.png')}
+                                style={{ width: windowWidth, height: windowWidth / 2, marginTop: 50 }}
+                            />
+                            <Text
+                                numberOfLines={2}
+                                style={{
+                                    fontFamily: "SFProDisplay-Regular",
+                                    fontSize: 17,
+                                    color: '#281E30',
+                                    textAlign: 'center',
+                                    lineHeight: 28,
+                                    width: 182,
+                                    marginTop: 22
+                                }}
+                            >
+                                {t("You have no conversations yet")}
+                            </Text>
+                            <TouchableOpacity onPress={() => setShowFriendsList(true)} style={[styles.rowAlignItems, { marginTop: 18 }]}>
+                                <SvgXml
+                                    width={24}
+                                    height={24}
+                                    xml={new_messageSvg}
+                                />
+                                <SemiBoldText
+                                    text={t("New message")}
+                                    fontSize={15}
+                                    lineHeight={24}
+                                    color='#8327D8'
+                                    marginLeft={10}
+                                />
+                            </TouchableOpacity>
+                        </>}
+                        <ScrollView
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={refreshing}
+                                    onRefresh={onRefresh}
+                                />
+                            }
+                            style={{
+                                marginBottom: 75
+                            }}
+                        >
+                            {
+                                conversations.map((item, index) =>
+                                    <ChatListItem
+                                        key={"chatListItem" + item.id + index.toString()}
+                                        props={props}
+                                        info={item}
+                                        label={label}
+                                        onDeleteItem={() => OnDeleteChat(index)}
+                                    />
+                                )
+                            }
+                        </ScrollView>
+                        {isLoading == true && <Progress.Circle
+                            indeterminate
+                            size={30}
+                            color="rgba(0, 0, 255, .7)"
+                            style={{ alignSelf: "center", marginTop: 70 }}
+                        />}
+                    </View>
+                </View>
+                <BottomButtons
+                    active='chat'
+                    props={props}
+                />
+                <RecordIcon
+                    props={props}
+                    bottom={15.5}
+                    left={windowWidth / 2 - 27}
+                />
+                {showFriendsList && <NewChat
+                    props={props}
+                    onCloseModal={() => setShowFriendsList(false)}
+                />}
+            </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
     )
 }
 

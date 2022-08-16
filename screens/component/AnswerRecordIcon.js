@@ -183,10 +183,10 @@ export const AnswerRecordIcon = ({
     <View
       style={{
         position: 'absolute',
-        bottom: isRecording ? 11 : 22,
-        right: isRecording ? 7 : 18,
-        width: (isRecording || isPublish) ? windowWidth : 54,
-        height: isRecording ? 76 : 54,
+        bottom: isRecording ? 23 : 33,
+        right: isRecording ? 7 : 13,
+        width: (isRecording || isPublish) ? windowWidth : 44,
+        height: isRecording ? 76 : 44,
         elevation: 11,
       }}
       onPress={() => onStopRecord(false)}
@@ -246,7 +246,7 @@ export const AnswerRecordIcon = ({
           </TouchableOpacity>
         </View>
         :
-        <View style={{ width: isRecording ? '100%' : 54, height: isRecording ? 76 : 54 }}>
+        <View style={{ width: isRecording ? '100%' : 44, height: isRecording ? 76 : 44 }}>
           {isRecording && <View style={{
             marginLeft: 48,
             color: '#281E30',
@@ -346,8 +346,8 @@ export const AnswerRecordIcon = ({
               }}
             >
               <SvgXml
-                width={isRecording ? 76 : 54}
-                height={isRecording ? 76 : 54}
+                width={isRecording ? 76 : 44}
+                height={isRecording ? 76 : 44}
                 xml={recordSvg}
               />
             </View>
