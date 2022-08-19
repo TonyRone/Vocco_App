@@ -58,7 +58,7 @@ export const Feed = ({
       }}
     >
       <ScrollView
-        style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 10 }}
+        style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 10, flex:1 }}
         ref={scrollRef}
         refreshControl={
           <RefreshControl

@@ -181,7 +181,7 @@ const AddFriendScreen = (props) => {
                 <View style={{height:100,width:10}}>
                 </View>
             </ScrollView>
-            {/* <ScrollView>
+            <ScrollView>
                 <SemiBoldText
                     text={t("Invite your contacts")}
                     fontSize={17}
@@ -192,7 +192,7 @@ const AddFriendScreen = (props) => {
                 <ContactList
                     props={props}
                 />
-            </ScrollView> */}
+            </ScrollView>
             <View style={{
                 position: 'absolute',
                 bottom: 30,

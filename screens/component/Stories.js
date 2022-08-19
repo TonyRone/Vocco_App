@@ -61,6 +61,7 @@ export const Stories = ({
       OnShowEnd();
       return;
     }
+    if (isNew) setLoading(true);
     VoiceService.getStories(isNew ? 0 : stories.length, userId, category, searchTitle, recordId, screenName == 'Feed' ? 'friend' : '').then(async res => {
       if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
@@ -109,7 +110,7 @@ export const Stories = ({
     }
   }, [refreshState, loadKey, category])
 
-  return <>
+  return <View>
     {showEnd &&
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12 }}>
         <Image
@@ -125,8 +126,8 @@ export const Stories = ({
         />
       </View>
     }
-    {(
-      !loading ? (stories.length > 0 ? storyItems : (screenName == 'Feed' ?
+    {(stories.length > 0 ? storyItems :(!loading?
+      (screenName == 'Feed' ?
         <View style={{ width: windowWidth, alignItems: 'center' }}>
           <Image
             style={{
@@ -163,19 +164,31 @@ export const Stories = ({
             lineHeight={28}
             marginTop={22}
           />
-        </View>)) :
+        </View>
+      )
+      :null)
+    )}
+    {loading &&
+      <View style={{
+        position: stories.length?'absolute':'relative',
+        width:'100%',
+        alignItems: 'center',
+        marginTop:100,
+        elevation: 20
+      }}>
         <Progress.Circle
           indeterminate
           size={30}
           color="rgba(0, 0, 255, .7)"
-          style={{ alignSelf: "center", marginTop: windowHeight / 20 }}
+          style={{ alignSelf: "center" }}
         />
-    )}
+      </View>
+    }
     {showInviteList &&
       <InviteUsers
         props={props}
         onCloseModal={() => setShowInviteList(false)}
       />
     }
-  </>
+  </View>
 };

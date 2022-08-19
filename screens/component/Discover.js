@@ -116,7 +116,7 @@ export const Discover = ({
         </View>
       </View>
       <ScrollView
-        style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75 }}
+        style={{ flex:1, marginBottom: Platform.OS == 'ios' ? 65 : 75 }}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}

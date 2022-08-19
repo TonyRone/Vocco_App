@@ -78,6 +78,8 @@ const VoiceProfileScreen = (props) => {
   const [label, setLabel] = useState('');
   const [showComment, setShowComment] = useState(false);
   const [visibleReaction, setVisibleReaction] = useState(false);
+  const [friends, setFriends] = useState([]);
+  const [filter, setFilter] = useState([]);
 
   const mounted = useRef(false);
 
@@ -139,16 +141,19 @@ const VoiceProfileScreen = (props) => {
         console.log(err);
       });
 
-    let tags = await VoiceService.getTags(recordId, 'record').then(async res => {
-      if (res.respInfo.status === 200 && mounted.current) {
-        return await res.json();
-      }
-    })
-      .catch(err => {
-        console.log(err);
-      });
-
-    onCombine(stories, tags);
+    // let tags = await VoiceService.getTags(recordId, 'record').then(async res => {
+    //   if (res.respInfo.status === 200 && mounted.current) {
+    //     return await res.json();
+    //   }
+    // })
+    //   .catch(err => {
+    //     console.log(err);
+    //   });
+    if (mounted.current) {
+      setCombines(stories);
+      setLoading(false);
+    }
+    //onCombine(stories, tags);
   }
 
   const editVoice = () => {
@@ -191,20 +196,6 @@ const VoiceProfileScreen = (props) => {
     let tp = [...combines];
     tp.splice(index, 1);
     setCombines(tp);
-  }
-
-  const OnSetLike = () => {
-    let rep;
-    if (isLike == true) {
-      setLikeCount(likeCount - 1);
-      rep = VoiceService.recordUnAppreciate(info.id);
-    }
-    else {
-      setLikeCount(likeCount + 1);
-      rep = VoiceService.recordAppreciate({ count: 1, id: info.id });
-    }
-    setIsLike(!isLike);
-    rep.then(() => dispatch(setRefreshState(!refreshState)));
   }
 
   const onAnswerStory = (res) => {
@@ -277,8 +268,55 @@ const VoiceProfileScreen = (props) => {
       })
   }
 
+  const getFollowUsers = () => {
+    VoiceService.getFollows(user.id, "Following")
+      .then(async res => {
+        if (res.respInfo.status === 200 && mounted.current) {
+          const jsonRes = await res.json();
+          setFriends([...jsonRes]);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  const findPosition = (e) => {
+    let i;
+    for (i = e.length - 1; i >= 0; i--) {
+      if (e[i] == '@') break;
+    }
+    return i;
+  }
+
+  const onSetLabel = (e) => {
+    setLabel(e);
+    let i = findPosition(e);
+    let tp = '';
+    if (i != -1) {
+      tp = e.slice(i + 1);
+    }
+    else
+      tp = ' ';
+    tp = tp.toLowerCase();
+    let filterFriends = friends.filter(el => {
+      let friendName = el.user.name.toLowerCase();
+      return friendName.startsWith(tp)
+    });
+    setFilter(filterFriends);
+  }
+
+  const onReplace = (e) => {
+    let i = findPosition(label);
+    if (i != -1) {
+      setLabel(label.slice(0, i + 1).concat(e) + ' ');
+      setFilter([]);
+    }
+  }
+
   useEffect(() => {
     mounted.current = true;
+    getFollowUsers();
     getUserInfo();
     getAnswers();
     dispatch(setVoiceState(voiceState + 1));
@@ -452,85 +490,127 @@ const VoiceProfileScreen = (props) => {
         </View>
         {info && <View style={{
           bottom: 0,
+          position: 'absolute',
           width: windowWidth,
-          height: 80,
-          borderTopLeftRadius: 24,
-          borderTopRightRadius: 24,
           backgroundColor: '#FFF',
           elevation: 10,
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.5,
           shadowRadius: 8,
         }}>
-          <View style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: 6,
-            marginBottom: 20,
-          }}>
-            <TouchableOpacity onPress={() => {
-              setShowComment(!showComment);
-            }}>
-              <SvgXml
-                style={{
-                  marginLeft: 14
-                }}
-                xml={gifSymbolSvg}
-              />
-            </TouchableOpacity>
-            <View
-              style={{
-                borderRadius: 40,
-                paddingHorizontal: 16,
-                paddingVertical: 8,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                backgroundColor: '#F2F0F5',
-                flex: 1,
-                marginRight: 65,
-                marginLeft: 10,
-              }}
+          {filter.length > 0 && filter.map((item, index) => {
+            return <TouchableOpacity style={{
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}
+              key={item.user.id + index.toString()}
+              onPress={() => onReplace(item.user.name)}
             >
-              <TextInput
-                style={
-                  {
-                    fontSize: 15,
-                    width: 205,
-                    lineHeight: 15,
-                    color: '#281E30',
-                  }
-                }
-                value={label}
-                autoCapitalize='none'
-                onSubmitEditing={() => {
-                  onAnswerBio();
-                }}
-                onChangeText={(e) => setLabel(e)}
-                placeholder={t("Type your answer")}
-                placeholderTextColor="rgba(59, 31, 82, 0.6)"
+              <Image
+                source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
+                style={{ width: 24, height: 24, borderRadius: 12, marginLeft: 16 }}
+                resizeMode='cover'
               />
-              <TouchableOpacity disabled={label.length == 0} onPress={() => {
-                onAnswerBio();
-                Keyboard.dismiss();
+              <View style={{
+                flex: 1,
+                borderBottomColor: '#F2F0F5',
+                borderBottomWidth: 1,
+                marginLeft: 12,
+                paddingVertical: 8,
+              }}>
+                <SemiBoldText
+                  text={'@' + item.user.name}
+                  fontSize={15}
+                  lineHeight={24}
+                />
+              </View>
+            </TouchableOpacity>
+          })
+          }
+          <View style={{
+            bottom: 0,
+            width: windowWidth,
+            height: 80,
+            borderTopLeftRadius: 24,
+            borderTopRightRadius: 24,
+            backgroundColor: '#FFF',
+            elevation: 10,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.5,
+            shadowRadius: 8,
+            marginTop: 8,
+          }}>
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 6,
+              marginBottom: 20,
+            }}>
+              <TouchableOpacity onPress={() => {
+                setShowComment(!showComment);
               }}>
                 <SvgXml
-                  xml={label == '' ? whitePostSvg : colorPostSvg}
+                  style={{
+                    marginLeft: 14
+                  }}
+                  xml={gifSymbolSvg}
                 />
               </TouchableOpacity>
+              <View
+                style={{
+                  borderRadius: 40,
+                  paddingHorizontal: 16,
+                  paddingVertical: 8,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  backgroundColor: '#F2F0F5',
+                  flex: 1,
+                  marginRight: 65,
+                  marginLeft: 10,
+                }}
+              >
+                <TextInput
+                  style={
+                    {
+                      fontSize: 15,
+                      width: 205,
+                      lineHeight: 15,
+                      color: '#281E30',
+                    }
+                  }
+                  value={label}
+                  autoCapitalize='none'
+                  onSubmitEditing={() => {
+                    onAnswerBio();
+                  }}
+                  onBlur={() => onSetLabel('')}
+                  onChangeText={(e) => onSetLabel(e)}
+                  placeholder={t("Type your answer")}
+                  placeholderTextColor="rgba(59, 31, 82, 0.6)"
+                />
+                <TouchableOpacity disabled={label.length == 0} onPress={() => {
+                  onAnswerBio();
+                  Keyboard.dismiss();
+                }}>
+                  <SvgXml
+                    xml={label == '' ? whitePostSvg : colorPostSvg}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
+            <AnswerRecordIcon
+              props={props}
+              onPublishStory={(res) => onAnswerStory(res)}
+              onStartPublish={() => setIsLoading(true)}
+            />
           </View>
-          <AnswerRecordIcon
-            props={props}
-            onPublishStory={(res) => onAnswerStory(res)}
-            onStartPublish={() => setIsLoading(true)}
-          />
         </View>}
-        <EmojiPicker
+        {/* <EmojiPicker
           onEmojiSelected={(icon) => onAnswerEmoji(icon.emoji)}
           open={visibleReaction}
           onClose={() => setVisibleReaction(false)}
-        />
+        /> */}
         <SwipeDownModal
           modalVisible={showComment}
           ContentModal={
@@ -762,6 +842,7 @@ const VoiceProfileScreen = (props) => {
             </View>
           </View>
         }
+
         {Platform.OS == 'ios' && <KeyboardSpacer />}
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>

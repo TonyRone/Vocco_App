@@ -127,11 +127,9 @@ export const TagFriends = ({
   const handleSubmit = () => {
     let userIds = selectedIds.map((item) => friends[item].user.id);
     let payload = {
-      storyId: info.id,
       storyType: storyType,
       tagUserIds: userIds,
       recordId: recordId,
-      answerId: answerId,
     };
     setSubmitLoading(true);
     VoiceService.postTag(payload).then(async res => {
