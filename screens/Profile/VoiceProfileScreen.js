@@ -489,8 +489,6 @@ const VoiceProfileScreen = (props) => {
           </ScrollView>
         </View>
         {info && <View style={{
-          bottom: 0,
-          position: 'absolute',
           width: windowWidth,
           backgroundColor: '#FFF',
           elevation: 10,
@@ -528,6 +526,7 @@ const VoiceProfileScreen = (props) => {
           })
           }
           <View style={{
+            position: filter.length>0? 'relative' :'absolute',
             bottom: 0,
             width: windowWidth,
             height: 80,
