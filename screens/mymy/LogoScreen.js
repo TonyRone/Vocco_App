@@ -192,7 +192,7 @@ const LogoScreen = (props) => {
     useEffect(() => {
         checkPermission();
         checkLogin();
-        OnSetPushNotification();
+        //OnSetPushNotification();
     }, [])
 
     return (

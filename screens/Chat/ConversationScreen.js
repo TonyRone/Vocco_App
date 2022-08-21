@@ -65,6 +65,7 @@ import { MessageItem } from '../component/MessageItem';
 import { TitleText } from '../component/TitleText';
 import { PhotoSelector } from '../component/PhotoSelector';
 import SwipeDownModal from 'react-native-swipe-down';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const ConversationScreen = (props) => {
 
@@ -447,7 +448,7 @@ const ConversationScreen = (props) => {
             <ImageBackground
                 source={require('../../assets/chat/Background.png')}
                 resizeMode="cover"
-                style={{ width: windowWidth, height: windowHeight }}
+                style={{ width: windowWidth, flex: 1 }}
             >
                 <View style={{
                     backgroundColor: "rgba(255, 255, 255, 0.6)",
@@ -686,8 +687,8 @@ const ConversationScreen = (props) => {
                     <>
                         {isRecording && <View style={{
                             position: 'absolute',
-                            bottom: 42,
-                            left: 16,
+                            bottom: 20,
+                            left: 40,
                             width: 328,
                             height: 56,
                             flexDirection: 'row',
@@ -752,7 +753,7 @@ const ConversationScreen = (props) => {
                     <View style={{
                         position: 'absolute',
                         width: windowWidth,
-                        bottom: 42,
+                        bottom: 10,
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'center'
@@ -864,126 +865,127 @@ const ConversationScreen = (props) => {
                         </View>
                     </View>
                 }
-            </ImageBackground>
-            {(!isRecording && !isPublish) &&
-                <View style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    width: windowWidth,
-                    height: 70,
-                    borderTopLeftRadius: 24,
-                    borderTopRightRadius: 24,
-                    backgroundColor: '#FFF',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.5,
-                    shadowRadius: 8,
-                    marginTop: 8,
-                }}>
+                {(!isRecording && !isPublish) &&
                     <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        marginTop: 6,
-                        marginBottom: 0,
+                        position: 'absolute',
+                        bottom: 0,
+                        width: windowWidth,
+                        height: 70,
+                        borderTopLeftRadius: 24,
+                        borderTopRightRadius: 24,
+                        backgroundColor: '#FFF',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.5,
+                        shadowRadius: 8,
+                        marginTop: 8,
                     }}>
-                        <TouchableOpacity onPress={() => {
-                            setShowComment(!showComment);
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginTop: 6,
+                            marginBottom: 0,
                         }}>
-                            <SvgXml
-                                style={{
-                                    marginLeft: 14
-                                }}
-                                xml={gifSymbolSvg}
-                            />
-                        </TouchableOpacity>
-                        <View
-                            style={{
-                                borderRadius: 40,
-                                paddingHorizontal: 16,
-                                //paddingVertical: 8,
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                backgroundColor: '#F2F0F5',
-                                flex: 1,
-                                height: 40,
-                                marginRight: 65,
-                                marginLeft: 10,
-                            }}
-                        >
-                            <TextInput
-                                style={
-                                    {
-                                        fontSize: 15,
-                                        width: 205,
-                                        lineHeight: 15,
-                                        color: '#281E30',
-                                    }
-                                }
-                                value={label}
-                                autoCapitalize='none'
-                                onSubmitEditing={() => {
-                                    onAnswerBio();
-                                }}
-                                onChangeText={(e) => setLabel(e)}
-                                placeholder={t("Type your answer")}
-                                placeholderTextColor="rgba(59, 31, 82, 0.6)"
-                            />
-                            <TouchableOpacity disabled={label.length == 0} onPress={() => {
-                                onAnswerBio();
-                                Keyboard.dismiss();
+                            <TouchableOpacity onPress={() => {
+                                setShowComment(!showComment);
                             }}>
                                 <SvgXml
-                                    xml={label == '' ? whitePostSvg : colorPostSvg}
+                                    style={{
+                                        marginLeft: 14
+                                    }}
+                                    xml={gifSymbolSvg}
                                 />
                             </TouchableOpacity>
+                            <View
+                                style={{
+                                    borderRadius: 40,
+                                    paddingHorizontal: 16,
+                                    //paddingVertical: 8,
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    backgroundColor: '#F2F0F5',
+                                    flex: 1,
+                                    height: 40,
+                                    marginRight: 65,
+                                    marginLeft: 10,
+                                }}
+                            >
+                                <TextInput
+                                    style={
+                                        {
+                                            fontSize: 15,
+                                            width: 205,
+                                            lineHeight: 15,
+                                            color: '#281E30',
+                                        }
+                                    }
+                                    value={label}
+                                    autoCapitalize='none'
+                                    onSubmitEditing={() => {
+                                        onAnswerBio();
+                                    }}
+                                    onChangeText={(e) => setLabel(e)}
+                                    placeholder={t("Type your answer")}
+                                    placeholderTextColor="rgba(59, 31, 82, 0.6)"
+                                />
+                                <TouchableOpacity disabled={label.length == 0} onPress={() => {
+                                    onAnswerBio();
+                                    Keyboard.dismiss();
+                                }}>
+                                    <SvgXml
+                                        xml={label == '' ? whitePostSvg : colorPostSvg}
+                                    />
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
-                </View>
-            }
-            {!isPublish&&<View style={{ position: 'absolute', bottom: isRecording ? 81 : 68, width: '100%', alignItems: 'center' }}>
-                <Draggable
-                    key={key}
-                    x={isRecording ? 330 : 336}
-                    y={0}
-                    shouldReverse={true}
-                    minX={200}
-                    maxX={windowWidth - 16}
-                    minY={0}
-                    maxY={0}
-                    touchableOpacityProps={{
-                        activeOpactiy: 1,
-                    }}
-                    onDrag={(event, gestureState) => {
-                    }}
-                    onDragRelease={(event, gestureState, bounds) => {
-                        dragPos.current = gestureState.dx;
-                        if (gestureState.dx <= -100) {
-                            Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-                            setTimeout(() => {
-                                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-                            }, 300);
-                        }
-                    }}
-                    onReverse={() => {
-
-                    }}
-
-                >
-                    <View
-                        onTouchStart={(e) => onChangeRecord(e, true)}
-                        onTouchEnd={(e) => onChangeRecord(e, false)}
-                        style={{
-                            opacity: isRecording ? 5 : 1
+                }
+                {!isPublish && <View style={{ position: 'absolute', bottom: isRecording ? 81 : 68, width: '100%', alignItems: 'center' }}>
+                    <Draggable
+                        key={key}
+                        x={isRecording ? windowWidth - 72 : windowWidth - 60}
+                        y={0}
+                        shouldReverse={true}
+                        minX={windowWidth / 3 * 2}
+                        maxX={windowWidth - 16}
+                        minY={0}
+                        maxY={0}
+                        touchableOpacityProps={{
+                            activeOpactiy: 1,
                         }}
+                        onDrag={(event, gestureState) => {
+                        }}
+                        onDragRelease={(event, gestureState, bounds) => {
+                            dragPos.current = gestureState.dx;
+                            if (gestureState.dx <= -100) {
+                                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                                setTimeout(() => {
+                                    Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                                }, 300);
+                            }
+                        }}
+                        onReverse={() => {
+
+                        }}
+
                     >
-                        <SvgXml
-                            width={isRecording ? 68 : 44}
-                            height={isRecording ? 68 : 44}
-                            xml={recordSvg}
-                        />
-                    </View>
-                </Draggable>
-            </View>}
+                        <View
+                            onTouchStart={(e) => onChangeRecord(e, true)}
+                            onTouchEnd={(e) => onChangeRecord(e, false)}
+                            style={{
+                                opacity: isRecording ? 5 : 1
+                            }}
+                        >
+                            <SvgXml
+                                width={isRecording ? 68 : 44}
+                                height={isRecording ? 68 : 44}
+                                xml={recordSvg}
+                            />
+                        </View>
+                    </Draggable>
+                </View>}
+            </ImageBackground>
+            {Platform.OS == 'ios' && <KeyboardSpacer />}
         </KeyboardAvoidingView>
     )
 }
