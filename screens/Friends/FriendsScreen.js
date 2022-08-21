@@ -197,9 +197,9 @@ const FriendsScreen = (props) => {
 
     const onShareLink = () => {
         Share.open({
-          url: 'https://api.vocco.ai',
+            url: 'https://api.vocco.ai',
         });
-      }
+    }
 
     useEffect(() => {
         mounted.current = true;
@@ -299,7 +299,7 @@ const FriendsScreen = (props) => {
                 style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 18 }}
             >
                 <TouchableOpacity
-                    style={[styles.rowSpaceBetween, { backgroundColor: '#F8F0FF',paddingVertical:8,paddingHorizontal:16}]}
+                    style={[styles.rowSpaceBetween, { backgroundColor: '#F8F0FF', paddingVertical: 8, paddingHorizontal: 16 }]}
                     onPress={() => onShareLink()}
                 >
                     <View style={styles.rowAlignItems}>
@@ -411,6 +411,63 @@ const FriendsScreen = (props) => {
                         width: windowWidth
                     }}>
                         {
+                            followings.map((item, index) => {
+                                if (item.user.name.toLowerCase().indexOf(label.toLowerCase()) == -1)
+                                    return null;
+                                return <TouchableOpacity
+                                    key={"following" + index.toString()}
+                                    style={[styles.rowSpaceBetween, { marginTop: 16 }]}
+                                    onPress={() => props.navigation.navigate("UserProfile", { userId: item.user.id })}
+                                >
+                                    <View style={styles.rowAlignItems}>
+                                        <Image
+                                            source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
+                                            style={{
+                                                width: 48,
+                                                height: 48,
+                                                borderRadius: 24,
+                                                marginLeft: 16,
+                                            }}
+                                        />
+                                        <View style={{
+                                            marginLeft: 12
+                                        }}>
+                                            <SemiBoldText
+                                                text={item.user.name}
+                                                fontSize={15}
+                                                lineHeight={24}
+                                            />
+                                            <DescriptionText
+                                                text={renderName(item.user.firstname, item.user.lastname)}
+                                                fontSize={13}
+                                                lineHeight={21}
+                                            />
+                                        </View>
+                                    </View>
+                                    <TouchableOpacity style={{
+                                        backgroundColor: '#F2F0F5',
+                                        paddingHorizontal: 16,
+                                        paddingVertical: 9,
+                                        borderRadius: 8,
+                                        marginRight: 8
+                                    }}
+                                        onPress={() => onDeleteFollowing(index)}
+                                    >
+                                        <SemiBoldText
+                                            text={t("Remove")}
+                                            fontSize={13}
+                                            lineHeight={21}
+                                            color={'rgba(54, 36, 68, 0.8)'}
+                                        />
+                                    </TouchableOpacity>
+                                </TouchableOpacity>
+                            })
+                        }
+                    </View>
+                    <View style={{
+                        width: windowWidth
+                    }}>
+                        {
                             requests.map((item, index) => {
                                 if (!allRequests && index > 1)
                                     return null;
@@ -480,63 +537,6 @@ const FriendsScreen = (props) => {
                                             />
                                         </TouchableOpacity>
                                     </View>
-                                </TouchableOpacity>
-                            })
-                        }
-                    </View>
-                    <View style={{
-                        width: windowWidth
-                    }}>
-                        {
-                            followings.map((item, index) => {
-                                if (item.user.name.toLowerCase().indexOf(label.toLowerCase()) == -1)
-                                    return null;
-                                return <TouchableOpacity
-                                    key={"following" + index.toString()}
-                                    style={[styles.rowSpaceBetween, { marginTop: 16 }]}
-                                    onPress={() => props.navigation.navigate("UserProfile", { userId: item.user.id })}
-                                >
-                                    <View style={styles.rowAlignItems}>
-                                        <Image
-                                            source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
-                                            style={{
-                                                width: 48,
-                                                height: 48,
-                                                borderRadius: 24,
-                                                marginLeft: 16,
-                                            }}
-                                        />
-                                        <View style={{
-                                            marginLeft: 12
-                                        }}>
-                                            <SemiBoldText
-                                                text={item.user.name}
-                                                fontSize={15}
-                                                lineHeight={24}
-                                            />
-                                            <DescriptionText
-                                                text={renderName(item.user.firstname, item.user.lastname)}
-                                                fontSize={13}
-                                                lineHeight={21}
-                                            />
-                                        </View>
-                                    </View>
-                                    <TouchableOpacity style={{
-                                        backgroundColor: '#F2F0F5',
-                                        paddingHorizontal: 16,
-                                        paddingVertical: 9,
-                                        borderRadius: 8,
-                                        marginRight: 8
-                                    }}
-                                        onPress={() => onDeleteFollowing(index)}
-                                    >
-                                        <SemiBoldText
-                                            text={t("Remove")}
-                                            fontSize={13}
-                                            lineHeight={21}
-                                            color={'rgba(54, 36, 68, 0.8)'}
-                                        />
-                                    </TouchableOpacity>
                                 </TouchableOpacity>
                             })
                         }
