@@ -18,7 +18,7 @@ import { BottomButtons } from '../component/BottomButtons';
 import { SearchLanguage } from '../component/SearchLanguage';
 import { MyButton } from '../component/MyButton';
 import { SvgXml } from 'react-native-svg';
-//import OpenFile from 'react-native-doc-viewer';
+import OpenFile from 'react-native-doc-viewer';
 import chewronRightSvg from '../../assets/common/chewron_right.svg';
 import termsSvg from '../../assets/setting/terms.svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
@@ -105,33 +105,33 @@ const SettingScreen = (props) => {
     }
 
     const pressTerms = () => {
-        // if (Platform.OS === 'ios') {
-        //     //IOS
-        //     OpenFile.openDoc([{
-        //         url: "https://storage.googleapis.com/voccosrg/CGUVOCCO.docx",
-        //         fileNameOptional: "Terms and conditions"
-        //     }], (error, url) => {
-        //         if (error) {
-        //             console.error(error);
-        //         } else {
-        //             console.log(url)
-        //         }
-        //     })
-        // } else {
-        //     //Android
-        //     OpenFile.openDoc([{
-        //         url: "https://storage.googleapis.com/voccosrg/CGUVOCCO.docx", // Local "file://" + filepath
-        //         fileName: "Terms and conditions",
-        //         cache: false,
-        //         fileType: "docx"
-        //     }], (error, url) => {
-        //         if (error) {
-        //             console.error(error);
-        //         } else {
-        //             console.log(url)
-        //         }
-        //     })
-        // }
+        if (Platform.OS === 'ios') {
+            //IOS
+            OpenFile.openDoc([{
+                url: "https://storage.googleapis.com/voccosrg/CGUVOCCO.docx",
+                fileNameOptional: "Terms and conditions"
+            }], (error, url) => {
+                if (error) {
+                    console.error(error);
+                } else {
+                    console.log(url)
+                }
+            })
+        } else {
+            //Android
+            OpenFile.openDoc([{
+                url: "https://storage.googleapis.com/voccosrg/CGUVOCCO.docx", // Local "file://" + filepath
+                fileName: "Terms and conditions",
+                cache: false,
+                fileType: "docx"
+            }], (error, url) => {
+                if (error) {
+                    console.error(error);
+                } else {
+                    console.log(url)
+                }
+            })
+        }
     }
 
     useEffect(() => {
