@@ -110,7 +110,7 @@ const SearchScreen = (props) => {
     let tp = recentList;
     let exist = tp.find(e => e == title);
     if (exist)
-      return ;
+      return;
     if (tp.length > 4)
       tp.splice(4, 1);
     tp.unshift(title);
@@ -146,6 +146,14 @@ const SearchScreen = (props) => {
       if (mounted.current)
         setRecentList(JSON.parse(tp));
     }
+  }
+
+  const onClearRecentHistory = async () => {
+    setRecentList([]);
+    await AsyncStorage.setItem(
+      RECENT_LIST,
+      JSON.stringify([])
+    );
   }
 
   useEffect(() => {
@@ -480,7 +488,14 @@ const SearchScreen = (props) => {
           />
         </View>
         <ScrollView style={{ paddingLeft: 16, marginTop: 31 }}>
-          <BlockList key='1' marginTop={0} blockName={t("Recent")} items={recentList} onLoadHistory={(title) => getLabel(title)} />
+          <BlockList
+            key='1'
+            marginTop={0}
+            blockName={t("Recent")}
+            items={recentList}
+            onLoadHistory={(title) => getLabel(title)}
+            onClear={() => onClearRecentHistory()}
+          />
           <BlockList key='2' marginTop={26} blockName={t("Popular")} items={[]} />
         </ScrollView>
       </View>}

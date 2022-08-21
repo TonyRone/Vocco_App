@@ -543,7 +543,6 @@ const VoiceProfileScreen = (props) => {
               flexDirection: 'row',
               alignItems: 'center',
               marginTop: 6,
-              marginBottom: 20,
             }}>
               <TouchableOpacity onPress={() => {
                 setShowComment(!showComment);
@@ -559,12 +558,12 @@ const VoiceProfileScreen = (props) => {
                 style={{
                   borderRadius: 40,
                   paddingHorizontal: 16,
-                  paddingVertical: 8,
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   backgroundColor: '#F2F0F5',
                   flex: 1,
+                  height:40,
                   marginRight: 65,
                   marginLeft: 10,
                 }}

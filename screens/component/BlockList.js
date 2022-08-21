@@ -9,7 +9,8 @@ export const BlockList = ({
   marginTop,
   blockName,
   items,
-  onLoadHistory = () => { }
+  onLoadHistory = () => { },
+  onClear = ()=>{}
 }) => {
 
   const { t, i18n } = useTranslation();
@@ -22,18 +23,20 @@ export const BlockList = ({
           color='#281E30'
           fontSize={15}
         />
-        <TitleText
-          text={t('Clear')}
-          marginRight={16}
-          fontSize={15}
-          fontFamily="SFProDisplay-Regular"
-          color='rgba(38, 52, 73, 0.85)'
-        />
+        <TouchableOpacity onPress={()=>onClear()}>
+          <TitleText
+            text={t('Clear')}
+            marginRight={16}
+            fontSize={15}
+            fontFamily="SFProDisplay-Regular"
+            color='rgba(38, 52, 73, 0.85)'
+          />
+        </TouchableOpacity>
       </View>
       <View style={{ width: '100%', height: 1, backgroundColor: '#F0F4FC', marginTop: 9, marginBottom: 18 }}></View>
       {items.map((item, index) => {
         return (
-          <TouchableOpacity onPress={() => onLoadHistory(item)} key={item.title+index.toString()}>
+          <TouchableOpacity onPress={() => onLoadHistory(item)} key={item.title + index.toString()}>
             <DescriptionText
               text={item}
               key={index + 'blocklist'}

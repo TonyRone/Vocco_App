@@ -14,6 +14,7 @@ import { BottomButtons } from '../component/BottomButtons';
 import searchSvg from '../../assets/login/search.svg';
 import closeCircleSvg from '../../assets/common/close-circle.svg';
 import greenCheckSvg from '../../assets/friend/green-check.svg';
+import ShareSvg from '../../assets/friend/share.svg';
 import addSvg from '../../assets/setting/add.svg';
 import { Avatars, windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
@@ -27,6 +28,7 @@ import '../../language/i18n';
 import { TitleText } from '../component/TitleText';
 import { TextInput } from 'react-native-gesture-handler';
 import { ContactList } from '../component/ContactList';
+import Share from 'react-native-share';
 
 const FriendsScreen = (props) => {
 
@@ -141,7 +143,7 @@ const FriendsScreen = (props) => {
                 console.log(err);
             });
         VoiceService.getSuggests(0).then(async res => {
-            if (res.respInfo.status == 200&&mounted.current) {
+            if (res.respInfo.status == 200 && mounted.current) {
                 const jsonRes = await res.json();
                 setSuggests(jsonRes);
             }
@@ -150,12 +152,12 @@ const FriendsScreen = (props) => {
                 console.log(err);
             });
         VoiceService.getFollows(user.id, "Followers").then(async res => {
-            if (res.respInfo.status === 200&&mounted.current) {
+            if (res.respInfo.status === 200 && mounted.current) {
                 const jsonRes = await res.json();
                 setFollowers(jsonRes);
                 const followerIds = new Set(jsonRes.map((item) => item.user.id));
                 VoiceService.getFollows(user.id, "Following").then(async res => {
-                    if (res.respInfo.status === 200&&mounted.current) {
+                    if (res.respInfo.status === 200 && mounted.current) {
                         const jsonRes1 = await res.json();
                         setFollowings(jsonRes1);
                         contacts = [...jsonRes, ...jsonRes1.filter(x => !followerIds.has(x.user.id))]
@@ -172,7 +174,7 @@ const FriendsScreen = (props) => {
                 console.log(err);
             });
         VoiceService.getInvites().then(async res => {
-            if (res.respInfo.status == 200&&mounted.current) {
+            if (res.respInfo.status == 200 && mounted.current) {
                 const jsonRes = await res.json();
                 setInvites(jsonRes);
             }
@@ -193,10 +195,16 @@ const FriendsScreen = (props) => {
         return (fullname == '' ? '' : "@") + fullname
     }
 
+    const onShareLink = () => {
+        Share.open({
+          url: 'https://api.vocco.ai',
+        });
+      }
+
     useEffect(() => {
         mounted.current = true;
         getUsers();
-        return ()=>{
+        return () => {
             mounted.current = false;
         }
     }, [])
@@ -290,238 +298,42 @@ const FriendsScreen = (props) => {
             <ScrollView
                 style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 18 }}
             >
-                <View style={styles.rowSpaceBetween}>
-                    <View style={styles.rowAlignItems}>
-                        <SemiBoldText
-                            text={t("Requests")}
-                            lineHeight={24}
-                            fontSize={15}
-                            marginLeft={20}
-                        />
-                        {!isSearch && <View style={{
-                            borderRadius: 12,
-                            backgroundColor: '#F2F0F5',
-                            paddingHorizontal: 8,
-                            paddingVertical: 4,
-                            marginLeft: 7
-                        }}>
-                            <DescriptionText
-                                text={requests.length}
-                                fontSize={12}
-                                lineHeight={16}
-                                color="#281E30"
-                            />
-                        </View>}
-                    </View>
-                    {requests.length > 2 && <TouchableOpacity onPress={() => setAllRequests(!allRequests)}>
-                        <DescriptionText
-                            text={t(allRequests ? "HIDE" : "SHOW ALL")}
-                            fontSize={13}
-                            lineHeight={21}
-                            marginRight={15}
-                        />
-                    </TouchableOpacity>}
-                </View>
-                <View style={{
-                    marginLeft: 16,
-                    height: 1,
-                    width: windowWidth - 16,
-                    backgroundColor: "#F0F4FC",
-                    marginTop: 9
-                }}>
-                </View>
-                {
-                    requests.map((item, index) => {
-                        if (!allRequests && index > 1)
-                            return null;
-                        if (item.fromUser.name.toLowerCase().indexOf(label.toLowerCase()) == -1)
-                            return null;
-                        return <TouchableOpacity
-                            key={"requests" + index.toString()}
-                            style={[styles.rowSpaceBetween, { marginTop: 16 }]}
-                            onPress={() => props.navigation.navigate("UserProfile", { userId: item.fromUser.id })}
-                        >
-                            <View style={styles.rowAlignItems}>
-                                <Image
-                                    source={item.fromUser.avatar ? { uri: item.fromUser.avatar.url } : Avatars[item.fromUser.avatarNumber].uri}
-                                    style={{
-                                        width: 48,
-                                        height: 48,
-                                        borderRadius: 24,
-                                        marginLeft: 16,
-                                    }}
-                                />
-                                <View style={{
-                                    marginLeft: 12
-                                }}>
-                                    <SemiBoldText
-                                        text={item.fromUser.name}
-                                        fontSize={15}
-                                        lineHeight={24}
-                                    />
-                                    <DescriptionText
-                                        text={renderName(item.fromUser.firstname, item.fromUser.lastname)}
-                                        fontSize={13}
-                                        lineHeight={21}
-                                    />
-                                </View>
-                            </View>
-                            <View style={styles.rowAlignItems}>
-                                {item.friend.status != 'accepted' &&
-                                    <TouchableOpacity style={{
-                                        backgroundColor: '#F8F0FF',
-                                        paddingHorizontal: 16,
-                                        paddingVertical: 9,
-                                        borderRadius: 8
-                                    }}
-                                        onPress={() => onAcceptRequest(index)}
-                                    >
-                                        <SemiBoldText
-                                            text={t("Confirm")}
-                                            fontSize={13}
-                                            lineHeight={21}
-                                            color={'#8327D8'}
-                                        />
-                                    </TouchableOpacity>}
-                                <TouchableOpacity style={{
-                                    backgroundColor: '#F2F0F5',
-                                    paddingHorizontal: 16,
-                                    paddingVertical: 9,
-                                    borderRadius: 8,
-                                    marginHorizontal: 8
-                                }}
-                                    onPress={() => onDeleteRequest(index)}
-                                >
-                                    <SemiBoldText
-                                        text={t("Delete")}
-                                        fontSize={13}
-                                        lineHeight={21}
-                                        color={'rgba(54, 36, 68, 0.8)'}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                        </TouchableOpacity>
-                    })
-                }
-                {/* <View style={[styles.rowSpaceBetween, { marginTop: 24 }]}>
-                    <SemiBoldText
-                        text={t("Suggest")}
-                        lineHeight={24}
-                        fontSize={15}
-                        marginLeft={16}
-                    />
-                    {suggests.length > 2 && <TouchableOpacity onPress={() => setMoreSuggests(!moreSuggests)}>
-                        <DescriptionText
-                            text={t(moreSuggests ? "SHOW LESS" : "SHOW ALL")}
-                            fontSize={13}
-                            lineHeight={21}
-                            marginRight={15}
-                        />
-                    </TouchableOpacity>}
-                </View>
-                <View style={{
-                    marginLeft: 16,
-                    height: 1,
-                    width: windowWidth - 16,
-                    backgroundColor: "#F0F4FC",
-                    marginTop: 9
-                }}>
-                </View>
-                <ScrollView
-                    horizontal
-                    style={{
-                        marginTop: 9
-                    }}
+                <TouchableOpacity
+                    style={[styles.rowSpaceBetween, { backgroundColor: '#F8F0FF',paddingVertical:8,paddingHorizontal:16}]}
+                    onPress={() => onShareLink()}
                 >
-                    {
-                        suggests.map((item, index) => {
-                            if (item.user.name.toLowerCase().indexOf(label.toLowerCase()) == -1)
-                                return null;
-                            return <TouchableOpacity
-                                key={"suggests" + index.toString()}
-                                style={{
-                                    width: 190,
-                                    height: 120,
-                                    marginLeft: 8,
-                                    marginRight: 8,
-                                    marginBottom: 6,
-                                    borderRadius: 12,
-                                    padding: 12,
-                                    backgroundColor: '#FFF',
-                                    shadowColor: 'rgba(88, 74, 117, 0.5)',
-                                    elevation: 10,
-                                    shadowOffset: { width: 0, height: 4 },
-                                    shadowOpacity: 0.5,
-                                    shadowRadius: 24,
-                                }}
-                                onPress={() => props.navigation.navigate("UserProfile", { userId: item.user.id })}
-                            >
-                                <View style={styles.rowAlignItems}>
-                                    <Image
-                                        source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
-                                        style={{
-                                            width: 48,
-                                            height: 48,
-                                            borderRadius: 24,
-                                            marginLeft: 16,
-                                        }}
-                                    />
-                                    <View style={{
-                                        marginLeft: 12
-                                    }}>
-                                        <SemiBoldText
-                                            text={item.user.name}
-                                            fontSize={15}
-                                            lineHeight={24}
-                                        />
-                                        <DescriptionText
-                                            text={renderName(item.user.firstname, item.user.lastname)}
-                                            fontSize={13}
-                                            lineHeight={21}
-                                        />
-                                    </View>
-                                </View>
-                                <View style={[styles.rowAlignItems, { marginTop: 9 }]}>
-                                    <TouchableOpacity style={{
-                                        backgroundColor: '#F8F0FF',
-                                        paddingHorizontal: 16,
-                                        paddingVertical: 9,
-                                        borderRadius: 8
-                                    }}
-                                        onPress={() => onSendRequest(index)}
-                                    >
-                                        <SemiBoldText
-                                            text={t("Follow")}
-                                            fontSize={13}
-                                            lineHeight={21}
-                                            color={'#8327D8'}
-                                        />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={{
-                                        backgroundColor: '#F2F0F5',
-                                        paddingHorizontal: 16,
-                                        paddingVertical: 9,
-                                        borderRadius: 8,
-                                        marginHorizontal: 8
-                                    }}
-                                        onPress={() => onDeleteSuggest(index)}
-                                    >
-                                        <SemiBoldText
-                                            text={t("Remove")}
-                                            fontSize={13}
-                                            lineHeight={21}
-                                            color={'rgba(54, 36, 68, 0.8)'}
-                                        />
-                                    </TouchableOpacity>
-                                </View>
-                            </TouchableOpacity>
-                        })
-                    }
-                </ScrollView> */}
+                    <View style={styles.rowAlignItems}>
+                        <Image
+                            source={user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri}
+                            style={{
+                                width: 48,
+                                height: 48,
+                                borderRadius: 24,
+                            }}
+                        />
+                        <View style={{
+                            marginLeft: 12
+                        }}>
+                            <SemiBoldText
+                                text={user.name}
+                                fontSize={15}
+                                lineHeight={24}
+                            />
+                            <DescriptionText
+                                text={'api.vocco.ai'}
+                                fontSize={13}
+                                lineHeight={21}
+                            />
+                        </View>
+                    </View>
+                    <SvgXml
+                        xml={ShareSvg}
+                    />
+                </TouchableOpacity>
                 <View style={[styles.rowAlignItems, { marginTop: 16 }]}>
                     <TouchableOpacity onPress={() => { scrollRef.current?.scrollTo({ x: 0, animated: true }); setIsFollowers(true); }} style={[styles.rowAlignItems, { marginLeft: 16, width: 126 }]}>
                         <SemiBoldText
-                            text={t("Followers")}
+                            text={t("Friends")}
                             fontSize={15}
                             lineHeight={24}
                             marginLeft={4}
@@ -544,7 +356,7 @@ const FriendsScreen = (props) => {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => { scrollRef.current?.scrollTo({ x: windowWidth, animated: true }); setIsFollowers(false); }} style={[styles.rowAlignItems, { marginLeft: 16, width: 126 }]}>
                         <SemiBoldText
-                            text={t("Followings")}
+                            text={t("Requests")}
                             fontSize={15}
                             lineHeight={24}
                             marginLeft={8}
@@ -558,7 +370,7 @@ const FriendsScreen = (props) => {
                             marginLeft: 8
                         }}>
                             <DescriptionText
-                                text={followings.length}
+                                text={requests.length}
                                 fontSize={12}
                                 lineHeight={16}
                                 color='#281E30'
@@ -599,17 +411,19 @@ const FriendsScreen = (props) => {
                         width: windowWidth
                     }}>
                         {
-                            followers.map((item, index) => {
-                                if (item.user.name.toLowerCase().indexOf(label.toLowerCase()) == -1)
+                            requests.map((item, index) => {
+                                if (!allRequests && index > 1)
+                                    return null;
+                                if (item.fromUser.name.toLowerCase().indexOf(label.toLowerCase()) == -1)
                                     return null;
                                 return <TouchableOpacity
-                                    key={"followers" + index.toString()}
+                                    key={"requests" + index.toString()}
                                     style={[styles.rowSpaceBetween, { marginTop: 16 }]}
-                                    onPress={() => props.navigation.navigate("UserProfile", { userId: item.user.id })}
+                                    onPress={() => props.navigation.navigate("UserProfile", { userId: item.fromUser.id })}
                                 >
                                     <View style={styles.rowAlignItems}>
                                         <Image
-                                            source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
+                                            source={item.fromUser.avatar ? { uri: item.fromUser.avatar.url } : Avatars[item.fromUser.avatarNumber].uri}
                                             style={{
                                                 width: 48,
                                                 height: 48,
@@ -621,33 +435,51 @@ const FriendsScreen = (props) => {
                                             marginLeft: 12
                                         }}>
                                             <SemiBoldText
-                                                text={item.user.name}
+                                                text={item.fromUser.name}
                                                 fontSize={15}
                                                 lineHeight={24}
                                             />
                                             <DescriptionText
-                                                text={renderName(item.user.firstname, item.user.lastname)}
+                                                text={renderName(item.fromUser.firstname, item.fromUser.lastname)}
                                                 fontSize={13}
                                                 lineHeight={21}
                                             />
                                         </View>
                                     </View>
-                                    <TouchableOpacity style={{
-                                        backgroundColor: '#F2F0F5',
-                                        paddingHorizontal: 16,
-                                        paddingVertical: 9,
-                                        borderRadius: 8,
-                                        marginRight: 8
-                                    }}
-                                        onPress={() => onDeleteFollower(index)}
-                                    >
-                                        <SemiBoldText
-                                            text={t("Remove")}
-                                            fontSize={13}
-                                            lineHeight={21}
-                                            color={'rgba(54, 36, 68, 0.8)'}
-                                        />
-                                    </TouchableOpacity>
+                                    <View style={styles.rowAlignItems}>
+                                        {item.friend.status != 'accepted' &&
+                                            <TouchableOpacity style={{
+                                                backgroundColor: '#F8F0FF',
+                                                paddingHorizontal: 16,
+                                                paddingVertical: 9,
+                                                borderRadius: 8
+                                            }}
+                                                onPress={() => onAcceptRequest(index)}
+                                            >
+                                                <SemiBoldText
+                                                    text={t("Confirm")}
+                                                    fontSize={13}
+                                                    lineHeight={21}
+                                                    color={'#8327D8'}
+                                                />
+                                            </TouchableOpacity>}
+                                        <TouchableOpacity style={{
+                                            backgroundColor: '#F2F0F5',
+                                            paddingHorizontal: 16,
+                                            paddingVertical: 9,
+                                            borderRadius: 8,
+                                            marginHorizontal: 8
+                                        }}
+                                            onPress={() => onDeleteRequest(index)}
+                                        >
+                                            <SemiBoldText
+                                                text={t("Delete")}
+                                                fontSize={13}
+                                                lineHeight={21}
+                                                color={'rgba(54, 36, 68, 0.8)'}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
                                 </TouchableOpacity>
                             })
                         }

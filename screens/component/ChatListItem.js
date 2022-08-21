@@ -32,7 +32,6 @@ export const ChatListItem = ({
     label = '',
     onDeleteItem = () => { }
 }) => {
-
     let { user } = useSelector((state) => {
         return (
             state.user
@@ -110,9 +109,15 @@ export const ChatListItem = ({
         }
     }
 
+    const onLimit = (v) => {
+        return ((v).length > 16) ?
+            (((v).substring(0, 13)) + '...') :
+            v;
+    }
+
     return (
         <>
-            {(otherUser.name.toLowerCase().indexOf(label.toLowerCase()) != -1&&!(info.visible==false&&info.receiver.id==user.id)) &&
+            {(otherUser.name.toLowerCase().indexOf(label.toLowerCase()) != -1 && !(info.visible == false && info.receiver.id == user.id)) &&
                 <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={{ maxWidth: windowWidth, borderBottomColor: '#F2F0F5', borderBottomWidth: 1 }}>
                     <TouchableOpacity
                         style={[styles.rowSpaceBetween, {
@@ -163,13 +168,23 @@ export const ChatListItem = ({
                                             {info.emoji}
                                         </Text>
                                         :
-                                        <SvgXml
-                                            width={16}
-                                            height={16}
-                                            xml={info.state == 'start' ? activeVoiceMessageSvg : info.type == 'photo' ? imageMessageSvg : voiceMessageSvg}
-                                        />}
+                                        info.type == 'bio' ?
+                                            <Text
+                                                style={{
+                                                    fontSize: 16,
+                                                    color: '#333',
+                                                }}
+                                            >
+                                                {onLimit(info.bio)}
+                                            </Text>
+                                            :
+                                            <SvgXml
+                                                width={16}
+                                                height={16}
+                                                xml={info.state == 'start' ? activeVoiceMessageSvg : info.type == 'photo' ? imageMessageSvg : info.type == 'gif' ? imageMessageSvg : voiceMessageSvg}
+                                            />}
                                     <DescriptionText
-                                        text={t(info.state == 'start' ? "recording audio..." : info.type == 'photo' ? t("Image") : info.type == 'emoji' ? "reaction" : t("Message vocal"))}
+                                        text={t(info.state == 'start' ? "recording audio..." : info.type == 'photo' ? t("Image") : info.type == 'emoji' ? "reaction" :info.type=='bio'?"":info.type=='gif'?t("GIF"):t("Message vocal"))}
                                         fontSize={13}
                                         lineHeight={21}
                                         marginLeft={6}
@@ -189,7 +204,7 @@ export const ChatListItem = ({
                             {renderState()}
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { onDeleteItem();}} style={[styles.rowAlignItems, {
+                    <TouchableOpacity onPress={() => { onDeleteItem(); }} style={[styles.rowAlignItems, {
                         width: windowWidth,
                         paddingVertical: 24,
                         backgroundColor: '#E41717',

@@ -32,7 +32,7 @@ const ShareFriendScreen = (props) => {
     const { t, i18n } = useTranslation();
 
     const [statetype, setStatetype] = useState('current');
-    const [referLink, setReferLink] = useState('https://bit.ly/3S9VVsu');
+    const [referLink, setReferLink] = useState('https://api.vocco.ai');
 
     let { user } = useSelector((state) => {
         return (

@@ -8,7 +8,10 @@ import {
     Text,
     ImageBackground,
     Platform,
-    Pressable
+    Pressable,
+    TextInput,
+    Keyboard,
+    KeyboardAvoidingView
 } from 'react-native';
 
 import AudioRecorderPlayer, {
@@ -31,11 +34,18 @@ import trashSvg from '../../assets/chat/trash.svg';
 import replySvg from '../../assets/chat/reply.svg';
 import selectSvg from '../../assets/chat/select.svg';
 import closeSvg from '../../assets/chat/close.svg';
+import whitePostSvg from '../../assets/record/white_post.svg';
+import colorPostSvg from '../../assets/record/color_post.svg';
+import emojiSymbolSvg from '../../assets/common/emoji_symbol.svg'
+import gifSymbolSvg from '../../assets/common/gif_symbol.svg'
 import { SvgXml } from 'react-native-svg';
 import arrowSvg from '../../assets/chat/Arrow.svg';
 import photoSvg from '../../assets/chat/photo.svg';
 import disableNotificationSvg from '../../assets/chat/disable_notification.svg';
 import recordSvg from '../../assets/common/bottomIcons/record.svg';
+import {
+    GifSearch,
+} from 'react-native-gif-search'
 
 import { Avatars, windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
@@ -54,6 +64,7 @@ import VoicePlayer from '../Home/VoicePlayer';
 import { MessageItem } from '../component/MessageItem';
 import { TitleText } from '../component/TitleText';
 import { PhotoSelector } from '../component/PhotoSelector';
+import SwipeDownModal from 'react-native-swipe-down';
 
 const ConversationScreen = (props) => {
 
@@ -84,6 +95,8 @@ const ConversationScreen = (props) => {
     const [selectedItems, setSelectedItems] = useState([]);
     const [isSelecting, setIsSelecting] = useState(false);
     const [otherState, setOtherState] = useState('');
+    const [showComment, setShowComment] = useState(false);
+    const [label, setLabel] = useState('');
 
     const mounted = useRef(false);
 
@@ -131,7 +144,7 @@ const ConversationScreen = (props) => {
             let hour = num % 24;
             let day = (num - hour) / 24
             let time = (day > 0 ? (day.toString() + ' ' + t("day") + (day > 1 ? 's' : '')) : (hour > 0 ? (hour.toString() + ' ' + t("hour") + (hour > 1 ? 's' : '')) : (minute > 0 ? (minute.toString() + ' ' + t("minute") + (minute > 1 ? 's' : '')) : '')));
-            return t("Online ")+time+t(" ago");
+            return t("Online ") + time + t(" ago");
         }
     }
 
@@ -166,6 +179,18 @@ const ConversationScreen = (props) => {
             .catch(err => {
                 console.log(err);
             })
+    }
+
+    const onAnswerBio = () => {
+        setIsLoading(true);
+        handleSubmit('bio', label, replyIdx)
+        setLabel('');
+    }
+
+    const onAnswerGif = (gif) => {
+        setShowComment(false);
+        setIsLoading(true);
+        handleSubmit('gif', gif, replyIdx)
     }
 
     const sendRecordMessage = () => {
@@ -211,6 +236,10 @@ const ConversationScreen = (props) => {
             sendFile.push({ name: 'ancestor', data: messages[replyIndex].id });
         if (fileType == 'emoji')
             sendFile.push({ name: 'emoji', data: v });
+        if (fileType == 'bio')
+            sendFile.push({ name: 'bio', data: v });
+        if (fileType == 'gif')
+            sendFile.push({ name: 'gif', data: v });
         VoiceService.postMessage(sendFile).then(async res => {
             const jsonRes = await res.json();
             if (res.respInfo.status !== 201) {
@@ -409,498 +438,553 @@ const ConversationScreen = (props) => {
     }, [])
 
     return (
-        <ImageBackground
-            source={require('../../assets/chat/Background.png')}
-            resizeMode="cover"
-            style={{ width: windowWidth, height: windowHeight }}
+        <KeyboardAvoidingView
+            style={{
+                backgroundColor: '#FFF',
+                flex: 1
+            }}
         >
-            <View style={{
-                backgroundColor: "rgba(255, 255, 255, 0.6)",
-            }}>
-                {!isSelecting ?
-                    <View
-                        style={[
-                            { marginTop: Platform.OS == 'ios' ? 50 : 20, paddingHorizontal: 16, marginBottom: 8 },
-                            styles.rowSpaceBetween
-                        ]}
-                    >
-                        <View style={styles.rowAlignItems}>
-                            <TouchableOpacity onPress={() => onNavigate("Chat")}>
-                                <SvgXml
-                                    width={32}
-                                    height={32}
-                                    xml={arrowBendUpLeft}
-                                />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.rowAlignItems}
-                                onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
-                            >
-                                <View
+            <ImageBackground
+                source={require('../../assets/chat/Background.png')}
+                resizeMode="cover"
+                style={{ width: windowWidth, height: windowHeight }}
+            >
+                <View style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.6)",
+                }}>
+                    {!isSelecting ?
+                        <View
+                            style={[
+                                { marginTop: Platform.OS == 'ios' ? 50 : 20, paddingHorizontal: 16, marginBottom: 8 },
+                                styles.rowSpaceBetween
+                            ]}
+                        >
+                            <View style={styles.rowAlignItems}>
+                                <TouchableOpacity onPress={() => onNavigate("Chat")}>
+                                    <SvgXml
+                                        width={32}
+                                        height={32}
+                                        xml={arrowBendUpLeft}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.rowAlignItems}
                                     onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
                                 >
-                                    <Image
-                                        source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
-                                        style={{ width: 40, height: 40, marginLeft: 25, borderRadius: 24, borderColor: '#FFA002', borderWidth: info.user.premium == 'none' ? 0 : 2 }}
-                                        resizeMode='cover'
-                                    />
-                                </View>
-                                <View style={{
-                                    marginLeft: 16
-                                }}>
                                     <View
                                         onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
                                     >
-                                        <SemiBoldText
-                                            text={info.user.name}
-                                            fontSize={20}
-                                            lineHeight={24}
+                                        <Image
+                                            source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
+                                            style={{ width: 40, height: 40, marginLeft: 25, borderRadius: 24, borderColor: '#FFA002', borderWidth: info.user.premium == 'none' ? 0 : 2 }}
+                                            resizeMode='cover'
                                         />
                                     </View>
-                                    <DescriptionText
-                                        text={renderState(isOnline)}
-                                        fontSize={13}
-                                        lineHeight={21}
-                                        color={(isOnline == 'onSession') ? '#8327D8' : 'rgba(54, 36, 68, 0.8)'}
+                                    <View style={{
+                                        marginLeft: 16
+                                    }}>
+                                        <View
+                                            onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}
+                                        >
+                                            <SemiBoldText
+                                                text={info.user.name}
+                                                fontSize={20}
+                                                lineHeight={24}
+                                            />
+                                        </View>
+                                        <DescriptionText
+                                            text={renderState(isOnline)}
+                                            fontSize={13}
+                                            lineHeight={21}
+                                            color={(isOnline == 'onSession') ? '#8327D8' : 'rgba(54, 36, 68, 0.8)'}
+                                        />
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                            <Menu
+                                visible={visible}
+                                anchor={
+                                    <Pressable onPress={showMenu}>
+                                        <SvgXml width="24" height="24" xml={moreSvg} />
+                                    </Pressable>
+                                }
+                                style={{
+                                    width: 250,
+                                    height: 129,
+                                    borderRadius: 16,
+                                    backgroundColor: '#FFF'
+                                }}
+                                onRequestClose={hideMenu}
+                            >
+                                <TouchableOpacity
+                                    style={styles.contextMenu}
+                                    onPress={() => { setIsSelecting(!isSelecting); hideMenu(); }}
+                                >
+                                    <TitleText
+                                        text={t("Select")}
+                                        fontSize={17}
+                                        fontFamily="SFProDisplay-Regular"
                                     />
-                                </View>
-                            </TouchableOpacity>
+                                    <SvgXml
+                                        width={20}
+                                        height={20}
+                                        xml={selectSvg}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.contextMenu}
+                                    onPress={() => hideMenu()}
+                                >
+                                    <TitleText
+                                        text={t("Disable Notification")}
+                                        fontSize={17}
+                                        fontFamily="SFProDisplay-Regular"
+                                    />
+                                    <SvgXml
+                                        width={20}
+                                        height={20}
+                                        xml={disableNotificationSvg}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={[styles.contextMenu, { borderBottomWidth: 0 }]}
+                                    onPress={() => { onClearAllChat(); hideMenu() }}
+                                >
+                                    <TitleText
+                                        text={t("Clear chat")}
+                                        fontSize={17}
+                                        color='#E41717'
+                                        fontFamily="SFProDisplay-Regular"
+                                    />
+                                    <SvgXml
+                                        width={20}
+                                        height={20}
+                                        xml={trashSvg}
+                                    />
+                                </TouchableOpacity>
+                            </Menu>
                         </View>
-                        <Menu
-                            visible={visible}
-                            anchor={
-                                <Pressable onPress={showMenu}>
-                                    <SvgXml width="24" height="24" xml={moreSvg} />
-                                </Pressable>
-                            }
-                            style={{
-                                width: 250,
-                                height: 129,
-                                borderRadius: 16,
-                                backgroundColor: '#FFF'
-                            }}
-                            onRequestClose={hideMenu}
+                        :
+                        <View
+                            style={[
+                                { marginTop: Platform.OS == 'ios' ? 56 : 26, paddingHorizontal: 12, marginBottom: 10 },
+                                styles.rowSpaceBetween
+                            ]}
                         >
-                            <TouchableOpacity
-                                style={styles.contextMenu}
-                                onPress={() => { setIsSelecting(!isSelecting); hideMenu(); }}
-                            >
-                                <TitleText
-                                    text={t("Select")}
-                                    fontSize={17}
-                                    fontFamily="SFProDisplay-Regular"
-                                />
-                                <SvgXml
-                                    width={20}
-                                    height={20}
-                                    xml={selectSvg}
-                                />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.contextMenu}
-                                onPress={() => hideMenu()}
-                            >
-                                <TitleText
-                                    text={t("Disable Notification")}
-                                    fontSize={17}
-                                    fontFamily="SFProDisplay-Regular"
-                                />
-                                <SvgXml
-                                    width={20}
-                                    height={20}
-                                    xml={disableNotificationSvg}
-                                />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[styles.contextMenu, { borderBottomWidth: 0 }]}
-                                onPress={() => { onClearAllChat(); hideMenu() }}
-                            >
-                                <TitleText
+                            <TouchableOpacity onPress={() => onClearChat()}>
+                                <DescriptionText
                                     text={t("Clear chat")}
                                     fontSize={17}
-                                    color='#E41717'
-                                    fontFamily="SFProDisplay-Regular"
-                                />
-                                <SvgXml
-                                    width={20}
-                                    height={20}
-                                    xml={trashSvg}
+                                    lineHeight={28}
+                                    color='#8327D8'
                                 />
                             </TouchableOpacity>
-                        </Menu>
-                    </View>
-                    :
-                    <View
-                        style={[
-                            { marginTop: Platform.OS == 'ios' ? 56 : 26, paddingHorizontal: 12, marginBottom: 10 },
-                            styles.rowSpaceBetween
-                        ]}
-                    >
-                        <TouchableOpacity onPress={() => onClearChat()}>
-                            <DescriptionText
-                                text={t("Clear chat")}
+                            <SemiBoldText
+                                text={`${selectedItems.length} ` + t("selected")}
                                 fontSize={17}
                                 lineHeight={28}
-                                color='#8327D8'
                             />
-                        </TouchableOpacity>
-                        <SemiBoldText
-                            text={`${selectedItems.length} ` + t("selected")}
-                            fontSize={17}
-                            lineHeight={28}
+                            <TouchableOpacity onPress={() => { setSelectedItems([]); setIsSelecting(false); }}>
+                                <DescriptionText
+                                    text={t("     ")}
+                                    fontSize={17}
+                                    lineHeight={28}
+                                    color='#8327D8'
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    }
+                </View>
+                {(!isLoading && messages.length == 0) && <View style={{ position: 'absolute', bottom: 109 }}>
+                    <View style={{ width: windowWidth, alignItems: 'center' }}>
+                        <View style={{
+                            backgroundColor: '#FFF',
+                            shadowColor: 'rgba(42, 10, 111, 0.17)',
+                            elevation: 10,
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.5,
+                            shadowRadius: 57,
+                            width: 250,
+                            height: 188,
+                            borderRadius: 16,
+                            alignItems: 'center'
+                        }}>
+                            <Image
+                                style={{
+                                    width: 54,
+                                    height: 54,
+                                    marginTop: 24
+                                }}
+                                source={require('../../assets/chat/dialog.png')}
+                            />
+                            <Text
+                                numberOfLines={3}
+                                style={{
+                                    fontFamily: "SFProDisplay-Regular",
+                                    fontSize: 15,
+                                    color: "#281E30",
+                                    textAlign: 'center',
+                                    lineHeight: 24,
+                                    width: 190,
+                                    marginTop: 18
+                                }}
+                            >
+                                {t("Your chat with") + ` ${info.user.name} ` + t("is empty! Start chatting now!")}
+                            </Text>
+
+                        </View>
+                    </View>
+                    <View style={{ marginTop: 14, flexDirection: 'row', justifyContent: 'flex-end', marginRight: windowWidth - 376 }}>
+                        <SvgXml
+                            width={141}
+                            height={189}
+                            xml={arrowSvg}
                         />
-                        <TouchableOpacity onPress={() => { setSelectedItems([]); setIsSelecting(false); }}>
-                            <DescriptionText
-                                text={t("     ")}
-                                fontSize={17}
-                                lineHeight={28}
-                                color='#8327D8'
+                    </View>
+                </View>}
+                <ScrollView style={{ paddingHorizontal: 8 }} ref={scrollRef} onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}>
+                    {messages.map((item, index) => {
+                        let ancestorIdx = null;
+                        if (item.ancestorId) {
+                            ancestorIdx = messages.findIndex(msg => (msg.id == item.ancestorId));
+                        }
+                        return <View key={"message" + item.id}>
+                            {(index == 0 || !onDateCompare(item.createdAt, messages[index - 1].createdAt)) &&
+                                <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 16, marginBottom: 8 }}>
+                                    <View style={{ paddingVertical: 6, paddingHorizontal: 12, borderRadius: 12, backgroundColor: 'rgba(59, 31, 82, 0.6)' }}>
+                                        <Text
+                                            style={{
+                                                fontFamily: "SFProDisplay-Regular",
+                                                fontSize: 11,
+                                                lineHeight: 12,
+                                                color: '#F6EFFF',
+                                                //textAlign: 'center',
+                                            }}
+                                        >
+                                            {
+                                                renderTime(item.createdAt)
+                                            }
+                                        </Text>
+                                    </View>
+                                </View>
+                            }
+                            <MessageItem
+                                props={props}
+                                info={item}
+                                ancestorInfo={ancestorIdx != null ? messages[ancestorIdx] : null}
+                                isSelect={isSelecting ? (selectedItems.indexOf(index) == -1 ? 0 : 1) : -1}
+                                onDeleteItem={() => onDeleteItem(index)}
+                                onSelectItem={() => onSelectItem(index)}
+                                onReplyMsg={() => setReplyIdx(index)}
+                                onSendEmoji={(v) => sendEmoji(v, index)}
+                            />
+                        </View>
+                    })}
+                    <View style={{ height: 110 }}></View>
+                </ScrollView>
+                {!isPublish ?
+                    <>
+                        {isRecording && <View style={{
+                            position: 'absolute',
+                            bottom: 42,
+                            left: 16,
+                            width: 328,
+                            height: 56,
+                            flexDirection: 'row',
+                            alignItems: 'center'
+                        }}>
+                            <ImageBackground
+                                style={{
+                                    position: 'absolute',
+                                    height: 56,
+                                    width: 328,
+                                    justifyContent: 'center'
+                                }}
+                                resizeMode="stretch"
+                                source={require('../../assets/chat/chatRecord.png')}
+                            >
+                                <DescriptionText
+                                    text={t("Swipe to Cancel")}
+                                    fontSize={13}
+                                    lineHeight={13}
+                                    color='#E41717'
+                                    marginLeft={188}
+                                />
+                            </ImageBackground>
+                            <View
+                                style={{
+                                    width: 8,
+                                    height: 8,
+                                    marginLeft: 24,
+                                    borderRadius: 4,
+                                    backgroundColor: "#E41717"
+                                }}
+                            ></View>
+                            <CountdownCircleTimer
+                                key={key}
+                                isPlaying={isRecording}
+                                duration={fill}
+                                size={57}
+                                strokeWidth={0}
+                                trailColor="#D4C9DE"
+                                trailStrokeWidth={0}
+                                onComplete={() => onStopRecord(true)}
+                                colors={[
+                                    ['#B35CF8', 0.4],
+                                    ['#8229F4', 0.4],
+                                    ['#8229F4', 0.2],
+                                ]}
+                            >
+                                {({ remainingTime, animatedColor }) => {
+                                    return (
+                                        <DescriptionText
+                                            text={new Date(wasteTime.current).toISOString().substr(14, 5)}
+                                            lineHeight={24}
+                                            color="rgba(54, 36, 68, 0.8)"
+                                            fontSize={15}
+                                        />
+                                    )
+                                }}
+                            </CountdownCircleTimer>
+                        </View>}
+                    </>
+                    :
+                    <View style={{
+                        position: 'absolute',
+                        width: windowWidth,
+                        bottom: 42,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                paddingRight: 12,
+                                paddingVertical: 8,
+                                backgroundColor: '#FFF',
+                                borderRadius: 30,
+                                // shadowColor: 'rgba(176, 148, 235, 1)',
+                                // elevation: 10,
+                                // shadowOffset: { width: 0, height: 2 },
+                                // shadowOpacity: 0.5,
+                                // shadowRadius: 8,
+                            }}
+                        >
+                            <VoicePlayer
+                                playBtn={true}
+                                waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
+                                playing={false}
+                                stopPlay={() => { }}
+                                startPlay={() => { }}
+                                tinWidth={windowWidth / 300}
+                                mrg={windowWidth / 600}
+                                duration={duration}
+                            />
+                            <TouchableOpacity onPress={() => setIsPublish(false)}>
+                                <SvgXml
+                                    width={24}
+                                    height={24}
+                                    xml={redTrashSvg}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity disabled={isLoading} onPress={() => handleSubmit('voice', null, replyIdx)}>
+                            <Image
+                                style={{
+                                    height: 56,
+                                    width: 56,
+                                    marginLeft: 4
+                                }}
+                                resizeMode="stretch"
+                                source={require('../../assets/post/answerPublish.png')}
                             />
                         </TouchableOpacity>
                     </View>
                 }
-            </View>
-            {(!isLoading && messages.length == 0) && <View style={{ position: 'absolute', bottom: 109 }}>
-                <View style={{ width: windowWidth, alignItems: 'center' }}>
-                    <View style={{
-                        backgroundColor: '#FFF',
-                        shadowColor: 'rgba(42, 10, 111, 0.17)',
-                        elevation: 10,
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.5,
-                        shadowRadius: 57,
-                        width: 250,
-                        height: 188,
-                        borderRadius: 16,
-                        alignItems: 'center'
-                    }}>
-                        <Image
-                            style={{
-                                width: 54,
-                                height: 54,
-                                marginTop: 24
-                            }}
-                            source={require('../../assets/chat/dialog.png')}
-                        />
-                        <Text
-                            numberOfLines={3}
-                            style={{
-                                fontFamily: "SFProDisplay-Regular",
-                                fontSize: 15,
-                                color: "#281E30",
-                                textAlign: 'center',
-                                lineHeight: 24,
-                                width: 190,
-                                marginTop: 18
-                            }}
-                        >
-                            {t("Your chat with") + ` ${info.user.name} ` + t("is empty! Start chatting now!")}
-                        </Text>
-
-                    </View>
-                </View>
-                <View style={{ marginTop: 14, flexDirection: 'row', justifyContent: 'flex-end', marginRight: windowWidth - 376 }}>
-                    <SvgXml
-                        width={141}
-                        height={189}
-                        xml={arrowSvg}
-                    />
-                </View>
-            </View>}
-            <ScrollView style={{ paddingHorizontal: 8 }} ref={scrollRef} onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}>
-                {messages.map((item, index) => {
-                    let ancestorIdx = null;
-                    if (item.ancestorId) {
-                        ancestorIdx = messages.findIndex(msg => (msg.id == item.ancestorId));
-                    }
-                    return <View key={"message" + item.id}>
-                        {(index == 0 || !onDateCompare(item.createdAt, messages[index - 1].createdAt)) &&
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 16, marginBottom: 8 }}>
-                                <View style={{ paddingVertical: 6, paddingHorizontal: 12, borderRadius: 12, backgroundColor: 'rgba(59, 31, 82, 0.6)' }}>
-                                    <Text
-                                        style={{
-                                            fontFamily: "SFProDisplay-Regular",
-                                            fontSize: 11,
-                                            lineHeight: 12,
-                                            color: '#F6EFFF',
-                                            //textAlign: 'center',
-                                        }}
-                                    >
-                                        {
-                                            renderTime(item.createdAt)
-                                        }
-                                    </Text>
-                                </View>
-                            </View>
-                        }
-                        <MessageItem
-                            props={props}
-                            info={item}
-                            ancestorInfo={ancestorIdx != null ? messages[ancestorIdx] : null}
-                            isSelect={isSelecting ? (selectedItems.indexOf(index) == -1 ? 0 : 1) : -1}
-                            onDeleteItem={() => onDeleteItem(index)}
-                            onSelectItem={() => onSelectItem(index)}
-                            onReplyMsg={() => setReplyIdx(index)}
-                            onSendEmoji={(v) => sendEmoji(v, index)}
-                        />
-                    </View>
-                })}
-                <View style={{ height: 110 }}></View>
-            </ScrollView>
-            {!isPublish ?
-                <>
-                    {!isRecording && <View style={{
-                        position: 'absolute',
-                        bottom: 42,
-                        right: windowWidth - 376,
-                        width: replyIdx == -1 ? 116 : 343,
-                        height: 56,
-                        borderRadius: 28,
-                        backgroundColor: '#FFF',
-                        flexDirection: 'row',
-                        alignItems: 'center'
-                    }}>
-                        {replyIdx != -1 && <View style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            width: 212,
-                            marginLeft: 16
+                <SwipeDownModal
+                    modalVisible={showComment}
+                    ContentModal={
+                        <View style={{
+                            position: 'absolute',
+                            top: 100,
+                            width: windowWidth,
+                            alignItems: 'center'
                         }}>
-                            <View style={styles.rowAlignItems}>
-                                <SvgXml
-                                    width={20}
-                                    height={20}
-                                    xml={replySvg}
+                            <View style={{
+                                height: 470,
+                                backgroundColor: '#FFF',
+                                shadowColor: 'rgba(88, 74, 117, 1)',
+                                elevation: 10,
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.5,
+                                shadowRadius: 8,
+                                borderRadius: 16,
+                                flexDirection: 'column',
+                                justifyContent: 'space-between'
+                            }}>
+                                <GifSearch
+                                    giphyApiKey={'lOPWZ8ORMutlKj0R1uqZV47rKbhuwrHt'}
+                                    onGifSelected={(gif_url) => onAnswerGif(gif_url)}
+                                    style={{ backgroundColor: '#FFF', height: 300, width: 400 }}
+                                    textInputStyle={{ fontWeight: 'bold', color: 'black' }}
+                                    loadingSpinnerColor={'black'}
+                                    placeholderTextColor={'grey'}
+                                    numColumns={3}
+                                    provider={"giphy"}
+                                    //providerLogo={poweredByGiphyLogoGrey}
+                                    showScrollBar={false}
+                                    noGifsFoundText={"No Gifs found :("}
                                 />
-                                <View style={{ marginLeft: 16 }}>
-                                    <DescriptionText
-                                        text={info.user.name}
-                                        fontSize={15}
-                                        lineHeight={24}
-                                        color='#8327D8'
-                                    />
-                                    <DescriptionText
-                                        text="voice message"
-                                        fontSize={12}
-                                        lineHeight={16}
-                                        color='rgba(59, 31, 82, 0.6)'
-                                    />
-                                </View>
-                            </View>
-                            <View style={styles.rowAlignItems}>
-                                <TouchableOpacity onPress={() => setReplyIdx(-1)}>
-                                    <SvgXml
-                                        width={24}
-                                        height={24}
-                                        xml={closeSvg}
-                                    />
-                                </TouchableOpacity>
-                                <View style={{
-                                    height: 32,
-                                    width: 1.5,
-                                    backgroundColor: '#F2F0F5',
-                                    marginLeft: 8,
-                                }}>
-                                </View>
                             </View>
                         </View>
-                        }
-                        <TouchableOpacity onPress={() => setIsSelectingPhoto(true)}>
-                            <SvgXml
-                                width={24}
-                                height={24}
-                                style={{
-                                    marginLeft: 18
-                                }}
-                                xml={photoSvg}
+                    }
+                    ContentModalStyle={styles.swipeModal}
+                    onClose={() => {
+                        setShowComment(false);
+                    }}
+                />
+                {isSelectingPhoto &&
+                    <PhotoSelector
+                        onSendPhoto={(v) => { setIsSelectingPhoto(false); handleSubmit('photo', v, replyIdx); }}
+                        onCloseModal={() => setIsSelectingPhoto(false)}
+                    />
+                }
+                {isLoading &&
+                    <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(1,1,1,0.3)' }}>
+                        <View style={{ marginTop: windowHeight / 2.5, alignItems: 'center', width: windowWidth }}>
+                            <Progress.Circle
+                                indeterminate
+                                size={30}
+                                color="rgba(0, 0, 255, 0.7)"
+                                style={{ alignSelf: "center" }}
                             />
-                        </TouchableOpacity>
-                    </View>}
-                    {isRecording && <View style={{
-                        position: 'absolute',
-                        bottom: 42,
-                        left: 16,
-                        width: 328,
-                        height: 56,
-                        flexDirection: 'row',
-                        alignItems: 'center'
-                    }}>
-                        <ImageBackground
-                            style={{
-                                position: 'absolute',
-                                height: 56,
-                                width: 328,
-                                justifyContent: 'center'
-                            }}
-                            resizeMode="stretch"
-                            source={require('../../assets/chat/chatRecord.png')}
-                        >
-                            <DescriptionText
-                                text={t("Swipe to Cancel")}
-                                fontSize={13}
-                                lineHeight={13}
-                                color='#E41717'
-                                marginLeft={188}
-                            />
-                        </ImageBackground>
-                        <View
-                            style={{
-                                width: 8,
-                                height: 8,
-                                marginLeft: 24,
-                                borderRadius: 4,
-                                backgroundColor: "#E41717"
-                            }}
-                        ></View>
-                        <CountdownCircleTimer
-                            key={key}
-                            isPlaying={isRecording}
-                            duration={fill}
-                            size={57}
-                            strokeWidth={0}
-                            trailColor="#D4C9DE"
-                            trailStrokeWidth={0}
-                            onComplete={() => onStopRecord(true)}
-                            colors={[
-                                ['#B35CF8', 0.4],
-                                ['#8229F4', 0.4],
-                                ['#8229F4', 0.2],
-                            ]}
-                        >
-                            {({ remainingTime, animatedColor }) => {
-                                return (
-                                    <DescriptionText
-                                        text={new Date(wasteTime.current).toISOString().substr(14, 5)}
-                                        lineHeight={24}
-                                        color="rgba(54, 36, 68, 0.8)"
-                                        fontSize={15}
-                                    />
-                                )
-                            }}
-                        </CountdownCircleTimer>
-                    </View>}
-
-                    <View style={{ position: 'absolute', bottom: isRecording ? 104 : 98, width: '100%', alignItems: 'center' }}>
-                        <Draggable
-                            key={key}
-                            x={isRecording ? 314 : 320}
-                            y={0}
-                            shouldReverse={true}
-                            minX={200}
-                            maxX={windowWidth - 16}
-                            minY={0}
-                            maxY={0}
-                            touchableOpacityProps={{
-                                activeOpactiy: 1,
-                            }}
-                            onDrag={(event, gestureState) => {
-                            }}
-                            onDragRelease={(event, gestureState, bounds) => {
-                                dragPos.current = gestureState.dx;
-                                if (gestureState.dx <= -100) {
-                                    Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-                                    setTimeout(() => {
-                                        Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-                                    }, 300);
-                                }
-                            }}
-                            onReverse={() => {
-
-                            }}
-
-                        >
-                            <View
-                                onTouchStart={(e) => onChangeRecord(e, true)}
-                                onTouchEnd={(e) => onChangeRecord(e, false)}
-                                style={{
-                                    opacity: isRecording ? 5 : 1
-                                }}
-                            >
-                                <SvgXml
-                                    width={isRecording ? 68 : 56}
-                                    height={isRecording ? 68 : 56}
-                                    xml={recordSvg}
-                                />
-                            </View>
-                        </Draggable>
+                        </View>
                     </View>
-                </>
-                :
+                }
+            </ImageBackground>
+            {(!isRecording && !isPublish) &&
                 <View style={{
                     position: 'absolute',
+                    bottom: 0,
                     width: windowWidth,
-                    bottom: 42,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center'
+                    height: 70,
+                    borderTopLeftRadius: 24,
+                    borderTopRightRadius: 24,
+                    backgroundColor: '#FFF',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 8,
+                    marginTop: 8,
                 }}>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            paddingRight: 12,
-                            paddingVertical: 8,
-                            backgroundColor: '#FFF',
-                            borderRadius: 30,
-                            // shadowColor: 'rgba(176, 148, 235, 1)',
-                            // elevation: 10,
-                            // shadowOffset: { width: 0, height: 2 },
-                            // shadowOpacity: 0.5,
-                            // shadowRadius: 8,
-                        }}
-                    >
-                        <VoicePlayer
-                            playBtn={true}
-                            waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
-                            playing={false}
-                            stopPlay={() => { }}
-                            startPlay={() => { }}
-                            tinWidth={windowWidth / 300}
-                            mrg={windowWidth / 600}
-                            duration={duration}
-                        />
-                        <TouchableOpacity onPress={() => setIsPublish(false)}>
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginTop: 6,
+                        marginBottom: 0,
+                    }}>
+                        <TouchableOpacity onPress={() => {
+                            setShowComment(!showComment);
+                        }}>
                             <SvgXml
-                                width={24}
-                                height={24}
-                                xml={redTrashSvg}
+                                style={{
+                                    marginLeft: 14
+                                }}
+                                xml={gifSymbolSvg}
                             />
                         </TouchableOpacity>
-                    </View>
-                    <TouchableOpacity disabled={isLoading} onPress={() => handleSubmit('voice', null, replyIdx)}>
-                        <Image
+                        <View
                             style={{
-                                height: 56,
-                                width: 56,
-                                marginLeft: 4
+                                borderRadius: 40,
+                                paddingHorizontal: 16,
+                                //paddingVertical: 8,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                backgroundColor: '#F2F0F5',
+                                flex: 1,
+                                height: 40,
+                                marginRight: 65,
+                                marginLeft: 10,
                             }}
-                            resizeMode="stretch"
-                            source={require('../../assets/post/answerPublish.png')}
-                        />
-                    </TouchableOpacity>
-                </View>
-            }
-            {isSelectingPhoto &&
-                <PhotoSelector
-                    onSendPhoto={(v) => { setIsSelectingPhoto(false); handleSubmit('photo', v, replyIdx); }}
-                    onCloseModal={() => setIsSelectingPhoto(false)}
-                />
-            }
-            {isLoading &&
-                <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'rgba(1,1,1,0.3)' }}>
-                    <View style={{ marginTop: windowHeight / 2.5, alignItems: 'center', width: windowWidth }}>
-                        <Progress.Circle
-                            indeterminate
-                            size={30}
-                            color="rgba(0, 0, 255, 0.7)"
-                            style={{ alignSelf: "center" }}
-                        />
+                        >
+                            <TextInput
+                                style={
+                                    {
+                                        fontSize: 15,
+                                        width: 205,
+                                        lineHeight: 15,
+                                        color: '#281E30',
+                                    }
+                                }
+                                value={label}
+                                autoCapitalize='none'
+                                onSubmitEditing={() => {
+                                    onAnswerBio();
+                                }}
+                                onChangeText={(e) => setLabel(e)}
+                                placeholder={t("Type your answer")}
+                                placeholderTextColor="rgba(59, 31, 82, 0.6)"
+                            />
+                            <TouchableOpacity disabled={label.length == 0} onPress={() => {
+                                onAnswerBio();
+                                Keyboard.dismiss();
+                            }}>
+                                <SvgXml
+                                    xml={label == '' ? whitePostSvg : colorPostSvg}
+                                />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             }
-        </ImageBackground>
+            {!isPublish&&<View style={{ position: 'absolute', bottom: isRecording ? 81 : 68, width: '100%', alignItems: 'center' }}>
+                <Draggable
+                    key={key}
+                    x={isRecording ? 330 : 336}
+                    y={0}
+                    shouldReverse={true}
+                    minX={200}
+                    maxX={windowWidth - 16}
+                    minY={0}
+                    maxY={0}
+                    touchableOpacityProps={{
+                        activeOpactiy: 1,
+                    }}
+                    onDrag={(event, gestureState) => {
+                    }}
+                    onDragRelease={(event, gestureState, bounds) => {
+                        dragPos.current = gestureState.dx;
+                        if (gestureState.dx <= -100) {
+                            Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                            setTimeout(() => {
+                                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                            }, 300);
+                        }
+                    }}
+                    onReverse={() => {
+
+                    }}
+
+                >
+                    <View
+                        onTouchStart={(e) => onChangeRecord(e, true)}
+                        onTouchEnd={(e) => onChangeRecord(e, false)}
+                        style={{
+                            opacity: isRecording ? 5 : 1
+                        }}
+                    >
+                        <SvgXml
+                            width={isRecording ? 68 : 44}
+                            height={isRecording ? 68 : 44}
+                            xml={recordSvg}
+                        />
+                    </View>
+                </Draggable>
+            </View>}
+        </KeyboardAvoidingView>
     )
 }
 

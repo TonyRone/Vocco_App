@@ -88,7 +88,8 @@ const ChatScreen = (props) => {
                             temp.state = 'stop';
                             return temp;
                         })
-                        setConversations([...tp]);
+                        if(mounted.current)
+                            setConversations([...tp]);
                     })
                 }
             })
