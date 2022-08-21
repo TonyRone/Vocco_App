@@ -11,6 +11,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		2C9EB1CD28B24A9D00E557FD /* libRNVibrationFeedback.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C9EB1CC28B24A7900E557FD /* libRNVibrationFeedback.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8CF513DE27D8FD0C00EFBCEF /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 8CF513DD27D8FD0C00EFBCEF /* fonts */; };
 		8CF5140C27DBBB8600EFBCEF /* libRNAudioRecorderPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CF513F827DB8E3800EFBCEF /* libRNAudioRecorderPlayer.a */; };
@@ -24,9 +25,9 @@
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = Vocco;
 		};
-		2CA926E728AF6B7D00E08D68 /* PBXContainerItemProxy */ = {
+		2C9EB1CB28B24A7900E557FD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 2CA926E328AF6B7C00E08D68 /* RNVibrationFeedback.xcodeproj */;
+			containerPortal = 2C9EB1C728B24A7900E557FD /* RNVibrationFeedback.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNVibrationFeedback;
@@ -53,7 +54,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Vocco/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Vocco/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Vocco/main.m; sourceTree = "<group>"; };
-		2CA926E328AF6B7C00E08D68 /* RNVibrationFeedback.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNVibrationFeedback.xcodeproj; path = "../node_modules/react-native-vibration-feedback/ios/RNVibrationFeedback.xcodeproj"; sourceTree = "<group>"; };
+		2C9EB1C728B24A7900E557FD /* RNVibrationFeedback.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNVibrationFeedback.xcodeproj; path = "../node_modules/react-native-vibration-feedback/ios/RNVibrationFeedback.xcodeproj"; sourceTree = "<group>"; };
 		34B878A7B5F04EDCB024913F /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		4E38C5706E08430BB7ABF091 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		578B8860E8EB459B9D526A16 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
@@ -105,6 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C9EB1CD28B24A9D00E557FD /* libRNVibrationFeedback.a in Frameworks */,
 				8CF5140C27DBBB8600EFBCEF /* libRNAudioRecorderPlayer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -150,10 +152,10 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		2CA926E428AF6B7C00E08D68 /* Products */ = {
+		2C9EB1C828B24A7900E557FD /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2CA926E828AF6B7D00E08D68 /* libRNVibrationFeedback.a */,
+				2C9EB1CC28B24A7900E557FD /* libRNVibrationFeedback.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -210,7 +212,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				2CA926E328AF6B7C00E08D68 /* RNVibrationFeedback.xcodeproj */,
+				2C9EB1C728B24A7900E557FD /* RNVibrationFeedback.xcodeproj */,
 				8CF5142327DBDAED00EFBCEF /* AccessibilityResources */,
 				8CF513F327DB8E3700EFBCEF /* RNAudioRecorderPlayer.xcodeproj */,
 			);
@@ -326,8 +328,8 @@
 					ProjectRef = 8CF513F327DB8E3700EFBCEF /* RNAudioRecorderPlayer.xcodeproj */;
 				},
 				{
-					ProductGroup = 2CA926E428AF6B7C00E08D68 /* Products */;
-					ProjectRef = 2CA926E328AF6B7C00E08D68 /* RNVibrationFeedback.xcodeproj */;
+					ProductGroup = 2C9EB1C828B24A7900E557FD /* Products */;
+					ProjectRef = 2C9EB1C728B24A7900E557FD /* RNVibrationFeedback.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -339,11 +341,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		2CA926E828AF6B7D00E08D68 /* libRNVibrationFeedback.a */ = {
+		2C9EB1CC28B24A7900E557FD /* libRNVibrationFeedback.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libRNVibrationFeedback.a;
-			remoteRef = 2CA926E728AF6B7D00E08D68 /* PBXContainerItemProxy */;
+			remoteRef = 2C9EB1CB28B24A7900E557FD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		8CF513F827DB8E3800EFBCEF /* libRNAudioRecorderPlayer.a */ = {
@@ -512,7 +514,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = SF6VT86H77;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Vocco/Info.plist;
@@ -548,7 +550,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = SF6VT86H77;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Vocco/Info.plist;
