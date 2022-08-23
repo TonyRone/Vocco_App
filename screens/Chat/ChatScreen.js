@@ -229,13 +229,18 @@ const ChatScreen = (props) => {
                         }}
                     >
                         {friends.map((item, index) =>
-                            <FriendItem
-                                key={index + 'friendItem_chat'}
-                                props={props}
-                                info={item}
-                                type='chatUser'
-                                isUserName={true}
-                            />)
+                            {
+                                if (item.user.name.toLowerCase().includes(label.toLowerCase())) {
+                                    return <FriendItem
+                                        key={index + 'friendItem_chat'}
+                                        props={props}
+                                        info={item}
+                                        type='chatUser'
+                                        isUserName={true}
+                                    />
+                                }
+                            }
+                        )
                         }
                     </ScrollView>
                 </View>
