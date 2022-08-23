@@ -915,7 +915,7 @@ const ConversationScreen = (props) => {
                                         {
                                             fontSize: 15,
                                             width: 205,
-                                            lineHeight: 15,
+                                            lineHeight: 18,
                                             color: '#281E30',
                                         }
                                     }
