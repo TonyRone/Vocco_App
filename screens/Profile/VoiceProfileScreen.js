@@ -150,6 +150,7 @@ const VoiceProfileScreen = (props) => {
     //     console.log(err);
     //   });
     if (mounted.current) {
+      stories.sort((a, b) => a.createdAt < b.createdAt);
       setCombines(stories);
       setLoading(false);
     }
@@ -195,6 +196,7 @@ const VoiceProfileScreen = (props) => {
   const onDeleteItem = (index) => {
     let tp = [...combines];
     tp.splice(index, 1);
+    tp.sort((a, b) => a.createdAt < b.createdAt);
     setCombines(tp);
   }
 
@@ -202,6 +204,7 @@ const VoiceProfileScreen = (props) => {
     res.user = user;
     let tp = combines;
     tp.unshift(res);
+    tp.sort((a, b) => a.createdAt < b.createdAt);
     if (mounted.current) {
       setCombines([...tp]);
       setIsLoading(false);
@@ -216,6 +219,7 @@ const VoiceProfileScreen = (props) => {
         answerBio.user = user;
         let tp = combines;
         tp.unshift(answerBio);
+        tp.sort((a, b) => a.createdAt < b.createdAt);
         if (mounted.current) {
           setCombines([...tp]);
           setIsLoading(false);
@@ -237,6 +241,7 @@ const VoiceProfileScreen = (props) => {
         emojiAnswer.user = user;
         let tp = combines;
         tp.unshift(emojiAnswer);
+        tp.sort((a, b) => a.createdAt < b.createdAt);
         if (mounted.current) {
           setCombines([...tp]);
           setIsLoading(false);
@@ -257,6 +262,7 @@ const VoiceProfileScreen = (props) => {
         gifAnswer.user = user;
         let tp = combines;
         tp.unshift(gifAnswer);
+        tp.sort((a, b) => a.createdAt < b.createdAt);
         if (mounted.current) {
           setCombines([...tp]);
           setIsLoading(false);
@@ -495,6 +501,7 @@ const VoiceProfileScreen = (props) => {
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.5,
           shadowRadius: 8,
+          height: 60
         }}>
           {filter.length > 0 && filter.map((item, index) => {
             return <TouchableOpacity style={{
@@ -543,6 +550,7 @@ const VoiceProfileScreen = (props) => {
               flexDirection: 'row',
               alignItems: 'center',
               marginTop: 6,
+              zIndex: 10,
             }}>
               <TouchableOpacity onPress={() => {
                 setShowComment(!showComment);

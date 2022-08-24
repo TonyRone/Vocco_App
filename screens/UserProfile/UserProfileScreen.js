@@ -223,10 +223,8 @@ const UserProfileScreen = (props) => {
         flex: 1
       }}
     >
-      {userInfo.user && <Image
-        source={userInfo.user.avatar ? { uri: userInfo.user.avatar.url } : Avatars[userInfo.user.avatarNumber].uri}
-        resizeMode="cover"
-        style= {{
+      {userInfo.user &&
+        <View style={{
           borderBottomLeftRadius: 45 + ((userInfo.user && userInfo.user.premium == "none") ? 0 : 3),
           width: windowWidth + ((userInfo.user && userInfo.user.premium == "none") ? 0 : 6),
           height: 350 + ((userInfo.user && userInfo.user.premium == "none") ? 0 : 6),
@@ -235,8 +233,18 @@ const UserProfileScreen = (props) => {
           marginTop: (userInfo.user && userInfo.user.premium == "none") ? 0 : -3,
           marginBottom:15,
           borderColor: '#FFA002'
-        }}
-      />}
+        }}>
+          <Image
+            source={userInfo.user.avatar ? { uri: userInfo.user.avatar.url } : Avatars[userInfo.user.avatarNumber].uri}
+            resizeMode="cover"
+            style= {{
+              borderBottomLeftRadius: 45 + ((userInfo.user && userInfo.user.premium == "none") ? 0 : 3),
+              width: windowWidth,
+              height: 350
+            }}
+          />
+        </View>
+      }
       <LinearGradient
         colors={['rgba(52, 50, 56, 0)', 'rgba(42, 39, 47, 0)', 'rgba(39, 36, 44, 0.65)', 'rgba(34, 32, 38, 0.9)']}
         locations={[0, 0.63, 0.83, 1]}
