@@ -7,7 +7,8 @@ import {
   ScrollView,
   Platform,
   RefreshControl,
-  Modal
+  Modal,
+  Image
 } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
@@ -25,6 +26,7 @@ import searchSvg from '../../assets/login/search.svg';
 import { Categories, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { Stories } from './Stories';
+import { DiscoverStories } from './Discoverstories';
 import { setRefreshState } from '../../store/actions';
 
 export const Discover = ({
@@ -92,8 +94,12 @@ export const Discover = ({
         flex: 1
       }}
     >
-      <View style={[styles.paddingH16]}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View style={[styles.paddingH16, {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: "flex-start"
+      }]}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
           <SvgXml
             width="20"
             height="20"
@@ -114,8 +120,66 @@ export const Discover = ({
             >{t("Search") + '...'}</Text>
           </Pressable>
         </View>
+        <View style={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: windowWidth / 375 * 14}}>
+          <View
+            style={{
+              height: windowWidth / 375 * 43,
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: windowWidth / 375 * 43,
+              borderRadius: 12,
+              backgroundColor: (category == selectedCategory ? true : false) ? '#B35CF8' : '#FFF',
+              shadowColor: 'rgba(42, 10, 111, 1)',
+              elevation: !(category == selectedCategory ? true : false) ? 10 : 0,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.5,
+              shadowRadius: 4
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                width: windowWidth / 375 * 43,
+                alignItems: 'center',
+                padding: 1,
+                borderRadius: 12,
+              }}
+              onPress={() => setShowModal()}
+            >
+              <View style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                color: '#4C64FF',
+                backgroundColor: '#FFF',
+                padding: 15,
+                width: windowWidth / 375 * 43 - 4,
+                height: windowWidth / 375 * 43 - 4,
+                borderRadius: 10,
+              }}>
+                <Image source={Categories[selectedCategory].uri}
+                  style={{
+                    width: 25,
+                    height: 25
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+          <Text
+            style={{
+              fontSize: 11,
+              fontFamily: "SFProDisplay-Regular",
+              letterSpacing: 0.066,
+              color: '#A24EE4',
+              textAlign: "center",
+              marginTop: 4,
+            }}
+          >
+            {Categories[selectedCategory].label == '' ? t('All') :  t(Categories[selectedCategory].label)}
+          </Text>
+        </View>
       </View>
-      <ScrollView
+      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+      {/* <ScrollView
         style={{ flex:1, marginBottom: Platform.OS == 'ios' ? 65 : 75 }}
         refreshControl={
           <RefreshControl
@@ -129,8 +193,8 @@ export const Discover = ({
           }
         }}
         scrollEventThrottle={400}
-      >
-        <View
+      > */}
+        {/* <View
           style={[styles.paddingH16, styles.rowSpaceBetween,{marginTop:25}]}
         >
           <TitleText
@@ -174,20 +238,21 @@ export const Discover = ({
             }}
             keyExtractor={(item, idx) => idx.toString()}
           />
-        </View>
-        <TitleText
+        </View> */}
+        {/* <TitleText
           text={t("World stories")}
           fontSize={20}
           marginTop={10}
           marginLeft={16}
-        />
-        <Stories
+        /> */}
+        <DiscoverStories
           props={props}
           loadKey={loadKey}
           screenName="Discover"
           category={Categories[category].label}
         />
-      </ScrollView>
+      {/* </ScrollView> */}
+      </View>
       <Modal
         animationType="slide"
         transparent={true}

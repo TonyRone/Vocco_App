@@ -315,7 +315,7 @@ const FriendsScreen = (props) => {
                             marginLeft: 12
                         }}>
                             <SemiBoldText
-                                text={user.name}
+                                text={t("Invite friends")}
                                 fontSize={15}
                                 lineHeight={24}
                             />

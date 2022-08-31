@@ -188,6 +188,7 @@ export const AnswerRecordIcon = ({
         width: (isRecording || isPublish) ? windowWidth : 44,
         height: isRecording ? 76 : 44,
         elevation: 11,
+        zIndex: 10
       }}
       onPress={() => onStopRecord(false)}
     >
