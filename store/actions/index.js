@@ -1,4 +1,4 @@
-import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE , SETREFRESHSTATE, SETNOTIFICATIONID, SETMESSAGECOUNT } from '../constants';
+import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE , SETREFRESHSTATE, SETNOTIFICATIONID, SETMESSAGECOUNT, SETVISIBLEONE } from '../constants';
 export function setUser(user) {
     return {
         type: SETUSER,
@@ -38,5 +38,12 @@ export function setMessageCount(messageCount) {
     return {
         type: SETMESSAGECOUNT,
         payload: messageCount
+    }
+}
+
+export function setVisibleOne(visibleOne) {
+    return {
+        type: SETVISIBLEONE,
+        payload: visibleOne
     }
 }

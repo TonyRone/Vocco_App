@@ -280,7 +280,7 @@ export const StoryScreens = ({
   }
 
   const onSetLabel = (e) => {
-    setLabel(e);
+    setLabel(e.charAt(0).toUpperCase() + e.slice(1));
     let i = findPosition(e);
     let tp = '';
     if (i != -1) {

@@ -14,13 +14,14 @@ import { VoiceItem } from '../component/VoiceItem';
 import { SvgXml } from 'react-native-svg';
 import box_blankSvg from '../../assets/discover/box_blank.svg';
 import { windowHeight, windowWidth } from '../../config/config';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import VoiceService from '../../services/VoiceService';
 import { DescriptionText } from '../component/DescriptionText';
 import { MyButton } from './MyButton';
 import { InviteUsers } from './InviteUsers';
 import SelectTopicScreen from '../PhoneNumberLogin/SelectTopicScreen';
 import { StoryItem } from '../component/StoryItem';
+import { setVisibleOne } from '../../store/actions';
 
 export const DiscoverStories = ({
   props,
@@ -32,6 +33,8 @@ export const DiscoverStories = ({
   recordId = '',
   setLoadKey = () => {}
 }) => {
+
+  const dispatch = useDispatch();
 
   const { t, i18n } = useTranslation();
   const scrollRef = useRef();
@@ -52,6 +55,8 @@ export const DiscoverStories = ({
       state.user
     )
   });
+
+  const { visibleOne } = useSelector((state) => state.user);
 
   const OnShowEnd = () => {
     if (showEnd) return;
@@ -131,6 +136,11 @@ export const DiscoverStories = ({
     // }
     // )
     return <FlatList
+      onMomentumScrollEnd={(e) => {
+        let contentOffset = e.nativeEvent.contentOffset;
+        let ind = Math.round(contentOffset.y / (windowHeight / 157 * 115));
+        dispatch(setVisibleOne(ind));
+      }}
       data={stories}
       pagingEnabled
       showsVerticalScrollIndicator={false}
@@ -145,6 +155,7 @@ export const DiscoverStories = ({
         />}
       renderItem={({item, index}) => {
         return <StoryItem
+          indd={index}
           key={index + item.id + screenName}
           props={props}
           info={item}

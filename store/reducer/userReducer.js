@@ -1,12 +1,13 @@
 import { setMessageCount, setNotificationId } from '../actions';
-import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE, SETREFRESHSTATE, SETNOTIFICATIONID, SETMESSAGECOUNT } from '../constants';
+import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE, SETREFRESHSTATE, SETNOTIFICATIONID, SETMESSAGECOUNT, SETVISIBLEONE } from '../constants';
 const initialState = {
     user: null,
     voiceState: 0,
     socketInstance: null,
     refreshState: false,
     notificationId: null,
-    messageCount: 0
+    messageCount: 0,
+    visibleOne: 0
 };
 const userReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -14,6 +15,11 @@ const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 user: action.payload
+            };
+        case SETVISIBLEONE:
+            return {
+                ...state,
+                visibleOne: action.payload
             };
         case SETVOICESTATE:
             return {

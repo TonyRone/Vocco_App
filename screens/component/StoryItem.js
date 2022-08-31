@@ -45,6 +45,7 @@ export const StoryItem = ({
   props,
   info,
   isRefresh = false,
+  indd,
   onChangeLike = () => { },
   spread = true,
 }) => {
@@ -70,6 +71,12 @@ export const StoryItem = ({
       state.user
     )
   });
+
+  const { visibleOne } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    setIsPlaying(visibleOne === indd);
+  }, [visibleOne])
 
   const getFollowUsers = async () => {
     setIsLoading(true);
@@ -205,6 +212,7 @@ export const StoryItem = ({
   return (
     <>
       <Pressable
+        style={{ height: windowHeight / 157 * 115 }}
         onPress={() => onClickDouble()}
       >
       <View style={{ width: windowWidth, height: windowHeight / 157 * 115 , paddingHorizontal: 16, position: "relative" }}>
