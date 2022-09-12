@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   TouchableOpacity,
-  Platform
+  Platform,
+  Vibration
 } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
@@ -13,6 +14,7 @@ import { SvgXml } from 'react-native-svg';
 import closeSvg from '../../assets/discover/close.svg'
 import { Categories } from '../../config/config';
 import { styles } from '../style/Common';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 
 export const AllCategory = ({
   closeModal = () => { },
@@ -69,7 +71,10 @@ export const AllCategory = ({
               key={'all_catagory' + index}
               label={item.label}
               source={item.uri}
-              onPress={() => setCategory(index)}
+              onPress={() => {
+                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                setCategory(index)}
+              }
               active={selectedCategory == index ? true : false}
             />
           )

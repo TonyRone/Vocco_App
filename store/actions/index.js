@@ -1,4 +1,4 @@
-import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE , SETREFRESHSTATE, SETNOTIFICATIONID, SETMESSAGECOUNT, SETVISIBLEONE } from '../constants';
+import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE , SETREFRESHSTATE, SETNOTIFICATIONID, SETMESSAGECOUNT, SETVISIBLEONE, SETFEEDVISIBLEONE } from '../constants';
 export function setUser(user) {
     return {
         type: SETUSER,
@@ -44,6 +44,13 @@ export function setMessageCount(messageCount) {
 export function setVisibleOne(visibleOne) {
     return {
         type: SETVISIBLEONE,
+        payload: visibleOne
+    }
+}
+
+export function setFeedVisibleOne(visibleOne) {
+    return {
+        type: SETFEEDVISIBLEONE,
         payload: visibleOne
     }
 }

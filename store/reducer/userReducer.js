@@ -1,5 +1,5 @@
 import { setMessageCount, setNotificationId } from '../actions';
-import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE, SETREFRESHSTATE, SETNOTIFICATIONID, SETMESSAGECOUNT, SETVISIBLEONE } from '../constants';
+import { SETUSER, SETVOICESTATE, SETSOCKETINSTANCE, SETREFRESHSTATE, SETNOTIFICATIONID, SETMESSAGECOUNT, SETVISIBLEONE, SETFEEDVISIBLEONE } from '../constants';
 const initialState = {
     user: null,
     voiceState: 0,
@@ -7,7 +7,8 @@ const initialState = {
     refreshState: false,
     notificationId: null,
     messageCount: 0,
-    visibleOne: 0
+    visibleOne: 0,
+    feedVisibleOne: 0
 };
 const userReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -16,6 +17,11 @@ const userReducer = (state = initialState, action) => {
                 ...state,
                 user: action.payload
             };
+        case SETFEEDVISIBLEONE:
+            return {
+                ...state,
+                feedVisibleOne: action.payload
+            }
         case SETVISIBLEONE:
             return {
                 ...state,

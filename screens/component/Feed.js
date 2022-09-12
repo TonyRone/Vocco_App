@@ -6,7 +6,8 @@ import {
   RefreshControl,
 } from 'react-native';
 
-import { Stories } from './Stories';
+
+import { FeedStories } from './FeedStories';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { windowWidth } from '../../config/config';
@@ -57,7 +58,7 @@ export const Feed = ({
         flex: 1,
       }}
     >
-      <ScrollView
+      {/* <ScrollView
         style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 10, flex:1 }}
         ref={scrollRef}
         refreshControl={
@@ -72,13 +73,13 @@ export const Feed = ({
           }
         }}
         scrollEventThrottle={400}
-      >
-        <Stories
+      > */}
+        <FeedStories
           props={props}
           loadKey={loadKey}
           screenName="Feed"
         />
-      </ScrollView>
+      {/* </ScrollView> */}
     </View>
   );
 };

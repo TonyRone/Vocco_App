@@ -3,27 +3,28 @@ import {
   View,
   Image,
   Text,
-  FlatList,
-  RefreshControl
+  ScrollView,
+  TouchableOpacity
 } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
+import { setRefreshState } from '../../store/actions';
 import '../../language/i18n';
 import * as Progress from "react-native-progress";
-import { VoiceItem } from '../component/VoiceItem';
+import { ProfileStoryItem } from './ProfileStoryItem';
 import { SvgXml } from 'react-native-svg';
 import box_blankSvg from '../../assets/discover/box_blank.svg';
 import { windowHeight, windowWidth } from '../../config/config';
 import { useSelector, useDispatch } from 'react-redux';
 import VoiceService from '../../services/VoiceService';
-import { DescriptionText } from '../component/DescriptionText';
+import { DescriptionText } from './DescriptionText';
 import { MyButton } from './MyButton';
 import { InviteUsers } from './InviteUsers';
 import SelectTopicScreen from '../PhoneNumberLogin/SelectTopicScreen';
-import { StoryItem } from '../component/StoryItem';
-// import { setVisibleOne } from '../../store/actions';
+import { styles } from '../style/Common';
+import whiteTrashSvg from '../../assets/notification/white_trash.svg'
 
-export const DiscoverStories = ({
+export const ProfileStories = ({
   props,
   loadKey = 0,
   screenName = '',
@@ -31,7 +32,6 @@ export const DiscoverStories = ({
   userId = '',
   searchTitle = '',
   recordId = '',
-  setLoadKey = () => {}
 }) => {
 
   const dispatch = useDispatch();
@@ -40,25 +40,18 @@ export const DiscoverStories = ({
   const scrollRef = useRef();
   const mounted = useRef(false);
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [follows, setFollows] = useState([]);
   const [stories, setStories] = useState([]);
   const [LoadMore, setLoadMore] = useState(10);
   const [loading, setLoading] = useState(true);
   const [showEnd, setShowEnd] = useState(false);
   const [showInviteList, setShowInviteList] = useState(false);
   const [localKey, setLocalKey] = useState(0);
-  const [refreshing, setRefreshing] = useState(false);
-  const [current, setCurrent] = useState(0);
-  const [userClick, setUserClick] = useState(false);
 
   let { refreshState } = useSelector((state) => {
     return (
       state.user
     )
   });
-
-  // const { visibleOne } = useSelector((state) => state.user);
 
   const OnShowEnd = () => {
     if (showEnd) return;
@@ -103,76 +96,55 @@ export const DiscoverStories = ({
     tp[id].isLike = val;
     setStories(tp);
   }
-  const onRefresh = () => {
-    setRefreshing(true);
-    getStories(true);
-    setLoadKey(loadKey - 1);
-    setTimeout(() => {
-      if(mounted.current)
-        setRefreshing(false)
-    }, 1000);
-  };
 
-  const fetchLoadMore = () => {
-    setLoading(true);
-    VoiceService.getStories(stories.length, userId, category, searchTitle, recordId, screenName == 'Feed' ? 'friend' : '').then(async res => {
-      if (res.respInfo.status === 200 && mounted.current) {
-        const jsonRes = await res.json();
-        setStories((stories.length == 0) ? [...jsonRes] : [...stories, ...jsonRes]);
-        setLoadMore(jsonRes.length);
-        setLoading(false);
-      }
+  const deleteVoice = (id) => {
+    VoiceService.deleteVoice(id).then(async res => {
+      dispatch(setRefreshState(!refreshState));
     })
       .catch(err => {
-        console.log(err);
-      });
+        console.log(err)
+      })
   }
 
   const storyItems = useMemo(() => {
-    // return stories.map((item, index) => {
-    //   return <StoryItem
-    //     key={index + item.id + screenName}
-    //     props={props}
-    //     info={item}
-    //     onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
-    //   />
-    // }
-    // )
-    return <FlatList
-      onMomentumScrollEnd={(e) => {
-        let contentOffset = e.nativeEvent.contentOffset;
-        let ind = Math.round(contentOffset.y / (windowHeight / 157 * 115));
-        setCurrent(ind);
-        // console.log(ind);
-        // dispatch(setVisibleOne(ind));
-      }}
-      data={stories}
-      pagingEnabled
-      showsVerticalScrollIndicator={false}
-      style={{
-        height: windowHeight / 157 * 115
-      }}
-      keyboardShouldPersistTaps='handled'
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />}
-      renderItem={({item, index}) => {
-        return <StoryItem
-          indd={index}
+    return stories.map((item, index) => {
+      return <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={{ maxWidth: windowWidth }}>
+        <ProfileStoryItem
           key={index + item.id + screenName}
           props={props}
           info={item}
-          current={current}
-          userClick={userClick}
-          onSetUserClick={() => setUserClick(!userClick)}
           onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
         />
-      }}
-      onEndReached={() => fetchLoadMore()}
-    />
-  }, [stories, refreshState, current])
+        <TouchableOpacity
+          style={[styles.rowAlignItems, {
+            marginTop: 12,
+            marginBottom: 4,
+            width: windowWidth,
+            paddingVertical: 24,
+            paddingHorizontal: 16,
+            backgroundColor: '#E41717',
+            borderTopLeftRadius: 24,
+            borderBottomLeftRadius: 24
+          }]}
+          onPress={() => deleteVoice(item.id)}
+        >
+          <View style={{ width: 2, height: 16, marginLeft: 4, backgroundColor: '#B91313', borderRadius: 1 }}></View>
+          <SvgXml
+            marginLeft={10}
+            xml={whiteTrashSvg}
+          />
+          <DescriptionText
+            text={t("Delete")}
+            fontSize={17}
+            lineHeight={22}
+            color='white'
+            marginLeft={16}
+          />
+        </TouchableOpacity>
+      </ScrollView>
+    }
+    )
+  }, [stories, refreshState])
 
   useEffect(() => {
     mounted.current = true;
@@ -182,7 +154,7 @@ export const DiscoverStories = ({
     }
   }, [refreshState, loadKey, category])
 
-  return <View style={{ height: windowHeight / 157 * 115 }}>
+  return <View>
     {showEnd &&
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12 }}>
         <Image

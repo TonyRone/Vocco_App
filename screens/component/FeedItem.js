@@ -41,15 +41,12 @@ import { StoryScreens } from './StoryScreens';
 import { SemiBoldText } from './SemiBoldText';
 import { setRefreshState } from '../../store/actions';
 
-export const StoryItem = ({
+export const FeedItem = ({
   props,
   info,
   isRefresh = false,
   indd,
-  current,
-  userClick,
   onChangeLike = () => { },
-  onSetUserClick = () => {},
   spread = true,
 }) => {
   const [showContext, setShowContext] = useState(false);
@@ -61,10 +58,10 @@ export const StoryItem = ({
   const [key, setKey] = useState(0);
   const [showReport, setShowReport] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [follows, setFollows] = useState(null);
+  // const [follows, setFollows] = useState(null);
   const [showChat, setShowChat] = useState(false);
-  const [isFriend, setIsFriend] = useState(false);
-  const [reload, setReload] = useState(false);
+  // const [isFriend, setIsFriend] = useState(false);
+  // const [reload, setReload] = useState(false);
 
   const { t, i18n } = useTranslation();
   const mounted = useRef(false);
@@ -75,72 +72,64 @@ export const StoryItem = ({
     )
   });
 
-  // const { visibleOne } = useSelector((state) => state.user);
+  // const { feedVisibleOne } = useSelector((state) => state.user);
 
   // useEffect(() => {
-  //   setIsPlaying(visibleOne === indd);
-  // }, [visibleOne])
+  //   setIsPlaying(feedVisibleOne === indd);
+  // }, [feedVisibleOne])
 
-  useEffect(() => {
-    if (userClick === false) {
-      setIsPlaying(current === indd);
-    } else {
-      setIsPlaying(false);
-    }
-  }, [current])
+  // const getFollowUsers = async () => {
+  //   setIsLoading(true);
+  //   await VoiceService.getFollows(user.id, 'Following').then(async res => {
+  //     if (res.respInfo.status === 200) {
+  //       const jsonRes = await res.json();
+  //       setFollows(jsonRes);
+  //       setIsLoading(false);
+  //     }
+  //   })
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+  // }
 
-  const getFollowUsers = async () => {
-    setIsLoading(true);
-    await VoiceService.getFollows(user.id, 'Following').then(async res => {
-      if (res.respInfo.status === 200) {
-        const jsonRes = await res.json();
-        setFollows(jsonRes);
-        setIsLoading(false);
-      }
-    })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-
-  const onSendRequest = () => {
-    if (isFriend) {
-      VoiceService.unfollowFriend(info.user.id);
-      Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-      Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-      setIsFriend(false);
-    } else {
-      VoiceService.followFriend(info.user.id);
-      Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-    }
-    setReload(!reload);
-    setRefreshState(!refreshState);
-  }
+  // const onSendRequest = () => {
+  //   if (isFriend) {
+  //     VoiceService.unfollowFriend(info.user.id);
+  //     Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+  //     Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+  //     setIsFriend(false);
+  //   } else {
+  //     VoiceService.followFriend(info.user.id);
+  //     Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+  //   }
+  //   setReload(!reload);
+  //   setRefreshState(!refreshState);
+  // }
 
   useEffect(() => {
     mounted.current = true;
     // setKey(prevKey => prevKey + 1);
-    getFollowUsers();
+    // getFollowUsers();
     return () => {
       mounted.current = false;
     }
   }, []);
 
-  useEffect(() => {
-    getFollowUsers();
-  }, [reload])
+  // useEffect(() => {
+  //   getFollowUsers();
+  // }, [reload])
 
-  useEffect(() => {
-    let flag = false;
-    if (!isLoading) {
-      follows.map((item) => {
-        if (item.user.name === info.user.name) {
-          flag = true;
-        }
-      });
-      setIsFriend(flag);
-    }
-  }, [follows, isLoading])
+  // useEffect(() => {
+  //   let flag = false;
+  //   if (!isLoading) {
+  //     follows.map((item) => {
+  //       if (item.user.name === info.user.name) {
+  //         flag = true;
+  //       }
+  //     });
+  //     // setIsFriend(flag);
+  //   }
+  // }, [follows, isLoading])
 
   useEffect(() => {
     setKey(key => key+1);
@@ -371,7 +360,7 @@ export const StoryItem = ({
                   style={{ width: windowHeight / 417 * 125 - 88, height: windowHeight / 417 * 125 - 88, borderRadius: (windowHeight / 417 * 125 - 88) / 2, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
                 />
                   <TouchableOpacity
-                    onPress={() => {setIsPlaying(!isPlaying); onSetUserClick()}}
+                    onPress={() => setIsPlaying(!isPlaying)}
                     style = {{
                       position: "absolute",
                       top: (windowHeight / 417 * 125 - 88) / 2 - 23,
@@ -443,7 +432,7 @@ export const StoryItem = ({
           bottom: 60,
           right: 20
         }}>
-          { !isLoading && user.id !== info.user.id && <TouchableOpacity style={{ position: "relative" }} onPress={() => onSendRequest()}>
+          {/* { !isLoading && user.id !== info.user.id && <TouchableOpacity style={{ position: "relative" }} onPress={() => onSendRequest()}>
             <Image source={ info.user.avatar?{ uri: info.user.avatar.url }:Avatars[info.user.avatarNumber].uri } style={{ width: 40, height: 40, borderRadius: 20 }} />
             <View style={{ 
               position: "absolute",
@@ -456,7 +445,7 @@ export const StoryItem = ({
                 xml={!isFriend ? info.user.premium != "none" ? addYellow_Svg : add_Svg : addSuccess_Svg}
               />
             </View>
-          </TouchableOpacity>}
+          </TouchableOpacity>} */}
           <View style={{
 
             marginTop: 18,

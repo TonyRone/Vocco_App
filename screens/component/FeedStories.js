@@ -20,10 +20,10 @@ import { DescriptionText } from '../component/DescriptionText';
 import { MyButton } from './MyButton';
 import { InviteUsers } from './InviteUsers';
 import SelectTopicScreen from '../PhoneNumberLogin/SelectTopicScreen';
-import { StoryItem } from '../component/StoryItem';
-// import { setVisibleOne } from '../../store/actions';
+import { FeedItem } from './FeedItem';
+// import { setFeedVisibleOne } from '../../store/actions';
 
-export const DiscoverStories = ({
+export const FeedStories = ({
   props,
   loadKey = 0,
   screenName = '',
@@ -31,7 +31,7 @@ export const DiscoverStories = ({
   userId = '',
   searchTitle = '',
   recordId = '',
-  setLoadKey = () => {}
+  setLoadKey = () => { }
 }) => {
 
   const dispatch = useDispatch();
@@ -40,8 +40,6 @@ export const DiscoverStories = ({
   const scrollRef = useRef();
   const mounted = useRef(false);
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [follows, setFollows] = useState([]);
   const [stories, setStories] = useState([]);
   const [LoadMore, setLoadMore] = useState(10);
   const [loading, setLoading] = useState(true);
@@ -49,16 +47,12 @@ export const DiscoverStories = ({
   const [showInviteList, setShowInviteList] = useState(false);
   const [localKey, setLocalKey] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
-  const [current, setCurrent] = useState(0);
-  const [userClick, setUserClick] = useState(false);
 
   let { refreshState } = useSelector((state) => {
     return (
       state.user
     )
   });
-
-  // const { visibleOne } = useSelector((state) => state.user);
 
   const OnShowEnd = () => {
     if (showEnd) return;
@@ -91,28 +85,6 @@ export const DiscoverStories = ({
       });
   }
 
-  const onChangeLike = (id, val) => {
-    let tp = [...stories];
-    let item = tp[id].isLike;
-    if (item == true && val == false) {
-      tp[id].likesCount--;
-    }
-    else if (item == false && val == true) {
-      tp[id].likesCount++;
-    }
-    tp[id].isLike = val;
-    setStories(tp);
-  }
-  const onRefresh = () => {
-    setRefreshing(true);
-    getStories(true);
-    setLoadKey(loadKey - 1);
-    setTimeout(() => {
-      if(mounted.current)
-        setRefreshing(false)
-    }, 1000);
-  };
-
   const fetchLoadMore = () => {
     setLoading(true);
     VoiceService.getStories(stories.length, userId, category, searchTitle, recordId, screenName == 'Feed' ? 'friend' : '').then(async res => {
@@ -128,9 +100,30 @@ export const DiscoverStories = ({
       });
   }
 
+  const onChangeLike = (id, val) => {
+    let tp = [...stories];
+    let item = tp[id].isLike;
+    if (item == true && val == false) {
+      tp[id].likesCount--;
+    }
+    else if (item == false && val == true) {
+      tp[id].likesCount++;
+    }
+    tp[id].isLike = val;
+    setStories(tp);
+  }
+  const onRefresh = () => {
+    setRefreshing(true);
+    setLoadKey(loadKey - 1);
+    setTimeout(() => {
+      if(mounted.current)
+        setRefreshing(false)
+    }, 1000);
+  };
+
   const storyItems = useMemo(() => {
     // return stories.map((item, index) => {
-    //   return <StoryItem
+    //   return <VoiceItem
     //     key={index + item.id + screenName}
     //     props={props}
     //     info={item}
@@ -140,11 +133,9 @@ export const DiscoverStories = ({
     // )
     return <FlatList
       onMomentumScrollEnd={(e) => {
-        let contentOffset = e.nativeEvent.contentOffset;
-        let ind = Math.round(contentOffset.y / (windowHeight / 157 * 115));
-        setCurrent(ind);
-        // console.log(ind);
-        // dispatch(setVisibleOne(ind));
+        // let contentOffset = e.nativeEvent.contentOffset;
+        // let ind = Math.round(contentOffset.y / (windowHeight / 157 * 115));
+        // dispatch(setFeedVisibleOne(ind));
       }}
       data={stories}
       pagingEnabled
@@ -159,20 +150,17 @@ export const DiscoverStories = ({
           onRefresh={onRefresh}
         />}
       renderItem={({item, index}) => {
-        return <StoryItem
+        return <FeedItem
           indd={index}
           key={index + item.id + screenName}
           props={props}
           info={item}
-          current={current}
-          userClick={userClick}
-          onSetUserClick={() => setUserClick(!userClick)}
           onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
         />
       }}
       onEndReached={() => fetchLoadMore()}
     />
-  }, [stories, refreshState, current])
+  }, [stories, refreshState])
 
   useEffect(() => {
     mounted.current = true;
@@ -182,7 +170,7 @@ export const DiscoverStories = ({
     }
   }, [refreshState, loadKey, category])
 
-  return <View style={{ height: windowHeight / 157 * 115 }}>
+  return <View>
     {showEnd &&
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12 }}>
         <Image

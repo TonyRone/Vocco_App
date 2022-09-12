@@ -43,6 +43,7 @@ import VoiceService from '../../services/VoiceService';
 
 export const AnswerRecordIcon = ({
   props,
+  recordId,
   onPublishStory = () => { },
   onStartPublish = () => { }
 }) => {
@@ -53,7 +54,7 @@ export const AnswerRecordIcon = ({
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
 
-  let recordId = props.navigation.state.params?.id;
+  // let recordId = props.navigation.state.params?.id;
   const [fill, setFill] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [key, setKey] = useState(0);
