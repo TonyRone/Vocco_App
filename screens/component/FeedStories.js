@@ -21,6 +21,8 @@ import { MyButton } from './MyButton';
 import { InviteUsers } from './InviteUsers';
 import SelectTopicScreen from '../PhoneNumberLogin/SelectTopicScreen';
 import { FeedItem } from './FeedItem';
+import EditService from '../../services/EditService';
+import { StoryItem } from './StoryItem';
 // import { setFeedVisibleOne } from '../../store/actions';
 
 export const FeedStories = ({
@@ -78,6 +80,12 @@ export const FeedStories = ({
         setLoading(false);
         if (isNew)
           scrollRef.current?.scrollToOffset({ animated: true, offset: 0 });
+        EditService.updateLastSee().then(res => {
+
+        })
+          .catch(err => {
+            console.log(err);
+          });
       }
     })
       .catch(err => {
@@ -116,7 +124,7 @@ export const FeedStories = ({
     setRefreshing(true);
     setLoadKey(loadKey - 1);
     setTimeout(() => {
-      if(mounted.current)
+      if (mounted.current)
         setRefreshing(false)
     }, 1000);
   };
@@ -149,9 +157,8 @@ export const FeedStories = ({
           refreshing={refreshing}
           onRefresh={onRefresh}
         />}
-      renderItem={({item, index}) => {
-        return <FeedItem
-          indd={index}
+      renderItem={({ item, index }) => {
+        return <StoryItem
           key={index + item.id + screenName}
           props={props}
           info={item}
@@ -182,11 +189,11 @@ export const FeedStories = ({
         />
         <DescriptionText
           marginLeft={3}
-          text={t("You are up to date 🎉! Share vocco with you friends!")}
+          text={t("You are up to date 🎉! Share Vocco with your friends!")}
         />
       </View>
     }
-    {(stories.length > 0 ? storyItems :(!loading?
+    {(stories.length > 0 ? storyItems : (!loading ?
       (screenName == 'Feed' ?
         <View style={{ width: windowWidth, alignItems: 'center' }}>
           <Image
@@ -226,14 +233,14 @@ export const FeedStories = ({
           />
         </View>
       )
-      :null)
+      : null)
     )}
     {loading &&
       <View style={{
-        position: stories.length?'absolute':'relative',
-        width:'100%',
+        position: stories.length ? 'absolute' : 'relative',
+        width: '100%',
         alignItems: 'center',
-        marginTop:100,
+        marginTop: 100,
         elevation: 20
       }}>
         <Progress.Circle

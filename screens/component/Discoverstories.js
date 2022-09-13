@@ -31,7 +31,7 @@ export const DiscoverStories = ({
   userId = '',
   searchTitle = '',
   recordId = '',
-  setLoadKey = () => {}
+  setLoadKey = () => { }
 }) => {
 
   const dispatch = useDispatch();
@@ -77,11 +77,13 @@ export const DiscoverStories = ({
     }
     if (isNew) setLoading(true);
     VoiceService.getStories(isNew ? 0 : stories.length, userId, category, searchTitle, recordId, screenName == 'Feed' ? 'friend' : '').then(async res => {
+      if (mounted.current)
+        setLoading(false);
+      console.log(res.respInfo.status);
       if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
         setStories((stories.length == 0 || isNew) ? [...jsonRes] : [...stories, ...jsonRes]);
         setLoadMore(jsonRes.length);
-        setLoading(false);
         if (isNew)
           scrollRef.current?.scrollToOffset({ animated: true, offset: 0 });
       }
@@ -108,7 +110,7 @@ export const DiscoverStories = ({
     getStories(true);
     setLoadKey(loadKey - 1);
     setTimeout(() => {
-      if(mounted.current)
+      if (mounted.current)
         setRefreshing(false)
     }, 1000);
   };
@@ -158,7 +160,7 @@ export const DiscoverStories = ({
           refreshing={refreshing}
           onRefresh={onRefresh}
         />}
-      renderItem={({item, index}) => {
+      renderItem={({ item, index }) => {
         return <StoryItem
           indd={index}
           key={index + item.id + screenName}
@@ -194,11 +196,11 @@ export const DiscoverStories = ({
         />
         <DescriptionText
           marginLeft={3}
-          text={t("You are up to date 🎉! Share vocco with you friends!")}
+          text={t("You are up to date 🎉! Share Vocco with your friends!")}
         />
       </View>
     }
-    {(stories.length > 0 ? storyItems :(!loading?
+    {(stories.length > 0 ? storyItems : (!loading ?
       (screenName == 'Feed' ?
         <View style={{ width: windowWidth, alignItems: 'center' }}>
           <Image
@@ -238,14 +240,14 @@ export const DiscoverStories = ({
           />
         </View>
       )
-      :null)
+      : null)
     )}
     {loading &&
       <View style={{
-        position: stories.length?'absolute':'relative',
-        width:'100%',
+        position: stories.length ? 'absolute' : 'relative',
+        width: '100%',
         alignItems: 'center',
-        marginTop:100,
+        marginTop: 100,
         elevation: 20
       }}>
         <Progress.Circle

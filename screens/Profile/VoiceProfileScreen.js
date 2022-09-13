@@ -132,29 +132,17 @@ const VoiceProfileScreen = (props) => {
   }
 
   const getAnswers = async () => {
-    let stories = await VoiceService.getAnswers(recordId, answerId).then(async res => {
+    VoiceService.getAnswers(recordId, answerId).then(async res => {
+      console.log(res.respInfo.status,"@@@@@@@@@@@@@@@@@@@@@@@");
       if (res.respInfo.status === 200 && mounted.current) {
-        return await res.json();
+        setLoading(false);
+        const jsonRes = await res.json();
+        setCombines(jsonRes);
       }
     })
       .catch(err => {
         console.log(err);
       });
-
-    // let tags = await VoiceService.getTags(recordId, 'record').then(async res => {
-    //   if (res.respInfo.status === 200 && mounted.current) {
-    //     return await res.json();
-    //   }
-    // })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
-    if (mounted.current) {
-      stories.sort((a, b) => a.createdAt < b.createdAt);
-      setCombines(stories);
-      setLoading(false);
-    }
-    //onCombine(stories, tags);
   }
 
   const editVoice = () => {
@@ -533,7 +521,7 @@ const VoiceProfileScreen = (props) => {
           })
           }
           <View style={{
-            position: filter.length>0? 'relative' :'absolute',
+            position: filter.length > 0 ? 'relative' : 'absolute',
             bottom: 0,
             width: windowWidth,
             height: 80,
@@ -571,7 +559,7 @@ const VoiceProfileScreen = (props) => {
                   alignItems: 'center',
                   backgroundColor: '#F2F0F5',
                   flex: 1,
-                  height:40,
+                  height: 40,
                   marginRight: 65,
                   marginLeft: 10,
                 }}

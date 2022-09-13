@@ -45,9 +45,7 @@ export const FeedItem = ({
   props,
   info,
   isRefresh = false,
-  indd,
   onChangeLike = () => { },
-  spread = true,
 }) => {
   const [showContext, setShowContext] = useState(false);
   const [refresh, setRefresh] = useState(false);

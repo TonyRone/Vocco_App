@@ -19,7 +19,7 @@ class VoiceService {
         return RNFetchBlob.config({ trusty: true }).
             fetch(
                 'POST',
-                `${API_URL}/records`, {
+                `${API_URL}/actions/addRecord`, {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
             },
@@ -123,10 +123,10 @@ class VoiceService {
             });
     }
 
-    async getStories(skip = 0, userId = '', category = '', searchTitle = '', recordId = '', friend = '') {
+    async getStories(skip = 0, userId = '', category = '', searchTitle = '', recordId = '', friend = '', take = 10) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
-            fetch('GET', `${API_URL}/records/stories?skip=${skip}&take=10&order=DESC&userId=${userId}&category=${category}&search=${searchTitle}&recordId=${recordId}&friend=${friend}`, {
+            fetch('GET', `${API_URL}/records/stories?skip=${skip}&take=${take}&order=DESC&userId=${userId}&category=${category}&search=${searchTitle}&recordId=${recordId}&friend=${friend}`, {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             });
@@ -484,6 +484,7 @@ class VoiceService {
             }
             );
     }
+
     async markAllrequestSeen() {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
@@ -494,6 +495,7 @@ class VoiceService {
             }
             );
     }
+
     async acceptFriend(userId, requestId) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
@@ -527,7 +529,7 @@ class VoiceService {
             );
     }
 
-    async getActiveUsers(){
+    async getActiveUsers() {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(
@@ -559,7 +561,7 @@ class VoiceService {
             }
             );
     }
-    
+
     async getAnswerBios(storyId) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
@@ -684,7 +686,7 @@ class VoiceService {
             );
     }
 
-    async answerBio(id,data) {
+    async answerBio(id, data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob
             .config({ trusty: true })
@@ -698,7 +700,7 @@ class VoiceService {
             );
     }
 
-    async answerEmoji(id,data) {
+    async answerEmoji(id, data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob
             .config({ trusty: true })
@@ -712,7 +714,7 @@ class VoiceService {
             );
     }
 
-    async answerGif(id,data) {
+    async answerGif(id, data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob
             .config({ trusty: true })

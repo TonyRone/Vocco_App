@@ -164,11 +164,13 @@ export const AnswerVoiceItem = ({
               />
             </TouchableOpacity>
             <View style={{ marginLeft: 16 }}>
-              <TitleText
-                text={userName}
-                marginBottom={6}
-                fontSize={15}
-              />
+              <TouchableOpacity onPress={() => info.user.id == user.id ? props.navigation.navigate('Profile') : props.navigation.navigate('UserProfile', { userId: info.user.id })}>
+                <TitleText
+                  text={userName}
+                  marginBottom={6}
+                  fontSize={15}
+                />
+              </TouchableOpacity>
               {info.type == 'bio' && <View style={{ width: 260 }}>
                 <MoreOrLess
                   numberOfLines={3}

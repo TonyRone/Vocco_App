@@ -45,12 +45,7 @@ export const StoryItem = ({
   props,
   info,
   isRefresh = false,
-  indd,
-  current,
-  userClick,
   onChangeLike = () => { },
-  onSetUserClick = () => {},
-  spread = true,
 }) => {
   const [showContext, setShowContext] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -82,17 +77,12 @@ export const StoryItem = ({
   // }, [visibleOne])
 
   useEffect(() => {
-    if (userClick === false) {
-      setIsPlaying(current === indd);
-    } else {
-      setIsPlaying(false);
-    }
-  }, [current])
+  }, [])
 
   const getFollowUsers = async () => {
     setIsLoading(true);
     await VoiceService.getFollows(user.id, 'Following').then(async res => {
-      if (res.respInfo.status === 200) {
+      if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
         setFollows(jsonRes);
         setIsLoading(false);
@@ -362,7 +352,7 @@ export const StoryItem = ({
                 </View>
                 <TouchableOpacity
                   onPress={() => {
-                    props.navigation.navigate('UserProfile', { userId: info.user.id });
+                    info.user.id == user.id ? props.navigation.navigate('Profile') : props.navigation.navigate('UserProfile', { userId: info.user.id });
                   }}
                   style={{ position: "relative" }}
                 >
@@ -371,7 +361,7 @@ export const StoryItem = ({
                   style={{ width: windowHeight / 417 * 125 - 88, height: windowHeight / 417 * 125 - 88, borderRadius: (windowHeight / 417 * 125 - 88) / 2, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
                 />
                   <TouchableOpacity
-                    onPress={() => {setIsPlaying(!isPlaying); onSetUserClick()}}
+                    onPress={() => {setIsPlaying(!isPlaying);}}
                     style = {{
                       position: "absolute",
                       top: (windowHeight / 417 * 125 - 88) / 2 - 23,

@@ -140,7 +140,7 @@ const NotificationScreen = (props) => {
 
     const onReadNotification = (index, isActive) => {
         if (isActive) {
-            let tp = activities;
+            let tp= activities;
             if (tp[index].seen == false) {
                 VoiceService.seenNotification(tp[index].id);
                 tp[index].seen = true;
@@ -149,7 +149,7 @@ const NotificationScreen = (props) => {
                 if (activeNum - 1 + requestNum == 0)
                     dispatch(setRefreshState(!refreshState));
             }
-            if (tp[index].type == 'likeRecord' || tp[index].type == 'newAnswer' || tp[index].type == 'likeAnswer' || tp[index].type == 'tagFriend') {
+            if (tp[index].type == 'likeRecord' || tp[index].type == 'newAnswer'||tp[index].type == 'newStory' || tp[index].type == 'likeAnswer' || tp[index].type == 'tagFriend') {
                 props.navigation.navigate("VoiceProfile", { id: tp[index].record.id, answerId: tp[index].answer?.id })
             }
             else {

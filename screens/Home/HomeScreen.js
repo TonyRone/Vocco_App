@@ -21,7 +21,7 @@ import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
-import { setMessageCount, setRefreshState } from '../../store/actions';
+import { setMessageCount, setRefreshState, setUser } from '../../store/actions';
 import { RecordIcon } from '../component/RecordIcon';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -45,6 +45,7 @@ const HomeScreen = (props) => {
     const [isActiveState, setIsActiveState] = useState(false);
     const [notify, setNotify] = useState(false);
     const [expandKey, setExpandKey] = useState(0);
+    const [newStory, setNewStory] = useState(false);
 
     const [noticeCount, noticeDispatch] = useReducer(reducer, 0);
 
@@ -113,10 +114,32 @@ const HomeScreen = (props) => {
             });
     }
 
+    const getLastStory = () => {
+        VoiceService.getStories(0, '', '', '', '', 'friend', 1)
+            .then(async res => {
+                if (res.respInfo.status === 200 && mounted.current) {
+                    const jsonRes = await res.json();
+                    if (jsonRes.length > 0 && (!user.lastSee || new Date(jsonRes[0].createdAt) > new Date(user.lastSee))) {
+                        setNewStory(true);
+                    }
+                }
+            })
+    }
+
+    const onClickFriend = () => {
+        setIsActiveState(true);
+        setNewStory(false);
+        Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+        let tp = user;
+        tp.lastSee = new Date();
+        dispatch(setUser(tp));
+    }
+
     useEffect(() => {
         mounted.current = true;
         getNewNotifyCount();
         getUnreadChatCount();
+        getLastStory();
         socketInstance.on("notice_Voice", (data) => {
             noticeDispatch("news");
         });
@@ -151,7 +174,7 @@ const HomeScreen = (props) => {
                     />
                 </TouchableOpacity>
                 <View style={styles.rowSpaceBetween}>
-                    <TouchableOpacity onPress={() => { setIsActiveState(true); Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100); }} style={[styles.contentCenter, { width: 97, height: 44 }]}>
+                    <TouchableOpacity onPress={() => onClickFriend()} style={[styles.contentCenter, { width: 97, height: 44 }]}>
                         <SemiBoldText
                             text={t("Friends")}
                             fontFamily={isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
@@ -159,6 +182,12 @@ const HomeScreen = (props) => {
                             fontSize={17}
                             lineHeight={28}
                         />
+                        {newStory && <View
+                            style={{
+                                position: 'absolute', width: 12, height: 12, right: 8, top: 8, borderRadius: 6,
+                                borderWidth: 2, borderColor: '#FFF', backgroundColor: '#D82783'
+                            }}>
+                        </View>}
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => { setIsActiveState(false); Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100); }} style={[styles.contentCenter, { width: 97, height: 44, marginLeft: 16 }]}>
                         <SemiBoldText

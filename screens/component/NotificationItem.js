@@ -53,6 +53,8 @@ export const NotificationItem = ({
         label = t("Liked your story");
     if (details == 'newAnswer')
         label = t("Answered your story");
+    if (details == 'newStory')
+        label = t("Posted a new story");
     if (details == 'likeAnswer')
         label = t("Liked your answer");
     if (details == 'tagFriend')
@@ -111,9 +113,9 @@ export const NotificationItem = ({
                                     color='rgba(54, 36, 68, 0.8)'
                                     marginTop={2}
                                 />
-                                {(details == 'likeRecord' || details == 'newAnswer') &&
+                                {(details == 'likeRecord' || details == 'newAnswer' || details == 'newStory') &&
                                     <DescriptionText
-                                        text={": "+recordInfo.title}
+                                        text={": " + recordInfo.title}
                                         fontSize={13}
                                         lineHeight={21}
                                         marginLeft={6}

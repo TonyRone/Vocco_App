@@ -166,7 +166,7 @@ export const ProfileStories = ({
         />
         <DescriptionText
           marginLeft={3}
-          text={t("You are up to date 🎉! Share vocco with you friends!")}
+          text={t("You are up to date 🎉! Share Vocco with your friends!")}
         />
       </View>
     }

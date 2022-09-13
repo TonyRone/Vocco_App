@@ -53,6 +53,17 @@ class EditService {
             );
     }
 
+    async updateLastSee() {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch(
+                'PUT',
+                `${API_URL}/account/lastSee`, {
+                'Authorization': `Bearer ${token}`
+            }
+            );
+    }
+
     async changeLanguage(language) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob
