@@ -79,7 +79,6 @@ export const DiscoverStories = ({
     VoiceService.getStories(isNew ? 0 : stories.length, userId, category, searchTitle, recordId, screenName == 'Feed' ? 'friend' : '').then(async res => {
       if (mounted.current)
         setLoading(false);
-      console.log(res.respInfo.status);
       if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
         setStories((stories.length == 0 || isNew) ? [...jsonRes] : [...stories, ...jsonRes]);

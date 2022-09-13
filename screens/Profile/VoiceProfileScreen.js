@@ -133,7 +133,6 @@ const VoiceProfileScreen = (props) => {
 
   const getAnswers = async () => {
     VoiceService.getAnswers(recordId, answerId).then(async res => {
-      console.log(res.respInfo.status,"@@@@@@@@@@@@@@@@@@@@@@@");
       if (res.respInfo.status === 200 && mounted.current) {
         setLoading(false);
         const jsonRes = await res.json();
