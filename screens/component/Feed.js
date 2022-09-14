@@ -11,8 +11,9 @@ import { FeedStories } from './FeedStories';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { windowWidth } from '../../config/config';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { TemporaryStories } from './TemporaryStories';
+import { setUser } from '../../store/actions';
 
 export const Feed = ({
   props,
@@ -27,6 +28,14 @@ export const Feed = ({
   const { t, i18n } = useTranslation();
 
   const scrollRef = useRef();
+
+  let { user } = useSelector((state) => {
+    return (
+      state.user
+    )
+  });
+
+  const dispatch = useDispatch();
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -45,7 +54,10 @@ export const Feed = ({
 
   useEffect(() => {
     mounted.current = true;
-    return ()=>{
+    let tp = user;
+    tp.lastSee = new Date();
+    dispatch(setUser(tp));
+    return () => {
       mounted.current = false;
     }
   }, [])
@@ -74,11 +86,11 @@ export const Feed = ({
         }}
         scrollEventThrottle={400}
       > */}
-        <FeedStories
-          props={props}
-          loadKey={loadKey}
-          screenName="Feed"
-        />
+      <FeedStories
+        props={props}
+        loadKey={loadKey}
+        screenName="Feed"
+      />
       {/* </ScrollView> */}
     </View>
   );

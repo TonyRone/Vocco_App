@@ -307,7 +307,7 @@ const SearchScreen = (props) => {
                       marginLeft={10}
                     />
                   </View>
-                  {(item.id != user.id && item.isNewUser > 0) && <TouchableOpacity style={{
+                  {item.id != user.id && item.isNewUser > 0 && <TouchableOpacity style={{
                     backgroundColor: item.isNewUser > 1 ? '#ECF8EE' : '#F2F0F5',
                     paddingHorizontal: 16,
                     paddingVertical: 9,

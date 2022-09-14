@@ -67,7 +67,6 @@ export const ContactList = ({
     if (Platform.OS == 'ios') {
       await Contacts.getAllWithoutPhotos()
         .then((contacts) => {
-          // work with contacts
           if (mounted.current)
             setContactUsers(contacts);
         })

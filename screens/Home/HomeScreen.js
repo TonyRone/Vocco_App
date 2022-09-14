@@ -130,9 +130,6 @@ const HomeScreen = (props) => {
         setIsActiveState(true);
         setNewStory(false);
         Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-        let tp = user;
-        tp.lastSee = new Date();
-        dispatch(setUser(tp));
     }
 
     useEffect(() => {

@@ -59,6 +59,8 @@ export const NotificationItem = ({
         label = t("Liked your answer");
     if (details == 'tagFriend')
         label = t("Tagged you in a story");
+    if (details == 'userFollow')
+        label = t("Has followed you")
 
     return (
         !isDeleted ?
@@ -150,13 +152,25 @@ export const NotificationItem = ({
                                 />
                             </TouchableOpacity>}
                         </View>
-                        : <DescriptionText
-                            text={time}
-                            fontSize={13}
-                            lineHeight={21}
-                            color='rgba(54, 36, 68, 0.8)'
-                            marginBottom={20}
-                        />}
+                        : <View>
+                            {(details == 'userFollow' && (!towardFriend || towardFriend.status == 'none'))?  <TouchableOpacity onPress={() => onFollowUser()} style={[styles.contentCenter, { width: 99, height: 40, borderRadius: 12, backgroundColor: '#F8F0FF'}]}>
+                                <SemiBoldText
+                                    text='Follow back'
+                                    fontSize={15}
+                                    lineHeight={24}
+                                    color='#8327D8'
+                                />
+                            </TouchableOpacity> :
+                                <DescriptionText
+                                    text={time}
+                                    fontSize={13}
+                                    lineHeight={21}
+                                    color='rgba(54, 36, 68, 0.8)'
+                                    marginBottom={20}
+                                />
+                            }
+                        </View>
+                    }
                 </TouchableOpacity>
                 {isActivity &&
                     <TouchableOpacity onPress={() => { onDeleteItem(); setIsDeleted(true); }} style={[styles.rowAlignItems, {

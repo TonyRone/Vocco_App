@@ -33,7 +33,7 @@ class VoiceService {
             .config({ trusty: true })
             .fetch(
                 'PUT',
-                `${API_URL}/records/changevoice`, {
+                `${API_URL}/records/changeVoice`, {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },

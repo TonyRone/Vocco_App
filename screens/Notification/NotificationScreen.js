@@ -165,7 +165,7 @@ const NotificationScreen = (props) => {
                 VoiceService.seenNotification(tp[index].id)
                 tp[index].seen = true;
                 setRequests(tp);
-                setRequestNum(requestNum - 1);
+                setRequestNum(Math.max(requestNum - 1,0));
                 if (activeNum + requestNum - 1 == 0)
                     dispatch(setRefreshState(!refreshState));
             }
@@ -188,7 +188,7 @@ const NotificationScreen = (props) => {
         else {
             let tp = [...requests];
             if (tp[index].seen == false) {
-                setRequestNum(requestNum - 1);
+                setRequestNum(Math.max(requestNum - 1,0));
                 if (activeNum + requestNum - 1 == 0)
                     dispatch(setRefreshState(!refreshState));
             }
@@ -239,7 +239,7 @@ const NotificationScreen = (props) => {
             VoiceService.seenNotification(tp[index].id)
             tp[index].seen = true;
             setRequests(tp);
-            setRequestNum(requestNum - 1);
+            setRequestNum(Math.max(requestNum - 1,0));
             if (activeNum + requestNum - 1 == 0)
                 dispatch(setRefreshState(!refreshState));
         }
@@ -250,10 +250,10 @@ const NotificationScreen = (props) => {
         Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
         VoiceService.followFriend(id).then(async res => {
             if (mounted.current) {
-                let tp = requests;
+                let tp = activities;
                 tp[index].towardFriend = { status: 'pending' };
                 setIsLoading(false);
-                setRequests([...tp]);
+                setActivities([...tp]);
             }
         })
             .catch(err => {
@@ -379,9 +379,11 @@ const NotificationScreen = (props) => {
                                 userInfo={item.fromUser}
                                 recordInfo={item.record}
                                 details={item.type}
+                                towardFriend={item.towardFriend}
                                 notificationTime={item.createdAt}
                                 isActivity={true}
                                 onPressItem={() => onReadNotification(index, true)}
+                                onFollowUser={() => onFollowUser(item.fromUser.id, index)}
                                 onDeleteItem={() => onDeleteNotification(item.id, index, true)}
                             />}
                             keyExtractor={(item, index) => index.toString()}
@@ -404,7 +406,7 @@ const NotificationScreen = (props) => {
                             xml={noRequestSvg}
                         />
                         <DescriptionText
-                            text={t("You have no request yet")}
+                            text={t("No new requests")}
                             fontSize={17}
                             lineHeight={28}
                             marginTop={22}

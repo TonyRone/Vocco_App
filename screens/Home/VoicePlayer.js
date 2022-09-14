@@ -89,6 +89,7 @@ class VoicePlayer extends Component {
 
   async componentWillUnmount() {
     this._isMounted = false;
+    
     await this.onStopPlay();
   }
 

@@ -215,7 +215,6 @@ export const StoryScreens = ({
   }
 
   const onAnswerBio = () => {
-    console.log('clicked');
     setIsLoading(true);
     VoiceService.answerBio(info.id, { bio: label }).then(async res => {
       if (res.respInfo.status == 200) {
