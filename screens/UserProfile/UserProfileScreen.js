@@ -133,11 +133,9 @@ const UserProfileScreen = (props) => {
     repo.then(async res => {
       if (mounted.current) {
         setFollowLoading(false);
+        const jsonRes=await res.json();
         if (res.respInfo.status == 201 || res.respInfo.status == 200) {
-          if (followState == 'none')
-            setFollowState('pending');
-          else
-            setFollowState('none');
+          setFollowState(jsonRes.status);
         }
       }
     })

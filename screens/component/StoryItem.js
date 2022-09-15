@@ -48,12 +48,13 @@ export const StoryItem = ({
   info,
   isRefresh = false,
   onChangeLike = () => { },
+  autoPlay = false
 }) => {
   const [showContext, setShowContext] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [lastTap, setLastTap] = useState(0);
   const [delayTime, setDelayTime] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(autoPlay);
   const [allLikes, setAllLikes] = useState(false);
   const [key, setKey] = useState(0);
   const [showReport, setShowReport] = useState(false);
@@ -62,6 +63,7 @@ export const StoryItem = ({
   const [showChat, setShowChat] = useState(false);
   const [isFriend, setIsFriend] = useState(false);
   const [reload, setReload] = useState(false);
+  const [isPlayed, setIsPlayed] = useState(false);
 
   const { t, i18n } = useTranslation();
   const mounted = useRef(false);
@@ -512,7 +514,7 @@ export const StoryItem = ({
             duration={info.duration * 1000}
           /></View>}
         </View>
-        {info.notSafe && !isPlaying && <ImageBackground
+        {info.notSafe && !isPlaying && !isPlayed && <ImageBackground
           source={require('../../assets/record/NotSafeBg.png')}
           resizeMode="stretch"
           style={{ width: '100%', height: '100%', position: 'absolute', elevation: 11, flex: 1, justifyContent: 'space-between', alignItems: 'center' }}
@@ -547,7 +549,7 @@ export const StoryItem = ({
               alignItems: 'center'
             }}>
               <TouchableOpacity
-                onPress={()=>setIsPlaying(true)}
+                onPress={()=>{setIsPlaying(true);setIsPlayed(true);}}
               >
                 <SemiBoldText
                   text={t("Play story")}
@@ -555,7 +557,7 @@ export const StoryItem = ({
                   lineHeight={22}
                   color="#000"
                   marginTop={17}
-                  marginBottom={100}
+                  marginBottom={50}
                 />
               </TouchableOpacity>
             </View>

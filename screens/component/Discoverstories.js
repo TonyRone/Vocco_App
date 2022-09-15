@@ -165,6 +165,7 @@ export const DiscoverStories = ({
           key={index + item.id + screenName}
           props={props}
           info={item}
+          autoPlay={index==0}
           current={current}
           userClick={userClick}
           onSetUserClick={() => setUserClick(!userClick)}

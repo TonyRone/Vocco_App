@@ -36,8 +36,8 @@ import fakeSvg from '../../assets/post/fake.svg';
 import privacySvg from '../../assets/post/privacy.svg';
 import brightFakeSvg from '../../assets/post/bright-fake.svg';
 import brightPrivacySvg from '../../assets/post/bright-privacy.svg';
-import pauseSvg from '../../assets/common/pause.svg';
-import playSvg from '../../assets/common/play.svg';
+import pauseSvg from '../../assets/post/pause.svg';
+import playSvg from '../../assets/post/play.svg';
 import editSvg from '../../assets/record/edit.svg';
 import rightArrowSvg from '../../assets/post/right_arrow.svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
@@ -88,6 +88,7 @@ const PostingVoiceScreen = (props) => {
   const [selectedCategory, setSelectedCategory] = useState(initCategory);
   const [isPlaying, setIsPlaying] = useState(false);
   const [postStep, setPostStep] = useState(0);
+  const [warning, setWarning] = useState(false);
 
   const mounted = useRef(false);
 
@@ -188,6 +189,11 @@ const PostingVoiceScreen = (props) => {
   }
 
   const onClickPost = async () => {
+    if (voiceTitle.length == 0||category == 0) {
+      setWarning(true);
+      setPostStep(0);
+      return;
+    }
     if (param.info)
       changeStory();
     else {
@@ -235,7 +241,7 @@ const PostingVoiceScreen = (props) => {
           right: 0
         }}
           onPress={() => onClickPost()}
-          disabled={voiceTitle == '' || isLoading}
+          disabled={isLoading}
         >
           <DescriptionText
             text={t("Post")}
@@ -247,16 +253,37 @@ const PostingVoiceScreen = (props) => {
       </View>
       {postStep == 0 ? <>
         <View style={{ alignItems: 'center', marginTop: 40 }}>
+          {warning && <View style={{
+            position: 'absolute',
+            top: -25,
+            paddingHorizontal: 33,
+            paddingVertical: 10,
+            backgroundColor: '#E41717',
+            borderRadius: 16,
+            shadowColor: 'rgba(244, 13, 13, 0.47)',
+            elevation: 10,
+            shadowOffset: { width: 0, height: 5.22 },
+            shadowOpacity: 0.5,
+            shadowRadius: 16,
+          }}>
+            <DescriptionText
+              text={voiceTitle==''? "Add a title to your story!":"You must select a category."}
+              fontSize={15}
+              lineHeight={18}
+              color='#FFF'
+            />
+          </View>}
           <TextInput
             placeholder={t("Your title")}
             placeholderTextColor="#3B1F5290"
             color="#281E30"
             textAlign={'center'}
+            autoFocus={true}
             value={voiceTitle}
-            onChangeText={(s) => s.length <= 25 ? setVoiceTitle(s) : null}
+            onChangeText={(s) => { s.length <= 25 ? setVoiceTitle(s) : null; setWarning(false) }}
             fontFamily="SFProDisplay-Regular"
-            fontSize={28}
-            lineHeight={34}
+            fontSize={34}
+            lineHeight={41}
             marginTop={5}
             letterSpaceing={5}
           />
@@ -359,7 +386,7 @@ const PostingVoiceScreen = (props) => {
             startPlay={() => { }}
             tinWidth={windowWidth / 170}
             mrg={windowWidth / 400}
-            height={70}
+            height={80}
             duration={displayDuration * 1000}
           />
           }
@@ -443,11 +470,22 @@ const PostingVoiceScreen = (props) => {
         height: 95
       }}>
         <TouchableOpacity
+          style={{
+            height: 56,
+            width: 95,
+            backgroundColor: '#FFF',
+            shadowColor: 'rgba(88, 74, 117, 1)',
+            elevation: 10,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.5,
+            shadowRadius: 8,
+            borderRadius: 28,
+            alignItems:'center',
+            justifyContent:'center'
+          }}
           onPress={() => setIsPlaying(!isPlaying)}
         >
           <SvgXml
-            width={56}
-            height={56}
             xml={isPlaying ? pauseSvg : playSvg}
           />
         </TouchableOpacity>
@@ -500,7 +538,6 @@ const PostingVoiceScreen = (props) => {
             label={t("Public post")}
             loading={isLoading}
             onPress={() => onClickPost()}
-            active={voiceTitle != ''}
           />
         </View>
       }
@@ -538,7 +575,7 @@ const PostingVoiceScreen = (props) => {
       {Platform.OS == 'ios' && <KeyboardSpacer />}
       {isLoading &&
         <View style={{
-          position:'absolute',
+          position: 'absolute',
           width: '100%',
           alignItems: 'center',
           top: 200,
