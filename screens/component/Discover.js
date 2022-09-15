@@ -248,7 +248,6 @@ export const Discover = ({
         <DiscoverStories
           props={props}
           loadKey={loadKey}
-          screenName="Discover"
           category={Categories[category].label}
         />
       {/* </ScrollView> */}

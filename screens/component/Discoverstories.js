@@ -21,7 +21,7 @@ import { MyButton } from './MyButton';
 import { InviteUsers } from './InviteUsers';
 import SelectTopicScreen from '../PhoneNumberLogin/SelectTopicScreen';
 import { StoryItem } from '../component/StoryItem';
-// import { setVisibleOne } from '../../store/actions';
+ import { setVisibleOne } from '../../store/actions';
 
 export const DiscoverStories = ({
   props,
@@ -49,7 +49,6 @@ export const DiscoverStories = ({
   const [showInviteList, setShowInviteList] = useState(false);
   const [localKey, setLocalKey] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
-  const [current, setCurrent] = useState(0);
   const [userClick, setUserClick] = useState(false);
 
   let { refreshState } = useSelector((state) => {
@@ -58,7 +57,6 @@ export const DiscoverStories = ({
     )
   });
 
-  // const { visibleOne } = useSelector((state) => state.user);
 
   const OnShowEnd = () => {
     if (showEnd) return;
@@ -143,9 +141,7 @@ export const DiscoverStories = ({
       onMomentumScrollEnd={(e) => {
         let contentOffset = e.nativeEvent.contentOffset;
         let ind = Math.round(contentOffset.y / (windowHeight / 157 * 115));
-        setCurrent(ind);
-        // console.log(ind);
-        // dispatch(setVisibleOne(ind));
+        dispatch(setVisibleOne(ind));
       }}
       data={stories}
       pagingEnabled
@@ -161,12 +157,10 @@ export const DiscoverStories = ({
         />}
       renderItem={({ item, index }) => {
         return <StoryItem
-          indd={index}
           key={index + item.id + screenName}
+          itemIndex = {index}
           props={props}
           info={item}
-          autoPlay={index==0}
-          current={current}
           userClick={userClick}
           onSetUserClick={() => setUserClick(!userClick)}
           onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
@@ -174,7 +168,7 @@ export const DiscoverStories = ({
       }}
       onEndReached={() => fetchLoadMore()}
     />
-  }, [stories, refreshState, current])
+  }, [stories, refreshState])
 
   useEffect(() => {
     mounted.current = true;
@@ -183,6 +177,10 @@ export const DiscoverStories = ({
       mounted.current = false;
     }
   }, [refreshState, loadKey, category])
+
+  useEffect(()=>{
+    dispatch(setVisibleOne(0));
+  },[])
 
   return <View style={{ height: windowHeight / 157 * 115 }}>
     {showEnd &&

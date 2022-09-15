@@ -47,21 +47,21 @@ export const StoryItem = ({
   props,
   info,
   isRefresh = false,
+  itemIndex,
   onChangeLike = () => { },
-  autoPlay = false
 }) => {
   const [showContext, setShowContext] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [lastTap, setLastTap] = useState(0);
   const [delayTime, setDelayTime] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(autoPlay);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [allLikes, setAllLikes] = useState(false);
   const [key, setKey] = useState(0);
   const [showReport, setShowReport] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [follows, setFollows] = useState(null);
   const [showChat, setShowChat] = useState(false);
-  const [isFriend, setIsFriend] = useState(false);
+  const [isFriend, setIsFriend] = useState(info.isFriend);
   const [reload, setReload] = useState(false);
   const [isPlayed, setIsPlayed] = useState(false);
 
@@ -74,14 +74,7 @@ export const StoryItem = ({
     )
   });
 
-  // const { visibleOne } = useSelector((state) => state.user);
-
-  // useEffect(() => {
-  //   setIsPlaying(visibleOne === indd);
-  // }, [visibleOne])
-
-  useEffect(() => {
-  }, [])
+  const { visibleOne } = useSelector((state) => state.user);
 
   const getFollowUsers = async () => {
     setIsLoading(true);
@@ -99,42 +92,42 @@ export const StoryItem = ({
 
   const onSendRequest = () => {
     if (isFriend) {
-      VoiceService.unfollowFriend(info.user.id);
+      setIsLoading(true);
+      VoiceService.unfollowFriend(info.user.id).then(res=>{
+        if(res.respInfo.status==200||res.respInfo.status==201){
+          setIsFriend(false);
+        }
+        setIsLoading(false);
+      });
       Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
       Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-      setIsFriend(false);
     } else {
-      VoiceService.followFriend(info.user.id);
+      setIsLoading(true);
+      VoiceService.followFriend(info.user.id).then(async res=>{
+        const jsonRes = await res.json();
+        if(res.respInfo.status==200||res.respInfo.status==201){
+          setIsFriend(jsonRes.status == 'accepted');
+        }
+        setIsLoading(false);
+      });
       Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
-    setReload(!reload);
-    setRefreshState(!refreshState);
   }
 
   useEffect(() => {
     mounted.current = true;
     // setKey(prevKey => prevKey + 1);
     getFollowUsers();
+    if(mounted.current)
+      setIsPlaying(visibleOne == itemIndex);
     return () => {
       mounted.current = false;
     }
-  }, []);
+  }, [visibleOne]);
 
   useEffect(() => {
     getFollowUsers();
   }, [reload])
-
-  useEffect(() => {
-    let flag = false;
-    if (!isLoading) {
-      follows.map((item) => {
-        if (item.user.name === info.user.name) {
-          flag = true;
-        }
-      });
-      setIsFriend(flag);
-    }
-  }, [follows, isLoading])
 
   useEffect(() => {
     setKey(key => key + 1);

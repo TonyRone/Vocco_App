@@ -14,6 +14,7 @@ import { windowWidth } from '../../config/config';
 import { useDispatch, useSelector } from 'react-redux';
 import { TemporaryStories } from './TemporaryStories';
 import { setUser } from '../../store/actions';
+import { DiscoverStories } from './Discoverstories';
 
 export const Feed = ({
   props,
@@ -86,7 +87,7 @@ export const Feed = ({
         }}
         scrollEventThrottle={400}
       > */}
-      <FeedStories
+      <DiscoverStories
         props={props}
         loadKey={loadKey}
         screenName="Feed"

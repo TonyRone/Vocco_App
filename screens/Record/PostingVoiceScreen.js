@@ -189,9 +189,10 @@ const PostingVoiceScreen = (props) => {
   }
 
   const onClickPost = async () => {
-    if (voiceTitle.length == 0||category == 0) {
+    if (voiceTitle.length == 0 || category == 0) {
       setWarning(true);
-      setPostStep(0);
+      if (voiceTitle.length == 0) setPostStep(0);
+      else setPostStep(1);
       return;
     }
     if (param.info)
@@ -216,7 +217,7 @@ const PostingVoiceScreen = (props) => {
     }
   }, [])
   return (
-    <View
+    <KeyboardAvoidingView
       style={{
         backgroundColor: '#FFF',
         flex: 1
@@ -235,7 +236,7 @@ const PostingVoiceScreen = (props) => {
           dag={2}
           progress={postStep}
         />
-        <Pressable style={{
+        <TouchableOpacity style={{
           marginRight: 16,
           position: 'absolute',
           right: 0
@@ -249,30 +250,10 @@ const PostingVoiceScreen = (props) => {
             lineHeight={28}
             color="#8327D8"
           />
-        </Pressable>
+        </TouchableOpacity>
       </View>
       {postStep == 0 ? <>
         <View style={{ alignItems: 'center', marginTop: 40 }}>
-          {warning && <View style={{
-            position: 'absolute',
-            top: -25,
-            paddingHorizontal: 33,
-            paddingVertical: 10,
-            backgroundColor: '#E41717',
-            borderRadius: 16,
-            shadowColor: 'rgba(244, 13, 13, 0.47)',
-            elevation: 10,
-            shadowOffset: { width: 0, height: 5.22 },
-            shadowOpacity: 0.5,
-            shadowRadius: 16,
-          }}>
-            <DescriptionText
-              text={voiceTitle==''? "Add a title to your story!":"You must select a category."}
-              fontSize={15}
-              lineHeight={18}
-              color='#FFF'
-            />
-          </View>}
           <TextInput
             placeholder={t("Your title")}
             placeholderTextColor="#3B1F5290"
@@ -423,7 +404,7 @@ const PostingVoiceScreen = (props) => {
                 if (index == 0)
                   return null;
                 return <TouchableOpacity
-                  onPress={() => setCategory(index)}
+                  onPress={() => {setWarning(false);setCategory(index);}}
                   key={index + "topics"}
                   style={{
                     flexDirection: 'row',
@@ -480,8 +461,8 @@ const PostingVoiceScreen = (props) => {
             shadowOpacity: 0.5,
             shadowRadius: 8,
             borderRadius: 28,
-            alignItems:'center',
-            justifyContent:'center'
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
           onPress={() => setIsPlaying(!isPlaying)}
         >
@@ -490,7 +471,7 @@ const PostingVoiceScreen = (props) => {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => setPostStep(1)}
+          onPress={() => { voiceTitle == '' ? setWarning(true) : setPostStep(1); }}
         >
           <LinearGradient
             style={
@@ -541,6 +522,31 @@ const PostingVoiceScreen = (props) => {
           />
         </View>
       }
+      {warning && <View style={{
+        position: 'absolute',
+        top: 40,
+        width: windowWidth,
+        alignItems: 'center'
+      }}>
+        <View style={{
+          paddingHorizontal: 33,
+          paddingVertical: 10,
+          backgroundColor: '#E41717',
+          borderRadius: 16,
+          shadowColor: 'rgba(244, 13, 13, 0.47)',
+          elevation: 10,
+          shadowOffset: { width: 0, height: 5.22 },
+          shadowOpacity: 0.5,
+          shadowRadius: 16,
+        }}>
+          <DescriptionText
+            text={voiceTitle == '' ? "Add a title to your story!" : "You must select a category."}
+            fontSize={15}
+            lineHeight={18}
+            color='#FFF'
+          />
+        </View>
+      </View>}
       {visibleReaction &&
         <EmojiPicker
           onEmojiSelected={(icon) => selectIcon(icon.emoji)}
@@ -572,7 +578,6 @@ const PostingVoiceScreen = (props) => {
           />
         </Pressable>
       </Modal>
-      {Platform.OS == 'ios' && <KeyboardSpacer />}
       {isLoading &&
         <View style={{
           position: 'absolute',
@@ -589,7 +594,8 @@ const PostingVoiceScreen = (props) => {
           />
         </View>
       }
-    </View>
+      {Platform.OS == 'ios' && <KeyboardSpacer />}
+    </KeyboardAvoidingView>
   );
 };
 
