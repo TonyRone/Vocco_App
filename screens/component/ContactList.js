@@ -32,7 +32,7 @@ export const ContactList = ({
   const mounted = useRef(false);
 
   if (Platform.OS == 'ios')
-    Contacts.iosEnableNotesUsage(false);
+    Contacts.iosEnableNotesUsage(true);
 
   const onInviteFriend = (index) => {
     VoiceService.inviteFriend(contactUsers[index].phoneNumbers[0].number);
