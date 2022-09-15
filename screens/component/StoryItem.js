@@ -193,7 +193,7 @@ export const StoryItem = ({
     } else {
       setLastTap(timeNow);
       setDelayTime(setTimeout(() => {
-        // props.navigation.navigate('VoiceProfile', { id: info.id });
+         props.navigation.navigate('VoiceProfile', { id: info.id });
       }, DOUBLE_PRESS_DELAY));
     }
   };
@@ -336,6 +336,7 @@ export const StoryItem = ({
                 ['#8229F4', 0.4],
                 ['#8229F4', 0.2],
               ]}
+              isLinearGradient={true}
             >
               {({ elapsedTime, remainingTime, animatedColor }) => {
                 return (

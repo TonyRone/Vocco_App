@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { KeyboardAvoidingView, Image, PermissionsAndroid, Platform, NativeModules } from 'react-native';
 import io from "socket.io-client";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,20 +15,18 @@ import { setUser, setSocketInstance } from '../../store/actions/index';
 import AuthService from '../../services/AuthService';
 import EditService from '../../services/EditService';
 import NavigationService from '../../services/NavigationService';
-import Contacts from 'react-native-contacts';
 
 const LogoScreen = (props) => {
 
     const { t, i18n } = useTranslation();
-
-    if (Platform.OS == 'ios')
-        Contacts.iosEnableNotesUsage(true);
 
     let { user, socketInstance } = useSelector((state) => {
         return (
             state.user
         )
     });
+
+    const mounted = useRef(false);
 
     const dispatch = useDispatch();
 
@@ -39,6 +37,8 @@ const LogoScreen = (props) => {
             : NativeModules.I18nManager.localeIdentifier;
 
     const onGoScreen = async (jsonRes, prevOpenCount) => {
+        if(!mounted.current)
+            return ;
         let openCount = await AsyncStorage.getItem(OPEN_COUNT);
         if (openCount != prevOpenCount) {
             return;
@@ -98,24 +98,25 @@ const LogoScreen = (props) => {
             onGoScreen(jsonRes, open_count);
     }
     const checkLogin = async () => {
-        let mainLanguage = await AsyncStorage.getItem(MAIN_LANGUAGE);
-        if (mainLanguage == null) {
-            if (deviceLanguage[0] == 'e') {
-                await AsyncStorage.setItem(
-                    MAIN_LANGUAGE,
-                    'English'
-                );
-                mainLanguage = 'English';
-            }
-            else {
-                await AsyncStorage.setItem(
-                    MAIN_LANGUAGE,
-                    'French'
-                );
-                mainLanguage = 'French';
-            }
-            EditService.changeLanguage(mainLanguage);
+        let systemLanguage = '';
+        if (deviceLanguage[0] == 'e') {
+            await AsyncStorage.setItem(
+                MAIN_LANGUAGE,
+                'English'
+            );
+            systemLanguage = 'English';
         }
+        else {
+            await AsyncStorage.setItem(
+                MAIN_LANGUAGE,
+                'French'
+            );
+            systemLanguage = 'French';
+        }
+        EditService.changeLanguage(systemLanguage);
+        let mainLanguage = await AsyncStorage.getItem(MAIN_LANGUAGE);
+        if(mainLanguage==null)
+            mainLanguage = systemLanguage;
         i18n.changeLanguage(mainLanguage).then(async () => {
             const aToken = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
             if (aToken != null) {
@@ -194,9 +195,13 @@ const LogoScreen = (props) => {
     }
 
     useEffect(() => {
+        mounted.current = true;
         checkPermission();
         checkLogin();
         OnSetPushNotification();
+        return () => {
+            mounted.current = false;
+        }
     }, [])
 
     return (

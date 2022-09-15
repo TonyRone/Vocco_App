@@ -70,7 +70,7 @@ const SettingScreen = (props) => {
     }
 
     const OnSelectLanguage = async () => {
-        EditService.changeLanguage(language.language);
+        //EditService.changeLanguage(language.language);
         i18n.changeLanguage(language.language).then(async () => {
             await AsyncStorage.setItem(
                 MAIN_LANGUAGE,

@@ -88,6 +88,8 @@ const PhoneVerifyScreen = (props) => {
     }
 
     const onGoScreen = async (jsonRes, prevOpenCount) => {
+        if(!mounted.current)
+            return ;
         let openCount = await AsyncStorage.getItem(OPEN_COUNT);
         if (openCount != prevOpenCount)
             return;
