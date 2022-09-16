@@ -17,7 +17,7 @@ import { TitleText } from "./TitleText";
 import { HeartIcon } from './HeartIcon';
 import { StoryLikes } from './StoryLikes';
 import { DescriptionText } from "./DescriptionText";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SvgXml } from 'react-native-svg';
 import pauseSvg from '../../assets/common/pause.svg';
 import pauseSvg2 from '../../assets/common/pause2.svg';
@@ -41,7 +41,7 @@ import { Avatars, windowWidth, windowHeight, Categories } from '../../config/con
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { StoryScreens } from './StoryScreens';
 import { SemiBoldText } from './SemiBoldText';
-import { setRefreshState } from '../../store/actions';
+import { setRefreshState, setVisibleOne } from '../../store/actions';
 
 export const StoryItem = ({
   props,
@@ -67,6 +67,8 @@ export const StoryItem = ({
 
   const { t, i18n } = useTranslation();
   const mounted = useRef(false);
+
+  const dispatch = useDispatch();
 
   let { refreshState } = useSelector((state) => {
     return (
@@ -118,7 +120,7 @@ export const StoryItem = ({
     mounted.current = true;
     // setKey(prevKey => prevKey + 1);
     getFollowUsers();
-    if(mounted.current)
+    if(mounted.current&&!info.notSafe)
       setIsPlaying(visibleOne == itemIndex);
     return () => {
       mounted.current = false;
@@ -181,6 +183,8 @@ export const StoryItem = ({
   }
 
   const onClickDouble = () => {
+    if(info.notSafe)
+      return ;
     const timeNow = Date.now();
     if (lastTap && timeNow - lastTap < DOUBLE_PRESS_DELAY) {
       clearTimeout(delayTime);
@@ -359,7 +363,10 @@ export const StoryItem = ({
                         style={{ width: windowHeight / 417 * 125 - 88, height: windowHeight / 417 * 125 - 88, borderRadius: (windowHeight / 417 * 125 - 88) / 2, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
                       />
                       <TouchableOpacity
-                        onPress={() => { setIsPlaying(!isPlaying); }}
+                        onPress={() => { 
+                          setIsPlaying(!isPlaying);
+                          dispatch(setVisibleOne(isPlaying?-1:itemIndex)); 
+                        }}
                         style={{
                           position: "absolute",
                           top: (windowHeight / 417 * 125 - 88) / 2 - 23,
