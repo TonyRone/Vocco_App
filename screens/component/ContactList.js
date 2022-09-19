@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import Contacts from 'react-native-contacts';
+import SendSMS from 'react-native-sms';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { windowWidth } from '../../config/config';
@@ -32,10 +33,37 @@ export const ContactList = ({
   const mounted = useRef(false);
 
   if (Platform.OS == 'ios')
-    Contacts.iosEnableNotesUsage(true);
+    Contacts.iosEnableNotesUsage(false);
 
   const onInviteFriend = (index) => {
-    VoiceService.inviteFriend(contactUsers[index].phoneNumbers[0].number);
+    // VoiceService.inviteFriend(contactUsers[index].phoneNumbers[0].number)
+    //   .then(res=>{
+
+    //   })
+    //   .catch(err=>{
+    //     console.log(err);
+    //   })
+    // ;
+    SendSMS.send(
+      {
+        // Message body
+        body: 'Gosh, these stories are crazy! Download Vocco app for free!\nhttps://vocco.app.link/rAPkH16Gmtb',
+        // Recipients Number
+        recipients: [contactUsers[index].phoneNumbers[0].number],
+        // An array of types 
+        // "completed" response when using android
+        successTypes: ['sent', 'queued'],
+      },
+      (completed, cancelled, error) => {
+        if (completed) {
+          console.log('SMS Sent Completed');
+        } else if (cancelled) {
+          console.log('SMS Sent Cancelled');
+        } else if (error) {
+          console.log('Some error occured');
+        }
+      },
+    );
     setInvitedUsers(prev => {
       prev.push(index);
       return [...prev]
@@ -51,7 +79,7 @@ export const ContactList = ({
         'buttonPositive': 'Please accept bare mortal'
       }
     )
-      .then(Contacts.getAllWithoutPhotos()
+      .then(Contacts.getAll()
         .then((contacts) => {
           // work with contacts
           if (mounted.current)
@@ -65,7 +93,7 @@ export const ContactList = ({
   useEffect(async () => {
     mounted.current = true;
     if (Platform.OS == 'ios') {
-      await Contacts.getAllWithoutPhotos()
+      await Contacts.getAll()
         .then((contacts) => {
           if (mounted.current)
             setContactUsers(contacts);
@@ -119,11 +147,11 @@ export const ContactList = ({
                   fontSize={15}
                   lineHeight={24}
                 />
-                <DescriptionText
+                {item.phoneNumbers && item.phoneNumbers.length > 0 && <DescriptionText
                   text={item.phoneNumbers[0].number}
                   fontSize={13}
                   lineHeight={21}
-                />
+                />}
               </View>
             </View>
             <TouchableOpacity style={{

@@ -100,8 +100,9 @@ const SettingScreen = (props) => {
         if (isSignedIn)
             await GoogleSignin.signOut();
         socketInstance.disconnect();
+        onNavigate("Welcome");
         dispatch(setSocketInstance(null));
-        onNavigate("Welcome")
+        dispatch(setUser(null));
     }
 
     const pressTerms = () => {

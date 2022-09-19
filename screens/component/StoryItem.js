@@ -441,7 +441,7 @@ export const StoryItem = ({
             bottom: 60,
             right: 20
           }}>
-            {!isLoading && user.id !== info.user.id && <TouchableOpacity style={{ position: "relative" }} onPress={() => onSendRequest()}>
+            {user.id !== info.user.id && <TouchableOpacity disabled={isLoading} style={{ position: "relative", opacity:isLoading?0.5:1 }} onPress={() => onSendRequest()}>
               <Image source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri} style={{ width: 40, height: 40, borderRadius: 20 }} />
               <View style={{
                 position: "absolute",

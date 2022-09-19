@@ -82,10 +82,10 @@ const LogoScreen = (props) => {
         let open_count = await AsyncStorage.getItem(OPEN_COUNT);
         if (socketInstance == null) {
             let socket = io(SOCKET_URL);
-            dispatch(setSocketInstance(socket));
             socket.on("connect", () => {
                 socket.emit("login", { uid: jsonRes.id, email: jsonRes.email, isNew: false }, (res) => {
                     if (res == "Success") {
+                        dispatch(setSocketInstance(socket));
                         onGoScreen(jsonRes, open_count);
                     }
                     else {

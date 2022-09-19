@@ -19,6 +19,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import RNFetchBlob from 'rn-fetch-blob';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { TitleText } from '../component/TitleText';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 
 import { CategoryIcon } from '../component/CategoryIcon';
 import { MyButton } from '../component/MyButton';
@@ -189,6 +190,7 @@ const PostingVoiceScreen = (props) => {
   }
 
   const onClickPost = async () => {
+    Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     if (voiceTitle.length == 0 || category == 0) {
       setWarning(true);
       if (voiceTitle.length == 0) setPostStep(0);
@@ -242,21 +244,6 @@ const PostingVoiceScreen = (props) => {
             dag={2}
             progress={postStep}
           />
-          <TouchableOpacity style={{
-            marginRight: 16,
-            position: 'absolute',
-            right: 0
-          }}
-            onPress={() => onClickPost()}
-            disabled={isLoading}
-          >
-            <DescriptionText
-              text={t("Post")}
-              fontSize={17}
-              lineHeight={28}
-              color="#8327D8"
-            />
-          </TouchableOpacity>
         </View>
         {postStep == 0 ? <>
           <View style={{ alignItems: 'center', marginTop: 40 }}>
@@ -299,7 +286,10 @@ const PostingVoiceScreen = (props) => {
                 flexDirection: 'row',
                 alignItems: 'center'
               }}
-              onPress={() => setVisibleStatus(!visibleStatus)}
+              onPress={() => {
+                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                setVisibleStatus(!visibleStatus);
+              }}
             >
               <SvgXml
                 xml={visibleStatus ? brightFakeSvg : fakeSvg}
@@ -326,7 +316,10 @@ const PostingVoiceScreen = (props) => {
               flexDirection: 'row',
               alignItems: 'center'
             }}
-              onPress={() => setNotSafe(!notSafe)}
+              onPress={() => {
+                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                setNotSafe(!notSafe);
+              }}
             >
               <SvgXml
                 xml={notSafe ? brightPrivacySvg : privacySvg}
@@ -472,12 +465,18 @@ const PostingVoiceScreen = (props) => {
             }}
             onPress={() => setIsPlaying(!isPlaying)}
           >
-            <SvgXml
-              xml={isPlaying ? pauseSvg : playSvg}
-            />
+            {isPlaying&&<SvgXml
+              xml={pauseSvg}
+            />}
+            {!isPlaying&&<SvgXml
+              xml={playSvg}
+            />}
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { voiceTitle == '' ? setWarning(true) : setPostStep(1); }}
+            onPress={() => {
+              voiceTitle == '' ? setWarning(true) : setPostStep(1);
+              Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+            }}
           >
             <LinearGradient
               style={
@@ -522,7 +521,7 @@ const PostingVoiceScreen = (props) => {
             }}
           >
             <MyButton
-              label={t("Public post")}
+              label={t("Publish story")}
               loading={isLoading}
               onPress={() => onClickPost()}
             />
