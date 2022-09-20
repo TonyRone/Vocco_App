@@ -127,13 +127,13 @@ const UserProfileScreen = (props) => {
   const changeFollowed = () => {
     setFollowLoading(true);
     let repo = followState == 'none' ? VoiceService.followFriend(userId) : VoiceService.unfollowFriend(userId);
-    if(followState == 'none'){
-      Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    if (followState == 'none') {
+      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
     repo.then(async res => {
       if (mounted.current) {
         setFollowLoading(false);
-        const jsonRes=await res.json();
+        const jsonRes = await res.json();
         if (res.respInfo.status == 201 || res.respInfo.status == 200) {
           setFollowState(jsonRes.status);
         }
@@ -229,13 +229,13 @@ const UserProfileScreen = (props) => {
           borderWidth: (userInfo.user && userInfo.user.premium == "none") ? 0 : 3,
           marginLeft: (userInfo.user && userInfo.user.premium == "none") ? 0 : -3,
           marginTop: (userInfo.user && userInfo.user.premium == "none") ? 0 : -3,
-          marginBottom:15,
+          marginBottom: 15,
           borderColor: '#FFA002'
         }}>
           <Image
             source={userInfo.user.avatar ? { uri: userInfo.user.avatar.url } : Avatars[userInfo.user.avatarNumber].uri}
             resizeMode="cover"
-            style= {{
+            style={{
               borderBottomLeftRadius: 45 + ((userInfo.user && userInfo.user.premium == "none") ? 0 : 3),
               width: windowWidth,
               height: 350
@@ -352,6 +352,31 @@ const UserProfileScreen = (props) => {
                       source={require('../../assets/common/premiumstar.png')}
                     />
                   }
+                  <View style={{
+                    paddingHorizontal: 12,
+                    paddingVertical: 6,
+                    borderRadius: 12,
+                    borderColor: userInfo.likes<100?'#E53F34':userInfo.likes<1000?'#FFCC27':'#6099C7',
+                    borderWidth:1,
+                    flexDirection: 'row',
+                    alignItems:'center',
+                    marginLeft:24
+                  }}>
+                    <Image
+                      style={{
+                        width: 24,
+                        height: 24,
+                      }}
+                      source={userInfo.likes<100?require('../../assets/profile/bronze-diamond.png'):
+                      userInfo.likes<1000?require('../../assets/profile/gold-diamond.png'):require('../../assets/profile/real-diamond.png')
+                    }
+                    />
+                    <DescriptionText
+                      text={userInfo.likes<100?t("Bronze"):userInfo.likes<1000?t("Gold"):t("Emeraud")}
+                      color={userInfo.likes<100?'#E4373A':userInfo.likes<1000?'#FFC30E':'#6497C5'}
+                      marginLeft={8}
+                    />
+                  </View>
                 </View>
               </View>
               <View style={styles.rowAlignItems}>
@@ -393,7 +418,7 @@ const UserProfileScreen = (props) => {
                   xml={blackPrivacySvg}
                 />
                 <DescriptionText
-                  text={t("This account is private. Follow ")+userInfo.user.name+t(" to discover the stories")}
+                  text={t("This account is private. Follow ") + userInfo.user.name + t(" to discover the stories")}
                   fontSize={17}
                   lineHeight={28}
                   textAlign='center'

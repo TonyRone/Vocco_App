@@ -282,7 +282,7 @@ const ProfileScreen = (props) => {
                       style={{
                         width: 150,
                         height: 30,
-                        marginLeft: 16,
+                        marginLeft: 8,
                         justifyContent: 'center'
                       }}
                       source={require('../../assets/common/discover_premium.png')}
@@ -298,6 +298,34 @@ const ProfileScreen = (props) => {
                     </ImageBackground>
                   }
                 </TouchableOpacity>
+                <View style={{
+                  paddingHorizontal: 6,
+                  paddingVertical: 4,
+                  borderRadius: 8,
+                  borderColor: userInfo.likes < 100 ? '#E53F34' : userInfo.likes < 1000 ? '#FFCC27' : '#6099C7',
+                  borderWidth: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginLeft: 4,
+                  marginRight: 4
+                }}>
+                  <Image
+                    style={{
+                      width:20,
+                      height: 20,
+                    }}
+                    source={userInfo.likes < 100 ? require('../../assets/profile/bronze-diamond.png') :
+                      userInfo.likes < 1000 ? require('../../assets/profile/gold-diamond.png') : require('../../assets/profile/real-diamond.png')
+                    }
+                  />
+                  <DescriptionText
+                  fontSize={13}
+                  lineHeight={18}
+                    text={userInfo.likes < 100 ? t("Bronze") : userInfo.likes < 1000 ? t("Gold") : t("Emeraud")}
+                    color={userInfo.likes < 100 ? '#E4373A' : userInfo.likes < 1000 ? '#FFC30E' : '#6497C5'}
+                    marginLeft={8}
+                  />
+                </View>
               </View>
             </View>
             <View style={[styles.contentCenter, { height: 40, width: 40, borderRadius: 20, backgroundColor: '#F8F0FF' }]}>

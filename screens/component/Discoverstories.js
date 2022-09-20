@@ -160,7 +160,6 @@ export const DiscoverStories = ({
       onMomentumScrollEnd={(e) => {
         let contentOffset = e.nativeEvent.contentOffset;
         let ind = Math.round(contentOffset.y / (windowHeight / 157 * 115));
-        console.log(currentVisible.current,"$$$$$$$$$$$$$$$$$$$$$");
         if(currentVisible.current>=0)
         dispatch(setVisibleOne(ind));
       }}

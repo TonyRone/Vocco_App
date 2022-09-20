@@ -82,8 +82,8 @@ const ProfilePictureScreen = (props) => {
                         const jsonRes = await res.json();
                         if (res.respInfo.status == 200) {
                             dispatch(setUser(jsonRes));
-                            props.navigation.navigate("AddFriend");
-                            onNavigate("AddFriend");
+                            props.navigation.navigate("SelectTopic");
+                            //onNavigate("AddFriend");
                         }
                         else {
                             setError(jsonRes.message);

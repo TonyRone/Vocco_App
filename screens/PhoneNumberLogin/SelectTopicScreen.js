@@ -17,8 +17,6 @@ import { ScrollView, TextInput } from 'react-native-gesture-handler';
 
 const SelectTopicScreen = (props) => {
 
-    const [value, setValue] = useState("");
-    const [formattedValue, setFormattedValue] = useState("");
     const [topics, SetTopics] = useState([]);
 
     const { t, i18n } = useTranslation();
@@ -61,6 +59,7 @@ const SelectTopicScreen = (props) => {
                     />
                 </TouchableOpacity>
                 <MyProgressBar
+                    dag={7}
                     progress={6}
                 />
                 <TouchableOpacity
@@ -144,8 +143,8 @@ const SelectTopicScreen = (props) => {
                 right: 16,
                 bottom: 16,
             }}
-                onPress={() => props.navigation.navigate('PhoneRegister')}
-                disabled={value.length < 3}
+                onPress={() => props.navigation.navigate('AddFriend')}
+                disabled={topics.length < 3}
             >
                 <LinearGradient
                     style={
@@ -159,7 +158,7 @@ const SelectTopicScreen = (props) => {
                         }
                     }
                     start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-                    colors={value.length > 2 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#FBF2FF', '#F7E5FF', '#E5D1FF']}
+                    colors={topics.length > 2 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#FBF2FF', '#F7E5FF', '#E5D1FF']}
                 >
                     <SvgXml
                         width={32}

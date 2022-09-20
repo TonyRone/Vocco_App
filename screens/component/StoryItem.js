@@ -95,8 +95,8 @@ export const StoryItem = ({
   const onSendRequest = () => {
     if (isFriend) {
       setIsLoading(true);
-      VoiceService.unfollowFriend(info.user.id).then(res=>{
-        if(res.respInfo.status==200||res.respInfo.status==201){
+      VoiceService.unfollowFriend(info.user.id).then(res => {
+        if (res.respInfo.status == 200 || res.respInfo.status == 201) {
           setIsFriend(false);
         }
         setIsLoading(false);
@@ -105,9 +105,9 @@ export const StoryItem = ({
       Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     } else {
       setIsLoading(true);
-      VoiceService.followFriend(info.user.id).then(async res=>{
+      VoiceService.followFriend(info.user.id).then(async res => {
         const jsonRes = await res.json();
-        if(res.respInfo.status==200||res.respInfo.status==201){
+        if (res.respInfo.status == 200 || res.respInfo.status == 201) {
           setIsFriend(jsonRes.status == 'accepted');
         }
         setIsLoading(false);
@@ -120,7 +120,7 @@ export const StoryItem = ({
     mounted.current = true;
     // setKey(prevKey => prevKey + 1);
     getFollowUsers();
-    if(mounted.current&&!info.notSafe)
+    if (mounted.current && !info.notSafe)
       setIsPlaying(visibleOne == itemIndex);
     return () => {
       mounted.current = false;
@@ -183,8 +183,8 @@ export const StoryItem = ({
   }
 
   const onClickDouble = () => {
-    if(info.notSafe)
-      return ;
+    if (info.notSafe)
+      return;
     const timeNow = Date.now();
     if (lastTap && timeNow - lastTap < DOUBLE_PRESS_DELAY) {
       clearTimeout(delayTime);
@@ -192,7 +192,7 @@ export const StoryItem = ({
     } else {
       setLastTap(timeNow);
       setDelayTime(setTimeout(() => {
-         props.navigation.navigate('VoiceProfile', { id: info.id });
+        props.navigation.navigate('VoiceProfile', { id: info.id });
       }, DOUBLE_PRESS_DELAY));
     }
   };
@@ -229,7 +229,7 @@ export const StoryItem = ({
               height: 31,
               flexDirection: "row",
               alignItems: "center",
-              paddingHorizontal: 10,
+              paddingHorizontal: 12,
               backgroundColor: "#FFF",
               borderRadius: 16,
               marginTop: 7,
@@ -243,13 +243,13 @@ export const StoryItem = ({
               <Image
                 source={getCategoryUrl(info.category)}
                 style={{
-                  width: 18,
-                  height: 18
+                  width: 22,
+                  height: 22
                 }}
               />
               <Text style={{
-                fontSize: 17,
-                lineHeight: 28,
+                fontSize: 21,
+                lineHeight: 35,
                 fontWeight: "400",
                 color: "#361252",
                 marginLeft: 6
@@ -259,8 +259,8 @@ export const StoryItem = ({
             </View>
             <TouchableOpacity style={{
               marginTop: 5,
-              width: 36,
-              height: 36,
+              width: 45,
+              height: 45,
               backgroundColor: '#FFF',
               shadowColor: 'rgba(88, 74, 117, 1)',
               elevation: 10,
@@ -276,8 +276,8 @@ export const StoryItem = ({
               onPress={() => setShowReport(true)}
             >
               <SvgXml
-                width={20}
-                height={20}
+                width={25}
+                height={25}
                 xml={more_Svg}
               />
             </TouchableOpacity>
@@ -363,9 +363,9 @@ export const StoryItem = ({
                         style={{ width: windowHeight / 417 * 125 - 88, height: windowHeight / 417 * 125 - 88, borderRadius: (windowHeight / 417 * 125 - 88) / 2, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
                       />
                       <TouchableOpacity
-                        onPress={() => { 
+                        onPress={() => {
                           setIsPlaying(!isPlaying);
-                          dispatch(setVisibleOne(isPlaying?-1:itemIndex)); 
+                          dispatch(setVisibleOne(isPlaying ? -1 : itemIndex));
                         }}
                         style={{
                           position: "absolute",
@@ -426,13 +426,6 @@ export const StoryItem = ({
                 }}>{info.user.name}</Text>
               </View>
             </TouchableOpacity>
-            <DescriptionText
-              text={info.listenCount + " " + t("Play") + (info.listenCount > 1 ? 's' : '') + (time != '' ? " - " : '') + time + t(' ago')}
-              fontSize={13}
-              lineHeight={15}
-              marginTop={9}
-              color='rgba(54, 36, 68, 0.8)'
-            />
           </View>
           <View style={{
             position: "absolute",
@@ -441,7 +434,7 @@ export const StoryItem = ({
             bottom: 60,
             right: 20
           }}>
-            {user.id !== info.user.id && <TouchableOpacity disabled={isLoading} style={{ position: "relative", opacity:isLoading?0.5:1 }} onPress={() => onSendRequest()}>
+            {user.id !== info.user.id && <TouchableOpacity disabled={isLoading} style={{ position: "relative", opacity: isLoading ? 0.5 : 1 }} onPress={() => onSendRequest()}>
               <Image source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri} style={{ width: 40, height: 40, borderRadius: 20 }} />
               <View style={{
                 position: "absolute",
@@ -501,7 +494,7 @@ export const StoryItem = ({
               />
             </TouchableOpacity>
           </View>
-          {isPlaying && <View style={{ width: windowWidth - 80, opacity: 0 }}><VoicePlayer
+          {isPlaying && <View style={{ position: 'absolute', width: windowWidth - 80, opacity: 0 }}><VoicePlayer
             voiceUrl={info.file.url}
             stopPlay={() => setIsPlaying(false)}
             startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
@@ -509,10 +502,18 @@ export const StoryItem = ({
             replayBtn={false}
             waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
             playing={true}
-            tinWidth={windowWidth / 160}
-            mrg={windowWidth / 600}
+            tinWidth={windowWidth / 160000}
+            mrg={windowWidth / 600000}
             duration={info.duration * 1000}
           /></View>}
+          <View style={{ position: 'absolute', bottom:75, width: windowWidth, alignItems: 'center' }}>
+            <DescriptionText
+              text={info.listenCount + " " + t("Play") + (info.listenCount > 1 ? 's' : '') + (time != '' ? " - " : '') + time + t(' ago')}
+              fontSize={13}
+              lineHeight={15}
+              color='rgba(54, 18, 82, 0.3)'
+            />
+          </View>
         </View>
         {info.notSafe && !isPlaying && !isPlayed && <ImageBackground
           source={require('../../assets/record/NotSafeBg.png')}
@@ -549,7 +550,7 @@ export const StoryItem = ({
               alignItems: 'center'
             }}>
               <TouchableOpacity
-                onPress={()=>{setIsPlaying(true);setIsPlayed(true);}}
+                onPress={() => { setIsPlaying(true); setIsPlayed(true); }}
               >
                 <SemiBoldText
                   text={t("Play story")}
