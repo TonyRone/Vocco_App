@@ -121,6 +121,26 @@ export const Categories =
         label:'Love',
         uri:require('../assets/categories/love.png')
     },
+    {
+        label:'Faith',
+        uri:require('../assets/categories/faith.png')
+    },
+    {
+        label:'Adventure',
+        uri:require('../assets/categories/adventure.png')
+    },
+    {
+        label:'WTF',
+        uri:require('../assets/categories/wtf.png')
+    },
+    {
+        label:'Record',
+        uri:require('../assets/categories/record.png')
+    },
+    {
+        label:'Singers',
+        uri:require('../assets/categories/singers.png')
+    },
 ]
 
 export const Avatars = [

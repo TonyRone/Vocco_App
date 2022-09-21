@@ -59,6 +59,7 @@ export const DiscoverStories = ({
 
   const currentVisible = useRef(visibleOne);
 
+  const pageHeight = windowHeight / 157 * 115+(screenName=='Feed'?90:0);
 
   const OnShowEnd = () => {
     if (showEnd) return;
@@ -159,7 +160,7 @@ export const DiscoverStories = ({
     return <FlatList
       onMomentumScrollEnd={(e) => {
         let contentOffset = e.nativeEvent.contentOffset;
-        let ind = Math.round(contentOffset.y / (windowHeight / 157 * 115));
+        let ind = Math.round(contentOffset.y / (pageHeight));
         if(currentVisible.current>=0)
         dispatch(setVisibleOne(ind));
       }}
@@ -167,7 +168,7 @@ export const DiscoverStories = ({
       pagingEnabled
       showsVerticalScrollIndicator={false}
       style={{
-        height: windowHeight / 157 * 115
+        height: pageHeight
       }}
       keyboardShouldPersistTaps='handled'
       refreshControl={
@@ -179,6 +180,7 @@ export const DiscoverStories = ({
         return <StoryItem
           key={index + item.id + screenName}
           itemIndex={index}
+          itemHeight={pageHeight}
           props={props}
           info={item}
           userClick={userClick}
@@ -190,7 +192,7 @@ export const DiscoverStories = ({
     />
   }, [stories, refreshState])
 
-  return <View style={{ height: windowHeight / 157 * 115 }}>
+  return <View style={{ height: pageHeight }}>
     {showEnd &&
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12 }}>
         <Image

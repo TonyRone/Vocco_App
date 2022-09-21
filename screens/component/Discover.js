@@ -260,7 +260,7 @@ export const Discover = ({
           setShowModal(!showModal);
         }}
       >
-        <Pressable onPressOut={() => setShowModal(false)} style={styles.swipeModal}>
+        <Pressable style={styles.swipeModal}>
           <AllCategory
             closeModal={() => setShowModal(false)}
             selectedCategory={category}

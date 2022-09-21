@@ -48,6 +48,7 @@ export const StoryItem = ({
   info,
   isRefresh = false,
   itemIndex,
+  itemHeight =windowHeight / 157 * 115,
   onChangeLike = () => { },
 }) => {
   const [showContext, setShowContext] = useState(false);
@@ -214,7 +215,7 @@ export const StoryItem = ({
   return (
     <>
       <Pressable
-        style={{ height: windowHeight / 157 * 115 }}
+        style={{ height: itemHeight }}
         onPress={() => onClickDouble()}
       >
         <View style={{ width: windowWidth, height: windowHeight / 157 * 115, paddingHorizontal: 16, position: "relative" }}>
