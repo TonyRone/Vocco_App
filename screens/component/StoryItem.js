@@ -218,7 +218,7 @@ export const StoryItem = ({
         onPress={() => onClickDouble()}
       >
         <View style={{ width: windowWidth, height: windowHeight / 157 * 115, paddingHorizontal: 16, position: "relative" }}>
-          <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom:10 }}>
+          <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between",marginTop:10, marginBottom:10 }}>
             {/* <TitleText
             text={onLimit(voiceTitle)}
             maxWidth={windowWidth - 100}
@@ -226,7 +226,7 @@ export const StoryItem = ({
           /> */}
             <View style={{
               alignSelf: "flex-start",
-              height: 31,
+              height: 36,
               flexDirection: "row",
               alignItems: "center",
               paddingHorizontal: 12,
@@ -431,7 +431,7 @@ export const StoryItem = ({
             position: "absolute",
             flexDirection: "column",
             alignItems: "center",
-            bottom: 133,
+            bottom: 128,
             right: 20
           }}>
             {user.id !== info.user.id && <TouchableOpacity disabled={isLoading} style={{ position: "relative", opacity: isLoading ? 0.5 : 1 }} onPress={() => onSendRequest()}>
