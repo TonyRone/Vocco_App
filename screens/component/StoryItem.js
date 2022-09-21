@@ -374,8 +374,8 @@ export const StoryItem = ({
                         }}
                       >
                         <SvgXml
-                          width={45}
-                          height={45}
+                          width={60}
+                          height={60}
                           xml={isPlaying ? pauseSvg2 : playSvg}
                         />
                       </TouchableOpacity>
