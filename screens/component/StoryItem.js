@@ -431,7 +431,7 @@ export const StoryItem = ({
             position: "absolute",
             flexDirection: "column",
             alignItems: "center",
-            bottom: 60,
+            bottom: 133,
             right: 20
           }}>
             {user.id !== info.user.id && <TouchableOpacity disabled={isLoading} style={{ position: "relative", opacity: isLoading ? 0.5 : 1 }} onPress={() => onSendRequest()}>
@@ -449,7 +449,7 @@ export const StoryItem = ({
               </View>
             </TouchableOpacity>}
             <View style={{
-              marginTop: -18,
+              marginTop: 18,
               flexDirection: "column",
               alignItems: "center"
             }}>
