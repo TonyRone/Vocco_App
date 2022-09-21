@@ -218,7 +218,7 @@ export const StoryItem = ({
         onPress={() => onClickDouble()}
       >
         <View style={{ width: windowWidth, height: windowHeight / 157 * 115, paddingHorizontal: 16, position: "relative" }}>
-          <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between",marginTop:10, marginBottom:10 }}>
+          <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 10, marginBottom: 10 }}>
             {/* <TitleText
             text={onLimit(voiceTitle)}
             maxWidth={windowWidth - 100}
@@ -358,27 +358,23 @@ export const StoryItem = ({
                       }}
                       style={{ position: "relative" }}
                     >
-                      <Image
+                      <ImageBackground
                         source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
-                        style={{ width: windowHeight / 417 * 125 - 80, height: windowHeight / 417 * 125 - 80, borderRadius: (windowHeight / 417 * 125 - 88) / 2, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
-                      />
-                      <TouchableOpacity
-                        onPress={() => {
-                          setIsPlaying(!isPlaying);
-                          dispatch(setVisibleOne(isPlaying ? -1 : itemIndex));
-                        }}
-                        style={{
-                          position: "absolute",
-                          top: (windowHeight / 417 * 125 - 88) / 2 - 15,
-                          left: (windowHeight / 417 * 125 - 88) / 2 - 15
-                        }}
+                        style={{justifyContent:'center',alignItems:'center', width: windowHeight / 417 * 125 - 70, height: windowHeight / 417 * 125 - 70, borderRadius: (windowHeight / 417 * 125 - 88) / 2, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
                       >
-                        <SvgXml
-                          width={61}
-                          height={61}
-                          xml={isPlaying ? pauseSvg2 : playSvg}
-                        />
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => {
+                            setIsPlaying(!isPlaying);
+                            dispatch(setVisibleOne(isPlaying ? -1 : itemIndex));
+                          }}
+                        >
+                          <SvgXml
+                            width={61}
+                            height={61}
+                            xml={isPlaying ? pauseSvg2 : playSvg}
+                          />
+                        </TouchableOpacity>
+                      </ImageBackground>
                     </TouchableOpacity>
                   </>
                 )
@@ -505,7 +501,7 @@ export const StoryItem = ({
             mrg={windowWidth / 600000}
             duration={info.duration * 1000}
           /></View>}
-          <View style={{ position: 'absolute', bottom:75, width: windowWidth, alignItems: 'center' }}>
+          <View style={{ position: 'absolute', bottom: 75, width: windowWidth, alignItems: 'center' }}>
             <DescriptionText
               text={info.listenCount + " " + t("Play") + (info.listenCount > 1 ? 's' : '') + (time != '' ? " - " : '') + time + t(' ago')}
               fontSize={13}
