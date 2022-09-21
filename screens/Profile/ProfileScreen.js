@@ -31,6 +31,7 @@ import { RecordIcon } from '../component/RecordIcon';
 import { FollowUsers } from '../component/FollowUsers';
 import { ShareQRcode } from '../component/ShareQRcode';
 import { ShowLikesCount } from '../component/ShowLikesCount';
+import { SemiBoldText } from '../component/SemiBoldText';
 
 const ProfileScreen = (props) => {
 
@@ -324,7 +325,7 @@ const ProfileScreen = (props) => {
                       userInfo.likes < 1000 ? require('../../assets/profile/gold-diamond.png') : require('../../assets/profile/real-diamond.png')
                     }
                   />
-                  <DescriptionText
+                  <SemiBoldText
                     fontSize={13}
                     lineHeight={18}
                     text={userInfo.likes < 100 ? t("Bronze") : userInfo.likes < 1000 ? t("Gold") : t("Emeraud")}
