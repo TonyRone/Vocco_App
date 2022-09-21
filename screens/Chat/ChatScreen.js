@@ -399,7 +399,7 @@ const ChatScreen = (props) => {
                 />
                 <RecordIcon
                     props={props}
-                    bottom={25}
+                    bottom={27}
                     left={windowWidth / 2 - 27}
                 />
                 {showFriendsList && <NewChat
