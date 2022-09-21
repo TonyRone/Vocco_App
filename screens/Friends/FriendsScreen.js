@@ -567,7 +567,7 @@ const FriendsScreen = (props) => {
             />
             <RecordIcon
                 props={props}
-                bottom={30.5}
+                bottom={25.5}
                 left={windowWidth / 2 - 27}
             />
         </SafeAreaView>
