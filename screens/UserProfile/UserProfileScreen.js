@@ -352,28 +352,37 @@ const UserProfileScreen = (props) => {
                       source={require('../../assets/common/premiumstar.png')}
                     />
                   }
-                  {userInfo.user &&<View style={{
+                  {userInfo.user && <View style={{
                     paddingHorizontal: 12,
-                    paddingVertical: 6,
+                    paddingVertical: 4,
                     borderRadius: 12,
-                    borderColor: userInfo.likes<100?'#E53F34':userInfo.likes<1000?'#FFCC27':'#6099C7',
-                    borderWidth:1,
+                    borderColor: userInfo.likes < 100 ? '#E53F34' : userInfo.likes < 1000 ? '#FFCC27' : '#6099C7',
+                    borderWidth: 1,
                     flexDirection: 'row',
-                    alignItems:'center',
-                    marginLeft:24
+                    alignItems: 'center',
+                    marginLeft: 6,
+                    marginRight:4,
+                    backgroundColor:'#FFF',
+                    shadowColor: 'rgba(88, 74, 117, 1)',
+                    elevation: 10,
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 8,
                   }}>
                     <Image
                       style={{
-                        width: 24,
-                        height: 24,
+                        width: 20,
+                        height: 20,
                       }}
-                      source={userInfo.likes<100?require('../../assets/profile/bronze-diamond.png'):
-                      userInfo.likes<1000?require('../../assets/profile/gold-diamond.png'):require('../../assets/profile/real-diamond.png')
-                    }
+                      source={userInfo.likes < 100 ? require('../../assets/profile/bronze-diamond.png') :
+                        userInfo.likes < 1000 ? require('../../assets/profile/gold-diamond.png') : require('../../assets/profile/real-diamond.png')
+                      }
                     />
                     <DescriptionText
-                      text={userInfo.likes<100?t("Bronze"):userInfo.likes<1000?t("Gold"):t("Emeraud")}
-                      color={userInfo.likes<100?'#E4373A':userInfo.likes<1000?'#FFC30E':'#6497C5'}
+                      fontSize={13}
+                      lineHeight={18}
+                      text={userInfo.likes < 100 ? t("Bronze") : userInfo.likes < 1000 ? t("Gold") : t("Emeraud")}
+                      color={userInfo.likes < 100 ? '#E4373A' : userInfo.likes < 1000 ? '#FFC30E' : '#6497C5'}
                       marginLeft={8}
                     />
                   </View>}

@@ -306,12 +306,18 @@ const ProfileScreen = (props) => {
                   borderWidth: 1,
                   flexDirection: 'row',
                   alignItems: 'center',
-                  marginLeft: 4,
-                  marginRight: 4
+                  marginLeft: 6,
+                  marginRight: 4,
+                  backgroundColor: '#FFF',
+                  shadowColor: 'rgba(88, 74, 117, 1)',
+                  elevation: 10,
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.5,
+                  shadowRadius: 8,
                 }}>
                   <Image
                     style={{
-                      width:20,
+                      width: 20,
                       height: 20,
                     }}
                     source={userInfo.likes < 100 ? require('../../assets/profile/bronze-diamond.png') :
@@ -319,8 +325,8 @@ const ProfileScreen = (props) => {
                     }
                   />
                   <DescriptionText
-                  fontSize={13}
-                  lineHeight={18}
+                    fontSize={13}
+                    lineHeight={18}
                     text={userInfo.likes < 100 ? t("Bronze") : userInfo.likes < 1000 ? t("Gold") : t("Emeraud")}
                     color={userInfo.likes < 100 ? '#E4373A' : userInfo.likes < 1000 ? '#FFC30E' : '#6497C5'}
                     marginLeft={8}
