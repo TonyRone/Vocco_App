@@ -284,7 +284,7 @@ const HomeScreen = (props) => {
             />
             <RecordIcon
                 props={props}
-                bottom={15.5}
+                bottom={30.5}
                 expandKey={expandKey}
                 left={windowWidth / 2 - 27}
             />

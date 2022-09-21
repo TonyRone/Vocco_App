@@ -381,7 +381,7 @@ const ProfileScreen = (props) => {
       }
       <RecordIcon
         props={props}
-        bottom={15.5}
+        bottom={30.5}
         left={windowWidth / 2 - 27}
       />
     </KeyboardAvoidingView>
