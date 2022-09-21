@@ -355,7 +355,7 @@ const UserProfileScreen = (props) => {
                   {userInfo.user && <View style={{
                     paddingHorizontal: 12,
                     paddingVertical: 4,
-                    borderRadius: 12,
+                    borderRadius: 6,
                     borderColor: userInfo.likes < 100 ? '#E53F34' : userInfo.likes < 1000 ? '#FFCC27' : '#6099C7',
                     borderWidth: 1,
                     flexDirection: 'row',
