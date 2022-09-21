@@ -44,7 +44,7 @@ export const PostContext = ({
   const [showModal, setShowModal] = useState(true);
   const [playstatus, setPlaystatus] = useState(false);
 
-  let { user, refreshState } = useSelector((state) => {
+  let { refreshState } = useSelector((state) => {
     return (
       state.user
     )
@@ -68,9 +68,9 @@ export const PostContext = ({
       type: 'audio/mp3',
     });
   }, []);
-
-  const onBlockUser = () => {
-    VoiceService.blockUser(postInfo.user.id).then(res => {
+  
+  const onBlockUser=()=>{
+    VoiceService.blockUser(postInfo.user.id).then(res=>{
       dispatch(setRefreshState(!refreshState));
       closeModal();
     })
@@ -80,7 +80,7 @@ export const PostContext = ({
     <Modal
       animationType="slide"
       transparent={true}
-      elevation={5}
+      elevation = {5}
       visible={showModal}
       onRequestClose={() => {
         closeModal();
@@ -88,7 +88,7 @@ export const PostContext = ({
     >
       <Pressable onPressOut={closeModal} style={styles.swipeModal}>
         <View
-          style={{ marginTop: "25%" }}
+          style={ { marginTop: "25%" }}
         >
           <VoiceItem
             info={postInfo}
@@ -101,7 +101,7 @@ export const PostContext = ({
             <View
               style={styles.contextWrap}
             >
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.contextMenu}
                 onPress={() => { props.navigation.navigate('VoiceProfile', { id: postInfo.id }); closeModal(); }}
               >
@@ -145,21 +145,18 @@ export const PostContext = ({
                   height={20}
                   xml={postInfo.isLike ? redHeartSvg : blankHeartSvg}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 style={styles.contextMenu}
                 onPress={() => {
-                  if (postInfo.user.id == user.id)
-                    props.navigation.navigate('Profile');
-                  else
-                    props.navigation.navigate('UserProfile', { userId: postInfo.user.id });
-                  closeModal();
+                  onBlockUser();
                 }}
               >
                 <TitleText
-                  text={postInfo.user.name}
+                  text={"Block"}
                   fontSize={17}
                   fontFamily="SFProDisplay-Regular"
+                  color="#E41717"
                 />
                 <SvgXml
                   width={20}
@@ -180,7 +177,6 @@ export const PostContext = ({
                   text={t("Report")}
                   fontSize={17}
                   fontFamily="SFProDisplay-Regular"
-                  color="#E41717"
                 />
                 <SvgXml
                   width={20}
@@ -195,12 +191,10 @@ export const PostContext = ({
             >
               <Pressable
                 style={styles.contextMenu}
-                onPress={() => onBlockUser()}
               >
                 <TitleText
-                  text={t("Block")}
+                  text={t("Spam")}
                   fontSize={17}
-                  color='#FFF'
                   fontFamily="SFProDisplay-Regular"
                 />
                 <SvgXml
@@ -213,7 +207,49 @@ export const PostContext = ({
                 style={styles.contextMenu}
               >
                 <TitleText
-                  text={t("Report")}
+                  text={t("Fake Account")}
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                />
+                <SvgXml
+                  width={20}
+                  height={20}
+                  xml={ciFakeSvg}
+                />
+              </Pressable>
+              <Pressable
+                style={styles.contextMenu}
+              >
+                <TitleText
+                  text={t("Violence")}
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                />
+                <SvgXml
+                  width={20}
+                  height={20}
+                  xml={ciViolenceSvg}
+                />
+              </Pressable>
+              <Pressable
+                style={styles.contextMenu}
+              >
+                <TitleText
+                  text={t("Child Abuse")}
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                />
+                <SvgXml
+                  width={20}
+                  height={20}
+                  xml={ciAbuseSvg}
+                />
+              </Pressable>
+              <Pressable
+                style={styles.contextMenu}
+              >
+                <TitleText
+                  text={t("Other")}
                   fontSize={17}
                   fontFamily="SFProDisplay-Regular"
                 />
