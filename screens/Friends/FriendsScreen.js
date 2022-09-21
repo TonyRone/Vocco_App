@@ -320,7 +320,7 @@ const FriendsScreen = (props) => {
                                 lineHeight={24}
                             />
                             <DescriptionText
-                                text={'api.vocco.ai'}
+                                text={'vocco.ai/'+user.name}
                                 fontSize={13}
                                 lineHeight={21}
                             />

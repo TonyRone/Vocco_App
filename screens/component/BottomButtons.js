@@ -43,7 +43,7 @@ export const BottomButtons = ({
         bottom: 0,
         width: '100%',
         paddingHorizontal: 27,
-        paddingBottom: 10,
+        paddingBottom: 25,
         height: 90,
         flexDirection: 'row',
         justifyContent: 'space-between',

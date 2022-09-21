@@ -352,7 +352,7 @@ const UserProfileScreen = (props) => {
                       source={require('../../assets/common/premiumstar.png')}
                     />
                   }
-                  <View style={{
+                  {userInfo.user &&<View style={{
                     paddingHorizontal: 12,
                     paddingVertical: 6,
                     borderRadius: 12,
@@ -376,7 +376,7 @@ const UserProfileScreen = (props) => {
                       color={userInfo.likes<100?'#E4373A':userInfo.likes<1000?'#FFC30E':'#6497C5'}
                       marginLeft={8}
                     />
-                  </View>
+                  </View>}
                 </View>
               </View>
               <View style={styles.rowAlignItems}>
