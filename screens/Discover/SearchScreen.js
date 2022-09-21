@@ -537,7 +537,7 @@ const SearchScreen = (props) => {
       </View>}
       <RecordIcon
         props={props}
-        bottom={22.5}
+        bottom={25}
         left={windowWidth / 2 - 27}
       />
     </KeyboardAvoidingView>

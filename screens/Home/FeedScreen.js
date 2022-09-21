@@ -231,7 +231,7 @@ const FeedScreen = (props) => {
       />
       <RecordIcon
         props={props}
-        bottom={22.5}
+        bottom={25}
         expandKey={expandKey}
         left={windowWidth / 2 - 27}
       />
