@@ -62,6 +62,12 @@ export const NotificationItem = ({
     if (details == 'userFollow')
         label = t("Has followed you")
 
+    const onLimit = (v) => {
+        return ((v).length > 25) ?
+            (((v).substring(0, 22)) + '...') :
+            v;
+    }
+
     return (
         !isDeleted ?
             <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={{ maxWidth: windowWidth, borderBottomColor: '#F2F0F5', borderBottomWidth: 1 }}>
@@ -109,7 +115,7 @@ export const NotificationItem = ({
                             </View>
                             <View style={styles.rowAlignItems}>
                                 <DescriptionText
-                                    text={label}
+                                    text={onLimit(label)}
                                     fontSize={13}
                                     lineHeight={21}
                                     color='rgba(54, 36, 68, 0.8)'
@@ -153,7 +159,7 @@ export const NotificationItem = ({
                             </TouchableOpacity>}
                         </View>
                         : <View>
-                            {(details == 'userFollow' && (!towardFriend || towardFriend.status == 'none'))?  <TouchableOpacity onPress={() => onFollowUser()} style={[styles.contentCenter, { width: 99, height: 40, borderRadius: 12, backgroundColor: '#F8F0FF'}]}>
+                            {(details == 'userFollow' && (!towardFriend || towardFriend.status == 'none')) ? <TouchableOpacity onPress={() => onFollowUser()} style={[styles.contentCenter, { width: 99, height: 40, borderRadius: 12, backgroundColor: '#F8F0FF' }]}>
                                 <SemiBoldText
                                     text='Follow back'
                                     fontSize={15}
