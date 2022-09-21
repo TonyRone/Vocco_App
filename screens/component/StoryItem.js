@@ -344,7 +344,7 @@ export const StoryItem = ({
                       flexDirection: "row",
                       alignItems: "center",
                       position: "absolute",
-                      bottom: -36
+                      bottom: -56
                     }}>
                       <DescriptionText
                         text={convertSectoPad(elapsedTime) + ' • ' + new Date(voiceTime * 1000).toISOString().substr(14, 5)}
@@ -385,7 +385,7 @@ export const StoryItem = ({
               }}
             </CountdownCircleTimer>
             <View style={{
-              marginTop: 36,
+              marginTop: 56,
               flexDirection: "row",
               alignItems: "center"
             }}>
