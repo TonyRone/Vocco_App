@@ -357,7 +357,7 @@ const UserProfileScreen = (props) => {
                     paddingVertical: 4,
                     borderRadius: 8,
                     borderColor: userInfo.likes < 100 ? '#E53F34' : userInfo.likes < 1000 ? '#FFCC27' : '#6099C7',
-                    borderWidth: 1,
+                    borderWidth: 2,
                     flexDirection: 'row',
                     alignItems: 'center',
                     marginLeft: 6,
