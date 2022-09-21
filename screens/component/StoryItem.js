@@ -360,7 +360,8 @@ export const StoryItem = ({
                     >
                       <ImageBackground
                         source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
-                        style={{justifyContent:'center',alignItems:'center', width: windowHeight / 417 * 125 - 70, height: windowHeight / 417 * 125 - 70, borderRadius: (windowHeight / 417 * 125 - 88) / 2, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
+                        style={{justifyContent:'center',alignItems:'center', width: windowHeight / 417 * 125 - 70, height: windowHeight / 417 * 125 - 70 }}
+                        imageStyle={{ borderRadius: (windowHeight / 417 * 125 - 88) / 2, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
                       >
                         <TouchableOpacity
                           onPress={() => {
