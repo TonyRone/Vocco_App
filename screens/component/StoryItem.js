@@ -431,7 +431,7 @@ export const StoryItem = ({
             position: "absolute",
             flexDirection: "column",
             alignItems: "center",
-            bottom: 128,
+            bottom: 120,
             right: 20
           }}>
             {user.id !== info.user.id && <TouchableOpacity disabled={isLoading} style={{ position: "relative", opacity: isLoading ? 0.5 : 1 }} onPress={() => onSendRequest()}>
