@@ -729,10 +729,9 @@ export const StoryItem = ({
       }
       {
         showReport &&
-        <ReportContext
+        <PostContext
           postInfo={info}
           props={props}
-          onChangeIsLike={() => OnSetLike()}
           onCloseModal={() => setShowReport(false)}
         />
       }
