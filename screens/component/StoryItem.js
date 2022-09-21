@@ -218,7 +218,7 @@ export const StoryItem = ({
         onPress={() => onClickDouble()}
       >
         <View style={{ width: windowWidth, height: windowHeight / 157 * 115, paddingHorizontal: 16, position: "relative" }}>
-          <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 10, marginBottom: 10 }}>
+          <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 15, marginBottom: 10 }}>
             {/* <TitleText
             text={onLimit(voiceTitle)}
             maxWidth={windowWidth - 100}
@@ -226,12 +226,12 @@ export const StoryItem = ({
           /> */}
             <View style={{
               alignSelf: "flex-start",
-              height: 36,
+              height: 28,
               flexDirection: "row",
               alignItems: "center",
               paddingHorizontal: 12,
               backgroundColor: "#FFF",
-              borderRadius: 16,
+              borderRadius: 12,
               marginTop: 7,
               shadowColor: 'rgba(88, 74, 117, 1)',
               elevation: 10,
@@ -243,12 +243,12 @@ export const StoryItem = ({
               <Image
                 source={getCategoryUrl(info.category)}
                 style={{
-                  width: 22,
-                  height: 22
+                  width: 18,
+                  height: 18
                 }}
               />
               <Text style={{
-                fontSize: 21,
+                fontSize: 16,
                 lineHeight: 35,
                 fontWeight: "400",
                 color: "#361252",
@@ -259,15 +259,15 @@ export const StoryItem = ({
             </View>
             <TouchableOpacity style={{
               marginTop: 5,
-              width: 45,
-              height: 45,
+              width: 36,
+              height: 36,
               backgroundColor: '#FFF',
               shadowColor: 'rgba(88, 74, 117, 1)',
               elevation: 10,
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.5,
               shadowRadius: 8,
-              borderRadius: 10,
+              borderRadius: 8,
               zIndex: 0,
               display: "flex",
               justifyContent: "center",
@@ -276,8 +276,8 @@ export const StoryItem = ({
               onPress={() => setShowReport(true)}
             >
               <SvgXml
-                width={25}
-                height={25}
+                width={20}
+                height={20}
                 xml={more_Svg}
               />
             </TouchableOpacity>
