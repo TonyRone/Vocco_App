@@ -218,7 +218,7 @@ export const StoryItem = ({
         onPress={() => onClickDouble()}
       >
         <View style={{ width: windowWidth, height: windowHeight / 157 * 115, paddingHorizontal: 16, position: "relative" }}>
-          <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom:10 }}>
             {/* <TitleText
             text={onLimit(voiceTitle)}
             maxWidth={windowWidth - 100}
@@ -449,8 +449,7 @@ export const StoryItem = ({
               </View>
             </TouchableOpacity>}
             <View style={{
-
-              marginTop: 18,
+              marginTop: -18,
               flexDirection: "column",
               alignItems: "center"
             }}>

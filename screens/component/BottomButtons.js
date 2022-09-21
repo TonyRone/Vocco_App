@@ -44,7 +44,7 @@ export const BottomButtons = ({
         width: '100%',
         paddingHorizontal: 27,
         paddingBottom: 10,
-        height: 75,
+        height: 90,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
