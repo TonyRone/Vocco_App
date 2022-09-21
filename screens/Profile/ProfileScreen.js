@@ -300,7 +300,7 @@ const ProfileScreen = (props) => {
                 </TouchableOpacity>
                 <View style={{
                   paddingHorizontal: 6,
-                  paddingVertical: 4,
+                  paddingVertical: 3,
                   borderRadius: 8,
                   borderColor: userInfo.likes < 100 ? '#E53F34' : userInfo.likes < 1000 ? '#FFCC27' : '#6099C7',
                   borderWidth: 2,
