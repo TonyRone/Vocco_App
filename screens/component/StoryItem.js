@@ -360,7 +360,7 @@ export const StoryItem = ({
                     >
                       <Image
                         source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
-                        style={{ width: windowHeight / 417 * 125 - 88, height: windowHeight / 417 * 125 - 88, borderRadius: (windowHeight / 417 * 125 - 88) / 2, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
+                        style={{ width: windowHeight / 417 * 125 - 80, height: windowHeight / 417 * 125 - 80, borderRadius: (windowHeight / 417 * 125 - 88) / 2, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
                       />
                       <TouchableOpacity
                         onPress={() => {
@@ -369,13 +369,13 @@ export const StoryItem = ({
                         }}
                         style={{
                           position: "absolute",
-                          top: (windowHeight / 417 * 125 - 88) / 2 - 23,
-                          left: (windowHeight / 417 * 125 - 88) / 2 - 23
+                          top: (windowHeight / 417 * 125 - 88) / 2 - 15,
+                          left: (windowHeight / 417 * 125 - 88) / 2 - 15
                         }}
                       >
                         <SvgXml
-                          width={60}
-                          height={60}
+                          width={61}
+                          height={61}
                           xml={isPlaying ? pauseSvg2 : playSvg}
                         />
                       </TouchableOpacity>
