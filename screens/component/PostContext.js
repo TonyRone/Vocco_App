@@ -4,20 +4,11 @@ import {
   Pressable,
   TouchableOpacity,
   Modal,
-  Image,
-  Vibration,
-  Platform
 } from 'react-native';
 
-import * as Progress from "react-native-progress";
 import { TitleText } from './TitleText';
 import { VoiceItem } from './VoiceItem';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
-import Share from 'react-native-share';
 import { SvgXml } from 'react-native-svg';
-import blankHeartSvg from '../../assets/post/blankHeart.svg';
-import redHeartSvg from '../../assets/post/redHeart.svg';
-import ciMicrophoneSvg from '../../assets/discover/context/microphone.svg';
 import ciUsertSvg from '../../assets/discover/context/user.svg';
 import ciReportRedSvg from '../../assets/discover/context/report.svg';
 import ciAbuseSvg from '../../assets/discover/context/abuse.svg';
@@ -32,9 +23,6 @@ import { styles } from '../style/Common';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { setRefreshState } from '../../store/actions';
-import RNShareFile from 'react-native-file-share'
-import RNFetchBlob from 'rn-fetch-blob';
-import PostingVoiceScreen from '../Record/PostingVoiceScreen';
 
 export const PostContext = ({
   postInfo,
