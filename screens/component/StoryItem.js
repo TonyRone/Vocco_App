@@ -213,9 +213,10 @@ export const StoryItem = ({
     }).fetch('GET', info.file.url).then(res => {
       if (mounted.current && res.respInfo.status == 200) {
         setLoading(false);
-        let filePath = `${Platform.OS === 'android' ? res.path() : `${fileName}.m4a`}`;
+        //let filePath = `${Platform.OS === 'android' ? res.path() : `${fileName}.m4a`}`;
+        let filePath = res.path();
         Share.open({
-          url: "file://" + filePath,
+          url: Platform.OS=='android'? 'file://':'' + filePath,
           type: 'audio/' + (Platform.OS === 'android' ? 'mp3' : 'm4a'),
         }).then(res => {
         })
