@@ -1,11 +1,15 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
   View,
   Pressable,
   TouchableOpacity,
   Modal,
-  Vibration
+  Image,
+  Vibration,
+  Platform
 } from 'react-native';
+
+import * as Progress from "react-native-progress";
 import { TitleText } from './TitleText';
 import { VoiceItem } from './VoiceItem';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
@@ -13,7 +17,6 @@ import Share from 'react-native-share';
 import { SvgXml } from 'react-native-svg';
 import blankHeartSvg from '../../assets/post/blankHeart.svg';
 import redHeartSvg from '../../assets/post/redHeart.svg';
-import ciShareSvg from '../../assets/discover/context/share.svg';
 import ciMicrophoneSvg from '../../assets/discover/context/microphone.svg';
 import ciUsertSvg from '../../assets/discover/context/user.svg';
 import ciReportRedSvg from '../../assets/discover/context/report.svg';
@@ -29,6 +32,9 @@ import { styles } from '../style/Common';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { setRefreshState } from '../../store/actions';
+import RNShareFile from 'react-native-file-share'
+import RNFetchBlob from 'rn-fetch-blob';
+import PostingVoiceScreen from '../Record/PostingVoiceScreen';
 
 export const PostContext = ({
   postInfo,
@@ -43,12 +49,15 @@ export const PostContext = ({
   const [showReport, setShowReport] = useState(false);
   const [showModal, setShowModal] = useState(true);
   const [playstatus, setPlaystatus] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   let { refreshState } = useSelector((state) => {
     return (
       state.user
     )
   });
+
+  const mounted = useRef(false);
 
   const appreciateVoice = () => {
     onChangeIsLike();
@@ -62,25 +71,26 @@ export const PostContext = ({
     setShowModal(false);
     onCloseModal();
   }
-  const onShareAudio = useCallback(() => {
-    Share.open({
-      url: postInfo.file.url,
-      type: 'audio/mp3',
-    });
-  }, []);
-  
-  const onBlockUser=()=>{
-    VoiceService.blockUser(postInfo.user.id).then(res=>{
+
+  const onBlockUser = () => {
+    VoiceService.blockUser(postInfo.user.id).then(res => {
       dispatch(setRefreshState(!refreshState));
       closeModal();
     })
   }
 
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    }
+  }, [])
+
   return (
     <Modal
       animationType="slide"
       transparent={true}
-      elevation = {5}
+      elevation={5}
       visible={showModal}
       onRequestClose={() => {
         closeModal();
@@ -88,7 +98,7 @@ export const PostContext = ({
     >
       <Pressable onPressOut={closeModal} style={styles.swipeModal}>
         <View
-          style={ { marginTop: "25%" }}
+          style={{ marginTop: "25%" }}
         >
           <VoiceItem
             info={postInfo}
@@ -116,7 +126,7 @@ export const PostContext = ({
                   xml={ciMicrophoneSvg}
                 />
               </TouchableOpacity>
-              <TouchableOpacity
+               <TouchableOpacity
                 style={styles.contextMenu}
                 onPress={onShareAudio}
               >
@@ -125,10 +135,9 @@ export const PostContext = ({
                   fontSize={17}
                   fontFamily="SFProDisplay-Regular"
                 />
-                <SvgXml
-                  width={20}
-                  height={20}
-                  xml={ciShareSvg}
+                <Image
+                  source={require('../../assets/record/Share.png')}
+                  style={{ width: 75, height: 24 }}
                 />
               </TouchableOpacity>
               <TouchableOpacity

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -6,9 +6,11 @@ import {
   Image,
   Vibration,
   Pressable,
-  ImageBackground
+  ImageBackground,
+  Platform
 } from "react-native";
 
+import * as Progress from "react-native-progress";
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { PostContext } from '../component/PostContext';
@@ -30,17 +32,20 @@ import star_Svg from '../../assets/common/star.svg';
 import heart_Svg from '../../assets/common/heart.svg';
 import heartRed_Svg from '../../assets/common/heart_red.svg';
 import heartYellow_Svg from '../../assets/common/heart_yellow.svg';
+import forwardSvg from '../../assets/record/forward.svg';
 import add_Svg from '../../assets/common/add.svg';
 import addYellow_Svg from '../../assets/common/add_yellow.svg';
 import addSuccess_Svg from '../../assets/common/add_success.svg';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { styles } from '../style/Common';
+import Share from 'react-native-share';
 import VoiceService from '../../services/VoiceService';
 import VoicePlayer from '../Home/VoicePlayer';
 import { Avatars, windowWidth, windowHeight, Categories } from '../../config/config';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { StoryScreens } from './StoryScreens';
 import { SemiBoldText } from './SemiBoldText';
+import RNFetchBlob from 'rn-fetch-blob';
 import { setRefreshState, setVisibleOne } from '../../store/actions';
 
 export const StoryItem = ({
@@ -48,7 +53,7 @@ export const StoryItem = ({
   info,
   isRefresh = false,
   itemIndex,
-  itemHeight =windowHeight / 157 * 115,
+  itemHeight = windowHeight / 157 * 115,
   onChangeLike = () => { },
 }) => {
   const [showContext, setShowContext] = useState(false);
@@ -65,6 +70,7 @@ export const StoryItem = ({
   const [isFriend, setIsFriend] = useState(info.isFriend);
   const [reload, setReload] = useState(false);
   const [isPlayed, setIsPlayed] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { t, i18n } = useTranslation();
   const mounted = useRef(false);
@@ -78,63 +84,6 @@ export const StoryItem = ({
   });
 
   const { visibleOne } = useSelector((state) => state.user);
-
-  const getFollowUsers = async () => {
-    setIsLoading(true);
-    await VoiceService.getFollows(user.id, 'Following').then(async res => {
-      if (res.respInfo.status === 200 && mounted.current) {
-        const jsonRes = await res.json();
-        setFollows(jsonRes);
-        setIsLoading(false);
-      }
-    })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-
-  const onSendRequest = () => {
-    if (isFriend) {
-      setIsLoading(true);
-      VoiceService.unfollowFriend(info.user.id).then(res => {
-        if (res.respInfo.status == 200 || res.respInfo.status == 201) {
-          setIsFriend(false);
-        }
-        setIsLoading(false);
-      });
-      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-    } else {
-      setIsLoading(true);
-      VoiceService.followFriend(info.user.id).then(async res => {
-        const jsonRes = await res.json();
-        if (res.respInfo.status == 200 || res.respInfo.status == 201) {
-          setIsFriend(jsonRes.status == 'accepted');
-        }
-        setIsLoading(false);
-      });
-      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-    }
-  }
-
-  useEffect(() => {
-    mounted.current = true;
-    // setKey(prevKey => prevKey + 1);
-    getFollowUsers();
-    if (mounted.current && !info.notSafe)
-      setIsPlaying(visibleOne == itemIndex);
-    return () => {
-      mounted.current = false;
-    }
-  }, [visibleOne]);
-
-  useEffect(() => {
-    getFollowUsers();
-  }, [reload])
-
-  useEffect(() => {
-    setKey(key => key + 1);
-  }, [isPlaying])
 
   let { user } = useSelector((state) => {
     return (
@@ -198,6 +147,44 @@ export const StoryItem = ({
     }
   };
 
+  const getFollowUsers = async () => {
+    setIsLoading(true);
+    await VoiceService.getFollows(user.id, 'Following').then(async res => {
+      if (res.respInfo.status === 200 && mounted.current) {
+        const jsonRes = await res.json();
+        setFollows(jsonRes);
+        setIsLoading(false);
+      }
+    })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  const onSendRequest = () => {
+    if (isFriend) {
+      setIsLoading(true);
+      VoiceService.unfollowFriend(info.user.id).then(res => {
+        if (res.respInfo.status == 200 || res.respInfo.status == 201) {
+          setIsFriend(false);
+        }
+        setIsLoading(false);
+      });
+      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    } else {
+      setIsLoading(true);
+      VoiceService.followFriend(info.user.id).then(async res => {
+        const jsonRes = await res.json();
+        if (res.respInfo.status == 200 || res.respInfo.status == 201) {
+          setIsFriend(jsonRes.status == 'accepted');
+        }
+        setIsLoading(false);
+      });
+      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    }
+  }
+
   const getCategoryUrl = (cate) => {
     let res = Categories.filter((item) => {
       return item.label === cate;
@@ -211,6 +198,55 @@ export const StoryItem = ({
 
     return min.toString().padStart(2, '0') + ':' + sec.toString().padStart(2, '0');
   }
+
+  const onShareAudio = useCallback(() => {
+    const dirs = RNFetchBlob.fs.dirs.DocumentDir;
+    const fileName = 'Vocco app - ' + info.title;
+    const path = Platform.select({
+      ios: `${dirs}/${fileName}.m4a`,
+      android: `${dirs}/${fileName}.mp3`,
+    });
+    setLoading(true);
+    RNFetchBlob.config({
+      fileCache: true,
+      path,
+    }).fetch('GET', info.file.url).then(res => {
+      if (mounted.current && res.respInfo.status == 200) {
+        setLoading(false);
+        let filePath = `${Platform.OS === 'android' ? res.path() : `${fileName}.m4a`}`;
+        Share.open({
+          url: "file://" + filePath,
+          type: 'audio/' + (Platform.OS === 'android' ? 'mp3' : 'm4a'),
+        }).then(res => {
+        })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    })
+      .catch(async err => {
+        console.log(err);
+      })
+  }, []);
+
+  useEffect(() => {
+    mounted.current = true;
+    // setKey(prevKey => prevKey + 1);
+    getFollowUsers();
+    if (mounted.current && !info.notSafe)
+      setIsPlaying(visibleOne == itemIndex);
+    return () => {
+      mounted.current = false;
+    }
+  }, [visibleOne]);
+
+  useEffect(() => {
+    getFollowUsers();
+  }, [reload])
+
+  useEffect(() => {
+    setKey(key => key + 1);
+  }, [isPlaying])
 
   return (
     <>
@@ -361,7 +397,7 @@ export const StoryItem = ({
                     >
                       <ImageBackground
                         source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
-                        style={{justifyContent:'center',alignItems:'center', width: windowHeight / 417 * 125 - 70, height: windowHeight / 417 * 125 - 70 }}
+                        style={{ justifyContent: 'center', alignItems: 'center', width: windowHeight / 417 * 125 - 70, height: windowHeight / 417 * 125 - 70 }}
                         imageStyle={{ borderRadius: (windowHeight / 417 * 125 - 88) / 2, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
                       >
                         <TouchableOpacity
@@ -488,6 +524,17 @@ export const StoryItem = ({
                 fontFamily="SFProDisplay-Medium"
                 color="rgba(59, 31, 82, 0.6)"
                 marginTop={2}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={{
+              marginTop: 8,
+              flexDirection: "column",
+              alignItems: "center"
+            }}
+              onPress={() => onShareAudio()}
+            >
+              <SvgXml
+                xml={forwardSvg}
               />
             </TouchableOpacity>
           </View>
@@ -748,6 +795,22 @@ export const StoryItem = ({
           onCloseModal={() => setShowChat(false)}
           onSetCommentCount={setCommentCount}
         />
+      }
+      {loading &&
+        <View style={{
+          position: 'absolute',
+          width: '100%',
+          alignItems: 'center',
+          marginTop: 100,
+          elevation: 20
+        }}>
+          <Progress.Circle
+            indeterminate
+            size={30}
+            color="rgba(0, 0, 255, .7)"
+            style={{ alignSelf: "center" }}
+          />
+        </View>
       }
     </>
   );
