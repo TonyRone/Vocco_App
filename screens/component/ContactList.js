@@ -63,7 +63,12 @@ export const ContactList = ({
           console.log('Some error occured');
         }
       },
-    );
+    ).then(res => {
+
+      })
+      .catch(err => {
+        console.log(err);
+      });
     setInvitedUsers(prev => {
       prev.push(index);
       return [...prev]

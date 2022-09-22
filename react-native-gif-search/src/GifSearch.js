@@ -426,6 +426,7 @@ class GifSearch extends PureComponent {
                                 placeholder={this.state.currentGifType == gif_types.GIF ? (this.placeholderText) : (this.stickersPlaceholderText)}
                                 placeholderTextColor={this.placeholderTextColor}
                                 autoCapitalize={'none'}
+                                color='#281E30'
                                 numberOfLines={1}
                                 style={[this.styles.textInput, this.props.textInputStyle]}
                                 onChangeText={this.onSearchTermChanged}
