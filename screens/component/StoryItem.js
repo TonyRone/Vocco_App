@@ -163,7 +163,7 @@ export const StoryItem = ({
     return min.toString().padStart(2, '0') + ':' + sec.toString().padStart(2, '0');
   }
 
-  const onShareAudio = useCallback(() => {
+  const onShareAudio = () => {
     const dirs = RNFetchBlob.fs.dirs.DocumentDir;
     const fileName = 'Vocco app - ' + info.title;
     const path = Platform.select({
@@ -192,7 +192,7 @@ export const StoryItem = ({
       .catch(async err => {
         console.log(err);
       })
-  }, []);
+  };
 
   useEffect(() => {
     mounted.current = true;
@@ -211,9 +211,9 @@ export const StoryItem = ({
 
   return (
     <>
-      <Pressable
+      <View
         style={{ height: itemHeight, backgroundColor:'rgba(255, 255, 255, 0.4)'}}
-        onPress={() => onClickDouble()}
+        //onPress={() => onClickDouble()}
       >
         <View style={{ width: windowWidth, height: windowHeight / 157 * 115, paddingHorizontal: 16, position: "relative" }}>
           <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 15, marginBottom: 10 }}>
@@ -382,12 +382,65 @@ export const StoryItem = ({
               </View>
             </TouchableOpacity>
           </View>
+          {isPlaying && <View style={{ position: 'absolute', width: 1, opacity: 0 }}><VoicePlayer
+            voiceUrl={info.file.url}
+            stopPlay={() => setIsPlaying(false)}
+            startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
+            playBtn={false}
+            replayBtn={false}
+            waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
+            playing={true}
+            tinWidth={windowWidth / 1600000}
+            mrg={windowWidth / 6000000}
+            duration={info.duration * 1000}
+            control={true}
+            playSpeed={speed}
+          /></View>}
+          <View style={{ position: 'absolute', bottom: 55, width: windowWidth, alignItems: 'center' }}>
+            <TouchableOpacity style={{
+              width:60,
+              height:37,
+              borderRadius:20,
+              backgroundColor:'#FFF',
+              borderWidth:1,
+              borderColor:'#F2F0F5',
+              alignItems:'center',
+              justifyContent:'center',
+              marginBottom:6
+            }}
+              onPress={()=>{
+                setSpeed(prev=>{
+                  let r = 0;
+                  if(prev == 2)
+                    r = 1;
+                  else
+                    r = prev+0.5;
+                  rTime.current *= (prev/r);
+                  return r;
+                })
+                setKey(key+1);
+              }}
+            >
+              <TitleText
+                fontSize={15}
+                lineHeight={25}
+                color='#636363'
+                text={'x'+speed.toString()}
+              />
+            </TouchableOpacity>
+            <DescriptionText
+              text={info.listenCount + " " + t("Play") + (info.listenCount > 1 ? 's' : '') + (time != '' ? " - " : '') + time + t(' ago')}
+              fontSize={13}
+              lineHeight={15}
+              color='rgba(54, 18, 82, 0.3)'
+            />
+          </View>
           <View style={{
             position: "absolute",
             flexDirection: "column",
             alignItems: "center",
-            bottom: 120,
-            right: 20
+            bottom: 90,
+            right: 20,
           }}>
             {user.id !== info.user.id && <TouchableOpacity disabled={isLoading} style={{ position: "relative", opacity: isLoading ? 0.5 : 1 }} onPress={() => onSendRequest()}>
               <Image source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri} style={{ width: 40, height: 40, borderRadius: 20 }} />
@@ -448,7 +501,7 @@ export const StoryItem = ({
               />
             </TouchableOpacity>
             <TouchableOpacity style={{
-              marginTop: 8,
+              marginTop: 10,
               flexDirection: "column",
               alignItems: "center"
             }}
@@ -458,59 +511,6 @@ export const StoryItem = ({
                 xml={forwardSvg}
               />
             </TouchableOpacity>
-          </View>
-          {isPlaying && <View style={{ position: 'absolute', width: windowWidth - 80, opacity: 0 }}><VoicePlayer
-            voiceUrl={info.file.url}
-            stopPlay={() => setIsPlaying(false)}
-            startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
-            playBtn={false}
-            replayBtn={false}
-            waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
-            playing={true}
-            tinWidth={windowWidth / 160000}
-            mrg={windowWidth / 600000}
-            duration={info.duration * 1000}
-            control={true}
-            playSpeed={speed}
-          /></View>}
-          <View style={{ position: 'absolute', bottom: 75, width: windowWidth, alignItems: 'center' }}>
-            <TouchableOpacity style={{
-              width:60,
-              height:37,
-              borderRadius:20,
-              backgroundColor:'#FFF',
-              borderWidth:1,
-              borderColor:'#F2F0F5',
-              alignItems:'center',
-              justifyContent:'center',
-              marginBottom:10
-            }}
-              onPress={()=>{
-                setSpeed(prev=>{
-                  let r = 0;
-                  if(prev == 2)
-                    r = 1;
-                  else
-                    r = prev+0.5;
-                  rTime.current *= (prev/r);
-                  return r;
-                })
-                setKey(key+1);
-              }}
-            >
-              <TitleText
-                fontSize={15}
-                lineHeight={25}
-                color='#636363'
-                text={'x'+speed.toString()}
-              />
-            </TouchableOpacity>
-            <DescriptionText
-              text={info.listenCount + " " + t("Play") + (info.listenCount > 1 ? 's' : '') + (time != '' ? " - " : '') + time + t(' ago')}
-              fontSize={13}
-              lineHeight={15}
-              color='rgba(54, 18, 82, 0.3)'
-            />
           </View>
         </View>
         {info.notSafe && !isPlaying && !isPlayed && <ImageBackground
@@ -562,7 +562,7 @@ export const StoryItem = ({
             </View>
           </View>
         </ImageBackground>}
-      </Pressable>
+      </View>
       {showContext &&
         <PostContext
           postInfo={info}
