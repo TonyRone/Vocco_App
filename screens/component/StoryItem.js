@@ -47,6 +47,7 @@ import { StoryScreens } from './StoryScreens';
 import { SemiBoldText } from './SemiBoldText';
 import RNFetchBlob from 'rn-fetch-blob';
 import { setRefreshState, setVisibleOne } from '../../store/actions';
+import { SoundPlay } from './SoundPlay';
 
 export const StoryItem = ({
   props,
@@ -157,6 +158,7 @@ export const StoryItem = ({
   }
 
   const convertSectoPad = (second) => {
+    let rSecond = second * speed;
     let sec = second % 60 | 0;
     let min = (second / 60) | 0;
 
@@ -212,8 +214,8 @@ export const StoryItem = ({
   return (
     <>
       <View
-        style={{ height: itemHeight, backgroundColor:'rgba(255, 255, 255, 0.4)'}}
-        //onPress={() => onClickDouble()}
+        style={{ height: itemHeight, backgroundColor: 'rgba(255, 255, 255, 0.4)' }}
+      //onPress={() => onClickDouble()}
       >
         <View style={{ width: windowWidth, height: windowHeight / 157 * 115, paddingHorizontal: 16, position: "relative" }}>
           <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 15, marginBottom: 10 }}>
@@ -285,11 +287,11 @@ export const StoryItem = ({
             <CountdownCircleTimer
               key={key}
               isPlaying={isPlaying}
-              duration={info.duration/speed}
+              duration={info.duration / speed}
               initialRemainingTime={rTime.current}
               size={windowHeight / 417 * 150}
               strokeWidth={7}
-              onComplete={()=> setIsPlaying(false) }
+              onComplete={() => setIsPlaying(false)}
               trailColor="#D4C9DE"
               trailStrokeWidth={1}
               colors={[
@@ -382,50 +384,56 @@ export const StoryItem = ({
               </View>
             </TouchableOpacity>
           </View>
-          {isPlaying && <View style={{ position: 'absolute', width: 1, opacity: 0 }}><VoicePlayer
-            voiceUrl={info.file.url}
-            stopPlay={() => setIsPlaying(false)}
-            startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
-            playBtn={false}
-            replayBtn={false}
-            waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
-            playing={true}
-            tinWidth={windowWidth / 1600000}
-            mrg={windowWidth / 6000000}
-            duration={info.duration * 1000}
-            control={true}
-            playSpeed={speed}
-          /></View>}
+          {isPlaying && <View style={{ position: 'absolute', width: 1, opacity: 0 }}>
+            {/* <VoicePlayer
+              voiceUrl={info.file.url}
+              stopPlay={() => setIsPlaying(false)}
+              startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
+              playBtn={false}
+              replayBtn={false}
+              waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
+              playing={true}
+              tinWidth={windowWidth / 1600000}
+              mrg={windowWidth / 6000000}
+              duration={info.duration * 1000}
+              control={true}
+              playSpeed={speed}
+            /> */}
+            <SoundPlay
+              path={info.file.url}
+              playSpeed={speed}
+            />
+          </View>}
           <View style={{ position: 'absolute', bottom: 55, width: windowWidth, alignItems: 'center' }}>
             <TouchableOpacity style={{
-              width:60,
-              height:37,
-              borderRadius:20,
-              backgroundColor:'#FFF',
-              borderWidth:1,
-              borderColor:'#F2F0F5',
-              alignItems:'center',
-              justifyContent:'center',
-              marginBottom:6
+              width: 60,
+              height: 37,
+              borderRadius: 20,
+              backgroundColor: '#FFF',
+              borderWidth: 1,
+              borderColor: '#F2F0F5',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: 6
             }}
-              onPress={()=>{
-                setSpeed(prev=>{
+              onPress={() => {
+                setSpeed(prev => {
                   let r = 0;
-                  if(prev == 2)
+                  if (prev == 2)
                     r = 1;
                   else
-                    r = prev+0.5;
-                  rTime.current *= (prev/r);
+                    r = prev + 0.5;
+                  rTime.current *= (prev / r);
                   return r;
                 })
-                setKey(key+1);
+                setKey(key + 1);
               }}
             >
               <TitleText
                 fontSize={15}
                 lineHeight={25}
                 color='#636363'
-                text={'x'+speed.toString()}
+                text={'x' + speed.toString()}
               />
             </TouchableOpacity>
             <DescriptionText
