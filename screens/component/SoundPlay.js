@@ -25,7 +25,7 @@ export const SoundPlay = ({
         path,
         null,
         error => {
-          if (error) {
+          if (error||!mounted.current) {
             console.log('Failed to load the sound', error);
             return;
           };
@@ -36,14 +36,14 @@ export const SoundPlay = ({
             'Number of channels:' +
             audio.getNumberOfChannels(),
           );
+          audio.setVolume(1);
+          audio.play(success => {
+            console.log(success,'audio play ended successfully!!');
+          })
+          audio.setSpeed(playSpeed);
+          music.current = audio;
         }
       );
-      audio.setVolume(1);
-      audio.play(success => {
-        console.log('audio play ended successfully');
-      })
-      audio.setSpeed(playSpeed);
-      music.current = audio;
     }
     return () => {
       mounted.current = false;
