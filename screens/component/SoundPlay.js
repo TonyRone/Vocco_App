@@ -7,6 +7,7 @@ export const SoundPlay = ({
   playSpeed
 }) => {
 
+  Sound.setMode("Default")
   Sound.setCategory('playback');
 
   const mounted = useRef(false);
