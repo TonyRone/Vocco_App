@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 import { styles } from '../style/Common';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
-//import { recorderPlayer } from './AudioRecorderPlayer';
 import { DescriptionText } from '../component/DescriptionText';
 import React, { Component } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -19,6 +18,7 @@ import { windowWidth } from '../../config/config';
 import pauseSvg from '../../assets/common/pause.svg';
 import playSvg from '../../assets/common/play.svg';
 import replaySvg from '../../assets/common/replay.svg';
+import Sound from 'react-native-sound'
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -56,7 +56,8 @@ class VoicePlayer extends Component {
       isPlaying: false,
       isStarted: false,
       voiceKey: props.voiceState,
-      swipe: {}
+      swipe: {},
+      music: null
     };
     this.audioRecorderPlayer = new AudioRecorderPlayer();
     //this.audioRecorderPlayer.setSubscriptionDuration(0.2); // optional. Default is 0.5
@@ -85,11 +86,14 @@ class VoicePlayer extends Component {
       }
       await this.onStopPlay();
     }
+    else if (this.props.control && this.state.music) {
+      this.state.music.setSpeed(this.props.playSpeed);
+    }
   }
 
   async componentWillUnmount() {
     this._isMounted = false;
-    
+
     await this.onStopPlay();
   }
 
@@ -298,16 +302,33 @@ class VoicePlayer extends Component {
             currentPositionSec: 0
           });
         this.props.startPlay();
-        const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath)
-          .then(res => {
-            this.audioRecorderPlayer.addPlayBackListener(async (e) => {
-              this.onSetPosition(e)
-              return;
-            });
+        if (this.props.control) {
+          const audio = new Sound(this._playerPath, null, (err) => {
+            if (err) {
+              return
+            }
           })
-          .catch(err => {
-            this.onStopPlay();
-          });
+          Sound.setActive(true)
+          Sound.setCategory('Playback', true)
+          Sound.setMode('Default');
+          audio.setSpeed(this.props.playSpeed);
+          this.setState({
+            music: audio
+          })
+          audio.play();
+        }
+        else {
+          const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath)
+            .then(res => {
+              this.audioRecorderPlayer.addPlayBackListener(async (e) => {
+                this.onSetPosition(e)
+                return;
+              });
+            })
+            .catch(err => {
+              this.onStopPlay();
+            });
+        }
       }
     }
     catch (err) {
@@ -335,14 +356,20 @@ class VoicePlayer extends Component {
 
   onStopPlay = async () => {
     if (this.state.isStarted == true) {
-      if (this._isMounted) this.setState({ isPlaying: false, isStarted: false, currentPositionSec: 0, currentDurationSec: 0 });
-      try {
-        await this.audioRecorderPlayer.stopPlayer()
-          .catch(err => console.log(err.message));
-        this.audioRecorderPlayer.removePlayBackListener();
+      if (this.props.control) {
+        if (this._isMounted)
+          this.state.music.stop();
       }
-      catch (err) {
-        console.log(err);
+      else {
+        if (this._isMounted) this.setState({ isPlaying: false, isStarted: false, currentPositionSec: 0, currentDurationSec: 0 });
+        try {
+          await this.audioRecorderPlayer.stopPlayer()
+            .catch(err => console.log(err.message));
+          this.audioRecorderPlayer.removePlayBackListener();
+        }
+        catch (err) {
+          console.log(err);
+        }
       }
     }
     if (this._isMounted)

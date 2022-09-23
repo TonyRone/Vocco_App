@@ -51,37 +51,30 @@ import { setRefreshState, setVisibleOne } from '../../store/actions';
 export const StoryItem = ({
   props,
   info,
-  isRefresh = false,
   itemIndex,
   itemHeight = windowHeight / 157 * 115,
   onChangeLike = () => { },
 }) => {
   const [showContext, setShowContext] = useState(false);
-  const [refresh, setRefresh] = useState(false);
   const [lastTap, setLastTap] = useState(0);
   const [delayTime, setDelayTime] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [allLikes, setAllLikes] = useState(false);
   const [key, setKey] = useState(0);
   const [showReport, setShowReport] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [follows, setFollows] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [isFriend, setIsFriend] = useState(info.isFriend);
-  const [reload, setReload] = useState(false);
   const [isPlayed, setIsPlayed] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [speed, setSpeed] = useState(1);
 
   const { t, i18n } = useTranslation();
   const mounted = useRef(false);
 
-  const dispatch = useDispatch();
+  const rTime = useRef(info.duration);
 
-  let { refreshState } = useSelector((state) => {
-    return (
-      state.user
-    )
-  });
+  const dispatch = useDispatch();
 
   const { visibleOne } = useSelector((state) => state.user);
 
@@ -94,10 +87,7 @@ export const StoryItem = ({
   const DOUBLE_PRESS_DELAY = 400;
 
   let voiceTitle = info.title,
-    details = info.user.name,
     voiceTime = info.duration,
-    erngSvg = info.emoji ? info.emoji : "😁",
-    comments = info.answersCount,
     premium = info.user.premium;
 
   let num = Math.ceil((new Date().getTime() - new Date(info.createdAt).getTime()) / 60000);
@@ -107,19 +97,7 @@ export const StoryItem = ({
   let day = (num - hour) / 24
   let time = (day > 0 ? (day.toString() + ' ' + t("day") + (day > 1 ? 's' : '')) : (hour > 0 ? (hour.toString() + ' ' + t("hour") + (hour > 1 ? 's' : '')) : (minute > 0 ? (minute.toString() + ' ' + t("minute") + (minute > 1 ? 's' : '')) : '')));
 
-  const [reactions, setReactions] = useState(info.reactions);
-  const [reactionsCount, setReactionsCount] = useState(info.reactionsCount);
   const [commentCount, setCommentCount] = useState(info.answersCount);
-
-  if (isRefresh != refresh) {
-    setRefresh(isRefresh);
-  }
-
-  const onLimit = (v) => {
-    return ((v).length > 20) ?
-      (((v).substring(0, 17)) + '...') :
-      v;
-  }
 
   const OnSetLike = () => {
     if (info.isLike == true) {
@@ -146,20 +124,6 @@ export const StoryItem = ({
       }, DOUBLE_PRESS_DELAY));
     }
   };
-
-  const getFollowUsers = async () => {
-    setIsLoading(true);
-    await VoiceService.getFollows(user.id, 'Following').then(async res => {
-      if (res.respInfo.status === 200 && mounted.current) {
-        const jsonRes = await res.json();
-        setFollows(jsonRes);
-        setIsLoading(false);
-      }
-    })
-      .catch(err => {
-        console.log(err);
-      });
-  }
 
   const onSendRequest = () => {
     if (isFriend) {
@@ -216,7 +180,7 @@ export const StoryItem = ({
         //let filePath = `${Platform.OS === 'android' ? res.path() : `${fileName}.m4a`}`;
         let filePath = res.path();
         Share.open({
-          url: Platform.OS=='android'? 'file://':'' + filePath,
+          url: Platform.OS == 'android' ? 'file://' : '' + filePath,
           type: 'audio/' + (Platform.OS === 'android' ? 'mp3' : 'm4a'),
         }).then(res => {
         })
@@ -232,8 +196,6 @@ export const StoryItem = ({
 
   useEffect(() => {
     mounted.current = true;
-    // setKey(prevKey => prevKey + 1);
-    getFollowUsers();
     if (mounted.current && !info.notSafe)
       setIsPlaying(visibleOne == itemIndex);
     return () => {
@@ -242,26 +204,19 @@ export const StoryItem = ({
   }, [visibleOne]);
 
   useEffect(() => {
-    getFollowUsers();
-  }, [reload])
-
-  useEffect(() => {
     setKey(key => key + 1);
+    rTime.current = info.duration;
+    setSpeed(1);
   }, [isPlaying])
 
   return (
     <>
       <Pressable
-        style={{ height: itemHeight }}
+        style={{ height: itemHeight, backgroundColor:'rgba(255, 255, 255, 0.4)'}}
         onPress={() => onClickDouble()}
       >
         <View style={{ width: windowWidth, height: windowHeight / 157 * 115, paddingHorizontal: 16, position: "relative" }}>
           <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 15, marginBottom: 10 }}>
-            {/* <TitleText
-            text={onLimit(voiceTitle)}
-            maxWidth={windowWidth - 100}
-            fontSize={28}
-          /> */}
             <View style={{
               alignSelf: "flex-start",
               height: 28,
@@ -320,39 +275,6 @@ export const StoryItem = ({
               />
             </TouchableOpacity>
           </View>
-          {/* <View style={{
-            alignSelf: "flex-start",
-            height: 31,
-            flexDirection: "row",
-            alignItems: "center",
-            paddingHorizontal: 10,
-            backgroundColor: "#FFF",
-            borderRadius: 16,
-            marginTop: 7,
-            shadowColor: 'rgba(88, 74, 117, 1)',
-            elevation: 10,
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.5,
-            shadowRadius: 8,
-          }}
-        >
-          <Image
-            source={getCategoryUrl(info.category)}
-            style={{
-              width: 18,
-              height: 18
-            }}
-          />
-          <Text style={{
-            fontSize: 17,
-            lineHeight: 28,
-            fontWeight: "400",
-            color: "#361252",
-            marginLeft: 6
-          }}>
-            { info.category === '' ? 'All' : info.category }
-          </Text>
-        </View> */}
           <View style={{
             position: 'relative',
             width: "100%",
@@ -363,9 +285,11 @@ export const StoryItem = ({
             <CountdownCircleTimer
               key={key}
               isPlaying={isPlaying}
-              duration={info.duration}
+              duration={info.duration/speed}
+              initialRemainingTime={rTime.current}
               size={windowHeight / 417 * 150}
               strokeWidth={7}
+              onComplete={()=> setIsPlaying(false) }
               trailColor="#D4C9DE"
               trailStrokeWidth={1}
               colors={[
@@ -376,6 +300,7 @@ export const StoryItem = ({
               isLinearGradient={true}
             >
               {({ elapsedTime, remainingTime, animatedColor }) => {
+                rTime.current = remainingTime;
                 return (
                   <>
                     <View style={{
@@ -424,11 +349,6 @@ export const StoryItem = ({
               flexDirection: "row",
               alignItems: "center"
             }}>
-              {/* <DescriptionText
-              text={details + ' • ' + new Date(voiceTime * 1000).toISOString().substr(14, 5)}
-              lineHeight={30}
-              fontSize={13}
-            /> */}
             </View>
             <View>
               <SemiBoldText
@@ -550,8 +470,41 @@ export const StoryItem = ({
             tinWidth={windowWidth / 160000}
             mrg={windowWidth / 600000}
             duration={info.duration * 1000}
+            control={true}
+            playSpeed={speed}
           /></View>}
           <View style={{ position: 'absolute', bottom: 75, width: windowWidth, alignItems: 'center' }}>
+            <TouchableOpacity style={{
+              width:60,
+              height:37,
+              borderRadius:20,
+              backgroundColor:'#FFF',
+              borderWidth:1,
+              borderColor:'#F2F0F5',
+              alignItems:'center',
+              justifyContent:'center',
+              marginBottom:10
+            }}
+              onPress={()=>{
+                setSpeed(prev=>{
+                  let r = 0;
+                  if(prev == 2)
+                    r = 1;
+                  else
+                    r = prev+0.5;
+                  rTime.current *= (prev/r);
+                  return r;
+                })
+                setKey(key+1);
+              }}
+            >
+              <TitleText
+                fontSize={15}
+                lineHeight={25}
+                color='#636363'
+                text={'x'+speed.toString()}
+              />
+            </TouchableOpacity>
             <DescriptionText
               text={info.listenCount + " " + t("Play") + (info.listenCount > 1 ? 's' : '') + (time != '' ? " - " : '') + time + t(' ago')}
               fontSize={13}
@@ -610,161 +563,6 @@ export const StoryItem = ({
           </View>
         </ImageBackground>}
       </Pressable>
-      {/* <TouchableOpacity
-        style={{
-          marginTop: 12,
-          marginBottom: 4,
-          paddingHorizontal: 16,
-          marginHorizontal: 16,
-          paddingTop: 16,
-          paddingBottom: 12,
-          backgroundColor: '#FFF',
-          shadowColor: 'rgba(88, 74, 117, 1)',
-          elevation: 10,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.5,
-          shadowRadius: 8,
-          borderRadius: 16,
-          borderWidth: premium == 'none' ? 0 : 1,
-          borderColor: '#FFA002',
-          zIndex: 0
-        }}
-        onLongPress={() => setShowContext(true)}
-        onPress={() => onClickDouble()}
-      >
-        <View
-          style={[styles.rowSpaceBetween]}
-        >
-          <View
-            style={styles.row}
-          >
-            <View>
-              <Image
-                source={ info.user.avatar?{ uri: info.user.avatar.url }:Avatars[info.user.avatarNumber].uri}
-                style={{ width: 50, height: 50, borderRadius: 25, borderColor: '#FFA002', borderWidth: premium == 'none' ? 0 : 2 }}
-                resizeMode='cover'
-              />
-              <View
-                style={{
-                  backgroundColor: '#FFF',
-                  borderWidth: 3,
-                  borderColor: 'rgba(255, 255, 255, 0.6)',
-                  position: 'absolute',
-                  borderRadius: 50,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  right: -10,
-                  bottom: -2
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 15,
-                    color: 'white',
-                  }}
-                >
-                  {erngSvg}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={{
-                marginLeft: 20
-              }}
-            >
-              <TitleText
-                text={onLimit(voiceTitle)}
-                maxWidth={windowWidth - 180}
-                fontSize={17}
-              />
-              <View style={styles.rowAlignItems}>
-                {premium != 'none' &&
-                  <SvgXml
-                    width={30}
-                    height={30}
-                    xml={yellow_starSvg}
-                  />}
-                <DescriptionText
-                  text={details + ' • ' + new Date(voiceTime * 1000).toISOString().substr(14, 5)}
-                  lineHeight={30}
-                  fontSize={13}
-                />
-              </View>
-            </View>
-          </View>
-          <TouchableOpacity
-            onPress={() => setIsPlaying(!isPlaying)}
-          >
-            <SvgXml
-              width={45}
-              height={45}
-              xml={isPlaying ? pauseSvg : playSvg}
-            />
-          </TouchableOpacity>
-        </View>
-        {
-          isPlaying &&
-          <View style={{ marginTop: 15, width: '100%' }}>
-            <VoicePlayer
-              voiceUrl={info.file.url}
-              stopPlay={() => setIsPlaying(false)}
-              startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
-              playBtn={false}
-              replayBtn={false}
-              waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
-              playing={true}
-              tinWidth={windowWidth / 160}
-              mrg={windowWidth / 600}
-              duration={info.duration * 1000}
-            />
-          </View>
-        }
-
-        <View
-          style={[styles.rowSpaceBetween, { marginTop: 8 }]}
-        >
-          <View style={[styles.row, { alignItems: 'center' }]}>
-            <HeartIcon
-              isLike={info.isLike}
-              OnSetLike={() => OnSetLike()}
-              marginLeft={6}
-              marginRight={7}
-            />
-            <TouchableOpacity onPress={() => setAllLikes(true)}>
-              <DescriptionText
-                text={info.likesCount}
-                fontSize={17}
-                lineHeight={19}
-                fontFamily="SFProDisplay-Medium"
-                color="rgba(59, 31, 82, 0.6)"
-              />
-            </TouchableOpacity>
-            <DescriptionText
-              text={info.listenCount + " " + t("reading") +(info.listenCount>1?'s':'')+(time != '' ? " - " : '') + time}
-              fontSize={13}
-              lineHeight={15}
-              marginLeft={30}
-              color='rgba(54, 36, 68, 0.8)'
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <SvgXml
-              width={19}
-              height={19}
-              xml={notifySvg}
-            />
-            <DescriptionText
-              text={comments}
-              fontSize={16}
-              lineHeight={19}
-              fontFamily="SFProDisplay-Medium"
-              color="rgba(59, 31, 82, 0.6)"
-              marginLeft={12}
-              marginRight={4}
-            />
-          </View>
-        </View>
-      </TouchableOpacity> */}
       {showContext &&
         <PostContext
           postInfo={info}
