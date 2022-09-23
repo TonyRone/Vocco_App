@@ -159,8 +159,8 @@ export const StoryItem = ({
 
   const convertSectoPad = (second) => {
     let rSecond = second * speed;
-    let sec = second % 60 | 0;
-    let min = (second / 60) | 0;
+    let sec = rSecond % 60 | 0;
+    let min = (rSecond / 60) | 0;
 
     return min.toString().padStart(2, '0') + ':' + sec.toString().padStart(2, '0');
   }
