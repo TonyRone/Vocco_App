@@ -23,7 +23,7 @@ export const SoundPlay = ({
     mounted.current = true;
     if (music.current == null) {
       let audio = new Sound(
-        path,
+        encodeURIComponent(path),
         null,
         error => {
           if (error||!mounted.current) {
