@@ -24,7 +24,7 @@ export const SoundPlay = ({
     if (music.current == null) {
       let audio = new Sound(
         path,
-        Sound.DOCUMENT,
+        Sound.LIBRARY,
         error => {
           if (error||!mounted.current) {
             console.log('Failed to load the sound', error);
