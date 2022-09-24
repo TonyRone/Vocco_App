@@ -21,10 +21,9 @@ export const SoundPlay = ({
 
   useEffect(() => {
     mounted.current = true;
-    console.log(encodeURIComponent(path)," * ", path);
     if (music.current == null) {
       let audio = new Sound(
-        encodeURIComponent(path),
+        path,
         null,
         error => {
           if (error||!mounted.current) {
