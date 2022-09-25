@@ -385,7 +385,7 @@ export const StoryItem = ({
             </TouchableOpacity>
           </View>
           {isPlaying && <View style={{ position: 'absolute', width: 1, opacity: 0 }}>
-            {/* <VoicePlayer
+            <VoicePlayer
               voiceUrl={info.file.url}
               stopPlay={() => setIsPlaying(false)}
               startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
@@ -398,11 +398,11 @@ export const StoryItem = ({
               duration={info.duration * 1000}
               control={true}
               playSpeed={speed}
-            /> */}
-            <SoundPlay
+            />
+            {/* <SoundPlay
               path={info.file.url}
               playSpeed={speed}
-            />
+            /> */}
           </View>}
           <View style={{ position: 'absolute', bottom: 55, width: windowWidth, alignItems: 'center' }}>
             <TouchableOpacity style={{

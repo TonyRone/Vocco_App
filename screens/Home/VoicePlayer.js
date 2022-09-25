@@ -305,6 +305,7 @@ class VoicePlayer extends Component {
         if (this.props.control) {
           const audio = new Sound(this._playerPath, null, (err) => {
             if (err) {
+              console.log("failed loading: ",err);
               return
             }
           })
@@ -315,7 +316,9 @@ class VoicePlayer extends Component {
           this.setState({
             music: audio
           })
-          audio.play();
+          audio.play(success => {
+            console.log(success,'audio play ended successfully!!');
+          });
         }
         else {
           const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath)
