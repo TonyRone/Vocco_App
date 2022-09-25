@@ -303,7 +303,7 @@ class VoicePlayer extends Component {
           });
         this.props.startPlay();
         if (this.props.control) {
-          const audio = new Sound(this._playerPath, null, (err) => {
+          const audio = new Sound('ss.m4a', null, (err) => {
             if (err) {
               console.log("failed loading: ",err);
               return
