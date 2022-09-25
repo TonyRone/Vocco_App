@@ -304,6 +304,7 @@ class VoicePlayer extends Component {
         this.props.startPlay();
         if (this.props.control) {
           const audio = new Sound(this._playerPath, null, (err) => {
+            console.log("wowowowowoow!");
             if (err) {
               console.log("failed loading: ", err);
               return;
