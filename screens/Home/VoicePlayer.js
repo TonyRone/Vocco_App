@@ -303,22 +303,22 @@ class VoicePlayer extends Component {
           });
         this.props.startPlay();
         if (this.props.control) {
-          const audio = new Sound('ss.m4a', null, (err) => {
+          const audio = new Sound(this._playerPath, null, (err) => {
             if (err) {
-              console.log("failed loading: ",err);
-              return
+              console.log("failed loading: ", err);
+              return;
             }
+            audio.setSpeed(this.props.playSpeed);
+            this.setState({
+              music: audio
+            })
+            audio.play(success => {
+              console.log(success, 'audio play ended successfully!!');
+            });
           })
           Sound.setActive(true)
           Sound.setCategory('Playback', true)
           Sound.setMode('Default');
-          audio.setSpeed(this.props.playSpeed);
-          this.setState({
-            music: audio
-          })
-          audio.play(success => {
-            console.log(success,'audio play ended successfully!!');
-          });
         }
         else {
           const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath)
