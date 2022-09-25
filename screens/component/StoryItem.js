@@ -59,6 +59,7 @@ export const StoryItem = ({
   const [showContext, setShowContext] = useState(false);
   const [lastTap, setLastTap] = useState(0);
   const [delayTime, setDelayTime] = useState(null);
+  const [playStatus, setIsPlayStatus] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [allLikes, setAllLikes] = useState(false);
   const [key, setKey] = useState(0);
@@ -198,8 +199,10 @@ export const StoryItem = ({
 
   useEffect(() => {
     mounted.current = true;
-    if (mounted.current && !info.notSafe)
-      setIsPlaying(visibleOne == itemIndex);
+    if (mounted.current && !info.notSafe){
+      setIsPlayStatus(visibleOne == itemIndex);
+      setIsPlaying(false);
+    }
     return () => {
       mounted.current = false;
     }
@@ -209,7 +212,7 @@ export const StoryItem = ({
     setKey(key => key + 1);
     rTime.current = info.duration;
     setSpeed(1);
-  }, [isPlaying])
+  }, [playStatus])
 
   return (
     <>
@@ -291,7 +294,7 @@ export const StoryItem = ({
               initialRemainingTime={rTime.current}
               size={windowHeight / 417 * 150}
               strokeWidth={7}
-              onComplete={() => setIsPlaying(false)}
+              onComplete={() => {setIsPlayStatus(false);setIsPlaying(false);}}
               trailColor="#D4C9DE"
               trailStrokeWidth={1}
               colors={[
@@ -330,14 +333,15 @@ export const StoryItem = ({
                       >
                         <TouchableOpacity
                           onPress={() => {
-                            setIsPlaying(!isPlaying);
-                            dispatch(setVisibleOne(isPlaying ? -1 : itemIndex));
+                            setIsPlayStatus(!playStatus);
+                            setIsPlaying(false);
+                            dispatch(setVisibleOne(playStatus ? -1 : itemIndex));
                           }}
                         >
                           <SvgXml
                             width={61}
                             height={61}
-                            xml={isPlaying ? pauseSvg2 : playSvg}
+                            xml={playStatus ? pauseSvg2 : playSvg}
                           />
                         </TouchableOpacity>
                       </ImageBackground>
@@ -384,11 +388,11 @@ export const StoryItem = ({
               </View>
             </TouchableOpacity>
           </View>
-          {isPlaying && <View style={{ position: 'absolute', width: 1, opacity: 0 }}>
+          {playStatus && <View style={{ position: 'absolute', width: 1, opacity: 0 }}>
             <VoicePlayer
               voiceUrl={info.file.url}
-              stopPlay={() => setIsPlaying(false)}
-              startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
+              stopPlay={() => {setIsPlaying(false);setIsPlayStatus(false)}}
+              startPlay={() => { setIsPlaying(true);VoiceService.listenStory(info.id, 'record'); }}
               playBtn={false}
               replayBtn={false}
               waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
@@ -521,7 +525,7 @@ export const StoryItem = ({
             </TouchableOpacity>
           </View>
         </View>
-        {info.notSafe && !isPlaying && !isPlayed && <ImageBackground
+        {info.notSafe && !playStatus && !isPlayed && <ImageBackground
           source={require('../../assets/record/NotSafeBg.png')}
           resizeMode="stretch"
           style={{ width: '100%', height: '100%', position: 'absolute', elevation: 11, flex: 1, justifyContent: 'space-between', alignItems: 'center' }}
@@ -556,7 +560,7 @@ export const StoryItem = ({
               alignItems: 'center'
             }}>
               <TouchableOpacity
-                onPress={() => { setIsPlaying(true); setIsPlayed(true); }}
+                onPress={() => { setIsPlayStatus(true); setIsPlayed(true);setIsPlaying(false); }}
               >
                 <SemiBoldText
                   text={t("Play story")}

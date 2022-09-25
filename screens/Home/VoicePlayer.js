@@ -301,10 +301,8 @@ class VoicePlayer extends Component {
             isPlaying: true,
             currentPositionSec: 0
           });
-        this.props.startPlay();
         if (this.props.control) {
           const audio = new Sound(this._playerPath, null, (err) => {
-            console.log("wowowowowoow!", err);
             if (err) {
               console.log("failed loading: ", err);
               return;
@@ -316,7 +314,7 @@ class VoicePlayer extends Component {
             this.setState({
               music: audio
             });
-            console.log("EWEWWEWEWE");
+            this.props.startPlay();
           })
           Sound.setActive(true)
           Sound.setCategory('Playback', true)
@@ -325,6 +323,7 @@ class VoicePlayer extends Component {
         else {
           const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath)
             .then(res => {
+              this.props.startPlay();
               this.audioRecorderPlayer.addPlayBackListener(async (e) => {
                 this.onSetPosition(e)
                 return;
