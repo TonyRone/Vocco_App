@@ -363,6 +363,7 @@ class VoicePlayer extends Component {
       if (this.props.control) {
         if (this._isMounted)
           this.state.music.stop();
+          this.state.music.release();
       }
       else {
         if (this._isMounted) this.setState({ isPlaying: false, isStarted: false, currentPositionSec: 0, currentDurationSec: 0 });
