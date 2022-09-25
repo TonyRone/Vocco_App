@@ -198,7 +198,7 @@ const LogoScreen = (props) => {
         mounted.current = true;
         checkPermission();
         checkLogin();
-        //OnSetPushNotification();
+        OnSetPushNotification();
         return () => {
             mounted.current = false;
         }
