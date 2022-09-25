@@ -310,12 +310,13 @@ class VoicePlayer extends Component {
               return;
             }
             audio.setSpeed(this.props.playSpeed);
-            this.setState({
-              music: audio
-            })
             audio.play(success => {
               console.log(success, 'audio play ended successfully!!');
             });
+            this.setState({
+              music: audio
+            });
+            console.log("EWEWWEWEWE");
           })
           Sound.setActive(true)
           Sound.setCategory('Playback', true)
