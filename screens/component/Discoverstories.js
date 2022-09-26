@@ -4,7 +4,8 @@ import {
   Image,
   Text,
   FlatList,
-  RefreshControl
+  RefreshControl,
+  ScrollView
 } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
@@ -22,6 +23,7 @@ import { InviteUsers } from './InviteUsers';
 import SelectTopicScreen from '../PhoneNumberLogin/SelectTopicScreen';
 import { StoryItem } from '../component/StoryItem';
 import { setVisibleOne } from '../../store/actions';
+import { StoryPanel } from './StoryPanel';
 
 export const DiscoverStories = ({
   props,
@@ -59,7 +61,13 @@ export const DiscoverStories = ({
 
   const currentVisible = useRef(visibleOne);
 
-  const pageHeight = windowHeight / 157 * 115+(screenName=='Feed'?90:0);
+  const pageHeight = windowHeight / 157 * 115 + (screenName == 'Feed' ? 90 : 0);
+
+  const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    const paddingToBottom = 10;
+    return layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom;
+  };
 
   const OnShowEnd = () => {
     if (showEnd) return;
@@ -148,48 +156,68 @@ export const DiscoverStories = ({
   }, [visibleOne])
 
   const storyItems = useMemo(() => {
-    // return stories.map((item, index) => {
-    //   return <StoryItem
-    //     key={index + item.id + screenName}
-    //     props={props}
-    //     info={item}
-    //     onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
-    //   />
-    // }
-    // )
-    return <FlatList
-      onMomentumScrollEnd={(e) => {
-        let contentOffset = e.nativeEvent.contentOffset;
-        let ind = Math.round(contentOffset.y / (pageHeight));
-        if(currentVisible.current>=0)
-        dispatch(setVisibleOne(ind));
-      }}
-      data={stories}
-      pagingEnabled
-      showsVerticalScrollIndicator={false}
+    return <ScrollView
       style={{
         height: pageHeight
       }}
-      keyboardShouldPersistTaps='handled'
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />}
-      renderItem={({ item, index }) => {
-        return <StoryItem
+      onScroll={({ nativeEvent }) => {
+        if (isCloseToBottom(nativeEvent)) {
+          fetchLoadMore()
+        }
+      }}
+      scrollEventThrottle={400}
+    >
+      <View
+        style={{
+          flexWrap: 'wrap',
+          flexDirection: 'row',
+          alignContent: 'center',
+          width: windowWidth,
+          paddingHorizontal: 12
+        }}
+      >
+        {stories.map((item, index) => <StoryPanel
           key={index + item.id + screenName}
           itemIndex={index}
-          itemHeight={pageHeight}
           props={props}
           info={item}
-          userClick={userClick}
-          onSetUserClick={() => setUserClick(!userClick)}
           onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
-        />
-      }}
-      onEndReached={() => fetchLoadMore()}
-    />
+        />)}
+      </View>
+    </ScrollView>
+    // return <FlatList
+    //   onMomentumScrollEnd={(e) => {
+    //     let contentOffset = e.nativeEvent.contentOffset;
+    //     let ind = Math.round(contentOffset.y / (pageHeight));
+    //     if(currentVisible.current>=0)
+    //     dispatch(setVisibleOne(ind));
+    //   }}
+    //   data={stories}
+    //   pagingEnabled
+    //   showsVerticalScrollIndicator={false}
+    //   style={{
+    //     height: pageHeight
+    //   }}
+    //   keyboardShouldPersistTaps='handled'
+    //   refreshControl={
+    //     <RefreshControl
+    //       refreshing={refreshing}
+    //       onRefresh={onRefresh}
+    //     />}
+    //   renderItem={({ item, index }) => {
+    //     return <StoryItem
+    //       key={index + item.id + screenName}
+    //       itemIndex={index}
+    //       itemHeight={pageHeight}
+    //       props={props}
+    //       info={item}
+    //       userClick={userClick}
+    //       onSetUserClick={() => setUserClick(!userClick)}
+    //       onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
+    //     />
+    //   }}
+    //   onEndReached={() => fetchLoadMore()}
+    // />
   }, [stories, refreshState])
 
   return <View style={{ height: pageHeight }}>

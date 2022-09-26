@@ -56,7 +56,7 @@ export const Discover = ({
     setRefreshing(true);
     setLoadKey(loadKey - 1);
     setTimeout(() => {
-      if(mounted.current)
+      if (mounted.current)
         setRefreshing(false)
     }, 1000);
   };
@@ -81,7 +81,7 @@ export const Discover = ({
 
   useEffect(() => {
     mounted.current = true;
-    return ()=>{
+    return () => {
       mounted.current = false;
     }
   }, [refreshState])
@@ -95,9 +95,8 @@ export const Discover = ({
       }}
     >
       <View style={[styles.paddingH16, {
-        display: 'flex',
         flexDirection: 'row',
-        alignItems: "flex-start"
+        alignItems: "flex-start",
       }]}>
         <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
           <SvgXml
@@ -120,7 +119,7 @@ export const Discover = ({
             >{t("Search") + '...'}</Text>
           </Pressable>
         </View>
-        <View style={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: windowWidth / 375 * 14}}>
+        <View style={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: windowWidth / 375 * 14 }}>
           <View
             style={{
               height: windowWidth / 375 * 43,
@@ -174,84 +173,88 @@ export const Discover = ({
               marginTop: 4,
             }}
           >
-            {Categories[selectedCategory].label == '' ? t('All') :  t(Categories[selectedCategory].label)}
+            {Categories[selectedCategory].label == '' ? t('World') : t(Categories[selectedCategory].label)}
           </Text>
         </View>
       </View>
-      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-      {/* <ScrollView
-        style={{ flex:1, marginBottom: Platform.OS == 'ios' ? 65 : 75 }}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }
-        onScroll={({ nativeEvent }) => {
-          if (isCloseToBottom(nativeEvent)) {
-            setLoadKey(loadKey + 1);
-          }
-        }}
-        scrollEventThrottle={400}
-      > */}
-        {/* <View
-          style={[styles.paddingH16, styles.rowSpaceBetween,{marginTop:25}]}
-        >
-          <TitleText
-            text={t("Top categories")}
-            fontSize={20}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              setShowModal(true);
-            }}
-          >
-            <DescriptionText
-              text={t("SEE ALL")}
-              fontSize={13}
-              color='#281E30'
-            />
-          </TouchableOpacity>
-        </View>
-        <View>
-          <FlatList
-            horizontal={true}
-            ref={scrollRef}
-            showsHorizontalScrollIndicator={false}
-            style={[{ marginLeft: 12 }, styles.mt16]}
-            data={Categories}
-            renderItem={({ item, index }) => {
-              let idx = 0;
-              if (selectedCategory > 0) {
-                if (index == 0) idx = selectedCategory;
-                else if (index <= selectedCategory) idx = index - 1;
-                else idx = index;
-              }
+      <View
+        style={[styles.paddingH16, styles.rowSpaceBetween, { marginTop: 0, marginBottom:8, marginTop:4 }]}
+      >
+        <FlatList
+          horizontal={true}
+          ref={scrollRef}
+          showsHorizontalScrollIndicator={false}
+          style={{ width: 100 }}
+          data={Categories}
+          renderItem={({ item, index }) => {
+            let idx = 0;
+            if (selectedCategory > 0) {
+              if (index == 0) idx = selectedCategory;
+              else if (index <= selectedCategory) idx = index - 1;
               else idx = index;
-              return <CategoryIcon
-                key={'category' + idx}
-                label={Categories[idx].label}
-                source={Categories[idx].uri}
-                onPress={() => onSetCategory(idx)}
-                active={category == idx ? true : false}
-              />
+            }
+            else idx = index;
+            return <TouchableOpacity style={{
+              alignSelf: "flex-start",
+              flexDirection: "row",
+              alignItems: "center",
+              paddingHorizontal: 12,
+              paddingVertical: 6,
+              backgroundColor: "#FFF",
+              borderRadius: 20,
+              borderWidth:1,
+              borderColor:idx==selectedCategory?'#8229F4':'#F2F0F5',
+              marginRight: 9,
             }}
-            keyExtractor={(item, idx) => idx.toString()}
-          />
-        </View> */}
-        {/* <TitleText
-          text={t("World stories")}
-          fontSize={20}
-          marginTop={10}
-          marginLeft={16}
-        /> */}
-        <DiscoverStories
-          props={props}
-          loadKey={loadKey}
-          category={Categories[category].label}
+            onPress={()=>onChangeCategory(idx)}
+            >
+              <Image
+                source={Categories[idx].uri}
+                style={{
+                  width: 18,
+                  height: 18
+                }}
+              />
+              <Text style={{
+                fontSize: 16,
+                fontWeight: "400",
+                color: "#361252",
+                marginLeft: 6
+              }}>
+                {Categories[idx].label == '' ? 'All' : Categories[idx].label}
+              </Text>
+            </TouchableOpacity>
+          }}
+          keyExtractor={(item, idx) => idx.toString()}
         />
-      {/* </ScrollView> */}
+        <TouchableOpacity
+          style={{
+            marginLeft: 10,
+            paddingHorizontal:9,
+            paddingVertical:6,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 20,
+            borderWidth: 1,
+            borderColor: '#8229F4'
+          }}
+          onPress={() => {
+            setShowModal(true);
+          }}
+        >
+          <DescriptionText
+            text={t("See All")}
+            fontSize={16}
+            lineHeight={16}
+            color='#281E30'
+          />
+        </TouchableOpacity>
       </View>
+      <DiscoverStories
+        props={props}
+        loadKey={loadKey}
+        category={Categories[category].label}
+      />
       <Modal
         animationType="slide"
         transparent={true}

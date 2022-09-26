@@ -310,6 +310,7 @@ class VoicePlayer extends Component {
             audio.setSpeed(this.props.playSpeed);
             audio.play(success => {
               console.log(success, 'audio play ended successfully!!');
+              this.onStopPlay();
             });
             this.setState({
               music: audio
