@@ -285,7 +285,7 @@ const HoldRecordScreen = (props) => {
           <ImageBackground
             source={require('../../assets/record/RecordControl.png')}
             resizeMode="stretch"
-            style={{ width: 311, height: 76, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6%' }}
+            style={{ width: 311, height: 76, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: '9%' }}
           >
             <TouchableOpacity
               style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 18 }}
