@@ -82,7 +82,7 @@ export const DiscoverStories = ({
   const onInsert = ( v )=>{
     let tp=[];
     for(let i=0;i<v.length;i++){
-      if((i+1)%80 == 0)
+      if((i+1)%10 == 0)
         tp.push({isPopUp:true});
       tp.push(v[i]);
     }

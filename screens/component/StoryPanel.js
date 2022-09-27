@@ -241,7 +241,7 @@ export const StoryPanel = ({
             justifyContent: 'center',
             alignItems: 'center',
             width: '100%',
-            height: 255,
+            height: 260,
             marginTop: 7,
           }}
           imageStyle={{

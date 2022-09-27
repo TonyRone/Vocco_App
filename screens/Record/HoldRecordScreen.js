@@ -172,7 +172,7 @@ const HoldRecordScreen = (props) => {
   }, [])
 
   return (
-    <SafeAreaView
+    <View
       style={{
         flex:1,
         backgroundColor:'#FFF'
@@ -285,7 +285,7 @@ const HoldRecordScreen = (props) => {
           <ImageBackground
             source={require('../../assets/record/RecordControl.png')}
             resizeMode="stretch"
-            style={{ width: 311, height: 76, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12%' }}
+            style={{ width: 311, height: 76, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6%' }}
           >
             <TouchableOpacity
               style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 18 }}
@@ -370,7 +370,7 @@ const HoldRecordScreen = (props) => {
           </View>
         </Draggable>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
