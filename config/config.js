@@ -141,6 +141,10 @@ export const Categories =
         label:'Singers',
         uri:require('../assets/categories/singers.png')
     },
+    {
+        label:'Art',
+        uri:require('../assets/categories/art.png')
+    },
 ]
 
 export const Avatars = [
