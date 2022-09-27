@@ -322,7 +322,7 @@ class VoicePlayer extends Component {
           Sound.setMode('Default');
         }
         else {
-          const msg = await this.audioRecorderPlayer.startPlayer(this._playerPath)
+          await this.audioRecorderPlayer.startPlayer(this._playerPath)
             .then(res => {
               this.props.startPlay();
               this.audioRecorderPlayer.addPlayBackListener(async (e) => {
@@ -356,7 +356,7 @@ class VoicePlayer extends Component {
         isPlaying: true
       })
     })
-      .catch(err => console.log(err.message));;
+      .catch(err => console.log(err.message));
   };
 
   onStopPlay = async () => {

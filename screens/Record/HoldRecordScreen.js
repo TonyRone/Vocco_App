@@ -1,13 +1,15 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
-  SafeAreaView,
   Text,
   ImageBackground,
   Image,
   Platform,
   Animated,
+  Pressable,
+  TouchableOpacity,
+  Vibration,
+  SafeAreaView,
 } from 'react-native';
 
 import AudioRecorderPlayer, {
@@ -19,6 +21,7 @@ import AudioRecorderPlayer, {
 
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
 import RNFetchBlob from 'rn-fetch-blob';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import Draggable from 'react-native-draggable';
 import { LinearTextGradient } from "react-native-text-gradient";
@@ -27,36 +30,35 @@ import { Warning } from '../component/Warning';
 import { windowHeight, windowWidth } from '../../config/config';
 import cancelSvg from '../../assets/record/cancel.svg';
 import publicSvg from '../../assets/record/public.svg';
+import fingerSvg from '../../assets/record/finger.svg';
 import { DescriptionText } from '../component/DescriptionText';
 import { useDispatch, useSelector } from 'react-redux';
 import { setVoiceState } from '../../store/actions';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
+
 import recordSvg from '../../assets/common/bottomIcons/record.svg';
 import { SvgXml } from 'react-native-svg';
+import { SemiBoldText } from '../component/SemiBoldText';
 
 const HoldRecordScreen = (props) => {
 
-  let isTemporary = props.navigation.state.params?.isTemporary;
-
-  let { user, voiceState } = useSelector((state) => state.user);
+  let { user, voiceState, refreshState } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
 
-  let info = props.navigation.state.params?.info;
   const [fill, setFill] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [key, setKey] = useState(0);
   const [hoverState, setHoverState] = useState(0);
   const [isPaused, setIsPaused] = useState(true);
-  const [isTime, setIsTime] = useState(true);
-  const [touchPos, setTouchPos] = useState(0);
+  const [temporary, setTemporary] = useState(false);
 
   const wasteTime = useRef(0);
+  const dragPos = useRef(0);
 
-  const audioRecorderPlayer = recorderPlayer;
-  audioRecorderPlayer.setSubscriptionDuration(0.2); // optional. Default is 0.1
+  recorderPlayer.setSubscriptionDuration(0.5); // optional. Default is 0.1
 
   const startAnimation = () => {
     setFill(50);
@@ -64,19 +66,25 @@ const HoldRecordScreen = (props) => {
   };
 
   const clearRecorder = async () => {
-    await audioRecorderPlayer.stopRecorder();
-    audioRecorderPlayer.removeRecordBackListener();
+    wasteTime.current = 0;
+    await recorderPlayer.resumeRecorder().then(res => {
+    })
+      .catch(err => {
+        console.log(err);
+      });
+    await recorderPlayer.stopRecorder().then(res => {
+    })
+      .catch(err => {
+        console.log(err);
+      });
+    recorderPlayer.removeRecordBackListener();
   }
-
-  useEffect(() => {
-    setFill(user.premium != 'none' ? 180 : 20);
-    setKey(prevKey => prevKey + 1);
-    dispatch(setVoiceState(voiceState + 1));
-    return () => clearRecorder();
-  }, [])
 
   const onStartRecord = async () => {
     if (isRecording == false) {
+      dragPos.current = 0;
+      setIsRecording(true);
+      setIsPaused(false);
       const dirs = RNFetchBlob.fs.dirs;
       const path = Platform.select({
         ios: `hello.m4a`,
@@ -90,52 +98,62 @@ const HoldRecordScreen = (props) => {
         AVFormatIDKeyIOS: AVEncodingOption.aac,
       };
       dispatch(setVoiceState(voiceState + 1));
-      await audioRecorderPlayer.startRecorder(path, audioSet);
-      await audioRecorderPlayer.addRecordBackListener((e) => {
-        wasteTime.current = e.currentPosition;
-      });
-      setIsRecording(true);
-      setIsPaused(false);
+      await recorderPlayer.startRecorder(path, audioSet).then(res => {
+        recorderPlayer.addRecordBackListener((e) => {
+          wasteTime.current = e.currentPosition;
+        });
+      })
+        .catch(err => {
+          console.log(err);
+          clearRecorder();
+        });
     }
   };
 
-  const onStopRecord = (publish) => {
+  const onStopRecord = async (publish) => {
     if (isRecording == true) {
       setIsRecording(false);
       setIsPaused(true);
       setKey(prevKey => prevKey + 1);
-      setIsTime(true);
-      clearRecorder();
       if (publish == true) {
-        if (wasteTime.current >= 1.0) {
-          if (info)
-            props.navigation.navigate('PostingAnswerVoice', { info: info, recordSecs: Math.floor(wasteTime.current / 1000) })
-          else
-            props.navigation.navigate('PostingVoice', { recordSecs: Math.floor(wasteTime.current / 1000), isTemporary: isTemporary })
-          clearRecorder();
-        }
+        let tp = Math.max(wasteTime.current, 1);
+        props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0), isTemporary: temporary })
+        setTemporary(false);
+        clearRecorder();
       }
-    }
-    if (publish == false) {
-      props.navigation.goBack();
+      else {
+        clearRecorder();
+        props.navigation.goBack();
+      }
     }
   };
 
   const onChangeRecord = async (e, v = false) => {
-    if (v == true && isRecording == false && isTime) {
-      setTouchPos(e.nativeEvent.pageX);
+    if (v == true)
+      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    if (v == true && isRecording == false) {
       onStartRecord();
     }
     else {
-      if (v == true && isPaused && isTime) {
-        audioRecorderPlayer.resumeRecorder();
+      if (v == true && isPaused) {
+        await recorderPlayer.resumeRecorder().then(res => {
+        })
+          .catch(err => {
+            console.log(err);
+          });;
         setIsPaused(false);
       }
       else if (v == false && isRecording == true) {
-        let delta = Math.abs(touchPos - e.nativeEvent.pageX);
+        let delta = Math.abs(dragPos.current);
         if (delta < 80) {
-          await audioRecorderPlayer.pauseRecorder();
           setIsPaused(true);
+          await recorderPlayer.pauseRecorder().then(res => {
+          })
+            .catch(err => {
+              console.log(err);
+              onStopRecord(false);
+            });
+
         }
       }
     }
@@ -146,34 +164,64 @@ const HoldRecordScreen = (props) => {
   }
 
   let r = 0;
+
+  useEffect(() => {
+    setFill(user.premium != 'none' ? 180 : 60);
+    setKey(prevKey => prevKey + 1);
+    return () => clearRecorder();
+  }, [])
+
   return (
     <SafeAreaView
       style={{
-        backgroundColor: '#FFF',
-        flex: 1,
-        alignItems: 'center'
+        flex:1,
+        backgroundColor:'#FFF'
       }}
     >
-      {user.premium != 'none' &&
-        <Image
-          style={{
-            position: 'absolute',
-            width: 320,
-            height: 68,
-            top: windowHeight / 10
-          }}
-          source={require("../../assets/record/holdpremium.png")}
-        />}
-      <View style={{ alignItems: 'center', width: '100%' }}>
+      <View
+        style={{
+          backgroundColor: '#FFF',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          width: '100%',
+          height: '100%',
+          alignItems: 'center',
+          paddingTop: 55
+        }}
+      >
         <TitleText
           text={t("Click & hold to record")}
           fontSize={20}
-          marginTop={10}
           color="#281E30"
         />
         <View
           style={{
-            marginTop: windowHeight / 6
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+            width: 295,
+            backgroundColor: '#FFF7E8',
+            borderWidth: 1,
+            borderRadius: 8,
+            borderColor: '#FFBB02',
+            shadowColor: '#FFB800',
+            elevation: 10,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.5,
+            shadowRadius: 5,
+            marginBottom: 30
+          }}
+        >
+          <SemiBoldText
+            text={user.premium != 'none' ? t("You are a premium member and you have up to three minutes of recording!") : t("Go to Premium and have 3 minutes instead of one for each record.")}
+            color='#F09E00'
+            fontSize={15}
+            lineHeight={24}
+            textAlign='center'
+          />
+        </View>
+        <View
+          style={{
+            marginBottom: 40
           }}
         >
           <CountdownCircleTimer
@@ -220,39 +268,59 @@ const HoldRecordScreen = (props) => {
             }}
           </CountdownCircleTimer>
         </View>
-      </View>
-      <View style={{ position: 'absolute', bottom: '6%', width: '100%', alignItems: 'center' }}>
-        <ImageBackground
-          source={require('../../assets/record/RecordControl.png')}
-          resizeMode="stretch"
-          style={{ width: 311, height: 76, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
-        >
-          <View
-            style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 18 }}
+        <Warning
+          text={t("Hate, racism, sexism or any kind of violence is stricly prohibited")}
+        />
+        <View style={{
+          alignItems: 'center'
+        }}>
+          <SvgXml
+            xml={fingerSvg}
+          />
+          <DescriptionText
+            text={t("Swipe to the right to publish, to the left to cancel")}
+            marginTop={5}
+            marginBottom={34}
+          />
+          <ImageBackground
+            source={require('../../assets/record/RecordControl.png')}
+            resizeMode="stretch"
+            style={{ width: 311, height: 76, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12%' }}
           >
-            <SvgXml width={20} height={16 - (hoverState < 0 ? r * 4 : 0)} xml={cancelSvg} />
-            <TitleText
-              text={t("Cancel")}
-              fontFamily="SFProDisplay-Regular"
-              fontSize={16}
-              marginLeft={8}
-              lineHeight={21}
-              color="#E41717"
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 18 }}>
-            <TitleText
-              text={t("Publish")}
-              fontFamily="SFProDisplay-Regular"
-              fontSize={16}
-              marginRight={8}
-              lineHeight={21}
-              color="#8327D8"
-            />
-            <SvgXml width={20} height={16 + (hoverState > 0 ? hoverState * 4 : 0)} xml={publicSvg} />
-          </View>
-        </ImageBackground>
+            <TouchableOpacity
+              style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 18 }}
+              onPress={() => onStopRecord(false)}
+            >
+              <SvgXml width={20} height={16 - (hoverState < 0 ? r * 4 : 0)} xml={cancelSvg} />
+              <TitleText
+                text={t("Cancel")}
+                fontFamily="SFProDisplay-Regular"
+                fontSize={16}
+                marginLeft={8}
+                lineHeight={21}
+                color="#E41717"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ flexDirection: 'row', alignItems: 'center', marginRight: 18 }}
+              onPress={() => onStopRecord(true)}
+            >
+              <TitleText
+                text={t("Publish")}
+                fontFamily="SFProDisplay-Regular"
+                fontSize={16}
+                marginRight={8}
+                lineHeight={21}
+                color="#8327D8"
+              />
+              <SvgXml width={20} height={16 + (hoverState > 0 ? hoverState * 4 : 0)} xml={publicSvg} />
+            </TouchableOpacity>
+          </ImageBackground>
+        </View>
+      </View>
+      <View style={{ position: 'absolute', bottom: '6%', width: 76, height: 76}}>
         <Draggable
+          key={key}
           x={windowWidth / 2 - 38}
           y={0}
           shouldReverse={true}
@@ -261,20 +329,26 @@ const HoldRecordScreen = (props) => {
           minY={0}
           maxY={0}
           touchableOpacityProps={{
-            activeOpactiy: 0.1,
+            // activeOpactiy: 1,
           }}
-          //onShortPressRelease={onChangeRecord}
           onDrag={(event, gestureState) => {
-            r = Math.trunc(gestureState.dx / 80);
-            if (hoverState != r) {
-              //  setHoverState(r);
-            }
+
           }}
           onDragRelease={(event, gestureState, bounds) => {
-            if (gestureState.dx > 80)
-              onStopRecord(true)
-            else if (gestureState.dx < -80)
+            dragPos.current = gestureState.dx;
+            if (gestureState.dx > 80) {
+              setTimeout(() => {
+                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+              }, 100);
+              onStopRecord(true);
+            }
+            else if (gestureState.dx < -80) {
+              Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+              setTimeout(() => {
+                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+              }, 300);
               onStopRecord(false);
+            }
           }}
           onReverse={() => {
 
@@ -284,6 +358,9 @@ const HoldRecordScreen = (props) => {
           <View
             onTouchStart={(e) => onChangeRecord(e, true)}
             onTouchEnd={(e) => onChangeRecord(e, false)}
+            style={{
+              opacity: isPaused ? 1 : 0.1
+            }}
           >
             <SvgXml
               width={76}
@@ -293,10 +370,6 @@ const HoldRecordScreen = (props) => {
           </View>
         </Draggable>
       </View>
-      <Warning
-        bottom={'25%'}
-        text={t("Hate, racism, sexism or any kind of violence is stricly prohibited")}
-      />
     </SafeAreaView>
   );
 };

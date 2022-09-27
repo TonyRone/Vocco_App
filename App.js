@@ -78,6 +78,7 @@ import UpdatePictureScreen from './screens/PhoneNumberLogin/UpdatePictureScreen'
 import SelectTopicScreen from './screens/PhoneNumberLogin/SelectTopicScreen';
 import AddFriendScreen from './screens/PhoneNumberLogin/AddFriendScreen';
 import ShareStoryScreen from './screens/mymy/ShareStoryScreen';
+import HoldRecordScreen from './screens/Record/HoldRecordScreen';
 
 
 const slideAnimation2 = (bottomToTop) => {
@@ -283,6 +284,13 @@ const AppNavigator = createStackNavigator({
   },
   PostingAnswerVoice: {
     screen: PostingAnswerVoiceScreen,
+    navigationOptions: {
+      headerShown: false,
+      animationEnabled: false
+    }
+  },
+  HoldRecord: {
+    screen: HoldRecordScreen,
     navigationOptions: {
       headerShown: false,
       animationEnabled: false

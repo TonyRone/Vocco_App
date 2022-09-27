@@ -97,6 +97,7 @@ export const Discover = ({
       <View style={[styles.paddingH16, {
         flexDirection: 'row',
         alignItems: "flex-start",
+        marginBottom:6,
       }]}>
         <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
           <SvgXml
@@ -176,9 +177,66 @@ export const Discover = ({
             {Categories[selectedCategory].label == '' ? t('World') : t(Categories[selectedCategory].label)}
           </Text>
         </View>
+        <View style={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: windowWidth / 375 * 14 }}>
+          <View
+            style={{
+              height: windowWidth / 375 * 43,
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: windowWidth / 375 * 43,
+              borderRadius: 12,
+              backgroundColor: (category == selectedCategory ? true : false) ? '#B35CF8' : '#FFF',
+              shadowColor: 'rgba(42, 10, 111, 1)',
+              elevation: !(category == selectedCategory ? true : false) ? 10 : 0,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.5,
+              shadowRadius: 4
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                width: windowWidth / 375 * 43,
+                alignItems: 'center',
+                padding: 1,
+                borderRadius: 12,
+              }}
+              //onPress={() => setShowModal()}
+            >
+              <View style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                color: '#4C64FF',
+                backgroundColor: '#FFF',
+                padding: 15,
+                width: windowWidth / 375 * 43 - 4,
+                height: windowWidth / 375 * 43 - 4,
+                borderRadius: 10,
+              }}>
+                <Image source={require("../../assets/record/UK.png")}
+                  style={{
+                    width: 25,
+                    height: 25
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+          <Text
+            style={{
+              fontSize: 11,
+              fontFamily: "SFProDisplay-Regular",
+              letterSpacing: 0.066,
+              color: '#A24EE4',
+              textAlign: "center",
+              marginTop: 4,
+            }}
+          >
+            {"English"}
+          </Text>
+        </View>
       </View>
-      <View
-        style={[styles.paddingH16, styles.rowSpaceBetween, { marginTop: 0, marginBottom:8, marginTop:4 }]}
+      {/* <View
+        style={[styles.paddingH16, styles.rowSpaceBetween, { marginTop: 0, marginBottom: 8, marginTop: 4 }]}
       >
         <FlatList
           horizontal={true}
@@ -202,11 +260,11 @@ export const Discover = ({
               paddingVertical: 6,
               backgroundColor: "#FFF",
               borderRadius: 20,
-              borderWidth:1,
-              borderColor:idx==selectedCategory?'#8229F4':'#F2F0F5',
+              borderWidth: 1,
+              borderColor: idx == selectedCategory ? '#8229F4' : '#F2F0F5',
               marginRight: 9,
             }}
-            onPress={()=>onChangeCategory(idx)}
+              onPress={() => onChangeCategory(idx)}
             >
               <Image
                 source={Categories[idx].uri}
@@ -230,8 +288,8 @@ export const Discover = ({
         <TouchableOpacity
           style={{
             marginLeft: 10,
-            paddingHorizontal:9,
-            paddingVertical:6,
+            paddingHorizontal: 9,
+            paddingVertical: 6,
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: 20,
@@ -249,7 +307,7 @@ export const Discover = ({
             color='#281E30'
           />
         </TouchableOpacity>
-      </View>
+      </View> */}
       <DiscoverStories
         props={props}
         loadKey={loadKey}

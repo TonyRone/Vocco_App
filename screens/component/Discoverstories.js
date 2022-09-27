@@ -52,6 +52,7 @@ export const DiscoverStories = ({
   const [localKey, setLocalKey] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [userClick, setUserClick] = useState(false);
+  const [storyPanels, setStoryPanels] = useState([]);
 
   let { visibleOne, refreshState } = useSelector((state) => {
     return (
@@ -78,6 +79,16 @@ export const DiscoverStories = ({
     }, 2000);
   }
 
+  const onInsert = ( v )=>{
+    let tp=[];
+    for(let i=0;i<v.length;i++){
+      if((i+1)%80 == 0)
+        tp.push({isPopUp:true});
+      tp.push(v[i]);
+    }
+    setStoryPanels([...tp]);
+  }
+
   const getStories = (isNew) => {
     setLocalKey(loadKey);
     if (!isNew && LoadMore < 10) {
@@ -90,10 +101,12 @@ export const DiscoverStories = ({
         setLoading(false);
       if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
-        setStories((stories.length == 0 || isNew) ? [...jsonRes] : [...stories, ...jsonRes]);
+        let temp = (stories.length == 0 || isNew) ? [...jsonRes] : [...stories, ...jsonRes];
+        setStories(temp);
         setLoadMore(jsonRes.length);
         if (isNew)
           scrollRef.current?.scrollToOffset({ animated: true, offset: 0 });
+        onInsert(temp);
       }
     })
       .catch(err => {
@@ -160,9 +173,15 @@ export const DiscoverStories = ({
       style={{
         height: pageHeight
       }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
       onScroll={({ nativeEvent }) => {
         if (isCloseToBottom(nativeEvent)) {
-          fetchLoadMore()
+          getStories(false);
         }
       }}
       scrollEventThrottle={400}
@@ -176,13 +195,16 @@ export const DiscoverStories = ({
           paddingHorizontal: 12
         }}
       >
-        {stories.map((item, index) => <StoryPanel
-          key={index + item.id + screenName}
-          itemIndex={index}
-          props={props}
-          info={item}
-          onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
-        />)}
+        {storyPanels.map((item, index) => {
+          return <StoryPanel
+            key={index +  screenName}
+            itemIndex={index}
+            props={props}
+            info={item}
+            onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
+          />
+        })
+        }
       </View>
     </ScrollView>
     // return <FlatList
@@ -218,7 +240,7 @@ export const DiscoverStories = ({
     //   }}
     //   onEndReached={() => fetchLoadMore()}
     // />
-  }, [stories, refreshState])
+  }, [storyPanels, refreshState])
 
   return <View style={{ height: pageHeight }}>
     {showEnd &&
