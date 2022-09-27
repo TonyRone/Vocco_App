@@ -115,7 +115,7 @@ export const DiscoverStories = ({
   }
 
   const onChangeLike = (id, val) => {
-    let tp = [...stories];
+    let tp = [...storyPanels];
     let item = tp[id].isLike;
     if (item == true && val == false) {
       tp[id].likesCount--;
@@ -124,7 +124,7 @@ export const DiscoverStories = ({
       tp[id].likesCount++;
     }
     tp[id].isLike = val;
-    setStories(tp);
+    setStoryPanels([...tp]);
   }
   const onRefresh = () => {
     setRefreshing(true);

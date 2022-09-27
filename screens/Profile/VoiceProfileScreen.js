@@ -594,6 +594,7 @@ const VoiceProfileScreen = (props) => {
             </View>
             <AnswerRecordIcon
               props={props}
+              recordId={recordId}
               onPublishStory={(res) => onAnswerStory(res)}
               onStartPublish={() => setIsLoading(true)}
             />

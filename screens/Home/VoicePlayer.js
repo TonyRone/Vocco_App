@@ -262,7 +262,7 @@ class VoicePlayer extends Component {
       path,
     }).fetch('GET', fileRemoteUrl).then(res => {
       if (this._isMounted && res.respInfo.status == 200) {
-        this._playerPath = res.path();
+        this._playerPath = (Platform.OS=='ios'&&!this.props.control)?'ss.m4a':res.path();
         return voiceState + 1;
       }
       else

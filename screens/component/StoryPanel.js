@@ -35,6 +35,7 @@ import { SemiBoldText } from './SemiBoldText';
 import { StoryScreens } from './StoryScreens';
 import LinearGradient from 'react-native-linear-gradient';
 import { LinearTextGradient } from 'react-native-text-gradient';
+import { StoryLikes } from './StoryLikes';
 
 export const StoryPanel = ({
   props,
@@ -53,6 +54,7 @@ export const StoryPanel = ({
   const [isFriend, setIsFriend] = useState(info.isFriend);
   const [playStatus, setIsPlayStatus] = useState(false);
   const [isPlayed, setIsPlayed] = useState(false);
+  const [allLikes, setAllLikes] = useState(false);
   const [speed, setSpeed] = useState(1);
 
   const { t, i18n } = useTranslation();
@@ -72,7 +74,7 @@ export const StoryPanel = ({
   num = (num - minute) / 60;
   let hour = num % 24;
   let day = (num - hour) / 24
-  let time = (day > 0 ? (day.toString() + ' ' + t("day") + (day > 1 ? 's' : '')) : (hour > 0 ? (hour.toString() + ' ' + t("hour") + (hour > 1 ? 's' : '')) : (minute > 0 ? (minute.toString() + ' ' + t("minute") + (minute > 1 ? 's' : '')) : '')));
+  let time = (day > 0 ? (day.toString() + ' ' + t("d") + (day > 1 ? 's' : '')) : (hour > 0 ? (hour.toString() + ' ' + t("h") + (hour > 1 ? 's' : '')) : (minute > 0 ? (minute.toString() + ' ' + t("m") + (minute > 1 ? 's' : '')) : '')));
 
   const DOUBLE_PRESS_DELAY = 400;
 
@@ -355,15 +357,15 @@ export const StoryPanel = ({
             }}
           >
             <TouchableOpacity disabled={isLoading || info.user.id == user.id} style={{ opacity: isLoading ? 0.5 : 1 }} onPress={() => onSendRequest()}>
-              <Image source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri} style={{ width: 30, height: 30, borderRadius: 15, borderColor: '#FFA002', borderWidth: info.user.premium == 'none' ? 0 : 1 }} />
+              <Image source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri} style={{ width: 36, height: 36, borderRadius: 15, borderColor: '#FFA002', borderWidth: info.user.premium == 'none' ? 0 : 1 }} />
               {info.user.id != user.id && <View style={{
                 position: "absolute",
                 bottom: -6,
-                left: 7
+                left: 10
               }}>
                 <SvgXml
-                  width={14}
-                  height={14}
+                  width={16}
+                  height={16}
                   xml={!isFriend ? info.user.premium != "none" ? addYellow_Svg : add_Svg : addSuccess_Svg}
                 />
               </View>}
@@ -382,7 +384,7 @@ export const StoryPanel = ({
                 <TitleText
                   text={info.user.name}
                   fontSize={14}
-                  lineHeight={16}
+                  lineHeight={18}
                 />
                 {info.user.premium != 'none' &&
                   <SvgXml
@@ -392,7 +394,7 @@ export const StoryPanel = ({
                   />}
               </View>
               <SemiBoldText
-                text={info.user.country + ', ' + time + ', ' + info.listenCount + " " + t("Play") + (info.listenCount > 1 ? 's' : '')}
+                text={time + ', ' + info.listenCount + " " + t("Play") + (info.listenCount > 1 ? 's' : '')}
                 color='#565656'
                 fontSize={12}
                 lineHeight={14}
@@ -581,14 +583,14 @@ export const StoryPanel = ({
           >
             <HeartIcon
               isLike={info.isLike}
-              height={21}
+              height={24}
               OnSetLike={() => OnSetLike()}
               marginLeft={10}
             />
             <TouchableOpacity onPress={() => setAllLikes(true)}>
               <DescriptionText
                 text={info.likesCount}
-                fontSize={12}
+                fontSize={13}
                 lineHeight={18}
                 color="rgba(54, 18, 82, 0.8)"
                 marginLeft={4}
@@ -602,13 +604,13 @@ export const StoryPanel = ({
               onPress={() => setShowChat(true)}
             >
               <SvgXml
-                width={21}
-                height={21}
+                width={24}
+                height={24}
                 xml={notifySvg}
               />
               <DescriptionText
                 text={info.answersCount}
-                fontSize={12}
+                fontSize={13}
                 lineHeight={18}
                 color="rgba(54, 18, 82, 0.8)"
                 marginLeft={4}
@@ -623,8 +625,8 @@ export const StoryPanel = ({
               <LinearGradient
                 style={
                   {
-                    width: 55,
-                    height: 27,
+                    width: 60,
+                    height: 30,
                     borderRadius: 14,
                     borderWidth: speed != 2 ? 0.63 : 0,
                     borderColor: '#D4C9DE',
@@ -657,6 +659,13 @@ export const StoryPanel = ({
               onCloseModal={() => setShowChat(false)}
             />
           }
+          {allLikes &&
+            <StoryLikes
+              props={props}
+              storyId={info.id}
+              storyType="record"
+              onCloseModal={() => setAllLikes(false)}
+            />}
           {playStatus && <View style={{ position: 'absolute', width: 1, opacity: 0 }}>
             <VoicePlayer
               voiceUrl={info.file.url}
