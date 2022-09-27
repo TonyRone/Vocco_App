@@ -126,6 +126,9 @@ const HoldRecordScreen = (props) => {
         props.navigation.goBack();
       }
     }
+    else {
+      props.navigation.goBack();
+    }
   };
 
   const onChangeRecord = async (e, v = false) => {
@@ -174,8 +177,8 @@ const HoldRecordScreen = (props) => {
   return (
     <View
       style={{
-        flex:1,
-        backgroundColor:'#FFF'
+        flex: 1,
+        backgroundColor: '#FFF'
       }}
     >
       <View
@@ -318,7 +321,7 @@ const HoldRecordScreen = (props) => {
           </ImageBackground>
         </View>
       </View>
-      <View style={{ position: 'absolute', bottom: '6%', width: 76, height: 76}}>
+      <View style={{ position: 'absolute', bottom: '6%', width: 76, height: 76 }}>
         <Draggable
           key={key}
           x={windowWidth / 2 - 38}
