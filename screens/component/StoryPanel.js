@@ -364,8 +364,8 @@ export const StoryPanel = ({
                 left: 10
               }}>
                 <SvgXml
-                  width={16}
-                  height={16}
+                  width={18}
+                  height={18}
                   xml={!isFriend ? info.user.premium != "none" ? addYellow_Svg : add_Svg : addSuccess_Svg}
                 />
               </View>}
