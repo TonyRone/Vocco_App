@@ -56,6 +56,8 @@ import ContactScreen from './screens/Setting/ContactScreen';
 import NotificationScreen from './screens/Notification/NotificationScreen';
 import UserProfileScreen from './screens/UserProfile/UserProfileScreen';
 import UserProfileListScreen from './screens/UserProfile/UserProfileListScreen';
+import RecordPrepareScreen from './screens/Record/RecordPrepareScreen';
+import RecordBoardScreen from './screens/Record/RecordBoardScreen';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { Provider } from 'react-redux';
@@ -200,6 +202,20 @@ const AppNavigator = createStackNavigator({
 
   PostingVoice: {
     screen: PostingVoiceScreen,
+    navigationOptions: {
+      headerShown: false,
+      animationEnabled: false
+    }
+  },
+  RecordPrepare: {
+    screen: RecordPrepareScreen,
+    navigationOptions: {
+      headerShown: false,
+      animationEnabled: false,
+    }
+  },
+  RecordBoard: {
+    screen: RecordBoardScreen,
     navigationOptions: {
       headerShown: false,
       animationEnabled: false

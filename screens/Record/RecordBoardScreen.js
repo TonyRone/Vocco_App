@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   View,
   Text,
@@ -10,43 +11,42 @@ import {
   TouchableOpacity,
   Vibration,
 } from 'react-native';
-
 import AudioRecorderPlayer, {
   AVEncoderAudioQualityIOSType,
   AVEncodingOption,
   AudioEncoderAndroidType,
   AudioSourceAndroidType,
 } from 'react-native-audio-recorder-player';
-
-import { recorderPlayer } from '../Home/AudioRecorderPlayer';
 import RNFetchBlob from 'rn-fetch-blob';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import { LinearTextGradient } from 'react-native-text-gradient';
 import Draggable from 'react-native-draggable';
-import { LinearTextGradient } from "react-native-text-gradient";
-import { TitleText } from './TitleText';
-import { Warning } from './Warning';
+import { useTranslation } from 'react-i18next';
+import Svg, { SvgXml } from 'react-native-svg';
+
+import '../../language/i18n';
+import { Avatars } from '../../config/config';
 import { windowHeight, windowWidth } from '../../config/config';
+import { recorderPlayer } from '../Home/AudioRecorderPlayer';
+import { TitleText } from '../component/TitleText';
+import { Warning } from '../component/Warning';
+import { DescriptionText } from '../component/DescriptionText';
+import { SemiBoldText } from '../component/SemiBoldText';
+import { setVoiceState } from '../../store/actions';
+
 import cancelSvg from '../../assets/record/cancel.svg';
+import closeSvg from '../../assets/record/closePurple.svg';
 import publicSvg from '../../assets/record/public.svg';
 import fingerSvg from '../../assets/record/finger.svg';
-import { DescriptionText } from './DescriptionText';
-import { useDispatch, useSelector } from 'react-redux';
-import { setVoiceState } from '../../store/actions';
-import { useTranslation } from 'react-i18next';
-import '../../language/i18n';
-
 import recordSvg from '../../assets/common/bottomIcons/record.svg';
-import { SvgXml } from 'react-native-svg';
-import { SemiBoldText } from './SemiBoldText';
+import uploadFileSvg from '../../assets/record/uploadFile.svg';
 
-export const RecordIcon = ({
-  props,
-  dem = 54,
-  expandKey = 0,
-  bottom,
-  left,
-}) => {
+const RecordBoardScreen = (props) => {
+  let expandKey = 0;
+  const voiceTitle = props.navigation.state.params.title;
+  const imgSource = props.navigation.state.params.source;
+  const storyAddress = props.navigation.state.params.address;
 
   let { user, voiceState, refreshState } = useSelector((state) => state.user);
 
@@ -58,7 +58,6 @@ export const RecordIcon = ({
   const [key, setKey] = useState(0);
   const [hoverState, setHoverState] = useState(0);
   const [isPaused, setIsPaused] = useState(true);
-  const [IsExpanded, setIsExpanded] = useState(false);
   const [expand, setExpand] = useState(0);
   const [temporary, setTemporary] = useState(false);
 
@@ -124,14 +123,13 @@ export const RecordIcon = ({
       setKey(prevKey => prevKey + 1);
       if (publish == true) {
         let tp = Math.max(wasteTime.current, 1);
-        props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0), isTemporary: temporary })
+        props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0), isTemporary: temporary, title: voiceTitle, source: imgSource, address: storyAddress })
         setTemporary(false);
         clearRecorder();
-        setIsExpanded(false);
       }
       else {
         clearRecorder();
-        setIsExpanded(false);
+        props.navigation.goBack()
       }
     }
   };
@@ -140,7 +138,6 @@ export const RecordIcon = ({
     if (v == true)
       Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     if (v == true && isRecording == false) {
-      setIsExpanded(true);
       onStartRecord();
     }
     else {
@@ -179,7 +176,6 @@ export const RecordIcon = ({
     setKey(prevKey => prevKey + 1);
     if (expandKey != expand) {
       setExpand(expandKey);
-      setIsExpanded(true);
       setTemporary(true);
     }
     //dispatch(setVoiceState(voiceState+1));
@@ -189,67 +185,52 @@ export const RecordIcon = ({
   return (
     <Pressable
       style={{
-        position: 'absolute',
-        bottom: IsExpanded ? 0 : bottom,
-        left: IsExpanded ? 0 : left,
-        width: IsExpanded ? windowWidth : dem,
-        height: IsExpanded ? windowHeight : dem,
+        width: windowWidth,
+        height: windowHeight,
         elevation: 11
       }}
     // onPress={() => onStopRecord(false)}
-    onPress={() => props.navigation.navigate('RecordPrepare')}
     >
-      {/* {IsExpanded && <View
+      <View
         style={{
           backgroundColor: '#FFF',
           flexDirection: 'column',
           justifyContent: 'space-between',
           width: '100%',
           height: '100%',
-          alignItems: 'center',
-          paddingTop: 55
+          alignItems: 'center'
         }}
       >
-        <TitleText
-          text={t("Click & hold to record")}
-          fontSize={20}
-          color="#281E30"
-        />
-        <View
-          style={{
-            paddingHorizontal: 16,
-            paddingVertical: 8,
-            width: 295,
-            backgroundColor: '#FFF7E8',
-            borderWidth: 1,
-            borderRadius: 8,
-            borderColor: '#FFBB02',
-            shadowColor: '#FFB800',
-            elevation: 10,
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.5,
-            shadowRadius: 5,
-            marginBottom: 30
-          }}
-        >
-          <SemiBoldText
-            text={user.premium != 'none' ? t("You are a premium member and you have up to three minutes of recording!") : t("Go to Premium and have 3 minutes instead of one for each record.")}
-            color='#F09E00'
-            fontSize={15}
-            lineHeight={24}
-            textAlign='center'
-          />
+        <View style={{ width: '100%' }}>
+          <TouchableOpacity style={{ marginTop: Platform.OS == 'ios' ? 50 : 20, marginLeft: 21 }} onPress={() => props.navigation.goBack()}>
+            <SvgXml width={14} height={14} xml={closeSvg} />
+          </TouchableOpacity>
+        </View>
+        <Text style={{
+          fontWeight: "400",
+          fontSize: 34,
+          lineHeight: 41,
+          color: "#361252",
+          marginTop: windowHeight / 812 * 18
+        }}>{voiceTitle}</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: windowHeight / 812 * 25, marginBottom: windowHeight / 812 * 30 }}>
+          <Text style={{
+            fontWeight: "400",
+            fontSize: 17,
+            lineHeight: 28,
+            color: "#3B1F5240"
+          }}>{ storyAddress ? storyAddress.description : '' }</Text>
         </View>
         <View
           style={{
-            marginBottom: 40
+            marginBottom: windowHeight / 812 * 24
           }}
         >
           <CountdownCircleTimer
             key={key}
             isPlaying={!isPaused}
             duration={fill}
-            size={250}
+            size={246}
             strokeWidth={5}
             trailColor="#D4C9DE"
             trailStrokeWidth={1}
@@ -263,20 +244,21 @@ export const RecordIcon = ({
             {({ remainingTime, animatedColor }) => {
               return (
                 <ImageBackground
-                  source={require('../../assets/record/Waves.png')}
+                  source={imgSource ? {uri: imgSource.path} :user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri}
                   resizeMode="stretch"
-                  style={{ width: 197, height: 197, alignItems: 'center' }}
+                  style={{ width: 189, height: 189, alignItems: 'center' }}
+                  imageStyle={{ borderRadius: 100 }}
                 >
                   <DescriptionText
                     text={t("seconds")}
-                    color="rgba(59, 31, 82, 0.6)"
+                    color="rgba(255, 255, 255, 1)"
                     fontSize={20}
                     marginTop={32}
                   />
                   <LinearTextGradient
-                    style={{ fontSize: 80, marginTop: -10 }}
+                    style={{ fontSize: 67, marginTop: 0 }}
                     locations={[0, 1]}
-                    colors={["#C479FF", "#650DD6"]}
+                    colors={["#FFFFFF", "#FFFFFF"]}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 0, y: 1 }}
                   >
@@ -289,6 +271,10 @@ export const RecordIcon = ({
             }}
           </CountdownCircleTimer>
         </View>
+        <View style={{flexDirection: "column", alignItems: "center", marginBottom: windowHeight / 812 * 17}}>
+          <SvgXml width={18} height={18} xml={uploadFileSvg} />
+          <Text style={{ marginTop: 6, fontWeight: "400", fontSize: 12, lineHeight: 16, color: "rgba(54, 18, 82, 0.3)" }}>{t('Or upload an audio file')}</Text>
+        </View>
         <Warning
           text={t("Hate, racism, sexism or any kind of violence is stricly prohibited")}
         />
@@ -300,8 +286,9 @@ export const RecordIcon = ({
           />
           <DescriptionText
             text={t("Swipe to the right to publish, to the left to cancel")}
-            marginTop={5}
+            fontSize={9}
             marginBottom={34}
+            color="#000000"
           />
           <ImageBackground
             source={require('../../assets/record/RecordControl.png')}
@@ -338,11 +325,11 @@ export const RecordIcon = ({
             </TouchableOpacity>
           </ImageBackground>
         </View>
-      </View>} */}
-      <View style={{ position: IsExpanded ? 'absolute' : 'relative', bottom: '6%', width: IsExpanded ? 76 : 54, height: IsExpanded ? 76 : 54 }}>
-        {/* <Draggable
+      </View>
+      <View style={{ position: 'absolute', bottom: '6%', width: 76, height: 76 }}>
+        <Draggable
           key={key}
-          x={IsExpanded ? windowWidth / 2 - 38 : 0}
+          x={windowWidth / 2 - 38}
           y={0}
           shouldReverse={true}
           minX={windowWidth / 2 - 120}
@@ -375,22 +362,24 @@ export const RecordIcon = ({
 
           }}
 
-        > */}
+        >
           <View
-            // onTouchStart={(e) => onChangeRecord(e, true)}
-            // onTouchEnd={(e) => onChangeRecord(e, false)}
+            onTouchStart={(e) => onChangeRecord(e, true)}
+            onTouchEnd={(e) => onChangeRecord(e, false)}
             style={{
               opacity: isPaused ? 1 : 0.1
             }}
           >
             <SvgXml
-              width={IsExpanded ? 76 : 54}
-              height={IsExpanded ? 76 : 54}
+              width={76}
+              height={76}
               xml={recordSvg}
             />
           </View>
-        {/* </Draggable> */}
+        </Draggable>
       </View>
     </Pressable>
   );
 };
+
+export default RecordBoardScreen;
