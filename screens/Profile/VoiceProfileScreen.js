@@ -528,7 +528,7 @@ const VoiceProfileScreen = (props) => {
             borderTopLeftRadius: 24,
             borderTopRightRadius: 24,
             backgroundColor: '#FFF',
-            elevation: 10,
+            elevation: filter.length > 0 ? 10 : 0,
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.5,
             shadowRadius: 8,
