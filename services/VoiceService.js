@@ -540,12 +540,12 @@ class VoiceService {
             );
     }
 
-    async getMessages(toUserId) {
+    async getMessages(toUserId, skip = 0) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(
                 'GET',
-                `${API_URL}/actions/getMessages?toUserId=${toUserId}`, {
+                `${API_URL}/actions/getMessages?toUserId=${toUserId}&skip=${skip}`, {
                 'Authorization': `Bearer ${token}`
             }
             );

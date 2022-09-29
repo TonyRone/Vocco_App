@@ -37,8 +37,8 @@ const LogoScreen = (props) => {
             : NativeModules.I18nManager.localeIdentifier;
 
     const onGoScreen = async (jsonRes, prevOpenCount) => {
-        if(!mounted.current)
-            return ;
+        if (!mounted.current)
+            return;
         let openCount = await AsyncStorage.getItem(OPEN_COUNT);
         if (openCount != prevOpenCount) {
             return;
@@ -51,7 +51,6 @@ const LogoScreen = (props) => {
             OPEN_COUNT,
             openCount
         );
-        dispatch(setUser(jsonRes));
         let navigateScreen = 'Home';
         if (!jsonRes.id) {
             return;
@@ -79,6 +78,44 @@ const LogoScreen = (props) => {
     }
 
     const onCreateSocket = async (jsonRes) => {
+        let systemLanguage = '';
+        if (deviceLanguage[0] == 'e') {
+            await AsyncStorage.setItem(
+                MAIN_LANGUAGE,
+                'English'
+            );
+            systemLanguage = 'English';
+        }
+        else if (deviceLanguage[0] == 'f') {
+            await AsyncStorage.setItem(
+                MAIN_LANGUAGE,
+                'French'
+            );
+            systemLanguage = 'French';
+        }
+        else {
+            await AsyncStorage.setItem(
+                MAIN_LANGUAGE,
+                'Portuguese'
+            );
+            systemLanguage = 'Portuguese';
+        }
+        if (jsonRes.language != systemLanguage)
+            EditService.changeLanguage(systemLanguage);
+        if (jsonRes.storyLanguage == 'none') {
+            EditService.changeStoryLanguage(systemLanguage);
+            jsonRes.storyLanguage = systemLanguage;
+        }
+        dispatch(setUser(jsonRes));
+        let mainLanguage = await AsyncStorage.getItem(MAIN_LANGUAGE);
+        if (mainLanguage == null) {
+            mainLanguage = systemLanguage;
+            await AsyncStorage.setItem(
+                MAIN_LANGUAGE,
+                systemLanguage
+            );
+        }
+        i18n.changeLanguage(mainLanguage);
         let open_count = await AsyncStorage.getItem(OPEN_COUNT);
         if (socketInstance == null) {
             let socket = io(SOCKET_URL);
@@ -98,47 +135,25 @@ const LogoScreen = (props) => {
             onGoScreen(jsonRes, open_count);
     }
     const checkLogin = async () => {
-        let systemLanguage = '';
-        if (deviceLanguage[0] == 'e') {
-            await AsyncStorage.setItem(
-                MAIN_LANGUAGE,
-                'English'
-            );
-            systemLanguage = 'English';
+        const aToken = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        if (aToken != null) {
+            AuthService.getUserInfo().then(async res => {
+                const jsonRes = await res.json();
+                if (res.respInfo.status == 200 && jsonRes != null) {
+                    onCreateSocket(jsonRes);
+                }
+                else {
+                    props.navigation.navigate('Welcome');
+                }
+            })
+                .catch(err => {
+                    console.log(err);
+                    props.navigation.navigate('Welcome');
+                });
         }
         else {
-            await AsyncStorage.setItem(
-                MAIN_LANGUAGE,
-                'French'
-            );
-            systemLanguage = 'French';
+            props.navigation.navigate('Welcome');
         }
-        EditService.changeLanguage(systemLanguage);
-        let mainLanguage = await AsyncStorage.getItem(MAIN_LANGUAGE);
-        if(mainLanguage==null)
-            mainLanguage = systemLanguage;
-        i18n.changeLanguage(mainLanguage).then(async () => {
-            const aToken = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
-            if (aToken != null) {
-                AuthService.getUserInfo().then(async res => {
-                    const jsonRes = await res.json();
-                    if (res.respInfo.status == 200 && jsonRes != null) {
-                        onCreateSocket(jsonRes);
-                    }
-                    else {
-                        props.navigation.navigate('Welcome');
-                    }
-                })
-                    .catch(err => {
-                        console.log(err);
-                        props.navigation.navigate('Welcome');
-                    });
-            }
-            else {
-                props.navigation.navigate('Welcome');
-            }
-        })
-            .catch(err => console.log(err));
     }
 
     const checkPermission = async () => {

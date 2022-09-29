@@ -76,6 +76,20 @@ class EditService {
             },
             );
     }
+
+    async changeStoryLanguage(language) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob
+            .config({ trusty: true })
+            .fetch(
+                'POST',
+                `${API_URL}/account/changeStoryLanguage?language=${language}`, {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            );
+    }
+
     async userNameVerify(userName) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob

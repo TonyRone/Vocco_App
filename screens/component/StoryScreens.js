@@ -62,8 +62,8 @@ export const StoryScreens = ({
   props,
   recordId,
   answerId = '',
-  onCloseModal = () => {},
-  onSetCommentCount = (ind) => {}
+  onCloseModal = () => { },
+  onSetCommentCount = (ind) => { }
 }) => {
 
   // let recordId = props.navigation.state.params.id, answerId = props.navigation.state.params.answerId ? props.navigation.state.params.answerId : '';
@@ -408,7 +408,9 @@ export const StoryScreens = ({
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.5,
               shadowRadius: 8,
-              height: 60
+              elevation: filter.length > 0 ? 10 : 0,
+              position: 'absolute',
+              bottom: 0
             }}>
               {filter.length > 0 && filter.map((item, index) => {
                 return <TouchableOpacity style={{
@@ -440,8 +442,6 @@ export const StoryScreens = ({
               })
               }
               <Pressable style={{
-                position: 'relative',
-                bottom: 20,
                 width: windowWidth,
                 height: 80,
                 borderTopLeftRadius: 24,
@@ -480,7 +480,7 @@ export const StoryScreens = ({
                       alignItems: 'center',
                       backgroundColor: '#F2F0F5',
                       flex: 1,
-                      height:40,
+                      height: 40,
                       marginRight: 65,
                       marginLeft: 10,
                     }}

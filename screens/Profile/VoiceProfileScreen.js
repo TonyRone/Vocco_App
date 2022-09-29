@@ -484,11 +484,12 @@ const VoiceProfileScreen = (props) => {
         {info && <View style={{
           width: windowWidth,
           backgroundColor: '#FFF',
-          elevation: 10,
+          elevation: filter.length > 0 ? 10 : 0,
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.5,
           shadowRadius: 8,
-          height: 60
+          position: 'absolute',
+          bottom: 0,
         }}>
           {filter.length > 0 && filter.map((item, index) => {
             return <TouchableOpacity style={{
@@ -520,8 +521,8 @@ const VoiceProfileScreen = (props) => {
           })
           }
           <View style={{
-            position: filter.length > 0 ? 'relative' : 'absolute',
-            bottom: 0,
+            // position: filter.length > 0 ? 'relative' : 'absolute',
+            // bottom: 0,
             width: windowWidth,
             height: 80,
             borderTopLeftRadius: 24,

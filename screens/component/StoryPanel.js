@@ -36,6 +36,7 @@ import { StoryScreens } from './StoryScreens';
 import LinearGradient from 'react-native-linear-gradient';
 import { LinearTextGradient } from 'react-native-text-gradient';
 import { StoryLikes } from './StoryLikes';
+import { PostContext } from './PostContext';
 
 export const StoryPanel = ({
   props,
@@ -55,6 +56,7 @@ export const StoryPanel = ({
   const [playStatus, setIsPlayStatus] = useState(false);
   const [isPlayed, setIsPlayed] = useState(false);
   const [allLikes, setAllLikes] = useState(false);
+  const [showContext, setShowContext] = useState(false);
   const [speed, setSpeed] = useState(1);
 
   const { t, i18n } = useTranslation();
@@ -74,7 +76,7 @@ export const StoryPanel = ({
   num = (num - minute) / 60;
   let hour = num % 24;
   let day = (num - hour) / 24
-  let time = (day > 0 ? (day.toString() + ' ' + t("d") + (day > 1 ? 's' : '')) : (hour > 0 ? (hour.toString() + ' ' + t("h") + (hour > 1 ? 's' : '')) : (minute > 0 ? (minute.toString() + ' ' + t("m") + (minute > 1 ? 's' : '')) : '')));
+  let time = (day > 0 ? (day.toString() + ' ' + t("d") ) : (hour > 0 ? (hour.toString() + ' ' + t("h")) : (minute > 0 ? (minute.toString() + ' ' + t("m") ) : '')));
 
   const DOUBLE_PRESS_DELAY = 400;
 
@@ -349,6 +351,7 @@ export const StoryPanel = ({
             marginLeft: (itemIndex % 2 > 0) ? 11 : 0,
           }}
           onPress={() => onClickDouble()}
+          onLongPress={() => setShowContext(true)}
         >
           <View
             style={{
@@ -666,6 +669,13 @@ export const StoryPanel = ({
               storyType="record"
               onCloseModal={() => setAllLikes(false)}
             />}
+          {showContext &&
+            <PostContext
+              postInfo={info}
+              props={props}
+              onCloseModal={() => setShowContext(false)}
+            />
+          }
           {playStatus && <View style={{ position: 'absolute', width: 1, opacity: 0 }}>
             <VoicePlayer
               voiceUrl={info.file.url}

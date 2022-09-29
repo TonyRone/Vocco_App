@@ -42,16 +42,13 @@ export const DiscoverStories = ({
   const scrollRef = useRef();
   const mounted = useRef(false);
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [follows, setFollows] = useState([]);
   const [stories, setStories] = useState([]);
   const [LoadMore, setLoadMore] = useState(10);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [showEnd, setShowEnd] = useState(false);
   const [showInviteList, setShowInviteList] = useState(false);
   const [localKey, setLocalKey] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
-  const [userClick, setUserClick] = useState(false);
   const [storyPanels, setStoryPanels] = useState([]);
 
   let { visibleOne, refreshState } = useSelector((state) => {
@@ -135,21 +132,6 @@ export const DiscoverStories = ({
         setRefreshing(false)
     }, 1000);
   };
-
-  const fetchLoadMore = () => {
-    setLoading(true);
-    VoiceService.getStories(stories.length, userId, category, searchTitle, recordId, screenName == 'Feed' ? 'friend' : '').then(async res => {
-      if (res.respInfo.status === 200 && mounted.current) {
-        const jsonRes = await res.json();
-        setStories((stories.length == 0) ? [...jsonRes] : [...stories, ...jsonRes]);
-        setLoadMore(jsonRes.length);
-        setLoading(false);
-      }
-    })
-      .catch(err => {
-        console.log(err);
-      });
-  }
 
   useEffect(() => {
     mounted.current = true;

@@ -11,7 +11,8 @@ import {
     Pressable,
     TextInput,
     Keyboard,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    RefreshControl
 } from 'react-native';
 
 import AudioRecorderPlayer, {
@@ -80,6 +81,8 @@ const ConversationScreen = (props) => {
 
     const dispatch = useDispatch();
 
+    const loadNumber = 15;
+
     const { t, i18n } = useTranslation();
 
     const [isLoading, setIsLoading] = useState(true);
@@ -98,6 +101,8 @@ const ConversationScreen = (props) => {
     const [otherState, setOtherState] = useState('');
     const [showComment, setShowComment] = useState(false);
     const [label, setLabel] = useState('');
+    const [refresh, setRefresh] = useState(false);
+    const [refreshCount, setRefreshCount] = useState(loadNumber);
 
     const mounted = useRef(false);
 
@@ -169,12 +174,20 @@ const ConversationScreen = (props) => {
         }
     }
 
-    const getMessages = async () => {
-        VoiceService.getMessages(info.user.id).then(async res => {
+    const getMessages = async (skip = 0) => {
+        VoiceService.getMessages(info.user.id, skip).then(async res => {
             const jsonRes = await res.json();
             if (res.respInfo.status == 200 && mounted.current) {
-                setMessages(jsonRes);
+                if (skip == 0)
+                    setMessages([...jsonRes]);
+                else {
+                    setMessages([...jsonRes, ...messages])
+                }
                 setIsLoading(false);
+                setRefreshCount(jsonRes.length);
+                if(jsonRes.length == 0){
+                    setRefresh(false);
+                }
             }
         })
             .catch(err => {
@@ -205,7 +218,7 @@ const ConversationScreen = (props) => {
             const jsonRes = await res.json();
             if (res.respInfo.status !== 201) {
             } else if (mounted.current) {
-                getMessages();
+                getMessages(0);
                 socketInstance.emit("newMessage", { info: jsonRes });
             }
         })
@@ -399,6 +412,13 @@ const ConversationScreen = (props) => {
         })
     }
 
+    const onRefresh = () => {
+        if (refreshCount === loadNumber) {
+            setRefresh(true);
+            getMessages(messages.length);
+        }
+    }
+
     useEffect(() => {
         mounted.current = true;
         dispatch(setMessageCount(0));
@@ -406,7 +426,7 @@ const ConversationScreen = (props) => {
             sendRecordMessage();
         }
         else
-            getMessages();
+            getMessages(0);
         setKey(prevKey => prevKey + 1);
         setFill(user.premium == 'none' ? 60 : 180);
         socketInstance.on("receiveMessage", ({ info }) => {
@@ -643,7 +663,21 @@ const ConversationScreen = (props) => {
                         />
                     </View>
                 </View>}
-                <ScrollView style={{ paddingHorizontal: 8 }} ref={scrollRef} onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}>
+                <ScrollView
+                    style={{ paddingHorizontal: 8 }}
+                    ref={scrollRef}
+                    onContentSizeChange={() => {
+                        if(!refresh)
+                            scrollRef.current?.scrollToEnd({ animated: true })
+                        setRefresh(false);
+                    }}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refresh}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                >
                     {messages.map((item, index) => {
                         let ancestorIdx = null;
                         if (item.ancestorId) {
@@ -914,7 +948,7 @@ const ConversationScreen = (props) => {
                                     style={
                                         {
                                             fontSize: 15,
-                                            width: 205,
+                                            width: 235,
                                             lineHeight: 18,
                                             color: '#281E30',
                                         }
@@ -925,7 +959,7 @@ const ConversationScreen = (props) => {
                                         onAnswerBio();
                                     }}
                                     onChangeText={(e) => setLabel(e)}
-                                    placeholder={t("Type your answer")}
+                                    placeholder={t("Type your answer by send your message")}
                                     placeholderTextColor="rgba(59, 31, 82, 0.6)"
                                 />
                                 <TouchableOpacity disabled={label.length == 0} onPress={() => {

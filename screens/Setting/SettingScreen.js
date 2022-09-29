@@ -40,6 +40,7 @@ import { RecordIcon } from '../component/RecordIcon';
 import { setSocketInstance, setUser } from '../../store/actions';
 import VoiceService from '../../services/VoiceService';
 import EditService from '../../services/EditService';
+import { SelectLanguage } from '../component/SelectLanguage';
 
 const SettingScreen = (props) => {
 
@@ -55,7 +56,6 @@ const SettingScreen = (props) => {
 
     const [showModal, setShowModal] = useState(false);
     const [showLanguageModal, setShowLanguageModal] = useState(false);
-    const [language, setLanguage] = useState(null);
 
     const mounted = useRef(false);
 
@@ -311,64 +311,12 @@ const SettingScreen = (props) => {
                     </View>
                 </Pressable>
             </Modal>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={showLanguageModal}
-                onRequestClose={() => {
-                    setShowLanguageModal(!showLanguageModal);
-                }}
-            >
-                <Pressable onPressOut={() => setShowLanguageModal(false)} style={styles.swipeModal}>
-                    <View style={styles.swipeInputContainerContent}>
-                        <View style={[styles.rowSpaceBetween, { paddingHorizontal: 14, paddingVertical: 12 }]}>
-                            <TouchableOpacity onPress={() => setShowLanguageModal(false)}>
-                                <View style={[styles.contentCenter, { width: 28, height: 28, borderRadius: 14, backgroundColor: '#F0F4FC' }]}>
-                                    <SvgXml
-                                        width={18}
-                                        height={18}
-                                        xml={closeBlackSvg}
-                                    />
-                                </View>
-                            </TouchableOpacity>
-                            <SemiBoldText
-                                text={t("Select your language")}
-                                fontSize={17}
-                                lineHeight={28}
-                                color='#263449'
-                            />
-                            <TouchableOpacity disabled={!language} onPress={() => { OnSelectLanguage(); setShowLanguageModal(false); }}>
-                                <DescriptionText
-                                    text={t('Save')}
-                                    fontSize={17}
-                                    lineHeight={28}
-                                    color='#8327D8'
-                                />
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
-                            <SearchLanguage
-                                height={windowHeight - 190}
-                                onSelectLanguage={(lge) => setLanguage(lge)}
-                            />
-                        </View>
-                        <LinearGradient
-                            colors={['#FFFFFF', 'rgba(255,255,255, 0)']}
-                            locations={[0.7, 1]}
-                            start={{ x: 0, y: 1 }} end={{ x: 0, y: 0 }}
-                            style={{ position: 'absolute', paddingHorizontal: 16, bottom: 0, width: windowWidth }}
-                        >
-                            <MyButton
-                                label={t("Save")}
-                                //marginTop={90}
-                                onPress={() => { OnSelectLanguage(); setShowLanguageModal(false); }}
-                                active={language ? true : false}
-                                marginBottom={20}
-                            />
-                        </LinearGradient>
-                    </View>
-                </Pressable>
-            </Modal>
+            {showLanguageModal &&
+                <SelectLanguage
+                    type = {"description"}
+                    onCloseModal={()=> setShowLanguageModal(false) }
+                />
+            }
             <RecordIcon
                 props={props}
                 bottom={27}

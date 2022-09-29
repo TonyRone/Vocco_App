@@ -28,6 +28,7 @@ import { styles } from '../style/Common';
 import { Stories } from './Stories';
 import { DiscoverStories } from './Discoverstories';
 import { setRefreshState } from '../../store/actions';
+import { SelectLanguage } from './SelectLanguage';
 
 export const Discover = ({
   props,
@@ -38,11 +39,12 @@ export const Discover = ({
   const [showModal, setShowModal] = useState(false);
   const [loadKey, setLoadKey] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const [showLanguage, setShowLanguage] = useState(false);
 
   const scrollRef = useRef();
   const mounted = useRef(false);
 
-  let { refreshState } = useSelector((state) => {
+  let { user, refreshState } = useSelector((state) => {
     return (
       state.user
     )
@@ -73,12 +75,6 @@ export const Discover = ({
     setShowModal(false);
   }
 
-  const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-    const paddingToBottom = 10;
-    return layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom;
-  };
-
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -97,7 +93,7 @@ export const Discover = ({
       <View style={[styles.paddingH16, {
         flexDirection: 'row',
         alignItems: "flex-start",
-        marginBottom:6,
+        marginBottom: 6,
       }]}>
         <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
           <SvgXml
@@ -200,7 +196,7 @@ export const Discover = ({
                 padding: 1,
                 borderRadius: 12,
               }}
-              //onPress={() => setShowModal()}
+              onPress={() => setShowLanguage(true)}
             >
               <View style={{
                 justifyContent: 'center',
@@ -212,7 +208,7 @@ export const Discover = ({
                 height: windowWidth / 375 * 43 - 4,
                 borderRadius: 10,
               }}>
-                <Image source={require("../../assets/record/UK.png")}
+                <Image source={user.storyLanguage == 'English' ? require("../../assets/discover/English.png") : user.storyLanguage == 'French' ? require("../../assets/discover/French.png") : require("../../assets/discover/Portuguese.png")}
                   style={{
                     width: 25,
                     height: 25
@@ -231,7 +227,7 @@ export const Discover = ({
               marginTop: 4,
             }}
           >
-            {"English"}
+            {user.storyLanguage}
           </Text>
         </View>
       </View>
@@ -329,6 +325,11 @@ export const Discover = ({
           />
         </Pressable>
       </Modal>
+      {showLanguage &&
+        <SelectLanguage
+          onCloseModal={() => setShowLanguage(false)}
+        />
+      }
     </View>
   );
 };
