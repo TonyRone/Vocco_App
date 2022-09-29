@@ -12,38 +12,27 @@ import {
   Image,
   Modal
 } from 'react-native';
-
 import * as Progress from "react-native-progress";
 import { useSelector, useDispatch } from 'react-redux';
 import { FlatList } from 'react-native-gesture-handler';
 import RNFetchBlob from 'rn-fetch-blob';
 import { NavigationActions, StackActions } from 'react-navigation';
-import { TitleText } from '../component/TitleText';
+import EmojiPicker from 'rn-emoji-keyboard';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
+import { useTranslation } from 'react-i18next';
+import { SvgXml } from 'react-native-svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LinearTextGradient } from 'react-native-text-gradient';
+import LinearGradient from 'react-native-linear-gradient';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
+import '../../language/i18n';
+import { Avatars, POST_CHECK, Categories, Ambiances, windowWidth, windowHeight } from '../../config/config';
+import { TitleText } from '../component/TitleText';
 import { CategoryIcon } from '../component/CategoryIcon';
 import { MyButton } from '../component/MyButton';
-import EmojiPicker from 'rn-emoji-keyboard';
 import { ShareHint } from '../component/ShareHint';
 import { ShareVoice } from '../component/ShareVoice';
-
-import { useTranslation } from 'react-i18next';
-import '../../language/i18n';
-import { SvgXml } from 'react-native-svg';
-import closeBlackSvg from '../../assets/record/closeBlack.svg';
-import yesSwitchSvg from '../../assets/common/yesSwitch.svg';
-import noSwitchSvg from '../../assets/common/noSwitch.svg';
-import fakeSvg from '../../assets/post/fake.svg';
-import privacySvg from '../../assets/post/privacy.svg';
-import brightFakeSvg from '../../assets/post/bright-fake.svg';
-import brightPrivacySvg from '../../assets/post/bright-privacy.svg';
-import pauseSvg from '../../assets/post/pause.svg';
-import playSvg from '../../assets/post/play.svg';
-import editSvg from '../../assets/record/edit.svg';
-import rightArrowSvg from '../../assets/post/right_arrow.svg';
-import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { POST_CHECK, Categories, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { AllCategory } from '../component/AllCategory';
 import VoiceService from '../../services/VoiceService';
@@ -51,9 +40,22 @@ import VoicePlayer from "../Home/VoicePlayer";
 import { setRefreshState, setVoiceState } from '../../store/actions';
 import { MyProgressBar } from '../component/MyProgressBar';
 import { DescriptionText } from '../component/DescriptionText';
-import { LinearTextGradient } from 'react-native-text-gradient';
-import LinearGradient from 'react-native-linear-gradient';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+
+import editImageSvg from '../../assets/record/editPurple.svg';
+import effectSvg from '../../assets/record/effect.svg';
+import cutSvg from '../../assets/record/cut.svg';
+import closeBlackSvg from '../../assets/record/closeBlack.svg';
+import yesSwitchSvg from '../../assets/common/yesSwitch.svg';
+import noSwitchSvg from '../../assets/common/noSwitch.svg';
+import fakeSvg from '../../assets/post/fake.svg';
+import privacySvg from '../../assets/post/privacy.svg';
+import brightFakeSvg from '../../assets/post/bright-fake.svg';
+import brightPrivacySvg from '../../assets/post/bright-privacy.svg';
+import pauseSvg from '../../assets/record/pause.svg';
+import playSvg from '../../assets/post/play.svg';
+import editSvg from '../../assets/record/edit.svg';
+import rightArrowSvg from '../../assets/post/right_arrow.svg';
+import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 
 const PostingVoiceScreen = (props) => {
 
@@ -90,6 +92,8 @@ const PostingVoiceScreen = (props) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [postStep, setPostStep] = useState(0);
   const [warning, setWarning] = useState(false);
+  const [showEffect, setShowEffect] = useState(false);
+  const [selectedAmbiance, setSelectedAmbiance] = useState('');
 
   const mounted = useRef(false);
 
@@ -127,9 +131,9 @@ const PostingVoiceScreen = (props) => {
     if (path) {
       let voiceFile = [
         {
-          name: 'file', filename: Platform.OS === 'android' ? `${voiceTitle}.mp3` : `${voiceTitle}.m4a`, data: RNFetchBlob.wrap(path)
+          name: 'file', filename: Platform.OS === 'android' ? `${param.title}.mp3` : `${param.title}.m4a`, data: RNFetchBlob.wrap(path)
         },
-        { name: 'title', data: voiceTitle },
+        { name: 'title', data: param.title },
         { name: 'emoji', data: String(icon) },
         { name: 'duration', data: String(displayDuration) },
         { name: 'category', data: Categories[category].label },
@@ -160,7 +164,7 @@ const PostingVoiceScreen = (props) => {
   const changeStory = async () => {
     const payload = {
       id: param.info.id,
-      title: voiceTitle,
+      title: param.title,
       emoji: icon,
       category: Categories[category].label,
       privacy: visibleStatus,
@@ -174,7 +178,7 @@ const PostingVoiceScreen = (props) => {
         } else {
           //  dispatch(setRefreshState(!refreshState));
           let info = param.info;
-          info.title = voiceTitle;
+          info.title = param.title;
           info.emoji = icon;
           info.category = Categories[category].label;
           info.privacy = visibleStatus;
@@ -191,10 +195,9 @@ const PostingVoiceScreen = (props) => {
 
   const onClickPost = async () => {
     Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-    if (voiceTitle.length == 0 || category == 0) {
+    if (category == 0) {
       setWarning(true);
-      if (voiceTitle.length == 0) setPostStep(0);
-      else setPostStep(1);
+      setPostStep(1);
       return;
     }
     if (param.info)
@@ -246,8 +249,8 @@ const PostingVoiceScreen = (props) => {
           />
         </View>
         {postStep == 0 ? <>
-          <View style={{ alignItems: 'center', marginTop: 40 }}>
-            <TextInput
+          <View style={{ alignItems: 'center', marginTop: 18 }}>
+            {/* <TextInput
               placeholder={t("Your title")}
               placeholderTextColor="#3B1F5290"
               color="#281E30"
@@ -260,7 +263,14 @@ const PostingVoiceScreen = (props) => {
               lineHeight={41}
               marginTop={5}
               letterSpaceing={5}
-            />
+            /> */}
+            <Text style={{
+              fontWeight: "400",
+              fontSize: 34,
+              lineHeight: 41,
+              color: "#361252",
+              marginTop: windowHeight / 812 * 18
+            }}>{param.title}</Text>
             {/* <TitleText
             text={`${t("Duration")}: ${displayDuration} ${t("seconds")}`}
             fontFamily="SFProDisplay-Regular"
@@ -269,6 +279,38 @@ const PostingVoiceScreen = (props) => {
             marginTop={7}
             color="rgba(54, 36, 68, 0.8)"
           /> */}
+          </View>
+          <View style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 22
+          }}>
+            <Text style={{
+              fontWeight: "400",
+              fontSize: 17,
+              lineHeight: 28,
+              color: "#3B1F5240",
+              marginRight: 12
+            }}>{ param.address ? param.address.description : '' }</Text>
+            <View style={{ position: "relative" }}>
+              <Image source={param.source ? {uri: param.source.path} :user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri} style={{ width: 45, height: 45, borderRadius: 15 }} />
+              <TouchableOpacity style={{
+                width: 18,
+                height: 18,
+                position: "absolute",
+                backgroundColor: "#F8F0FF",
+                borderRadius: 18,
+                bottom: -2,
+                right: -3,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+              >
+                <SvgXml width={6} height={7} xml={editImageSvg} />
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={{
             flexDirection: 'row',
@@ -371,6 +413,88 @@ const PostingVoiceScreen = (props) => {
             />
             }
           </View>
+          {
+            showEffect && <View style={{ marginTop: windowHeight / 812 * 29, paddingHorizontal: 16 }}>
+              <Text style={{ fontWeight: "600", fontSize: 20, lineHeight: 24, color: "rgba(54, 18, 82, 0.8)", fontFamily: "SFProDisplay-Semibold" }}>{t("Add ambiance")}:</Text>
+              <View style={{ flexDirection: "row", alignItems: "center", marginTop: 16 }}>
+                {
+                  Ambiances.map((item, index) => {
+                    return (
+                      <View
+                        style={{
+                          width: (windowWidth - 75) / 25 * 4,
+                          marginRight: 16
+                        }}
+                        key={'all_ambiance' + index}
+                      >
+                        <View
+                          style={{
+                            height: (windowWidth - 75) / 25 * 4,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: (windowWidth - 75) / 25 * 4,
+                            borderRadius: 16,
+                            backgroundColor: selectedAmbiance === item.label ? '#B35CF8' : '#FFF',
+                            shadowColor: 'rgba(42, 10, 111, 1)',
+                            elevation: !(selectedAmbiance === item.label) ? 10 : 0,
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.5,
+                            shadowRadius: 4,
+                          }}
+                        >
+                          <TouchableOpacity
+                            style={{
+                              width: (windowWidth - 75) / 25 * 4,
+                              alignItems: 'center',
+                              padding: 1,
+                              borderRadius: 16,
+                            }}
+                            onPress={() => {
+                              if (selectedAmbiance !== item.label) {
+                                setSelectedAmbiance(item.label);
+                              } else {
+                                setSelectedAmbiance('');
+                              }
+                            }}
+                          >
+                            <View style={{
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              color: '#4C64FF',
+                              backgroundColor: '#FFF',
+                              padding: 15,
+                              width: (windowWidth - 75) / 25 * 4 - 4,
+                              height: (windowWidth - 75) / 25 * 4 - 4,
+                              borderRadius: 14,
+                            }}>
+                              <Image source={item.uri}
+                                style={{
+                                  width: 32,
+                                  height: 32
+                                }}
+                              />
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                        <Text
+                          style={{
+                            fontSize: 11,
+                            fontFamily: "SFProDisplay-Regular",
+                            letterSpacing: 0.066,
+                            color: selectedAmbiance === item.label ? '#A24EE4' : 'rgba(54, 36, 68, 0.8)',
+                            textAlign: "center",
+                            marginTop: 8
+                          }}
+                        >
+                          {t(item.label)}
+                        </Text>
+                      </View>
+                    )
+                  })
+                }
+              </View>
+            </View>
+          }
         </> :
           <>
             <View
@@ -442,76 +566,154 @@ const PostingVoiceScreen = (props) => {
         }
         {postStep == 0 ? <View style={{
           position: 'absolute',
-          bottom: 20,
+          bottom: 50,
           flexDirection: 'row',
-          justifyContent: 'space-evenly',
           width: windowWidth,
-          paddingHorizontal: 40,
-          height: 95
+          paddingHorizontal: 8
         }}>
-          <TouchableOpacity
-            style={{
-              height: 56,
-              width: 95,
-              backgroundColor: '#FFF',
-              shadowColor: 'rgba(88, 74, 117, 1)',
-              elevation: 10,
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.5,
-              shadowRadius: 8,
-              borderRadius: 28,
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-            onPress={() => setIsPlaying(!isPlaying)}
-          >
-            {isPlaying&&<SvgXml
-              xml={pauseSvg}
-            />}
-            {!isPlaying&&<SvgXml
-              xml={playSvg}
-            />}
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              voiceTitle == '' ? setWarning(true) : setPostStep(1);
-              Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-            }}
-          >
-            <LinearGradient
-              style={
-                {
-                  paddingVertical: 13,
-                  paddingHorizontal: 29,
-                  height: 56,
-                  borderRadius: 28,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'row'
-                }
-              }
-              start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
-              colors={['#D89DF4', '#B35CF8', '#8229F4']}
+          <View style={{
+            width: '100%',
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            backgroundColor: "white",
+            shadowColor: 'rgba(42, 10, 111, 1)',
+            elevation: 10,
+            shadowOffset: { width: 10, height: 5 },
+            shadowRadius: 8,
+            borderRadius: 100,
+            paddingLeft: 26,
+            height: 56
+          }}>
+            <View style={{
+              flexDirection: "row",
+              alignItems: "center"
+            }}>
+              <View style={{
+                flexDirection: "column",
+                alignItems: "center"
+              }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#FFF',
+                    borderRadius: 28,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                  onPress={() => setIsPlaying(!isPlaying)}
+                >
+                  {isPlaying&&<SvgXml
+                    xml={pauseSvg}
+                    height={24}
+                  />}
+                  {!isPlaying&&<SvgXml
+                    xml={playSvg}
+                    height={24}
+                  />}
+                </TouchableOpacity>
+                <Text style={{
+                  fontWeight: "500",
+                  fontSize: 10,
+                  lineHeight: 12,
+                  color: "rgba(54, 18, 82, 0.8)",
+                  marginTop: 8
+                }}>{t('Play')}</Text>
+              </View>
+              <View style={{
+                flexDirection: "column",
+                alignItems: "center",
+                marginLeft: 24
+              }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#FFF',
+                    borderRadius: 28,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <SvgXml
+                    xml={cutSvg}
+                    height={24}
+                  />
+                </TouchableOpacity>
+                <Text style={{
+                  fontWeight: "500",
+                  fontSize: 10,
+                  lineHeight: 12,
+                  color: "rgba(54, 18, 82, 0.8)",
+                  marginTop: 8
+                }}>{t('Cut record')}</Text>
+              </View>
+              <View style={{
+                flexDirection: "column",
+                alignItems: "center",
+                marginLeft: 24
+              }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#FFF',
+                    borderRadius: 28,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                  onPress={() => setShowEffect(true)}
+                >
+                  <SvgXml
+                    xml={effectSvg}
+                    height={24}
+                  />
+                </TouchableOpacity>
+                <Text style={{
+                  fontWeight: "500",
+                  fontSize: 10,
+                  lineHeight: 12,
+                  color: "rgba(54, 18, 82, 0.8)",
+                  marginTop: 8
+                }}>{t('Effects')}</Text>
+              </View>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                setPostStep(1);
+                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+              }}
             >
-              <Text
+              <LinearGradient
                 style={
                   {
-                    color: '#FFF',
-                    fontFamily: "SFProDisplay-Semibold",
-                    fontSize: 17
+                    paddingVertical: 13,
+                    paddingHorizontal: 29,
+                    height: 56,
+                    borderRadius: 28,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'row'
                   }
                 }
+                start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                colors={['#D89DF4', '#B35CF8', '#8229F4']}
               >
-                {t("Next step")}
-              </Text>
-              <SvgXml
-                style={{
-                  marginLeft: 2
-                }}
-                xml={rightArrowSvg}
-              />
-            </LinearGradient>
-          </TouchableOpacity>
+                <Text
+                  style={
+                    {
+                      color: '#FFF',
+                      fontFamily: "SFProDisplay-Semibold",
+                      fontSize: 17
+                    }
+                  }
+                >
+                  {t("Next step")}
+                </Text>
+                <SvgXml
+                  style={{
+                    marginLeft: 2
+                  }}
+                  xml={rightArrowSvg}
+                />
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
         </View> :
           <View
             style={{
@@ -545,7 +747,7 @@ const PostingVoiceScreen = (props) => {
             shadowRadius: 16,
           }}>
             <DescriptionText
-              text={voiceTitle == '' ? "Add a title to your story!" : "You must select a category."}
+              text={"You must select a category."}
               fontSize={15}
               lineHeight={18}
               color='#FFF'
