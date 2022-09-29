@@ -197,7 +197,7 @@ const FriendsScreen = (props) => {
 
     const onShareLink = () => {
         Share.open({
-            url: 'https://vocco.app.link/rAPkH16Gmtb',
+            url: `https://vocco.app.link/${user.name}`,
         });
     }
 

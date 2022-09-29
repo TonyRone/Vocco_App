@@ -12,7 +12,7 @@ import SendSMS from 'react-native-sms';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { windowWidth } from '../../config/config';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import VoiceService from '../../services/VoiceService';
 import { styles } from '../style/Common';
 import { SemiBoldText } from './SemiBoldText';
@@ -25,6 +25,12 @@ import greenCheckSvg from '../../assets/friend/green-check.svg';
 export const ContactList = ({
   props,
 }) => {
+
+  let { user } = useSelector((state) => {
+    return (
+      state.user
+    )
+  });
 
   const { t, i18n } = useTranslation();
   const [contactUsers, setContactUsers] = useState([]);
@@ -47,7 +53,7 @@ export const ContactList = ({
     SendSMS.send(
       {
         // Message body
-        body: 'Gosh, these stories are crazy! Download Vocco app for free!\nhttps://vocco.app.link/rAPkH16Gmtb',
+        body: `Gosh, these stories are crazy! Download Vocco app for free!\nhttps://vocco.app.link/${user.name}`,
         // Recipients Number
         recipients: [contactUsers[index].phoneNumbers[0].number],
         // An array of types 
@@ -65,7 +71,7 @@ export const ContactList = ({
       },
     ).then(res => {
 
-      })
+    })
       .catch(err => {
         console.log(err);
       });

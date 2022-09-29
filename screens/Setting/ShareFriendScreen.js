@@ -29,16 +29,16 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const ShareFriendScreen = (props) => {
 
-    const { t, i18n } = useTranslation();
-
-    const [statetype, setStatetype] = useState('current');
-    const [referLink, setReferLink] = useState('https://vocco.app.link/rAPkH16Gmtb');
-
     let { user } = useSelector((state) => {
         return (
           state.user
         )
       });
+
+    const { t, i18n } = useTranslation();
+
+    const [statetype, setStatetype] = useState('current');
+    const [referLink, setReferLink] = useState(`https://vocco.app.link/${user.name}`);
     
     const handleSubmit = () => {
         if (statetype == 'current') {
