@@ -143,6 +143,25 @@ export const Categories =
     },
 ]
 
+export const Ambiances = [
+    {
+        label: 'Fun',
+        uri: require('../assets/categories/fun.png')
+    },
+    {
+        label: 'Horro',
+        uri: require('../assets/categories/horror.png')
+    },
+    {
+        label: 'Fire',
+        uri: require('../assets/categories/fire.png')
+    },
+    {
+        label: 'Rain',
+        uri: require('../assets/categories/rain.png')
+    }
+]
+
 export const Avatars = [
     {
         label:'',
