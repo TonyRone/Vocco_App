@@ -185,7 +185,7 @@ const ConversationScreen = (props) => {
                 }
                 setIsLoading(false);
                 setRefreshCount(jsonRes.length);
-                if(jsonRes.length == 0){
+                if (jsonRes.length == 0) {
                     setRefresh(false);
                 }
             }
@@ -196,14 +196,12 @@ const ConversationScreen = (props) => {
     }
 
     const onAnswerBio = () => {
-        setIsLoading(true);
         handleSubmit('bio', label, replyIdx)
         setLabel('');
     }
 
     const onAnswerGif = (gif) => {
         setShowComment(false);
-        setIsLoading(true);
         handleSubmit('gif', gif, replyIdx)
     }
 
@@ -228,7 +226,6 @@ const ConversationScreen = (props) => {
     }
 
     const handleSubmit = async (fileType, v, replyIndex) => {
-        setIsLoading(true);
         let fileName = '', filePath = '';
         if (fileType == 'voice') {
             fileName = Platform.OS === 'android' ? 'message.mp3' : 'message.m4a';
@@ -250,20 +247,26 @@ const ConversationScreen = (props) => {
             sendFile.push({ name: 'ancestor', data: messages[replyIndex].id });
         if (fileType == 'emoji')
             sendFile.push({ name: 'emoji', data: v });
-        if (fileType == 'bio')
+        else if (fileType == 'bio')
             sendFile.push({ name: 'bio', data: v });
-        if (fileType == 'gif')
+        else if (fileType == 'gif')
             sendFile.push({ name: 'gif', data: v });
+        else {
+            setIsLoading(true);
+        }
+
         VoiceService.postMessage(sendFile).then(async res => {
             const jsonRes = await res.json();
             if (res.respInfo.status !== 201) {
             } else if (mounted.current) {
                 Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                 setIsPublish(false);
-                let tp = messages;
-                tp.push(jsonRes);
-                tp.sort(onCompare);
-                setMessages([...tp]);
+                if (fileType == 'record' || fileType == 'voice' || fileType == 'photo') {
+                    let tp = messages;
+                    tp.push(jsonRes);
+                    tp.sort(onCompare);
+                    setMessages([...tp]);
+                }
                 socketInstance.emit("newMessage", { info: jsonRes });
                 setIsLoading(false);
             }
@@ -271,6 +274,25 @@ const ConversationScreen = (props) => {
             .catch(err => {
                 console.log(err);
             });
+        if (fileType == 'emoji' || fileType == 'bio' || fileType == 'gif') {
+            let el = {
+                ancestorId: replyIndex >= 0 ? messages[replyIndex].id : null,
+                bio: fileType == 'bio' ? v : null,
+                emoji: fileType == 'emoji' ? v : null,
+                gif: fileType == 'gif' ? v : null,
+                seen: false,
+                toUser: {
+                    id: info.user.id,
+                },
+                type: fileType,
+                user: {
+                    id: user.id
+                }
+            }
+            let tp = messages;
+            tp.push(el);
+            setMessages([...tp]);
+        }
         setReplyIdx(-1);
     }
 
@@ -667,7 +689,7 @@ const ConversationScreen = (props) => {
                     style={{ paddingHorizontal: 8 }}
                     ref={scrollRef}
                     onContentSizeChange={() => {
-                        if(!refresh)
+                        if (!refresh)
                             scrollRef.current?.scrollToEnd({ animated: true })
                         setRefresh(false);
                     }}
@@ -683,7 +705,7 @@ const ConversationScreen = (props) => {
                         if (item.ancestorId) {
                             ancestorIdx = messages.findIndex(msg => (msg.id == item.ancestorId));
                         }
-                        return <View key={"message" + item.id}>
+                        return <View key={"messageItem"+index.toString()}>
                             {(index == 0 || !onDateCompare(item.createdAt, messages[index - 1].createdAt)) &&
                                 <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 16, marginBottom: 8 }}>
                                     <View style={{ paddingVertical: 6, paddingHorizontal: 12, borderRadius: 12, backgroundColor: 'rgba(59, 31, 82, 0.6)' }}>
@@ -959,7 +981,7 @@ const ConversationScreen = (props) => {
                                         onAnswerBio();
                                     }}
                                     onChangeText={(e) => setLabel(e)}
-                                    placeholder={t("Type your answer by send your message")}
+                                    placeholder={t("Send your message")}
                                     placeholderTextColor="rgba(59, 31, 82, 0.6)"
                                 />
                                 <TouchableOpacity disabled={label.length == 0} onPress={() => {

@@ -4,8 +4,12 @@ import {
   Pressable,
   TouchableOpacity,
   Modal,
+  Image,
+  Platform,
 } from 'react-native';
 
+import Share from 'react-native-share';
+import * as Progress from "react-native-progress";
 import { TitleText } from './TitleText';
 import { VoiceItem } from './VoiceItem';
 import { SvgXml } from 'react-native-svg';
@@ -23,6 +27,7 @@ import { styles } from '../style/Common';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { setRefreshState } from '../../store/actions';
+import RNFetchBlob from 'rn-fetch-blob';
 
 export const PostContext = ({
   postInfo,
@@ -54,6 +59,38 @@ export const PostContext = ({
     else
       VoiceService.recordUnAppreciate(postInfo.id);
   }
+
+  const onShareAudio = () => {
+    const dirs = RNFetchBlob.fs.dirs.DocumentDir;
+    const fileName = 'Vocco app - ' + postInfo.title;
+    const path = Platform.select({
+      ios: `${dirs}/${fileName}.m4a`,
+      android: `${dirs}/${fileName}.mp3`,
+    });
+    setLoading(true);
+    RNFetchBlob.config({
+      fileCache: true,
+      path,
+    }).fetch('GET', postInfo.file.url).then(res => {
+      if (mounted.current && res.respInfo.status == 200) {
+        setLoading(false);
+        //let filePath = `${Platform.OS === 'android' ? res.path() : `${fileName}.m4a`}`;
+        let filePath = res.path();
+        console.log(filePath);
+        Share.open({
+          url: Platform.OS == 'android' ? 'file://' : '' + filePath,
+          type: 'audio/' + (Platform.OS === 'android' ? 'mp3' : 'm4a'),
+        }).then(res => {
+        })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    })
+      .catch(async err => {
+        console.log(err);
+      })
+  };
 
   const closeModal = () => {
     setShowModal(false);
@@ -143,6 +180,20 @@ export const PostContext = ({
                   xml={postInfo.isLike ? redHeartSvg : blankHeartSvg}
                 />
               </TouchableOpacity> */}
+              <TouchableOpacity
+                style={styles.contextMenu}
+                onPress={onShareAudio}
+              >
+                <TitleText
+                  text={t("Share")}
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                />
+                <Image
+                  source={require('../../assets/record/Share.png')}
+                  style={{ width: 75, height: 24 }}
+                />
+              </TouchableOpacity>
               <TouchableOpacity
                 style={styles.contextMenu}
                 onPress={() => {
@@ -285,6 +336,22 @@ export const PostContext = ({
             </View>
           }
         </View>
+        {loading &&
+          <View style={{
+            position: 'absolute',
+            width: '100%',
+            alignItems: 'center',
+            top: 300,
+            elevation: 20
+          }}>
+            <Progress.Circle
+              indeterminate
+              size={30}
+              color="rgba(0, 0, 255, .7)"
+              style={{ alignSelf: "center" }}
+            />
+          </View>
+        }
       </Pressable>
     </Modal>
   );
