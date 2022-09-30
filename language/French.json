@@ -381,6 +381,15 @@
     "Type your answer":"Tappez votre commentaire",
     "more":"Voir plus",
     "less":"moins",
-    "Play":"écoute"
+    "Play":"écoute",
+    "Add a title to your story!": "Ajouter un titre à votre histoire!",
+    "Add a picture to illustrate your story!": "Ajoutez une image pour illustrer votre histoire!",
+    "Next step": "L'étape suivante",
+    "optional": "optionnel",
+    "Or upload an audio file": "Ou télécharger un fichier audio",
+    "Cut record": "Couper l'enregistrement",
+    "Add ambiance": "Ajouter de l'ambiance",
+    "Fire": "Feu",
+    "Rain": "Pluie"
   }
 }

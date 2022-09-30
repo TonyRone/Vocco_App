@@ -528,7 +528,7 @@ const VoiceProfileScreen = (props) => {
             borderTopLeftRadius: 24,
             borderTopRightRadius: 24,
             backgroundColor: '#FFF',
-            elevation: 10,
+            elevation: filter.length > 0 ? 10 : 0,
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.5,
             shadowRadius: 8,
@@ -633,7 +633,7 @@ const VoiceProfileScreen = (props) => {
                   style={{ backgroundColor: '#FFF', height: 300, width: 400 }}
                   //textInputStyle={{ fontWeight: 'bold', color: 'black' }}
                   loadingSpinnerColor={'black'}
-                  placeholderTextColor={'grey'}
+                  placeholderTextColor='rgba(59, 31, 82, 0.6)'
                   numColumns={3}
                   provider={"giphy"}
                   //providerLogo={poweredByGiphyLogoGrey}

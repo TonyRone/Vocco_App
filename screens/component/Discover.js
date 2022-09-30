@@ -170,7 +170,7 @@ export const Discover = ({
               marginTop: 4,
             }}
           >
-            {Categories[selectedCategory].label == '' ? t('World') : t(Categories[selectedCategory].label)}
+            {Categories[selectedCategory].label == '' ? t('All') : t(Categories[selectedCategory].label)}
           </Text>
         </View>
         <View style={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: windowWidth / 375 * 14 }}>

@@ -888,7 +888,7 @@ const ConversationScreen = (props) => {
                                     style={{ backgroundColor: '#FFF', height: 300, width: 400 }}
                                     //textInputStyle={{ fontWeight: 'bold', color: 'black' }}
                                     loadingSpinnerColor={'black'}
-                                    placeholderTextColor={'grey'}
+                                    placeholderTextColor='rgba(59, 31, 82, 0.6)'
                                     numColumns={3}
                                     provider={"giphy"}
                                     //providerLogo={poweredByGiphyLogoGrey}
