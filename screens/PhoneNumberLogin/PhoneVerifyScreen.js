@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, ImageBackground, TouchableOpacity, Platform, Text, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, ImageBackground, TouchableOpacity, Platform, Text, Keyboard, TouchableWithoutFeedback, NativeModules } from 'react-native';
 import * as Progress from "react-native-progress";
 import { NavigationActions, StackActions } from 'react-navigation';
 import { SvgXml } from 'react-native-svg';
@@ -14,7 +14,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import '../../language/i18n';
 
 import { MyProgressBar } from '../component/MyProgressBar';
-import { windowWidth, windowHeight, OPEN_COUNT } from '../../config/config';
+import { windowWidth, windowHeight, OPEN_COUNT, MAIN_LANGUAGE } from '../../config/config';
 import { TextInput } from 'react-native-gesture-handler';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import AuthService from '../../services/AuthService';
@@ -24,6 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ACCESSTOKEN_KEY, REFRESHTOKEN_KEY, TUTORIAL_CHECK, SOCKET_URL } from '../../config/config';
 import { styles } from '../style/Login';
 import { useDispatch, useSelector } from 'react-redux';
+import EditService from '../../services/EditService';
 
 const PhoneVerifyScreen = (props) => {
 
@@ -38,6 +39,12 @@ const PhoneVerifyScreen = (props) => {
 
     const { user, socketInstance } = useSelector((state) => state.user);
     const dispatch = useDispatch();
+
+    const deviceLanguage =
+        Platform.OS === 'ios'
+            ? NativeModules.SettingsManager.settings.AppleLocale ||
+            NativeModules.SettingsManager.settings.AppleLanguages[0] //iOS 13
+            : NativeModules.I18nManager.localeIdentifier;
 
     const _storeData = async (aToken, rToken) => {
         try {
@@ -130,6 +137,44 @@ const PhoneVerifyScreen = (props) => {
     }
 
     const onCreateSocket = async (jsonRes, isRegister) => {
+        let systemLanguage = '';
+        if (deviceLanguage[0] == 'e') {
+            await AsyncStorage.setItem(
+                MAIN_LANGUAGE,
+                'English'
+            );
+            systemLanguage = 'English';
+        }
+        else if (deviceLanguage[0] == 'f') {
+            await AsyncStorage.setItem(
+                MAIN_LANGUAGE,
+                'French'
+            );
+            systemLanguage = 'French';
+        }
+        else {
+            await AsyncStorage.setItem(
+                MAIN_LANGUAGE,
+                'Portuguese'
+            );
+            systemLanguage = 'Portuguese';
+        }
+        if (jsonRes.language != systemLanguage)
+            EditService.changeLanguage(systemLanguage);
+        if (jsonRes.storyLanguage == 'none') {
+            EditService.changeStoryLanguage(systemLanguage);
+            jsonRes.storyLanguage = systemLanguage;
+        }
+        dispatch(setUser(jsonRes));
+        let mainLanguage = await AsyncStorage.getItem(MAIN_LANGUAGE);
+        if (mainLanguage == null) {
+            mainLanguage = systemLanguage;
+            await AsyncStorage.setItem(
+                MAIN_LANGUAGE,
+                systemLanguage
+            );
+        }
+        i18n.changeLanguage(mainLanguage);
         let open_count = await AsyncStorage.getItem(OPEN_COUNT);
         if (socketInstance == null) {
             let socket = io(SOCKET_URL);
