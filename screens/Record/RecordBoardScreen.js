@@ -123,9 +123,9 @@ const RecordBoardScreen = (props) => {
       setKey(prevKey => prevKey + 1);
       if (publish == true) {
         let tp = Math.max(wasteTime.current, 1);
-        props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0), isTemporary: temporary, title: voiceTitle, source: imgSource, address: storyAddress })
         setTemporary(false);
         clearRecorder();
+        props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0), isTemporary: temporary, title: voiceTitle, source: imgSource, address: storyAddress })
       }
       else {
         clearRecorder();

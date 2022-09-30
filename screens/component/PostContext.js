@@ -44,7 +44,7 @@ export const PostContext = ({
   const [playstatus, setPlaystatus] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  let { refreshState } = useSelector((state) => {
+  let { user, refreshState } = useSelector((state) => {
     return (
       state.user
     )
@@ -95,6 +95,16 @@ export const PostContext = ({
   const closeModal = () => {
     setShowModal(false);
     onCloseModal();
+  }
+
+  const deleteVoice = () => {
+    VoiceService.deleteVoice(postInfo.id).then(async res => {
+      dispatch(setRefreshState(!refreshState));
+      closeModal();
+    })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
   const onBlockUser = () => {
@@ -194,7 +204,7 @@ export const PostContext = ({
                   style={{ width: 75, height: 24 }}
                 />
               </TouchableOpacity>
-              <TouchableOpacity
+              {postInfo.user.id != user.id && <TouchableOpacity
                 style={styles.contextMenu}
                 onPress={() => {
                   onBlockUser();
@@ -211,8 +221,8 @@ export const PostContext = ({
                   height={20}
                   xml={ciUsertSvg}
                 />
-              </TouchableOpacity>
-              <Pressable
+              </TouchableOpacity>}
+              {postInfo.user.id != user.id && <Pressable
                 style={{
                   paddingVertical: 10,
                   paddingHorizontal: 16,
@@ -231,7 +241,27 @@ export const PostContext = ({
                   height={20}
                   xml={ciReportRedSvg}
                 />
-              </Pressable>
+              </Pressable>}
+              {postInfo.user.id == user.id && <Pressable
+                style={{
+                  paddingVertical: 10,
+                  paddingHorizontal: 16,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between'
+                }}
+                onPress={() => deleteVoice()}
+              >
+                <TitleText
+                  text={t("Delete")}
+                  fontSize={17}
+                  fontFamily="SFProDisplay-Regular"
+                />
+                <SvgXml
+                  width={20}
+                  height={20}
+                  xml={ciTrashSvg}
+                />
+              </Pressable>}
             </View>
             :
             <View

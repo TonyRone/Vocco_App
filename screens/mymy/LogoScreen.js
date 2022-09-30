@@ -86,13 +86,13 @@ const LogoScreen = (props) => {
             );
             systemLanguage = 'English';
         }
-        else if (deviceLanguage[0] == 'f') {
-            await AsyncStorage.setItem(
-                MAIN_LANGUAGE,
-                'French'
-            );
-            systemLanguage = 'French';
-        }
+        // else if (deviceLanguage[0] == 'f') {
+        //     await AsyncStorage.setItem(
+        //         MAIN_LANGUAGE,
+        //         'French'
+        //     );
+        //     systemLanguage = 'French';
+        // }
         else {
             await AsyncStorage.setItem(
                 MAIN_LANGUAGE,
