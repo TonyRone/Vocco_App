@@ -309,7 +309,7 @@ const RecordPrepareScreen = (props) => {
           visible={showCityModal}
           onRequestClose={() => setShowCityModal(!showCityModal)}
         >
-          <Pressable onPress={() => setShowCityModal(false)} style={[styles.centeredView, { justifyContent: 'flex-start', paddingHorizontal: 8, backgroundColor: 'gray' }]}>
+          <Pressable onPress={() => setShowCityModal(false)} style={[styles.centeredView, { justifyContent: 'flex-start', paddingHorizontal: 8, backgroundColor: 'white' }]}>
             <View style={{ width: windowWidth, height: windowHeight, paddingTop:50 }}>
               <GooglePlacesAutocomplete
                 placeholder='Search'
