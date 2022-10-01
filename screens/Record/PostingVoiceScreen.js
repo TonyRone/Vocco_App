@@ -143,12 +143,11 @@ const PostingVoiceScreen = (props) => {
         { name: 'privacy', data: String(visibleStatus) },
         { name: 'notSafe', data: String(notSafe) },
         { name: 'temporary', data: String(temporaryStatus) },
-        { name: 'address', data: String(param.address?.description) }
+        { name: 'address', data: String(param.address?param.address:'') }
       ];
       setIsLoading(true);
       VoiceService.postVoice(voiceFile).then(async res => {
         const jsonRes = await res.json();
-        console.log(res);
         if (mounted.current) {
           if (res.respInfo.status !== 201) {
           } else {
@@ -322,7 +321,7 @@ const PostingVoiceScreen = (props) => {
               lineHeight: 28,
               color: "#3B1F5240",
               marginRight: 12
-            }}>{param.address ? param.address.description : ''}</Text>
+            }}>{param.address ? param.address : ''}</Text>
             <View style={{ position: "relative" }}>
               <Image source={recordImg ? { uri: recordImg.path } : param.info?.imgFile ? { uri: param.info.imgFile.url } : user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri} style={{ width: 56, height: 56, borderRadius: 20 }} />
               <TouchableOpacity style={{

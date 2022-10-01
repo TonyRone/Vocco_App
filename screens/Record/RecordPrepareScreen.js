@@ -36,6 +36,7 @@ import nextSvg from '../../assets/record/next.svg';
 import editImageSvg from '../../assets/record/editPurple.svg';
 import globalSvg from '../../assets/record/global.svg';
 import { PickImage } from '../component/PickImage';
+import { SelectLocation } from '../component/SelectLocation';
 
 const RecordPrepareScreen = (props) => {
   let initId = Math.max(Math.ceil(Math.random() * 11), 1);
@@ -48,7 +49,7 @@ const RecordPrepareScreen = (props) => {
   const [showCityModal, setShowCityModal] = useState(false);
   const [source, setSource] = useState(null);
   const [avatarId, setAvatarId] = useState(initId);
-  const [storyAddress, setStoryAddress] = useState(null);
+  const [storyAddress, setStoryAddress] = useState('');
 
   useEffect(() => {
     mounted.current = true;
@@ -182,7 +183,7 @@ const RecordPrepareScreen = (props) => {
             >
               <SvgXml width={15} height={15} xml={globalSvg} />
               <View style={{ width: "100%", height: 15, marginLeft: 16, borderLeftWidth: storyAddress ? 0 : 1, borderLeftColor: "rgb(0, 0, 0)" }}>
-                {storyAddress ? <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 17, marginLeft: 2 }}>{storyAddress.description}</Text> : <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 17, marginLeft: 2 }}>{t('Search')}...</Text>}
+                {storyAddress ? <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 17, marginLeft: 2 }}>{storyAddress}</Text> : <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 17, marginLeft: 2 }}>{t('Search')}...</Text>}
               </View>
             </Pressable>
           </View>
@@ -219,13 +220,21 @@ const RecordPrepareScreen = (props) => {
           onSetImageSource={(img) => onSetSource(img)}
           onCloseModal={() => setPickModal(false)}
         />}
-        <Modal
+        {showCityModal && <SelectLocation
+          selectLocation={(cty) => {
+            setStoryAddress(cty);
+            setShowCityModal(false);
+          }}
+          onCloseModal={() => setShowCityModal(false)}
+        />
+        }
+        {/* <Modal
           animationType='slide'
           visible={showCityModal}
           onRequestClose={() => setShowCityModal(!showCityModal)}
         >
           <Pressable onPress={() => setShowCityModal(false)} style={[styles.centeredView, { justifyContent: 'flex-start', paddingHorizontal: 8 }]}>
-            <View style={{ width: windowWidth, height: windowHeight, paddingTop: 50, backgroundColor:'rgba(255, 255, 255, 0.4)' }}>
+            <View style={{ width: windowWidth, height: windowHeight, paddingTop: 50, backgroundColor: 'rgba(255, 255, 255, 0.4)' }}>
               <GooglePlacesAutocomplete
                 placeholder='Search'
                 onPress={(data, details = null) => {
@@ -241,7 +250,7 @@ const RecordPrepareScreen = (props) => {
               />
             </View>
           </Pressable>
-        </Modal>
+        </Modal> */}
       </Pressable>
       {Platform.OS == 'ios' && <KeyboardSpacer />}
     </KeyboardAvoidingView>
