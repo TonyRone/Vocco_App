@@ -162,7 +162,7 @@ const RecordPrepareScreen = (props) => {
           <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 28, color: "#361252", fontFamily: "SFProDisplay-Regular" }}>Where did it happen? </Text>
           <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 28, color: "#36125232", fontFamily: "SFProDisplay-Regular" }}>({t('optionnal')})</Text>
         </View>
-        <View style={{ paddingHorizontal: 27, marginTop: 10 }}>
+        <View style={{ paddingHorizontal: 27, marginTop: 0, marginBottom:windowHeight/10 }}>
           <Pressable style={{
             width: "100%",
             flexDirection: "row",
