@@ -196,11 +196,11 @@ export const RecordIcon = ({
         height: IsExpanded ? windowHeight : dem,
         elevation: 11
       }}
-    // onPress={() => onStopRecord(false)}
-    onPress={() => {
-      Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-      props.navigation.navigate('RecordPrepare');
-    }}
+      // onPress={() => onStopRecord(false)}
+      onPress={() => {
+        // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+        props.navigation.navigate('RecordPrepare');
+      }}
     >
       {/* {IsExpanded && <View
         style={{
@@ -379,19 +379,19 @@ export const RecordIcon = ({
           }}
 
         > */}
-          <View
-            // onTouchStart={(e) => onChangeRecord(e, true)}
-            // onTouchEnd={(e) => onChangeRecord(e, false)}
-            style={{
-              opacity: isPaused ? 1 : 0.1
-            }}
-          >
-            <SvgXml
-              width={IsExpanded ? 76 : 54}
-              height={IsExpanded ? 76 : 54}
-              xml={recordSvg}
-            />
-          </View>
+        <View
+          // onTouchStart={(e) => onChangeRecord(e, true)}
+          // onTouchEnd={(e) => onChangeRecord(e, false)}
+          style={{
+            opacity: isPaused ? 1 : 0.1
+          }}
+        >
+          <SvgXml
+            width={IsExpanded ? 76 : 54}
+            height={IsExpanded ? 76 : 54}
+            xml={recordSvg}
+          />
+        </View>
         {/* </Draggable> */}
       </View>
     </Pressable>
