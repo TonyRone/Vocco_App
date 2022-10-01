@@ -80,13 +80,13 @@ const RecordPrepareScreen = (props) => {
         flex: 1
       }}
     >
-      <Pressable style={{ width: windowWidth, flex: 1, backgroundColor: '#FFFFFF' }} onPress={() => Keyboard.dismiss()}>
+      <Pressable style={{ width: windowWidth, flexDirection:'column', justifyContent:'space-between', backgroundColor: '#FFFFFF' }} onPress={() => Keyboard.dismiss()}>
         <View>
           <TouchableOpacity style={{ marginTop: Platform.OS == 'ios' ? 50 : 20, marginLeft: 21 }} onPress={() => props.navigation.goBack()}>
             <SvgXml width={14} height={14} xml={closeSvg} />
           </TouchableOpacity>
         </View>
-        <View style={{ alignItems: "center", marginTop: windowHeight / 812 * 17 }}>
+        <View style={{ alignItems: "center", marginTop: 0}}>
           <TextInput
             placeholder={t("Your title")}
             placeholderTextColor="#3612521E"
@@ -102,7 +102,7 @@ const RecordPrepareScreen = (props) => {
             letterSpaceing={5}
           />
         </View>
-        {warning === true ? <View style={{ width: "100%", alignItems: "center", marginTop: windowHeight / 812 * 21 }}>
+        {warning === true ? <View style={{ width: "100%", alignItems: "center", marginTop: 0}}>
           <View style={{
             backgroundColor: "#E41717",
             // backgroundColor: "#FFF",
@@ -117,7 +117,7 @@ const RecordPrepareScreen = (props) => {
             <Text style={{ color: "white", fontWeight: "500", fontSize: 15, lineHeight: 18, fontFamily: "SFProDisplay-Medium" }}>{t("Add a title to your story!")}</Text>
           </View>
         </View> : <View></View>}
-        <View style={{ width: "100%", alignItems: "center", marginTop: !warning ? windowHeight / 812 * 70 : windowHeight / 812 * 25 }}>
+        <View style={{ width: "100%", alignItems: "center", marginTop: 0 }}>
           {source ? <View style={{
             position: "relative"
           }}>
@@ -158,7 +158,7 @@ const RecordPrepareScreen = (props) => {
             </View>
           }
         </View>
-        <View style={{ marginLeft: 35, marginTop: windowHeight / 812 * 50, flexDirection: "row", alignItems: 'center' }}>
+        <View style={{ marginLeft: 35, marginTop: 0, flexDirection: "row", alignItems: 'center' }}>
           <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 28, color: "#361252", fontFamily: "SFProDisplay-Regular" }}>Where did it happen? </Text>
           <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 28, color: "#36125232", fontFamily: "SFProDisplay-Regular" }}>({t('optionnal')})</Text>
         </View>
@@ -182,7 +182,7 @@ const RecordPrepareScreen = (props) => {
             </View>
           </Pressable>
         </View>
-        <View style={{ position: 'absolute', width: "100%", alignItems: "center", bottom: 70 }}>
+        <View style={{ width: "100%", alignItems: "center", marginBottom: 70 }}>
           <TouchableOpacity onPress={() => onClickNext()}>
             <LinearGradient
               style={
