@@ -8,7 +8,6 @@ import {
   Platform,
   ImageBackground,
   Modal,
-  TouchableOpacity,
   TextInput,
   Vibration,
   Keyboard,
@@ -20,7 +19,7 @@ import {
   poweredByGiphyLogoGrey,
 } from 'react-native-gif-search'
 
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import * as Progress from "react-native-progress";
 import { Picker } from 'emoji-mart-native'
 import { useTranslation } from 'react-i18next';
