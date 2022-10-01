@@ -229,6 +229,7 @@ const RecordPrepareScreen = (props) => {
           </View>
         </Pressable>
       </Modal>
+      {Platform.OS == 'ios' && <KeyboardSpacer />}
     </Pressable>
   )
 }
