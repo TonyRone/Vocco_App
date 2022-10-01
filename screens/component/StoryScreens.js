@@ -389,7 +389,7 @@ export const StoryScreens = ({
             </Pressable>
             <View style={{
               width: windowWidth,
-              backgroundColor: filter.length>0 ?'#FFF':'#FFF0',
+              backgroundColor: filter.length > 0 ? '#FFF' : '#FFF0',
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.5,
               shadowRadius: 8,
@@ -743,9 +743,8 @@ export const StoryScreens = ({
                 </View>
               </View>
             }
-
-            {Platform.OS == 'ios' && <KeyboardSpacer />}
           </KeyboardAvoidingView>
+          {Platform.OS == 'ios' && <KeyboardSpacer />}
         </View>
       </Pressable>
     </Modal>
