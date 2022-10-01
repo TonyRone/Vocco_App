@@ -187,7 +187,7 @@ const RecordPrepareScreen = (props) => {
             </Pressable>
           </View>
         </View>
-        <View style={{ width: "100%", alignItems: "center", marginBottom: windowHeight/15 }}>
+        <View style={{ width: "100%", alignItems: "center", marginBottom: 40 }}>
           <TouchableOpacity onPress={() => onClickNext()}>
             <LinearGradient
               style={
