@@ -224,7 +224,7 @@ const RecordPrepareScreen = (props) => {
           visible={showCityModal}
           onRequestClose={() => setShowCityModal(!showCityModal)}
         >
-          <Pressable onPress={() => setShowCityModal(false)} style={[styles.centeredView, { justifyContent: 'flex-start', paddingHorizontal: 8, backgroundColor: 'white' }]}>
+          <Pressable onPress={() => setShowCityModal(false)} style={[styles.centeredView, { justifyContent: 'flex-start', paddingHorizontal: 8, backgroundColor: '#FFFFFFEE' }]}>
             <View style={{ width: windowWidth, height: windowHeight, paddingTop: 50 }}>
               <GooglePlacesAutocomplete
                 placeholder='Search'
@@ -233,6 +233,7 @@ const RecordPrepareScreen = (props) => {
                   setStoryAddress(data);
                   setShowCityModal(false);
                 }}
+                pl
                 query={{
                   key: 'AIzaSyBLImCd0n7ztnIyLHwkMbZC9APGTDEqgX4',
                   language: 'en'
