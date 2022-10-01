@@ -287,7 +287,8 @@ const ConversationScreen = (props) => {
                 type: fileType,
                 user: {
                     id: user.id
-                }
+                },
+                createdAt: new Date()
             }
             let tp = messages;
             tp.push(el);
