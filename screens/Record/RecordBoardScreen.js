@@ -270,7 +270,7 @@ const RecordBoardScreen = (props) => {
                       start={{ x: 0, y: 0 }}
                       end={{ x: 0, y: 1 }}
                     >
-                      <Animated.Text style={{ color: animatedColor, fontFamily: "SFProDisplay-Semibold" }}>
+                      <Animated.Text style={{ color: '#FFF', fontFamily: "SFProDisplay-Semibold" }}>
                         {fill - Math.floor(wasteTime.current / 1000)}
                       </Animated.Text>
                     </LinearTextGradient>
