@@ -224,8 +224,8 @@ const RecordPrepareScreen = (props) => {
           visible={showCityModal}
           onRequestClose={() => setShowCityModal(!showCityModal)}
         >
-          <Pressable onPress={() => setShowCityModal(false)} style={[styles.centeredView, { justifyContent: 'flex-start', paddingHorizontal: 8, backgroundColor: 'rgba(255,255,255,0.8)' }]}>
-            <View style={{ width: windowWidth, height: windowHeight, paddingTop: 50 }}>
+          <Pressable onPress={() => setShowCityModal(false)} style={[styles.centeredView, { justifyContent: 'flex-start', paddingHorizontal: 8 }]}>
+            <View style={{ width: windowWidth, height: windowHeight, paddingTop: 50, backgroundColor:'rgba(255, 255, 255, 0.4)' }}>
               <GooglePlacesAutocomplete
                 placeholder='Search'
                 onPress={(data, details = null) => {
