@@ -187,7 +187,7 @@ const RecordPrepareScreen = (props) => {
             </Pressable>
           </View>
         </View>
-        <View style={{ width: "100%", alignItems: "center", marginBottom: '7%' }}>
+        <View style={{ width: "100%", alignItems: "center" }}>
           <TouchableOpacity onPress={() => onClickNext()}>
             <LinearGradient
               style={
@@ -214,6 +214,7 @@ const RecordPrepareScreen = (props) => {
             </LinearGradient>
           </TouchableOpacity>
         </View>
+        <View></View>
         {pickModal && <PickImage
           onSetImageSource={(img) => onSetSource(img)}
           onCloseModal={() => setPickModal(false)}
