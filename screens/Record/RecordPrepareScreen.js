@@ -80,13 +80,13 @@ const RecordPrepareScreen = (props) => {
         flex: 1
       }}
     >
-      <Pressable style={{ width: windowWidth, flex:1, flexDirection:'column', justifyContent:'space-between', backgroundColor: '#FFFFFF' }} onPress={() => Keyboard.dismiss()}>
+      <Pressable style={{ width: windowWidth, flex: 1, flexDirection: 'column', justifyContent: 'space-between', backgroundColor: '#FFFFFF' }} onPress={() => Keyboard.dismiss()}>
         <View>
           <TouchableOpacity style={{ marginTop: Platform.OS == 'ios' ? 50 : 20, marginLeft: 21 }} onPress={() => props.navigation.goBack()}>
             <SvgXml width={14} height={14} xml={closeSvg} />
           </TouchableOpacity>
         </View>
-        <View style={{ alignItems: "center", marginTop: 0}}>
+        <View style={{ alignItems: "center", marginTop: 0 }}>
           <TextInput
             placeholder={t("Your title")}
             placeholderTextColor="#3612521E"
@@ -102,7 +102,7 @@ const RecordPrepareScreen = (props) => {
             letterSpaceing={5}
           />
         </View>
-        {warning === true ? <View style={{ width: "100%", alignItems: "center", marginTop: 0}}>
+        {warning === true ? <View style={{ width: "100%", alignItems: "center", marginTop: 0 }}>
           <View style={{
             backgroundColor: "#E41717",
             // backgroundColor: "#FFF",
@@ -158,29 +158,33 @@ const RecordPrepareScreen = (props) => {
             </View>
           }
         </View>
-        <View style={{ marginLeft: 35, marginTop: 0, flexDirection: "row", alignItems: 'center' }}>
-          <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 28, color: "#361252", fontFamily: "SFProDisplay-Regular" }}>Where did it happen? </Text>
-          <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 28, color: "#36125232", fontFamily: "SFProDisplay-Regular" }}>({t('optionnal')})</Text>
-        </View>
-        <View style={{ paddingHorizontal: 27, marginTop: 0, marginBottom:windowHeight/10 }}>
-          <Pressable style={{
-            width: "100%",
-            flexDirection: "row",
-            borderRadius: 24,
-            paddingVertical: 8,
-            paddingHorizontal: 13,
-            alignItems: "center",
-            borderWidth: 1,
-            borderColor: "rgb(0, 0, 0)",
-            backgroundColor: "rgba(242, 240, 245, 1)"
-          }}
-            onPress={() => setShowCityModal(true)}
-          >
-            <SvgXml width={15} height={15} xml={globalSvg} />
-            <View style={{ width: "100%", height: 15, marginLeft: 16, borderLeftWidth: storyAddress ? 0 : 1, borderLeftColor: "rgb(0, 0, 0)" }}>
-              {storyAddress ? <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 17, marginLeft: 2 }}>{storyAddress.description}</Text> : <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 17, marginLeft: 2 }}>{t('Search')}...</Text>}
-            </View>
-          </Pressable>
+        <View style={{
+          marginBottom: windowHeight / 10
+        }}>
+          <View style={{ marginLeft: 35, marginTop: 0, flexDirection: "row", alignItems: 'center' }}>
+            <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 28, color: "#361252", fontFamily: "SFProDisplay-Regular" }}>Where did it happen? </Text>
+            <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 28, color: "#36125232", fontFamily: "SFProDisplay-Regular" }}>({t('optionnal')})</Text>
+          </View>
+          <View style={{ paddingHorizontal: 27, marginTop: 11}}>
+            <Pressable style={{
+              width: "100%",
+              flexDirection: "row",
+              borderRadius: 24,
+              paddingVertical: 8,
+              paddingHorizontal: 13,
+              alignItems: "center",
+              borderWidth: 1,
+              borderColor: "rgb(0, 0, 0)",
+              backgroundColor: "rgba(242, 240, 245, 1)"
+            }}
+              onPress={() => setShowCityModal(true)}
+            >
+              <SvgXml width={15} height={15} xml={globalSvg} />
+              <View style={{ width: "100%", height: 15, marginLeft: 16, borderLeftWidth: storyAddress ? 0 : 1, borderLeftColor: "rgb(0, 0, 0)" }}>
+                {storyAddress ? <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 17, marginLeft: 2 }}>{storyAddress.description}</Text> : <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 17, marginLeft: 2 }}>{t('Search')}...</Text>}
+              </View>
+            </Pressable>
+          </View>
         </View>
         <View style={{ width: "100%", alignItems: "center", marginBottom: 70 }}>
           <TouchableOpacity onPress={() => onClickNext()}>
