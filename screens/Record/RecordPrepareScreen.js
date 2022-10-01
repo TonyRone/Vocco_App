@@ -161,7 +161,6 @@ const RecordPrepareScreen = (props) => {
           }
         </View>
         <View style={{
-          marginBottom: windowHeight / 10
         }}>
           <View style={{ marginLeft: 35, marginTop: 0, flexDirection: "row", alignItems: 'center' }}>
             <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 28, color: "#361252", fontFamily: "SFProDisplay-Regular" }}>Where did it happen? </Text>
