@@ -14,6 +14,20 @@ class VoiceService {
             path,
         }).fetch('GET', fileRemoteUrl)
     }
+
+    async postRecordImage(data) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return await fetch(`${API_URL}/actions/recordImage`, {
+            method: 'POST',
+            body: data,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+    }
+
     async postVoice(data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
@@ -29,16 +43,15 @@ class VoiceService {
 
     async changeVoice(data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
-        return RNFetchBlob
-            .config({ trusty: true })
-            .fetch(
-                'PUT',
-                `${API_URL}/records/changeVoice`, {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+        return await fetch(`${API_URL}/records/changeVoice`, {
+            method: 'POST',
+            body: data,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`,
             },
-                JSON.stringify(data)
-            );
+        });
     }
 
     async postAnswerVoice(data) {

@@ -173,7 +173,7 @@ export const Discover = ({
             {Categories[selectedCategory].label == '' ? t('All') : t(Categories[selectedCategory].label)}
           </Text>
         </View>
-        <View style={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: windowWidth / 375 * 14 }}>
+        {/* <View style={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: windowWidth / 375 * 14 }}>
           <View
             style={{
               height: windowWidth / 375 * 43,
@@ -229,7 +229,7 @@ export const Discover = ({
           >
             {user.storyLanguage}
           </Text>
-        </View>
+        </View> */}
       </View>
       {/* <View
         style={[styles.paddingH16, styles.rowSpaceBetween, { marginTop: 0, marginBottom: 8, marginTop: 4 }]}

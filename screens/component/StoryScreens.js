@@ -60,11 +60,13 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 export const StoryScreens = ({
   props,
-  recordId,
+  info,
   answerId = '',
   onCloseModal = () => { },
   onSetCommentCount = (ind) => { }
 }) => {
+
+  let recordId = info.id;
 
   // let recordId = props.navigation.state.params.id, answerId = props.navigation.state.params.answerId ? props.navigation.state.params.answerId : '';
   // let answerId = props.navigation.state.params.answerId ? props.navigation.state.params.answerId : '';
@@ -72,7 +74,6 @@ export const StoryScreens = ({
   const [deleteModal, setDeleteModal] = useState(false);
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
-  const [info, setInfo] = useState();
   const [showShareVoice, setShowShareVoice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -401,10 +402,9 @@ export const StoryScreens = ({
                 <View style={{ width: 10, height: 58 }}></View>
               </ScrollView>
             </Pressable>
-            {info && <View style={{
+            <View style={{
               width: windowWidth,
-              backgroundColor: '#FFF',
-              elevation: 10,
+              backgroundColor: filter.length>0 ?'#FFF':'#FFF0',
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.5,
               shadowRadius: 8,
@@ -520,7 +520,7 @@ export const StoryScreens = ({
                   onStartPublish={() => setIsLoading(true)}
                 />
               </Pressable>
-            </View>}
+            </View>
             {/* <EmojiPicker
               onEmojiSelected={(icon) => onAnswerEmoji(icon.emoji)}
               open={visibleReaction}

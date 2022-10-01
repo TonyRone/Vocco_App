@@ -9,33 +9,33 @@ class AuthService {
             .fetch(
                 'POST',
                 `${API_URL}/${'login'}`, {
-                    'Content-Type': 'application/json',
-                },
+                'Content-Type': 'application/json',
+            },
                 JSON.stringify(data)
             );
     }
 
-    appleLogin(data){
+    appleLogin(data) {
         return RNFetchBlob
-        .config({ trusty: true })
-        .fetch(
-            'POST',
-            `${API_URL}/${'appleauth'}`, {
+            .config({ trusty: true })
+            .fetch(
+                'POST',
+                `${API_URL}/${'appleauth'}`, {
                 'Content-Type': 'application/json',
             },
-            JSON.stringify(data)
-        ); 
+                JSON.stringify(data)
+            );
     }
-    googleLogin(data){
+    googleLogin(data) {
         return RNFetchBlob
-        .config({ trusty: true })
-        .fetch(
-            'POST',
-            `${API_URL}/${'googleauth'}`, {
+            .config({ trusty: true })
+            .fetch(
+                'POST',
+                `${API_URL}/${'googleauth'}`, {
                 'Content-Type': 'application/json',
             },
-            JSON.stringify(data)
-        ); 
+                JSON.stringify(data)
+            );
     }
     register(data) {
         return RNFetchBlob
@@ -43,8 +43,8 @@ class AuthService {
             .fetch(
                 'POST',
                 `${API_URL}/${'register'}`, {
-                    'Content-Type': 'application/json',
-                },
+                'Content-Type': 'application/json',
+            },
                 JSON.stringify(data)
             );
     }
@@ -55,8 +55,8 @@ class AuthService {
             .fetch(
                 'POST',
                 `${API_URL}/${'phoneRegister'}`, {
-                    'Content-Type': 'application/json',
-                },
+                'Content-Type': 'application/json',
+            },
                 JSON.stringify(data)
             );
     }
@@ -67,8 +67,8 @@ class AuthService {
             .fetch(
                 'POST',
                 `${API_URL}/${'phoneLogin'}`, {
-                    'Content-Type': 'application/json',
-                },
+                'Content-Type': 'application/json',
+            },
                 JSON.stringify(data)
             );
     }
@@ -79,14 +79,14 @@ class AuthService {
             .fetch(
                 'POST',
                 `${API_URL}/${'confirmPhoneNumber'}`, {
-                    'Content-Type': 'application/json',
-                },
+                'Content-Type': 'application/json',
+            },
                 JSON.stringify(data)
             );
     }
 
-    async getUserInfo( accessToken = null, checkDevice = '') {
-        const token = accessToken?accessToken:await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+    async getUserInfo(accessToken = null, checkDevice = '') {
+        const token = accessToken ? accessToken : await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         const deviceToken = await AsyncStorage.getItem(DEVICE_TOKEN);
         const deviceOs = await AsyncStorage.getItem(DEVICE_OS);
         return RNFetchBlob
@@ -94,9 +94,9 @@ class AuthService {
             .fetch(
                 'GET',
                 `${API_URL}/account/me?checkDevice=${checkDevice}&deviceToken=${deviceToken}&deviceOs=${deviceOs}`, {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
             );
     }
     async changeEmail(data) {
@@ -106,11 +106,13 @@ class AuthService {
             .fetch(
                 'POST',
                 `${API_URL}/account/changeemail?password=${data.password}&newemail=${data.newemail}`, {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
             );
     }
+
+    postRecordImage
 
     async uploadPhoto(data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
@@ -118,24 +120,26 @@ class AuthService {
             method: 'POST',
             body: data,
             headers: {
-              Accept: 'application/json',
-              'Content-Type': 'multipart/form-data',
-              'Authorization': `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`,
             },
-          });
-        // return RNFetchBlob
-        //     .config({ trusty: true})
-        //     .fetch('POST', `${API_URL}/account/avatar`, {
-        //         'Authorization': `Bearer ${token}`,
-        //         'Content-Type': "multipart/form-data",
-        //     }, data);
-
-        // At request level
-        // const agent = new https.Agent({
-        //     rejectUnauthorized: false
-        // });
-        // return axios.post(`${API_URL}/account/avatar`, data, { headers: { httpsAgent: agent, 'Authorization': `Bearer ${token}` } });
+        });
     }
+
+    async postRecordImage(data) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return await fetch(`${API_URL}/actions/recordImage`, {
+            method: 'POST',
+            body: data,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+    }
+
     async confirmVerify(data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob
@@ -143,9 +147,9 @@ class AuthService {
             .fetch(
                 'POST',
                 `${API_URL}/account/emailverify`, {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
                 JSON.stringify(data)
             );
     }
@@ -157,9 +161,9 @@ class AuthService {
             .fetch(
                 'GET',
                 `${API_URL}/${'account/resendcode'}`, {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
             );
     }
 }

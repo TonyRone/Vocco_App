@@ -76,7 +76,7 @@ export const StoryPanel = ({
   num = (num - minute) / 60;
   let hour = num % 24;
   let day = (num - hour) / 24
-  let time = (day > 0 ? (day.toString() + ' ' + t("d") ) : (hour > 0 ? (hour.toString() + ' ' + t("h")) : (minute > 0 ? (minute.toString() + ' ' + t("m") ) : '')));
+  let time = (day > 0 ? (day.toString() + ' ' + t("d")) : (hour > 0 ? (hour.toString() + ' ' + t("h")) : (minute > 0 ? (minute.toString() + ' ' + t("m")) : '')));
 
   const DOUBLE_PRESS_DELAY = 400;
 
@@ -397,7 +397,7 @@ export const StoryPanel = ({
                   />}
               </View>
               <SemiBoldText
-                text={time + ', ' + info.listenCount + " " + t("Play") + (info.listenCount > 1 ? 's' : '')}
+                text={(info.address ? (info.address + ', ') : '') + time + ', ' + info.listenCount + " " + t("Play") + (info.listenCount > 1 ? 's' : '')}
                 color='#565656'
                 fontSize={12}
                 lineHeight={14}
@@ -405,7 +405,7 @@ export const StoryPanel = ({
             </View>
           </View>
           <ImageBackground
-            source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
+            source={info.imgFile ? { uri: info.imgFile.url } : info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
             style={{
               justifyContent: 'center',
               alignItems: 'center',
@@ -658,7 +658,7 @@ export const StoryPanel = ({
             showChat &&
             <StoryScreens
               props={props}
-              recordId={info.id}
+              info={info}
               onCloseModal={() => setShowChat(false)}
             />
           }

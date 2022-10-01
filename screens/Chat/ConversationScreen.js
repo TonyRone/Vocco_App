@@ -705,7 +705,7 @@ const ConversationScreen = (props) => {
                         if (item.ancestorId) {
                             ancestorIdx = messages.findIndex(msg => (msg.id == item.ancestorId));
                         }
-                        return <View key={"messageItem"+index.toString()}>
+                        return <View key={"messageItem" + index.toString()}>
                             {(index == 0 || !onDateCompare(item.createdAt, messages[index - 1].createdAt)) &&
                                 <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 16, marginBottom: 8 }}>
                                     <View style={{ paddingVertical: 6, paddingHorizontal: 12, borderRadius: 12, backgroundColor: 'rgba(59, 31, 82, 0.6)' }}>
@@ -975,12 +975,14 @@ const ConversationScreen = (props) => {
                                             color: '#281E30',
                                         }
                                     }
+                                    keyboardType={'url'}
                                     value={label}
                                     autoCapitalize='none'
                                     onSubmitEditing={() => {
                                         onAnswerBio();
                                     }}
                                     onChangeText={(e) => setLabel(e)}
+                                    onFocus={() => scrollRef.current?.scrollToEnd({ animated: true })}
                                     placeholder={t("Send your message")}
                                     placeholderTextColor="rgba(59, 31, 82, 0.6)"
                                 />

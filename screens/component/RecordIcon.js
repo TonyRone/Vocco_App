@@ -197,7 +197,10 @@ export const RecordIcon = ({
         elevation: 11
       }}
     // onPress={() => onStopRecord(false)}
-    onPress={() => props.navigation.navigate('RecordPrepare')}
+    onPress={() => {
+      Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+      props.navigation.navigate('RecordPrepare');
+    }}
     >
       {/* {IsExpanded && <View
         style={{

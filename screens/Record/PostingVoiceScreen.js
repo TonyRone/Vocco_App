@@ -19,7 +19,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import { NavigationActions, StackActions } from 'react-navigation';
 import EmojiPicker from 'rn-emoji-keyboard';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
-import { useTranslation } from 'react-i18next';
+import { composeInitialProps, useTranslation } from 'react-i18next';
 import { SvgXml } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearTextGradient } from 'react-native-text-gradient';
@@ -56,6 +56,7 @@ import playSvg from '../../assets/post/play.svg';
 import editSvg from '../../assets/record/edit.svg';
 import rightArrowSvg from '../../assets/post/right_arrow.svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
+import { PickImage } from '../component/PickImage';
 
 const PostingVoiceScreen = (props) => {
 
@@ -94,6 +95,8 @@ const PostingVoiceScreen = (props) => {
   const [warning, setWarning] = useState(false);
   const [showEffect, setShowEffect] = useState(false);
   const [selectedAmbiance, setSelectedAmbiance] = useState('');
+  const [recordImg, setRecordImg] = useState(param.source);
+  const [pickModal, setPickModal] = useState(false);
 
   const mounted = useRef(false);
 
@@ -139,18 +142,36 @@ const PostingVoiceScreen = (props) => {
         { name: 'category', data: Categories[category].label },
         { name: 'privacy', data: String(visibleStatus) },
         { name: 'notSafe', data: String(notSafe) },
-        { name: 'temporary', data: String(temporaryStatus) }
+        { name: 'temporary', data: String(temporaryStatus) },
+        { name: 'address', data: String(param.address?.description) }
       ];
       setIsLoading(true);
       VoiceService.postVoice(voiceFile).then(async res => {
         const jsonRes = await res.json();
+        console.log(res);
         if (mounted.current) {
           if (res.respInfo.status !== 201) {
           } else {
-            socketInstance.emit("newVoice", { uid: user.id });
-            //setShowShareVoice(true);
-            props.navigation.navigate("ShareStory", { info: jsonRes });
-            // dispatch(setRefreshState(!refreshState));
+            if (recordImg) {
+              let formData = new FormData();
+              formData.append('recordId', jsonRes.id);
+              const imagePath = Platform.OS == 'android' ? recordImg.path : decodeURIComponent(recordImg.path.replace('file://', ''));
+              const mimeType = recordImg.mime;
+              const fileData = {
+                uri: imagePath,
+                type: mimeType,
+                name: 'recordImage',
+              }
+              formData.append('file', fileData);
+              VoiceService.postRecordImage(formData).then(res => {
+                socketInstance.emit("newVoice", { uid: user.id });
+                props.navigation.navigate("ShareStory", { info: jsonRes });
+              })
+            }
+            else {
+              socketInstance.emit("newVoice", { uid: user.id });
+              props.navigation.navigate("ShareStory", { info: jsonRes });
+            }
           }
           setIsLoading(false);
         }
@@ -162,29 +183,31 @@ const PostingVoiceScreen = (props) => {
   }
 
   const changeStory = async () => {
-    const payload = {
-      id: param.info.id,
-      title: param.title,
-      emoji: icon,
-      category: Categories[category].label,
-      privacy: visibleStatus,
-      notSafe: notSafe,
-      temporary: temporaryStatus
-    };
+    let formData = new FormData();
+    formData.append('id', param.info.id);
+    if (recordImg) {
+      const imagePath = Platform.OS == 'android' ? recordImg.path : decodeURIComponent(recordImg.path.replace('file://', ''));
+      const mimeType = recordImg.mime;
+      const fileData = {
+        uri: imagePath,
+        type: mimeType,
+        name: 'recordImage',
+      }
+      formData.append('file', fileData);
+    }
+    formData.append('category', Categories[category].label);
+    formData.append('privacy', visibleStatus);
+    formData.append('notSafe', notSafe);
     setIsLoading(true);
-    VoiceService.changeVoice(payload).then(async res => {
+    VoiceService.changeVoice(formData).then(async res => {
       if (mounted.current) {
-        if (res.respInfo.status !== 200) {
-        } else {
-          //  dispatch(setRefreshState(!refreshState));
-          let info = param.info;
-          info.title = param.title;
-          info.emoji = icon;
-          info.category = Categories[category].label;
-          info.privacy = visibleStatus;
-          info.temporary = temporaryStatus;
-          onNavigate("VoiceProfile", { id: info.id });
-        }
+        let info = param.info;
+        info.title = param.title;
+        info.emoji = icon;
+        info.category = Categories[category].label;
+        info.privacy = visibleStatus;
+        info.temporary = temporaryStatus;
+        onNavigate("VoiceProfile", { id: info.id });
         setIsLoading(false);
       }
     })
@@ -213,6 +236,13 @@ const PostingVoiceScreen = (props) => {
     }
   }
 
+  const onSetRecordImg = (img) => {
+    if (mounted.current) {
+      setRecordImg(img);
+      setPickModal(false);
+    }
+  }
+
   useEffect(() => {
     mounted.current = true;
     if (param.info)
@@ -230,7 +260,7 @@ const PostingVoiceScreen = (props) => {
     >
       <View
         style={{
-          width:windowWidth,
+          width: windowWidth,
           flex: 1
         }}
       >
@@ -292,12 +322,12 @@ const PostingVoiceScreen = (props) => {
               lineHeight: 28,
               color: "#3B1F5240",
               marginRight: 12
-            }}>{ param.address ? param.address.description : '' }</Text>
+            }}>{param.address ? param.address.description : ''}</Text>
             <View style={{ position: "relative" }}>
-              <Image source={param.source ? {uri: param.source.path} :user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri} style={{ width: 45, height: 45, borderRadius: 15 }} />
+              <Image source={recordImg ? { uri: recordImg.path } : param.info?.imgFile ? { uri: param.info.imgFile.url } : user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri} style={{ width: 56, height: 56, borderRadius: 20 }} />
               <TouchableOpacity style={{
-                width: 18,
-                height: 18,
+                width: 23,
+                height: 23,
                 position: "absolute",
                 backgroundColor: "#F8F0FF",
                 borderRadius: 18,
@@ -307,8 +337,9 @@ const PostingVoiceScreen = (props) => {
                 alignItems: "center",
                 justifyContent: "center"
               }}
+                onPress={() => setPickModal(true)}
               >
-                <SvgXml width={6} height={7} xml={editImageSvg} />
+                <SvgXml width={10} height={10} xml={editImageSvg} />
               </TouchableOpacity>
             </View>
           </View>
@@ -413,7 +444,7 @@ const PostingVoiceScreen = (props) => {
             />
             }
           </View>
-          {
+          {/* {
             showEffect && <View style={{ marginTop: windowHeight / 812 * 29, paddingHorizontal: 16 }}>
               <Text style={{ fontWeight: "600", fontSize: 20, lineHeight: 24, color: "rgba(54, 18, 82, 0.8)", fontFamily: "SFProDisplay-Semibold" }}>{t("Add ambiance")}:</Text>
               <View style={{ flexDirection: "row", alignItems: "center", marginTop: 16 }}>
@@ -494,7 +525,7 @@ const PostingVoiceScreen = (props) => {
                 }
               </View>
             </View>
-          }
+          } */}
         </> :
           <>
             <View
@@ -591,7 +622,8 @@ const PostingVoiceScreen = (props) => {
             }}>
               <View style={{
                 flexDirection: "column",
-                alignItems: "center"
+                alignItems: "center",
+                marginLeft:40,
               }}>
                 <TouchableOpacity
                   style={{
@@ -602,11 +634,11 @@ const PostingVoiceScreen = (props) => {
                   }}
                   onPress={() => setIsPlaying(!isPlaying)}
                 >
-                  {isPlaying&&<SvgXml
+                  {isPlaying && <SvgXml
                     xml={pauseSvg}
                     height={24}
                   />}
-                  {!isPlaying&&<SvgXml
+                  {!isPlaying && <SvgXml
                     xml={playSvg}
                     height={24}
                   />}
@@ -619,7 +651,7 @@ const PostingVoiceScreen = (props) => {
                   marginTop: 8
                 }}>{t('Play')}</Text>
               </View>
-              <View style={{
+              {/* <View style={{
                 flexDirection: "column",
                 alignItems: "center",
                 marginLeft: 24
@@ -671,7 +703,7 @@ const PostingVoiceScreen = (props) => {
                   color: "rgba(54, 18, 82, 0.8)",
                   marginTop: 8
                 }}>{t('Effects')}</Text>
-              </View>
+              </View> */}
             </View>
             <TouchableOpacity
               onPress={() => {
@@ -769,6 +801,12 @@ const PostingVoiceScreen = (props) => {
             info={showShareVoice}
             onCloseModal={() => { setShowShareVoice(false); onNavigate("Home"); }}
           />}
+        {pickModal &&
+          <PickImage
+            onCloseModal={() => setPickModal(false)}
+            onSetImageSource={(img) => onSetRecordImg(img)}
+          />
+        }
         <Modal
           animationType="slide"
           transparent={true}

@@ -79,6 +79,7 @@ const RecordBoardScreen = (props) => {
         console.log(err);
       });
     await recorderPlayer.stopRecorder().then(res => {
+      console.log(res);
     })
       .catch(err => {
         console.log(err);
@@ -219,7 +220,7 @@ const RecordBoardScreen = (props) => {
             fontSize: 17,
             lineHeight: 28,
             color: "#3B1F5240"
-          }}>{ storyAddress ? storyAddress.description : '' }</Text>
+          }}>{storyAddress ? storyAddress.description : ''}</Text>
         </View>
         <View
           style={{
@@ -244,37 +245,45 @@ const RecordBoardScreen = (props) => {
             {({ remainingTime, animatedColor }) => {
               return (
                 <ImageBackground
-                  source={imgSource ? {uri: imgSource.path} :user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri}
+                  source={imgSource ? { uri: imgSource.path } : user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri}
                   resizeMode="stretch"
                   style={{ width: 189, height: 189, alignItems: 'center' }}
                   imageStyle={{ borderRadius: 100 }}
                 >
-                  <DescriptionText
-                    text={t("seconds")}
-                    color="rgba(255, 255, 255, 1)"
-                    fontSize={20}
-                    marginTop={32}
-                  />
-                  <LinearTextGradient
-                    style={{ fontSize: 67, marginTop: 0 }}
-                    locations={[0, 1]}
-                    colors={["#FFFFFF", "#FFFFFF"]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 0, y: 1 }}
-                  >
-                    <Animated.Text style={{ color: animatedColor, fontFamily: "SFProDisplay-Semibold" }}>
-                      {fill - Math.floor(wasteTime.current / 1000)}
-                    </Animated.Text>
-                  </LinearTextGradient>
+                  <View style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius:100,
+                    alignItems: 'center',
+                    backgroundColor: "#00000050"
+                  }}>
+                    <DescriptionText
+                      text={t("seconds")}
+                      color="rgba(255, 255, 255, 1)"
+                      fontSize={20}
+                      marginTop={32}
+                    />
+                    <LinearTextGradient
+                      style={{ fontSize: 67, marginTop: 0 }}
+                      locations={[0, 1]}
+                      colors={["#FFFFFF", "#FFFFFF"]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 0, y: 1 }}
+                    >
+                      <Animated.Text style={{ color: animatedColor, fontFamily: "SFProDisplay-Semibold" }}>
+                        {fill - Math.floor(wasteTime.current / 1000)}
+                      </Animated.Text>
+                    </LinearTextGradient>
+                  </View>
                 </ImageBackground>
               )
             }}
           </CountdownCircleTimer>
         </View>
-        <View style={{flexDirection: "column", alignItems: "center", marginBottom: windowHeight / 812 * 17}}>
+        {/* <View style={{ flexDirection: "column", alignItems: "center", marginBottom: windowHeight / 812 * 17 }}>
           <SvgXml width={18} height={18} xml={uploadFileSvg} />
           <Text style={{ marginTop: 6, fontWeight: "400", fontSize: 12, lineHeight: 16, color: "rgba(54, 18, 82, 0.3)" }}>{t('Or upload an audio file')}</Text>
-        </View>
+        </View> */}
         <Warning
           text={t("Hate, racism, sexism or any kind of violence is stricly prohibited")}
         />
