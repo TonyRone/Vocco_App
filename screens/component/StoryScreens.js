@@ -72,8 +72,8 @@ export const StoryScreens = ({
   // let answerId = props.navigation.state.params.answerId ? props.navigation.state.params.answerId : '';
   const [showModal, setShowModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [isLike, setIsLike] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
+  const [isLike, setIsLike] = useState(info.isLike);
+  const [likeCount, setLikeCount] = useState(info.likesCount);
   const [showShareVoice, setShowShareVoice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -101,20 +101,6 @@ export const StoryScreens = ({
       state.user
     )
   });
-
-  const getUserInfo = () => {
-    VoiceService.getStories(0, '', '', '', recordId).then(async res => {
-      if (res.respInfo.status === 200 && mounted.current) {
-        const jsonRes = await res.json();
-        setIsLike(jsonRes[0].isLike);
-        setLikeCount(jsonRes[0].likesCount);
-        setInfo(jsonRes[0]);
-      }
-    })
-      .catch(err => {
-        console.log(err);
-      });
-  }
 
   const onCompare = (a, b) => {
     if (a.createdAt < b.createdAt)
@@ -312,7 +298,6 @@ export const StoryScreens = ({
   useEffect(() => {
     mounted.current = true;
     getFollowUsers();
-    getUserInfo();
     getAnswers();
     dispatch(setVoiceState(voiceState + 1));
     return () => {
