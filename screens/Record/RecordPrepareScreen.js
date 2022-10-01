@@ -80,7 +80,7 @@ const RecordPrepareScreen = (props) => {
         flex: 1
       }}
     >
-      <Pressable style={{ width: windowWidth, flexDirection:'column', justifyContent:'space-between', backgroundColor: '#FFFFFF' }} onPress={() => Keyboard.dismiss()}>
+      <Pressable style={{ width: windowWidth, flex:1, flexDirection:'column', justifyContent:'space-between', backgroundColor: '#FFFFFF' }} onPress={() => Keyboard.dismiss()}>
         <View>
           <TouchableOpacity style={{ marginTop: Platform.OS == 'ios' ? 50 : 20, marginLeft: 21 }} onPress={() => props.navigation.goBack()}>
             <SvgXml width={14} height={14} xml={closeSvg} />
