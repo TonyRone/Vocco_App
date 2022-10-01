@@ -82,41 +82,43 @@ const RecordPrepareScreen = (props) => {
     >
       <Pressable style={{ width: windowWidth, flex: 1, flexDirection: 'column', justifyContent: 'space-between', backgroundColor: '#FFFFFF' }} onPress={() => Keyboard.dismiss()}>
         <View>
-          <TouchableOpacity style={{ marginTop: Platform.OS == 'ios' ? 50 : 20, marginLeft: 21 }} onPress={() => props.navigation.goBack()}>
-            <SvgXml width={14} height={14} xml={closeSvg} />
-          </TouchableOpacity>
-        </View>
-        <View style={{ alignItems: "center", marginTop: 0 }}>
-          <TextInput
-            placeholder={t("Your title")}
-            placeholderTextColor="#3612521E"
-            color="#361252"
-            textAlign={'center'}
-            autoFocus={true}
-            value={voiceTitle}
-            onChangeText={(s) => { s.length <= 25 ? setVoiceTitle(s) : null; setWarning(false) }}
-            fontFamily="SFProDisplay-Regular"
-            fontSize={34}
-            lineHeight={41}
-            marginTop={5}
-            letterSpaceing={5}
-          />
-        </View>
-        {warning === true ? <View style={{ width: "100%", alignItems: "center", marginTop: 0 }}>
-          <View style={{
-            backgroundColor: "#E41717",
-            // backgroundColor: "#FFF",
-            borderRadius: 16,
-            paddingHorizontal: 34,
-            paddingVertical: 10,
-            shadowColor: 'rgba(244, 13, 13, 1)',
-            elevation: 10,
-            shadowOffset: { width: 0, height: 5 },
-            shadowRadius: 8
-          }}>
-            <Text style={{ color: "white", fontWeight: "500", fontSize: 15, lineHeight: 18, fontFamily: "SFProDisplay-Medium" }}>{t("Add a title to your story!")}</Text>
+          <View>
+            <TouchableOpacity style={{ marginTop: Platform.OS == 'ios' ? 50 : 20, marginLeft: 21 }} onPress={() => props.navigation.goBack()}>
+              <SvgXml width={14} height={14} xml={closeSvg} />
+            </TouchableOpacity>
           </View>
-        </View> : <View></View>}
+          <View style={{ alignItems: "center", marginTop: 12 }}>
+            <TextInput
+              placeholder={t("Your title")}
+              placeholderTextColor="#3612521E"
+              color="#361252"
+              textAlign={'center'}
+              autoFocus={true}
+              value={voiceTitle}
+              onChangeText={(s) => { s.length <= 25 ? setVoiceTitle(s) : null; setWarning(false) }}
+              fontFamily="SFProDisplay-Regular"
+              fontSize={34}
+              lineHeight={41}
+              marginTop={5}
+              letterSpaceing={5}
+            />
+          </View>
+          {warning === true ? <View style={{ width: "100%", alignItems: "center", marginTop: 21 }}>
+            <View style={{
+              backgroundColor: "#E41717",
+              // backgroundColor: "#FFF",
+              borderRadius: 16,
+              paddingHorizontal: 34,
+              paddingVertical: 10,
+              shadowColor: 'rgba(244, 13, 13, 1)',
+              elevation: 10,
+              shadowOffset: { width: 0, height: 5 },
+              shadowRadius: 8
+            }}>
+              <Text style={{ color: "white", fontWeight: "500", fontSize: 15, lineHeight: 18, fontFamily: "SFProDisplay-Medium" }}>{t("Add a title to your story!")}</Text>
+            </View>
+          </View> : <View></View>}
+        </View>
         <View style={{ width: "100%", alignItems: "center", marginTop: 0 }}>
           {source ? <View style={{
             position: "relative"
@@ -165,7 +167,7 @@ const RecordPrepareScreen = (props) => {
             <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 28, color: "#361252", fontFamily: "SFProDisplay-Regular" }}>Where did it happen? </Text>
             <Text style={{ fontWeight: "400", fontSize: 17, lineHeight: 28, color: "#36125232", fontFamily: "SFProDisplay-Regular" }}>({t('optionnal')})</Text>
           </View>
-          <View style={{ paddingHorizontal: 27, marginTop: 11}}>
+          <View style={{ paddingHorizontal: 27, marginTop: 11 }}>
             <Pressable style={{
               width: "100%",
               flexDirection: "row",
