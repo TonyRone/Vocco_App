@@ -138,6 +138,7 @@ const HomeScreen = (props) => {
     }
 
     const shareAudio = () => {
+        setShowHint(false);
         const dirs = RNFetchBlob.fs.dirs.DocumentDir;
         const fileName = 'Vocco app - ' + postInfo.title;
         const path = Platform.select({
@@ -148,7 +149,6 @@ const HomeScreen = (props) => {
             fileCache: true,
             path,
         }).fetch('GET', postInfo.file.url).then(res => {
-            //setShowHint(false);
             if (mounted.current && res.respInfo.status == 200) {
                 let filePath = res.path();
                 Share.open({

@@ -34,17 +34,15 @@ export const ShareHint = ({
   const mounted = useRef(false);
 
   const [showModal, setShowModal] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
 
   const closeModal = async (v = false) => {
-    setIsLoading(false);
     setShowModal(false);
     onCloseModal();
   }
 
   const shareAudio = () => {
-    setIsLoading(true);
     onShareAudio();
+    setShowModal(false);
   };
 
   useEffect(()=>{
@@ -116,7 +114,6 @@ export const ShareHint = ({
             <MyButton
               label={t("Share it now")}
               onPress={shareAudio}
-              loading={isLoading}
             />
           </View>
         </View>
