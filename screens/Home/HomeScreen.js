@@ -137,6 +137,7 @@ const HomeScreen = (props) => {
     }
 
     const shareAudio = (filePath) => {
+        console.log(filePath,"%%%%%%%%%%%%%%%%%%%%%%%%");
         setShowHint(false);
         Share.open({
             url: Platform.OS == 'android' ? 'file://' : '' + filePath,
