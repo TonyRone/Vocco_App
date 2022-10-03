@@ -198,7 +198,7 @@ export const RecordIcon = ({
       }}
       // onPress={() => onStopRecord(false)}
       onPress={() => {
-        Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+        //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
         props.navigation.navigate('HoldRecord');
       }}
     >
