@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 
 import { SvgXml } from 'react-native-svg';
-import RNFetchBlob from 'rn-fetch-blob';
 import ShareIconsSvg from '../../assets/post/ShareIcons.svg';
 import ShareHintSvg from '../../assets/post/ShareHint.svg';
 import shareSvg from '../../assets/post/share.svg';
@@ -26,7 +25,6 @@ import '../../language/i18n';
 import { MyButton } from './MyButton';
 
 export const ShareHint = ({
-  postInfo,
   onShareAudio = ()=>{},
   onCloseModal = () => { }
 }) => {
@@ -45,26 +43,8 @@ export const ShareHint = ({
   }
 
   const shareAudio = () => {
-    const dirs = RNFetchBlob.fs.dirs.DocumentDir;
-    const fileName = 'Vocco app - ' + postInfo.title;
-    const path = Platform.select({
-      ios: `${dirs}/${fileName}.m4a`,
-      android: `${dirs}/${fileName}.mp3`,
-    });
     setIsLoading(true);
-    RNFetchBlob.config({
-      fileCache: true,
-      path,
-    }).fetch('GET', postInfo.file.url).then(res => {
-      setIsLoading(false);
-      if (mounted.current && res.respInfo.status == 200) {
-        let filePath = res.path();
-        onShareAudio(filePath);
-      }
-    })
-      .catch(async err => {
-        console.log(err);
-      })
+    onShareAudio();
   };
 
   useEffect(()=>{

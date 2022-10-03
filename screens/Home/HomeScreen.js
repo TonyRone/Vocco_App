@@ -30,6 +30,7 @@ import { Feed } from '../component/Feed';
 import { Discover } from '../component/Discover';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { ShareHint } from '../component/ShareHint';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const HomeScreen = (props) => {
 
@@ -136,18 +137,34 @@ const HomeScreen = (props) => {
         Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
 
-    const shareAudio = (filePath) => {
-        Share.open({
-            url: Platform.OS == 'android' ? 'file://' : '' + filePath,
-            type: 'audio/' + (Platform.OS === 'android' ? 'mp3' : 'm4a'),
-        }).then(res => {
-            console.log(res);
+    const shareAudio = () => {
+        const dirs = RNFetchBlob.fs.dirs.DocumentDir;
+        const fileName = 'Vocco app - ' + postInfo.title;
+        const path = Platform.select({
+            ios: `${dirs}/${fileName}.m4a`,
+            android: `${dirs}/${fileName}.mp3`,
+        });
+        RNFetchBlob.config({
+            fileCache: true,
+            path,
+        }).fetch('GET', postInfo.file.url).then(res => {
             setShowHint(false);
+            if (mounted.current && res.respInfo.status == 200) {
+                let filePath = res.path();
+                Share.open({
+                    url: Platform.OS == 'android' ? 'file://' : '' + filePath,
+                    type: 'audio/' + (Platform.OS === 'android' ? 'mp3' : 'm4a'),
+                }).then(res => {
+                    console.log(res);
+                })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }
         })
-            .catch(err => {
+            .catch(async err => {
                 console.log(err);
-                setShowHint(false);
-            });
+            })
     }
 
     useEffect(() => {
@@ -299,8 +316,7 @@ const HomeScreen = (props) => {
             />
             {showHint &&
                 <ShareHint
-                    postInfo={postInfo}
-                    onShareAudio={(path) => shareAudio(path)}
+                    onShareAudio={() => shareAudio()}
                     onCloseModal={() => { setShowHint(false); }}
                 />}
         </SafeAreaView>
