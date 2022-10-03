@@ -4,6 +4,7 @@ import {
   Pressable,
   Modal,
   Platform,
+  Vibration,
 } from 'react-native';
 
 import RNVibrationFeedback from 'react-native-vibration-feedback';

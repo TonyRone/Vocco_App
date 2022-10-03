@@ -11,6 +11,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 import ShareIconsSvg from '../../assets/post/ShareIcons.svg';
 import ShareHintSvg from '../../assets/post/ShareHint.svg';
+import shareSvg from '../../assets/post/share.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { POST_CHECK, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
@@ -18,10 +19,12 @@ import { TitleText } from './TitleText';
 import { DescriptionText } from './DescriptionText';
 import { SemiBoldText } from './SemiBoldText';
 import { useTranslation } from 'react-i18next';
-import closeCircleSvg from '../../assets/common/close-circle.svg';
+import closeCircleSvg from '../../assets/post/gray-close.svg';
 import '../../language/i18n';
+import { MyButton } from './MyButton';
 
 export const ShareHint = ({
+  onShareAudio = () => { },
   onCloseModal = () => { }
 }) => {
 
@@ -29,11 +32,12 @@ export const ShareHint = ({
 
   const [showModal, setShowModal] = useState(true);
 
+  const shareAudio=()=>{
+    onShareAudio();
+    setShowModal(false);
+  }
+
   const closeModal = async (v = false) => {
-    await AsyncStorage.setItem(
-      POST_CHECK,
-      "checked"
-    );
     setShowModal(false);
     onCloseModal();
   }
@@ -48,100 +52,65 @@ export const ShareHint = ({
       }}
     >
       <Pressable onPressOut={closeModal} style={styles.swipeModal}>
-        <Pressable
-          style={{ position: 'absolute', alignItems: 'flex-end', width: '100%', bottom: 50, paddingHorizontal: 0 }}
-          onPress={closeModal}
-        >
-          <View style={{
-            width: windowWidth - 48,
-            marginRight: 24,
-            borderRadius: 16,
-            padding: 24,
-            backgroundColor: '#FFF'
-          }}>
-            <TouchableOpacity
+        <View style={{
+          position: 'absolute',
+          backgroundColor: '#FFF',
+          bottom: 0,
+          width: windowWidth,
+          borderTopLeftRadius: 16,
+          borderTopRightRadius: 16,
+          alignItems: 'center'
+        }}>
+          <TouchableOpacity style={{
+            width: windowWidth,
+            alignItems: 'flex-end',
+            marginTop: 7,
+            paddingRight: 12
+          }}
+            onPress={closeModal}
+          >
+            <SvgXml
+              xml={closeCircleSvg}
+            />
+          </TouchableOpacity>
+          <TitleText
+            text={t("Your story is published!")}
+            color='#361252'
+            fontSize={25.7}
+            lineHeight={30}
+          />
+          <DescriptionText
+            text={t("Share your new story with your friends and let the whole world hear you!")}
+            color='rgba(54, 18, 82, 0.8)'
+            fontSize={15}
+            lineHeight={24}
+            maxWidth={264}
+            textAlign='center'
+            marginTop={9}
+          />
+          <TouchableOpacity
+            onPress={shareAudio}
+          >
+            <SvgXml
               style={{
-                position: 'absolute',
-                top: 14,
-                right: 14
+                marginTop: 12
               }}
-              onPress={closeModal}
-            >
-              <SvgXml
-                width={24}
-                height={24}
-                xml={closeCircleSvg}
-              />
-            </TouchableOpacity>
-            <Image
-              source={require("../../assets/post/Logos.png")}
-              style={{
-                marginTop: -16
-              }}
+              xml={shareSvg}
             />
-            <TitleText
-              text={t("Share with friends!")}
-              fontSize={22}
-              lineHeight={28}
-              marginTop={16}
+          </TouchableOpacity>
+          <View
+            style={{
+              paddingHorizontal: 16,
+              width: '100%',
+              marginBottom: 16
+            }}
+          >
+            <MyButton
+              label={t("Share it now")}
+              onPress={shareAudio}
             />
-            <DescriptionText
-              text={t("Share the stories to your friends and make them know about Vocco!")}
-              fontSize={15}
-              lineHeight={24}
-              marginTop={11}
-              color='#281E30'
-            />
-            <SemiBoldText
-              text={t("Thanks for sharing!")}
-              fontSize={15}
-              lineHeight={24}
-              marginTop={24}
-              color='#281E30'
-            />
-            <View style={{
-              alignItems: 'flex-end'
-            }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#F8F0FF',
-                  height: 60,
-                  borderRadius: 16,
-                  paddingHorizontal: 32,
-                  paddingVertical: 16,
-                  marginTop: 24
-                }}
-                onPress={()=>closeModal(true)}
-              >
-                <Text
-                  style={
-                    {
-                      color: '#8327D8',
-                      fontFamily: "SFProDisplay-Semibold",
-                      fontSize: 17
-                    }
-                  }
-                >
-                  {t("Let's share!")}
-                </Text>
-              </TouchableOpacity>
-            </View>
           </View>
-          <Image
-            source={require("../../assets/post/triangle.png")}
-            style={{
-              marginRight: 80,
-            }}
-          />
-          <SvgXml
-            //width={'50%'}
-            style={{
-              marginTop: 60,
-              marginRight: 35
-            }}
-            xml={ShareIconsSvg}
-          />
-        </Pressable>
+        </View>
       </Pressable>
     </Modal>
   );

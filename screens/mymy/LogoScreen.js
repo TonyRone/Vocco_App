@@ -213,7 +213,8 @@ const LogoScreen = (props) => {
         mounted.current = true;
         checkPermission();
         checkLogin();
-        OnSetPushNotification();
+        if(Platform.OS == 'ios')
+            OnSetPushNotification();
         return () => {
             mounted.current = false;
         }

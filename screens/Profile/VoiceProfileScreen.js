@@ -319,8 +319,14 @@ const VoiceProfileScreen = (props) => {
     }
   }, [refreshState])
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <KeyboardAvoidingView
+    <Pressable
+      onPress={() => Keyboard.dismiss()}
+      style={{
+        flex:1,
+        backgroundColor:'#FFF'
+      }}
+    >
+      <View
         style={{
           backgroundColor: '#FFF',
           flex: 1
@@ -484,7 +490,7 @@ const VoiceProfileScreen = (props) => {
         </View>
         {info && <View style={{
           width: windowWidth,
-          backgroundColor: '#FFF',
+          backgroundColor: filter.length > 0 ? '#FFF' : '#FFF0',
           elevation: filter.length > 0 ? 10 : 0,
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.5,
@@ -750,9 +756,9 @@ const VoiceProfileScreen = (props) => {
             </View>
           </Pressable>
         </Modal>}
-        {deleteModal&&<DeleteConfirm
+        {deleteModal && <DeleteConfirm
           onConfirmDelete={deleteVoice}
-          onCloseModal={()=> setDeleteModal(false)}
+          onCloseModal={() => setDeleteModal(false)}
         />}
         {showShareVoice &&
           <ShareVoice
@@ -791,10 +797,9 @@ const VoiceProfileScreen = (props) => {
             </View>
           </View>
         }
-
-        {Platform.OS == 'ios' && <KeyboardSpacer />}
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+      </View>
+      {Platform.OS == 'ios' && <KeyboardSpacer />}
+    </Pressable>
   );
 };
 

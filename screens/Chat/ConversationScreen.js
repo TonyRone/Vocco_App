@@ -971,7 +971,7 @@ const ConversationScreen = (props) => {
                                     style={
                                         {
                                             fontSize: 15,
-                                            width: windowWidth*8/15,
+                                            width: windowWidth*10/19,
                                             lineHeight: 18,
                                             color: '#281E30',
                                         }

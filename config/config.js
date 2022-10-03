@@ -145,6 +145,14 @@ export const Categories =
         label:'Art',
         uri:require('../assets/categories/art.png')
     },
+    {
+        label:'Psychedelics',
+        uri:require('../assets/categories/psychedelics.png')
+    },
+    {
+        label:'Makeup',
+        uri:require('../assets/categories/makeup.png')
+    },
 ]
 
 export const Ambiances = [
