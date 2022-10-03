@@ -542,7 +542,7 @@ const PostingVoiceScreen = (props) => {
                     onPress={() => {
                       setWarning(false);
                       setCategory(index);
-                      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                      //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                     }}
                     key={index + "topics"}
                     style={{
