@@ -158,13 +158,13 @@ const PostingVoiceScreen = (props) => {
               }
               formData.append('file', fileData);
               VoiceService.postRecordImage(formData).then(res => {
-                //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                 socketInstance.emit("newVoice", { uid: user.id });
                 onNavigate("Home",{shareInfo:jsonRes})
               })
             }
             else {
-              //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+              Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
               socketInstance.emit("newVoice", { uid: user.id });
               onNavigate("Home",{shareInfo:jsonRes})
             }
@@ -214,7 +214,7 @@ const PostingVoiceScreen = (props) => {
   }
 
   const onClickPost = async () => {
-    //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     if (category == 0) {
       setWarning(true);
       setPostStep(1);
@@ -542,7 +542,7 @@ const PostingVoiceScreen = (props) => {
                     onPress={() => {
                       setWarning(false);
                       setCategory(index);
-                      //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                     }}
                     key={index + "topics"}
                     style={{
@@ -677,7 +677,7 @@ const PostingVoiceScreen = (props) => {
                 }
                 else {
                   setPostStep(1);
-                  //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                 }
               }}
             >
