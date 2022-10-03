@@ -158,13 +158,13 @@ const PostingVoiceScreen = (props) => {
               }
               formData.append('file', fileData);
               VoiceService.postRecordImage(formData).then(res => {
-                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                 socketInstance.emit("newVoice", { uid: user.id });
                 onNavigate("Home",{shareInfo:jsonRes})
               })
             }
             else {
-              Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+              //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
               socketInstance.emit("newVoice", { uid: user.id });
               onNavigate("Home",{shareInfo:jsonRes})
             }
