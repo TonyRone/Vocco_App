@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import Share from 'react-native-share';
 import { DescriptionText } from '../component/DescriptionText';
 import { SvgXml } from 'react-native-svg';
 import closeSvg from '../../assets/common/close.svg';
@@ -133,6 +134,18 @@ const HomeScreen = (props) => {
         setIsActiveState(true);
         setNewStory(false);
         Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    }
+
+    const shareAudio = (filePath) => {
+        setShowHint(false);
+        Share.open({
+            url: Platform.OS == 'android' ? 'file://' : '' + filePath,
+            type: 'audio/' + (Platform.OS === 'android' ? 'mp3' : 'm4a'),
+        }).then(res => {
+        })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     useEffect(() => {
@@ -285,6 +298,7 @@ const HomeScreen = (props) => {
             {showHint &&
                 <ShareHint
                     postInfo={postInfo}
+                    onShareAudio={(path) => shareAudio(path)}
                     onCloseModal={() => { setShowHint(false); }}
                 />}
         </SafeAreaView>

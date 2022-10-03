@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 
 import { SvgXml } from 'react-native-svg';
-import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import ShareIconsSvg from '../../assets/post/ShareIcons.svg';
 import ShareHintSvg from '../../assets/post/ShareHint.svg';
@@ -28,6 +27,7 @@ import { MyButton } from './MyButton';
 
 export const ShareHint = ({
   postInfo,
+  onShareAudio = ()=>{},
   onCloseModal = () => { }
 }) => {
 
@@ -58,20 +58,12 @@ export const ShareHint = ({
     }).fetch('GET', postInfo.file.url).then(res => {
       if (mounted.current && res.respInfo.status == 200) {
         let filePath = res.path();
-        Share.open({
-          url: Platform.OS == 'android' ? 'file://' : '' + filePath,
-          type: 'audio/' + (Platform.OS === 'android' ? 'mp3' : 'm4a'),
-        }).then(res => {
-        })
-          .catch(err => {
-            console.log(err);
-          });
-        closeModal();
+        onShareAudio(filePath);
+        setShowModal(false);
       }
     })
       .catch(async err => {
         console.log(err);
-        closeModal();
       })
   };
 
