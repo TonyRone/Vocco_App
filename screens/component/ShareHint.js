@@ -56,10 +56,11 @@ export const ShareHint = ({
       fileCache: true,
       path,
     }).fetch('GET', postInfo.file.url).then(res => {
+      setIsLoading(false);
       if (mounted.current && res.respInfo.status == 200) {
         let filePath = res.path();
         onShareAudio(filePath);
-        setShowModal(false);
+        //setShowModal(false);
       }
     })
       .catch(async err => {
