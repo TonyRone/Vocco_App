@@ -42,7 +42,6 @@ export const ShareHint = ({
 
   const shareAudio = () => {
     onShareAudio();
-    setShowModal(false);
   };
 
   useEffect(()=>{
