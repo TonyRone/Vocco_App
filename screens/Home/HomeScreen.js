@@ -138,7 +138,6 @@ const HomeScreen = (props) => {
     }
 
     const shareAudio = () => {
-        setShowHint(false);
         const dirs = RNFetchBlob.fs.dirs.DocumentDir;
         const fileName = 'Vocco app - ' + postInfo.title;
         const path = Platform.select({
@@ -156,9 +155,11 @@ const HomeScreen = (props) => {
                     type: 'audio/' + (Platform.OS === 'android' ? 'mp3' : 'm4a'),
                 }).then(res => {
                     console.log(res);
+                    setShowHint(false);
                 })
                     .catch(err => {
                         console.log(err);
+                        setShowHint(false);
                     });
             }
         })

@@ -112,7 +112,7 @@ export const ShareHint = ({
           >
             <MyButton
               label={t("Share it now")}
-              onPress={shareAudio}
+              onPress={()=>shareAudio()}
             />
           </View>
         </View>
