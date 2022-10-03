@@ -148,7 +148,7 @@ const HomeScreen = (props) => {
             fileCache: true,
             path,
         }).fetch('GET', postInfo.file.url).then(res => {
-            setShowHint(false);
+            //setShowHint(false);
             if (mounted.current && res.respInfo.status == 200) {
                 let filePath = res.path();
                 Share.open({
