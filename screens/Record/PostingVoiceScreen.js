@@ -40,7 +40,6 @@ import VoicePlayer from "../Home/VoicePlayer";
 import { setRefreshState, setVoiceState } from '../../store/actions';
 import { MyProgressBar } from '../component/MyProgressBar';
 import { DescriptionText } from '../component/DescriptionText';
-import Share from 'react-native-share';
 import editImageSvg from '../../assets/record/editPurple.svg';
 import cameraSvg from '../../assets/post/camera.svg';
 import targetSvg from '../../assets/record/target.svg';
@@ -88,7 +87,6 @@ const PostingVoiceScreen = (props) => {
   const [icon, setIcon] = useState(param.info ? param.info.emoji : "😁");
   const [voiceTitle, setVoiceTitle] = useState(param.info ? param.info.title : '');
   const [isLoading, setIsLoading] = useState(false);
-  const [showHint, setShowHint] = useState(false);
   const [showShareVoice, setShowShareVoice] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(initCategory);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -162,16 +160,15 @@ const PostingVoiceScreen = (props) => {
               VoiceService.postRecordImage(formData).then(res => {
                 Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                 socketInstance.emit("newVoice", { uid: user.id });
-                setShowHint(true);
+                onNavigate("Home",{shareInfo:jsonRes})
               })
             }
             else {
               Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
               socketInstance.emit("newVoice", { uid: user.id });
-              setShowHint(true);
+              onNavigate("Home",{shareInfo:jsonRes})
             }
           }
-          setIsLoading(false);
         }
       })
         .catch(err => {
@@ -229,38 +226,6 @@ const PostingVoiceScreen = (props) => {
       handleSubmit();
     }
   }
-
-  const shareAudio = () => {
-    setShowHint(false);
-    const dirs = RNFetchBlob.fs.dirs.DocumentDir;
-    const fileName = 'Vocco app - ' + postInfo.title;
-    const path = Platform.select({
-      ios: `${dirs}/${fileName}.m4a`,
-      android: `${dirs}/${fileName}.mp3`,
-    });
-    setIsLoading(true);
-    RNFetchBlob.config({
-      fileCache: true,
-      path,
-    }).fetch('GET', postInfo.file.url).then(res => {
-      if (mounted.current&&res.respInfo.status == 200) {
-        setIsLoading(false);
-        let filePath = res.path();
-        Share.open({
-          url: Platform.OS == 'android' ? 'file://' : '' + filePath,
-          type: 'audio/' + (Platform.OS === 'android' ? 'mp3' : 'm4a'),
-        }).then(res => {
-        })
-          .catch(err => {
-            console.log(err);
-          });
-        onNavigate("Home");
-      }
-    })
-      .catch(async err => {
-        console.log(err);
-      })
-  };
 
   const onSetRecordImg = (img) => {
     if (mounted.current) {
@@ -806,11 +771,6 @@ const PostingVoiceScreen = (props) => {
             open={visibleReaction}
             onClose={() => setVisibleReaction(false)} />
         }
-        {showHint &&
-          <ShareHint
-            onShareAudio={shareAudio}
-            onCloseModal={() => { setShowHint(false); onNavigate("Home"); }}
-          />}
         {showShareVoice &&
           <ShareVoice
             info={showShareVoice}
@@ -821,22 +781,6 @@ const PostingVoiceScreen = (props) => {
             onCloseModal={() => setPickModal(false)}
             onSetImageSource={(img) => onSetRecordImg(img)}
           />
-        }
-        {isLoading &&
-          <View style={{
-            position: 'absolute',
-            width: '100%',
-            alignItems: 'center',
-            top: 200,
-            elevation: 20
-          }}>
-            <Progress.Circle
-              indeterminate
-              size={30}
-              color="rgba(0, 0, 255, .7)"
-              style={{ alignSelf: "center" }}
-            />
-          </View>
         }
       </View>
       {Platform.OS == 'ios' && <KeyboardSpacer />}

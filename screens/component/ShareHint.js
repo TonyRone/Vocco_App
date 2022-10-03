@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Modal,
   Pressable,
   View,
   Image,
   TouchableOpacity,
-  Text
+  Text,
+  Platform
 } from 'react-native';
 
 import { SvgXml } from 'react-native-svg';
+import Share from 'react-native-share';
+import RNFetchBlob from 'rn-fetch-blob';
 import ShareIconsSvg from '../../assets/post/ShareIcons.svg';
 import ShareHintSvg from '../../assets/post/ShareHint.svg';
 import shareSvg from '../../assets/post/share.svg';
@@ -24,23 +27,60 @@ import '../../language/i18n';
 import { MyButton } from './MyButton';
 
 export const ShareHint = ({
-  onShareAudio = () => { },
+  postInfo,
   onCloseModal = () => { }
 }) => {
 
   const { t, i18n } = useTranslation();
 
-  const [showModal, setShowModal] = useState(true);
+  const mounted = useRef(false);
 
-  const shareAudio=()=>{
-    onShareAudio();
-    setShowModal(false);
-  }
+  const [showModal, setShowModal] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const closeModal = async (v = false) => {
+    setIsLoading(false);
     setShowModal(false);
     onCloseModal();
   }
+
+  const shareAudio = () => {
+    const dirs = RNFetchBlob.fs.dirs.DocumentDir;
+    const fileName = 'Vocco app - ' + postInfo.title;
+    const path = Platform.select({
+      ios: `${dirs}/${fileName}.m4a`,
+      android: `${dirs}/${fileName}.mp3`,
+    });
+    setIsLoading(true);
+    RNFetchBlob.config({
+      fileCache: true,
+      path,
+    }).fetch('GET', postInfo.file.url).then(res => {
+      if (mounted.current && res.respInfo.status == 200) {
+        let filePath = res.path();
+        Share.open({
+          url: Platform.OS == 'android' ? 'file://' : '' + filePath,
+          type: 'audio/' + (Platform.OS === 'android' ? 'mp3' : 'm4a'),
+        }).then(res => {
+        })
+          .catch(err => {
+            console.log(err);
+          });
+        closeModal();
+      }
+    })
+      .catch(async err => {
+        console.log(err);
+        closeModal();
+      })
+  };
+
+  useEffect(()=>{
+    mounted.current = true;
+    return ()=>{
+      mounted.current = false;
+    }
+  })
 
   return (
     <Modal
@@ -88,16 +128,12 @@ export const ShareHint = ({
             textAlign='center'
             marginTop={9}
           />
-          <TouchableOpacity
-            onPress={shareAudio}
-          >
-            <SvgXml
-              style={{
-                marginTop: 12
-              }}
-              xml={shareSvg}
-            />
-          </TouchableOpacity>
+          <SvgXml
+            style={{
+              marginTop: 12
+            }}
+            xml={shareSvg}
+          />
           <View
             style={{
               paddingHorizontal: 16,
@@ -108,6 +144,7 @@ export const ShareHint = ({
             <MyButton
               label={t("Share it now")}
               onPress={shareAudio}
+              loading={isLoading}
             />
           </View>
         </View>

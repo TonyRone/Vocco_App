@@ -28,10 +28,12 @@ import '../../language/i18n';
 import { Feed } from '../component/Feed';
 import { Discover } from '../component/Discover';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
+import { ShareHint } from '../component/ShareHint';
 
 const HomeScreen = (props) => {
 
-    let new_init = props.navigation.state.params ? 1 : 0;
+
+    const postInfo = props.navigation.state.params?.shareInfo;
 
     const { t, i18n } = useTranslation();
 
@@ -43,6 +45,7 @@ const HomeScreen = (props) => {
     }
 
     const [isActiveState, setIsActiveState] = useState(false);
+    const [showHint, setShowHint] = useState(postInfo ? true : false);
     const [notify, setNotify] = useState(false);
     const [expandKey, setExpandKey] = useState(0);
     const [newStory, setNewStory] = useState(false);
@@ -140,15 +143,6 @@ const HomeScreen = (props) => {
         socketInstance.on("notice_Voice", (data) => {
             noticeDispatch("news");
         });
-        if (new_init < 0) {
-            setTimeout(() => {
-                if (mounted.current)
-                    noticeDispatch("reset");
-            }, 1500);
-        }
-        if (new_init) {
-            setExpandKey(expandKey + 1);
-        }
         return () => {
             mounted.current = false;
             socketInstance.off("notice_Voice")
@@ -288,6 +282,11 @@ const HomeScreen = (props) => {
                 expandKey={expandKey}
                 left={windowWidth / 2 - 27}
             />
+            {showHint &&
+                <ShareHint
+                    postInfo={postInfo}
+                    onCloseModal={() => { setShowHint(false); }}
+                />}
         </SafeAreaView>
     );
 };
