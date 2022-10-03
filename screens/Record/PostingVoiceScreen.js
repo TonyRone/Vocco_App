@@ -214,7 +214,7 @@ const PostingVoiceScreen = (props) => {
   }
 
   const onClickPost = async () => {
-    Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     if (category == 0) {
       setWarning(true);
       setPostStep(1);
