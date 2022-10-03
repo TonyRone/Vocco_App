@@ -130,7 +130,7 @@ export const ShareHint = ({
             style={{
               paddingHorizontal: 16,
               width: '100%',
-              marginBottom: 16
+              marginBottom: 30
             }}
           >
             <MyButton
