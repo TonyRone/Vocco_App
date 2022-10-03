@@ -28,6 +28,7 @@ import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { setRefreshState } from '../../store/actions';
 import RNFetchBlob from 'rn-fetch-blob';
+import { DeleteConfirm } from './DeleteConfirm';
 
 export const PostContext = ({
   postInfo,
@@ -43,6 +44,7 @@ export const PostContext = ({
   const [showModal, setShowModal] = useState(true);
   const [playstatus, setPlaystatus] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
 
   let { user, refreshState } = useSelector((state) => {
     return (
@@ -97,6 +99,7 @@ export const PostContext = ({
   }
 
   const deleteVoice = () => {
+    setDeleteModal(false);
     VoiceService.deleteVoice(postInfo.id).then(async res => {
       dispatch(setRefreshState(!refreshState));
       closeModal();
@@ -248,7 +251,7 @@ export const PostContext = ({
                   flexDirection: 'row',
                   justifyContent: 'space-between'
                 }}
-                onPress={() => deleteVoice()}
+                onPress={() => setDeleteModal(true)}
               >
                 <TitleText
                   text={t("Delete")}
@@ -365,6 +368,10 @@ export const PostContext = ({
             </View>
           }
         </View>
+        {deleteModal&&<DeleteConfirm
+          onConfirmDelete={deleteVoice}
+          onCloseModal={()=> setDeleteModal(false)}
+        />}
         {loading &&
           <View style={{
             position: 'absolute',

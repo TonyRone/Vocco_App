@@ -971,12 +971,11 @@ const ConversationScreen = (props) => {
                                     style={
                                         {
                                             fontSize: 15,
-                                            width: 235,
+                                            width: windowWidth*8/15,
                                             lineHeight: 18,
                                             color: '#281E30',
                                         }
                                     }
-                                    keyboardType={'url'}
                                     value={label}
                                     autoCapitalize='none'
                                     onSubmitEditing={() => {

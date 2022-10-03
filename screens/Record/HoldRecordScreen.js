@@ -277,11 +277,18 @@ const HoldRecordScreen = (props) => {
         <View style={{
           alignItems: 'center'
         }}>
-          <SvgXml
-            xml={fingerSvg}
+          <Image
+            source={require("../../assets/record/finger.png")}
+            style={{
+              width:32,
+              height:32
+            }}
           />
-          <DescriptionText
-            text={t("Swipe to the right to publish, to the left to cancel")}
+          <SemiBoldText
+            text={t("Click & Hold to record. Swipe to the right to publish, to the left to cancel")}
+            fontSize={12}
+            lineHeight={16}
+            color='#000000'
             marginTop={5}
             marginBottom={34}
           />

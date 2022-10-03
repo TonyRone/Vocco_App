@@ -46,10 +46,10 @@ const RecordPrepareScreen = (props) => {
   const [voiceTitle, setVoiceTitle] = useState('');
   const [warning, setWarning] = useState(false);
   const [pickModal, setPickModal] = useState(false);
-  const [showCityModal, setShowCityModal] = useState(false);
   const [source, setSource] = useState(null);
   const [avatarId, setAvatarId] = useState(initId);
   const [storyAddress, setStoryAddress] = useState('');
+  const [showCityModal, setShowCityModal] = useState(false);
 
   useEffect(() => {
     mounted.current = true;

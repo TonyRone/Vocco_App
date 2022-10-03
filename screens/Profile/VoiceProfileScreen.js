@@ -57,6 +57,7 @@ import { AnswerRecordIcon } from '../component/AnswerRecordIcon';
 import SwipeDownModal from 'react-native-swipe-down';
 import EmojiPicker from 'rn-emoji-keyboard';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { DeleteConfirm } from '../component/DeleteConfirm';
 
 const VoiceProfileScreen = (props) => {
 
@@ -749,57 +750,10 @@ const VoiceProfileScreen = (props) => {
             </View>
           </Pressable>
         </Modal>}
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={deleteModal}
-          onRequestClose={() => {
-            setDeleteModal(!deleteModal);
-          }}
-        >
-          <Pressable onPressOut={() => setDeleteModal(false)} style={styles.swipeModal}>
-            <View style={{ height: '100%', width: '100%' }}>
-              <View style={{ position: 'absolute', width: windowWidth - 16, bottom: 112, marginHorizontal: 8, height: 122, borderRadius: 14, backgroundColor: '#E9EAEC' }}>
-                <View style={{ paddingTop: 14, height: 65.5, width: '100%', borderBottomWidth: 1, borderBottomColor: '#B6C2DB', alignItems: 'center' }}>
-                  <SemiBoldText
-                    text={t("Do you want to delete this story?")}
-                    fontSize={13}
-                    lineHeight={21}
-                    color='rgba(38, 52, 73, 0.7)'
-                  />
-                  <SemiBoldText
-                    text={t("This action cannot be undone")}
-                    fontSize={13}
-                    lineHeight={21}
-                    color='rgba(38, 52, 73, 0.7)'
-                  />
-                </View>
-                <Pressable onPress={deleteVoice}>
-                  <DescriptionText
-                    text={t("Delete")}
-                    fontSize={20}
-                    lineHeight={24}
-                    color='#E41717'
-                    textAlign='center'
-                    marginTop={16}
-                  />
-                </Pressable>
-              </View>
-              <View style={{ position: 'absolute', width: windowWidth - 16, bottom: 48, marginHorizontal: 8, height: 56, borderRadius: 14, backgroundColor: 'white' }}>
-                <Pressable onPress={() => setDeleteModal(false)}>
-                  <DescriptionText
-                    text={t('Cancel')}
-                    fontSize={20}
-                    lineHeight={24}
-                    color='#1E61EB'
-                    textAlign='center'
-                    marginTop={16}
-                  />
-                </Pressable>
-              </View>
-            </View>
-          </Pressable>
-        </Modal>
+        {deleteModal&&<DeleteConfirm
+          onConfirmDelete={deleteVoice}
+          onCloseModal={()=> setDeleteModal(false)}
+        />}
         {showShareVoice &&
           <ShareVoice
             info={info}

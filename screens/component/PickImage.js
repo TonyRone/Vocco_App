@@ -83,7 +83,7 @@ export const PickImage = ({
         closeModal();
       }}
     >
-      <Pressable onPressOut={() => setShowModal(false)} style={[styles.centeredView, { justifyContent: 'flex-end', paddingHorizontal: 8 }]}>
+      <Pressable onPressOut={() => onCloseModal()} style={[styles.centeredView, { justifyContent: 'flex-end', paddingHorizontal: 8 }]}>
         <View
           style={{
             borderRadius: 14,
