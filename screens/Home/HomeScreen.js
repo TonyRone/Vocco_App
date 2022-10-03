@@ -146,6 +146,7 @@ const HomeScreen = (props) => {
         })
             .catch(err => {
                 console.log(err);
+                setShowHint(false);
             });
     }
 

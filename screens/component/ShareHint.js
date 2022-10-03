@@ -60,7 +60,6 @@ export const ShareHint = ({
       if (mounted.current && res.respInfo.status == 200) {
         let filePath = res.path();
         onShareAudio(filePath);
-        //setShowModal(false);
       }
     })
       .catch(async err => {
