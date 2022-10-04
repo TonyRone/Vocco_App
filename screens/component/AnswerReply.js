@@ -96,7 +96,7 @@ export const AnswerReply = ({
 
   useEffect(() => {
     mounted.current = true;
-    setFill(user.premium == 'none' ? 60 : 180);
+    setFill(user.premium == 'none' ? 30 : 180);
     setKey(prevKey => prevKey + 1);
     return () => {
       mounted.current = false;

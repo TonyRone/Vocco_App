@@ -67,11 +67,6 @@ export const RecordIcon = ({
 
   recorderPlayer.setSubscriptionDuration(0.5); // optional. Default is 0.1
 
-  const startAnimation = () => {
-    setFill(50);
-    setIsPlaying(!isPlaying);
-  };
-
   const clearRecorder = async () => {
     wasteTime.current = 0;
     await recorderPlayer.resumeRecorder().then(res => {
@@ -174,17 +169,16 @@ export const RecordIcon = ({
 
   let r = 0;
 
-  useEffect(() => {
-    setFill(user.premium != 'none' ? 180 : 60);
-    setKey(prevKey => prevKey + 1);
-    if (expandKey != expand) {
-      setExpand(expandKey);
-      setIsExpanded(true);
-      setTemporary(true);
-    }
-    //dispatch(setVoiceState(voiceState+1));
-    return () => clearRecorder();
-  }, [expandKey])
+  // useEffect(() => {
+  //   setFill(user.premium != 'none' ? 180 : 30);
+  //   setKey(prevKey => prevKey + 1);
+  //   if (expandKey != expand) {
+  //     setExpand(expandKey);
+  //     setIsExpanded(true);
+  //     setTemporary(true);
+  //   }
+  //   return () => clearRecorder();
+  // }, [expandKey])
 
   return (
     <Pressable

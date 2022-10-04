@@ -4,10 +4,11 @@ import {
   ScrollView,
   Platform,
   PermissionsAndroid,
-  Image
+  Image,
+  TextInput
 } from 'react-native';
 
-import Contacts from 'react-native-contacts';
+import Contacts, { checkPermission } from 'react-native-contacts';
 import SendSMS from 'react-native-sms';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -20,6 +21,7 @@ import { DescriptionText } from './DescriptionText';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SvgXml } from 'react-native-svg';
 import greenCheckSvg from '../../assets/friend/green-check.svg';
+import searchSvg from '../../assets/login/search.svg';
 
 
 export const ContactList = ({
@@ -35,6 +37,7 @@ export const ContactList = ({
   const { t, i18n } = useTranslation();
   const [contactUsers, setContactUsers] = useState([]);
   const [invitedUsers, setInvitedUsers] = useState([]);
+  const [label, setLabel] =useState("");
 
   const mounted = useRef(false);
 
@@ -101,6 +104,26 @@ export const ContactList = ({
         }))
   }
 
+  const getLabel=(v)=>{
+    setLabel(v);
+  }
+
+  const checkValid=(el)=>{
+    if(el.givenName.length>0){
+      if(el.givenName.toLowerCase().includes(label.toLowerCase()))
+        return true;
+    }
+    if(el.familyName.length>0){
+      if(el.familyName.toLowerCase().includes(label.toLowerCase()))
+      return true;
+    }
+    if(el.phoneNumbers && el.phoneNumbers.length > 0){
+      if(el.phoneNumbers[0].number.toLowerCase().includes(label.toLowerCase()))
+        return true;
+    }
+    return false;
+  }
+
   useEffect(async () => {
     mounted.current = true;
     if (Platform.OS == 'ios') {
@@ -126,11 +149,39 @@ export const ContactList = ({
         backgroundColor: '#FFF',
         width: windowWidth,
         flex: 1,
+        marginBottom:80,
       }}
     >
-
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#F2F0F5',
+        borderRadius: 24,
+        height: 44,
+        width: windowWidth - 68,
+        paddingHorizontal: 12,
+        marginTop:8,
+        marginBottom:6,
+        marginLeft:6
+      }}>
+        <SvgXml
+          width="24"
+          height="24"
+          xml={searchSvg}
+        />
+        <TextInput
+          style={[styles.searchInput, { paddingLeft: 12, width: windowWidth - 120 }]}
+          value={label}
+          color='#281E30'
+          placeholder={t("Search"+"...")}
+          onChangeText={getLabel}
+          placeholderTextColor="rgba(59, 31, 82, 0.6)"
+        />
+      </View>
       {
         contactUsers.map((item, index) => {
+          if(!checkValid(item))
+            return null;
           let isInvited = invitedUsers.includes(index);
           return <View key={"InviteContacts" + index.toString()} style={[styles.rowSpaceBetween, { marginTop: 16 }]}>
             <View style={styles.rowAlignItems}>

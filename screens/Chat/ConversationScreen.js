@@ -451,7 +451,7 @@ const ConversationScreen = (props) => {
         else
             getMessages(0);
         setKey(prevKey => prevKey + 1);
-        setFill(user.premium == 'none' ? 60 : 180);
+        setFill(user.premium == 'none' ? 30 : 180);
         socketInstance.on("receiveMessage", ({ info }) => {
             setMessages((prev) => {
                 prev.push(info);

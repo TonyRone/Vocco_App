@@ -66,11 +66,6 @@ const RecordBoardScreen = (props) => {
 
   recorderPlayer.setSubscriptionDuration(0.5); // optional. Default is 0.1
 
-  const startAnimation = () => {
-    setFill(50);
-    setIsPlaying(!isPlaying);
-  };
-
   const clearRecorder = async () => {
     wasteTime.current = 0;
     await recorderPlayer.resumeRecorder().then(res => {
@@ -79,7 +74,6 @@ const RecordBoardScreen = (props) => {
         console.log(err);
       });
     await recorderPlayer.stopRecorder().then(res => {
-      console.log(res);
     })
       .catch(err => {
         console.log(err);
@@ -173,7 +167,7 @@ const RecordBoardScreen = (props) => {
   let r = 0;
 
   useEffect(() => {
-    setFill(user.premium != 'none' ? 180 : 60);
+    setFill(user.premium != 'none' ? 180 : 30);
     setKey(prevKey => prevKey + 1);
     if (expandKey != expand) {
       setExpand(expandKey);

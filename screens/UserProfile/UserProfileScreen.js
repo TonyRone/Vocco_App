@@ -30,6 +30,7 @@ import blockSvg from '../../assets/profile/block.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
 import blackPrivacySvg from '../../assets/profile/black_privacy.svg'
 import arrowPointerSvg from '../../assets/profile/arrowpointer.svg'
+import chatSvg from '../../assets/profile/chat.svg'
 import shareSvg from '../../assets/post/share.svg';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -352,40 +353,32 @@ const UserProfileScreen = (props) => {
                       source={require('../../assets/common/premiumstar.png')}
                     />
                   }
-                  {userInfo.user && <View style={{
-                    paddingHorizontal: 12,
+                  {userInfo.user && <TouchableOpacity style={{
+                    paddingHorizontal: 8,
                     paddingVertical: 3,
                     borderRadius: 8,
-                    borderColor: userInfo.likes < 100 ? '#E53F34' : userInfo.likes < 1000 ? '#FFCC27' : '#6099C7',
-                    borderWidth: 2,
+                    borderColor: '#A24EE4',
+                    borderWidth: 1,
                     flexDirection: 'row',
                     alignItems: 'center',
                     marginLeft: 6,
                     marginRight:4,
-                    backgroundColor:'#FFF',
-                    shadowColor: 'rgba(88, 74, 117, 1)',
-                    elevation: 10,
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.5,
-                    shadowRadius: 8,
-                  }}>
-                    <Image
-                      style={{
-                        width: 20,
-                        height: 20,
-                      }}
-                      source={userInfo.likes < 100 ? require('../../assets/profile/bronze-diamond.png') :
-                        userInfo.likes < 1000 ? require('../../assets/profile/gold-diamond.png') : require('../../assets/profile/real-diamond.png')
-                      }
+                  }}
+                    onPress={()=> props.navigation.navigate("Conversation",{info:userInfo})}
+                  >
+                    <SvgXml
+                      width={20}
+                      height={20}
+                      xml = {chatSvg}
                     />
                     <SemiBoldText
                       fontSize={13}
                       lineHeight={18}
-                      text={userInfo.likes < 100 ? t("Bronze") : userInfo.likes < 1000 ? t("Gold") : t("Emeraud")}
-                      color={userInfo.likes < 100 ? '#E4373A' : userInfo.likes < 1000 ? '#FFC30E' : '#6497C5'}
+                      text={t("Message")}
+                      color={'#8229F4'}
                       marginLeft={8}
                     />
-                  </View>}
+                  </TouchableOpacity>}
                 </View>
               </View>
               <View style={styles.rowAlignItems}>

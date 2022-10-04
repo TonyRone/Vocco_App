@@ -43,6 +43,8 @@ import { SemiBoldText } from '../component/SemiBoldText';
 
 const HoldRecordScreen = (props) => {
 
+  const param = props.navigation.state.params;
+
   let { user, voiceState, refreshState } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
@@ -59,11 +61,6 @@ const HoldRecordScreen = (props) => {
   const dragPos = useRef(0);
 
   recorderPlayer.setSubscriptionDuration(0.5); // optional. Default is 0.1
-
-  const startAnimation = () => {
-    setFill(50);
-    setIsPlaying(!isPlaying);
-  };
 
   const clearRecorder = async () => {
     wasteTime.current = 0;
@@ -117,7 +114,7 @@ const HoldRecordScreen = (props) => {
       setKey(prevKey => prevKey + 1);
       if (publish == true) {
         let tp = Math.max(wasteTime.current, 1);
-        props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0), isTemporary: temporary })
+        props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0), isTemporary: temporary, photoInfo:param.photoInfo, categoryId:param.categoryId })
         setTemporary(false);
         clearRecorder();
       }
@@ -169,7 +166,7 @@ const HoldRecordScreen = (props) => {
   let r = 0;
 
   useEffect(() => {
-    setFill(user.premium != 'none' ? 180 : 60);
+    setFill(user.premium != 'none' ? 180 : 30);
     setKey(prevKey => prevKey + 1);
     return () => clearRecorder();
   }, [])

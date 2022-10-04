@@ -3,6 +3,7 @@
 /node_modules
 /dist
 /ios
+/package.json
 # Logs
 logs
 *.log

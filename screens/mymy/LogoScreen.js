@@ -108,7 +108,7 @@ const LogoScreen = (props) => {
         }
         dispatch(setUser(jsonRes));
         let mainLanguage = await AsyncStorage.getItem(MAIN_LANGUAGE);
-        if (mainLanguage == null) {
+        if (mainLanguage == null || mainLanguage == 'French') {
             mainLanguage = systemLanguage;
             await AsyncStorage.setItem(
                 MAIN_LANGUAGE,
@@ -213,7 +213,7 @@ const LogoScreen = (props) => {
         mounted.current = true;
         checkPermission();
         checkLogin();
-        if(Platform.OS == 'ios')
+        if (Platform.OS == 'ios')
             OnSetPushNotification();
         return () => {
             mounted.current = false;
