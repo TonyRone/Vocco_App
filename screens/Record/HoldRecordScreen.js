@@ -130,8 +130,8 @@ const HoldRecordScreen = (props) => {
   };
 
   const onChangeRecord = async (e, v = false) => {
-    if (v == true)
-      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    // if (v == true)
+    //   Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     if (v == true && isRecording == false) {
       onStartRecord();
     }
@@ -355,7 +355,7 @@ const HoldRecordScreen = (props) => {
             dragPos.current = gestureState.dx;
             if (gestureState.dx > 80) {
               setTimeout(() => {
-                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
               }, 100);
               onStopRecord(true);
             }
