@@ -40,6 +40,8 @@ export const DailyPopUp = ({
 
   const mounted = useRef(false);
 
+  const scrollRef = useRef();
+
   const [showModal, setShowModal] = useState(true);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(-1);
@@ -109,7 +111,7 @@ export const DailyPopUp = ({
         closeModal();
       }}
     >
-      <Pressable onPressOut={closeModal} style={styles.swipeModal}>
+      <View style={styles.swipeModal}>
         <View style={{
           position: 'absolute',
           backgroundColor: '#FFF',
@@ -206,28 +208,23 @@ export const DailyPopUp = ({
           </View>
           <FlatList
             horizontal={true}
+            ref = {scrollRef}
             showsHorizontalScrollIndicator={false}
             style={{
               width: windowWidth - 36,
             }}
             data={Categories}
             renderItem={({ item, index }) => {
-              let idx = 0;
-              if (selectedCategory > 0) {
-                if (index == 0) idx = selectedCategory;
-                else if (index <= selectedCategory) idx = index - 1;
-                else idx = index;
-              }
-              else idx = index;
               return <CategoryIcon
-                key={'all_catagory' + idx.toString()}
-                label={Categories[idx].label}
-                source={Categories[idx].uri}
+                key={'all_catagory' + index.toString()}
+                label={Categories[index].label}
+                source={Categories[index].uri}
                 onPress={() => {
-                  setSelectedCategory(idx);
+                  setSelectedCategory(index);
                   setWarning(false);
+                  scrollRef.current?.scrollToIndex({animated: true, index: index});
                 }}
-                active={selectedCategory == idx ? true : false}
+                active={selectedCategory == index ? true : false}
               />
             }}
             keyExtractor={(item, index) => index.toString()}
@@ -368,11 +365,12 @@ export const DailyPopUp = ({
                 setSelectedCategory(id);
                 setShowCategoryModal(false);
                 setWarning(false);
+                scrollRef.current?.scrollToIndex({animated: true, index: id});
               }}
             />
           </Pressable>
         </Modal>
-      </Pressable>
+      </View>
     </Modal>
   );
 };

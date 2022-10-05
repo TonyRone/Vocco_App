@@ -649,17 +649,17 @@ const PostingVoiceScreen = (props) => {
                     setWarning(true);
                   }
                   else {
-                    setPostStep(1);
+                    onClickPost();
                     Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                   }
                 }}
+                disabled={isLoading}
               >
                 <LinearGradient
                   style={
                     {
-                      paddingVertical: 13,
-                      paddingHorizontal: 29,
                       height: 56,
+                      width:100,
                       borderRadius: 28,
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -669,7 +669,7 @@ const PostingVoiceScreen = (props) => {
                   start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                   colors={['#D89DF4', '#B35CF8', '#8229F4']}
                 >
-                  <Text
+                  {!isLoading ? <Text
                     style={
                       {
                         color: '#FFF',
@@ -678,8 +678,15 @@ const PostingVoiceScreen = (props) => {
                       }
                     }
                   >
-                    {t("Next")}
-                  </Text>
+                    {t("Publish")}
+                  </Text> :
+                    <Progress.Circle
+                      indeterminate
+                      size={30}
+                      color="rgba(255, 255, 255, .7)"
+                      style={{ alignSelf: "center" }}
+                    />
+                  }
                   {/* <SvgXml
                     style={{
                       marginLeft: 2
