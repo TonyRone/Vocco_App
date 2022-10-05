@@ -68,7 +68,7 @@ const PostingVoiceScreen = (props) => {
 
   let { user, refreshState, voiceState, socketInstance } = useSelector((state) => state.user);
 
-  let initCategory = param.categoryId?param.categoryId:0;
+  let initCategory = param.categoryId ? param.categoryId : 0;
   if (param.info) {
     for (let i = 0; i < Categories.length; i++) {
       if (Categories[i].label == param.info.category) {
@@ -94,11 +94,12 @@ const PostingVoiceScreen = (props) => {
   const [warning, setWarning] = useState(false);
   const [showEffect, setShowEffect] = useState(false);
   const [selectedAmbiance, setSelectedAmbiance] = useState('');
-  const [recordImg, setRecordImg] = useState(param.photoInfo?param.photoInfo:null);
+  const [recordImg, setRecordImg] = useState(param.photoInfo ? param.photoInfo : null);
   const [pickModal, setPickModal] = useState(false);
   const [storyAddress, setStoryAddress] = useState(param.info ? param.info.address : '');
   const [showCityModal, setShowCityModal] = useState(false);
   const [postInfo, setPostInfo] = useState(null);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
 
   const mounted = useRef(false);
 
@@ -548,27 +549,27 @@ const PostingVoiceScreen = (props) => {
                   />}
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity style={{
-                width: 56,
-                height: 56,
-                marginRight: 16,
-                borderRadius: 15,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: '#FFF',
-                shadowColor: 'rgba(42, 10, 111, 1)',
-                elevation: 10,
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0.5,
-                shadowRadius: 57,
-              }}
+              <TouchableOpacity
                 onPress={() => {
                   setPickModal(true);
                   Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                 }}
               >
-                {(recordImg || param.info?.imgFile) ? <View>
-                  <Image source={recordImg ? { uri: recordImg.path } : { uri: param.info.imgFile.url }} style={{ width: 56, height: 56, borderRadius: 20 }} />
+                <LinearGradient
+                  style={
+                    {
+                      height: 56,
+                      width: 56,
+                      borderRadius: 20,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexDirection: 'row'
+                    }
+                  }
+                  start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                  colors={['#D89DF4', '#B35CF8', '#8229F4']}
+                >
+                  <Image source={recordImg ? { uri: recordImg.path } : { uri: param.info.imgFile.url }} style={{ width: 52, height: 52, borderRadius: 18 }} />
                   <View style={{
                     width: 23,
                     height: 23,
@@ -584,17 +585,58 @@ const PostingVoiceScreen = (props) => {
                   >
                     <SvgXml width={10} height={10} xml={editImageSvg} />
                   </View>
-                </View> :
-                  <View>
-                    <SvgXml
-                      xml={cameraSvg}
-                    />
-                  </View>
-                }
+                </LinearGradient>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  if (voiceTitle == ''||!recordImg) {
+                  setShowCategoryModal(true);
+                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                }}
+              >
+                <LinearGradient
+                  style={
+                    {
+                      height: 56,
+                      width: 56,
+                      borderRadius: 20,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexDirection: 'row'
+                    }
+                  }
+                  start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                  colors={['#D89DF4', '#B35CF8', '#8229F4']}
+                >
+                  <View style={{
+                    width: 52,
+                    height: 52,
+                    backgroundColor: '#FFF',
+                    borderRadius: 18,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <Image source={Categories[selectedCategory].uri} style={{ width: 32, height: 32 }} />
+                  </View>
+                  <View style={{
+                    width: 23,
+                    height: 23,
+                    position: "absolute",
+                    backgroundColor: "#F8F0FF",
+                    borderRadius: 18,
+                    bottom: -2,
+                    right: -3,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                  >
+                    <SvgXml width={10} height={10} xml={editImageSvg} />
+                  </View>
+                </LinearGradient>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  if (voiceTitle == '' || !recordImg) {
                     setWarning(true);
                   }
                   else {
@@ -627,14 +669,14 @@ const PostingVoiceScreen = (props) => {
                       }
                     }
                   >
-                    {t("Next step")}
+                    {t("Next")}
                   </Text>
-                  <SvgXml
+                  {/* <SvgXml
                     style={{
                       marginLeft: 2
                     }}
                     xml={rightArrowSvg}
-                  />
+                  /> */}
                 </LinearGradient>
               </TouchableOpacity>
             </View>
@@ -743,7 +785,7 @@ const PostingVoiceScreen = (props) => {
             shadowRadius: 16,
           }}>
             <DescriptionText
-              text={voiceTitle == "" ? t("Add a title to your story!") :recordImg == null ? t("Add a picture to illustrate your story!"): t("You must select a category.")}
+              text={voiceTitle == "" ? t("Add a title to your story!") : recordImg == null ? t("Add a picture to illustrate your story!") : t("You must select a category.")}
               fontSize={15}
               lineHeight={18}
               color='#FFF'
@@ -776,6 +818,25 @@ const PostingVoiceScreen = (props) => {
             onSetImageSource={(img) => onSetRecordImg(img)}
           />
         }
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={showCategoryModal}
+          onRequestClose={() => {
+            setShowCategoryModal(false);
+          }}
+        >
+          <Pressable style={styles.swipeModal}>
+            <AllCategory
+              closeModal={() => setShowCategoryModal(false)}
+              selectedCategory={selectedCategory}
+              setCategory={(id) => {
+                setSelectedCategory(id);
+                setShowCategoryModal(false);
+              }}
+            />
+          </Pressable>
+        </Modal>
       </View>
       {Platform.OS == 'ios' && <KeyboardSpacer />}
     </KeyboardAvoidingView>

@@ -138,12 +138,12 @@ const PhoneVerifyScreen = (props) => {
 
     const onCreateSocket = async (jsonRes, isRegister) => {
         let systemLanguage = '';
-        if (deviceLanguage[0] == 'e') {
+        if (deviceLanguage[0] == 'p') {
             await AsyncStorage.setItem(
                 MAIN_LANGUAGE,
-                'English'
+                'Portuguese'
             );
-            systemLanguage = 'English';
+            systemLanguage = 'Portuguese';
         }
         // else if (deviceLanguage[0] == 'f') {
         //     await AsyncStorage.setItem(
@@ -155,9 +155,9 @@ const PhoneVerifyScreen = (props) => {
         else {
             await AsyncStorage.setItem(
                 MAIN_LANGUAGE,
-                'Portuguese'
+                'English'
             );
-            systemLanguage = 'Portuguese';
+            systemLanguage = 'English';
         }
         if (jsonRes.language != systemLanguage)
             EditService.changeLanguage(systemLanguage);
