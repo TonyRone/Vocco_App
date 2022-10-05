@@ -17,7 +17,7 @@ import ShareHintSvg from '../../assets/post/ShareHint.svg';
 import shareSvg from '../../assets/post/share.svg';
 import cameraSvg from '../../assets/discover/camera.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Categories, POST_CHECK, windowWidth } from '../../config/config';
+import { Categories, POST_CHECK, windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { TitleText } from './TitleText';
 import { DescriptionText } from './DescriptionText';
@@ -232,7 +232,11 @@ export const DailyPopUp = ({
             }}
             keyExtractor={(item, index) => index.toString()}
           />
-          <ScrollView>
+          <ScrollView
+            style={{
+              maxHeight:430
+            }}
+          >
             <View
               style={{
                 flexWrap: 'wrap',
