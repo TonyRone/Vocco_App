@@ -569,7 +569,16 @@ const PostingVoiceScreen = (props) => {
                   start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                   colors={['#D89DF4', '#B35CF8', '#8229F4']}
                 >
-                  <Image source={recordImg ? { uri: recordImg.path } : { uri: param.info.imgFile.url }} style={{ width: 52, height: 52, borderRadius: 18 }} />
+                  <View style={{
+                    width: 52,
+                    height: 52,
+                    backgroundColor: '#FFF',
+                    borderRadius: 18,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <Image source={recordImg ? { uri: recordImg.path } : { uri: param.info.imgFile.url }} style={{ width: 52, height: 52, borderRadius: 18 }} />
+                  </View>
                   <View style={{
                     width: 23,
                     height: 23,
