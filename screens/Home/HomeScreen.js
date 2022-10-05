@@ -31,11 +31,13 @@ import { Discover } from '../component/Discover';
 import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { ShareHint } from '../component/ShareHint';
 import RNFetchBlob from 'rn-fetch-blob';
+import { DailyPopUp } from '../component/DailyPopUp';
 
 const HomeScreen = (props) => {
 
-
-    const postInfo = props.navigation.state.params?.shareInfo;
+    const param = props.navigation.state.params;
+    const postInfo = param?.shareInfo;
+    const popUp = param?.popUp;
 
     const { t, i18n } = useTranslation();
 
@@ -51,6 +53,7 @@ const HomeScreen = (props) => {
     const [notify, setNotify] = useState(false);
     const [expandKey, setExpandKey] = useState(0);
     const [newStory, setNewStory] = useState(false);
+    const [dailyPop, setDailyPop] = useState(popUp?true:false);
 
     const [noticeCount, noticeDispatch] = useReducer(reducer, 0);
 
@@ -314,6 +317,10 @@ const HomeScreen = (props) => {
                 expandKey={expandKey}
                 left={windowWidth / 2 - 27}
             />
+            {dailyPop && <DailyPopUp
+                props={props}
+                onCloseModal={() => setDailyPop(false)}
+            />}
             {showHint &&
                 <ShareHint
                     onShareAudio={() => shareAudio()}

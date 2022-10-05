@@ -231,6 +231,7 @@ const PostingVoiceScreen = (props) => {
     if (mounted.current) {
       setRecordImg(img);
       setPickModal(false);
+      setWarning(false);
     }
   }
 
@@ -593,7 +594,7 @@ const PostingVoiceScreen = (props) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  if (voiceTitle == '') {
+                  if (voiceTitle == ''||!recordImg) {
                     setWarning(true);
                   }
                   else {
@@ -742,7 +743,7 @@ const PostingVoiceScreen = (props) => {
             shadowRadius: 16,
           }}>
             <DescriptionText
-              text={voiceTitle == "" ? t("Add a title to your story!") : t("You must select a category.")}
+              text={voiceTitle == "" ? t("Add a title to your story!") :recordImg == null ? t("Add a picture to illustrate your story!"): t("You must select a category.")}
               fontSize={15}
               lineHeight={18}
               color='#FFF'

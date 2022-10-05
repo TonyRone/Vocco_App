@@ -29,7 +29,6 @@ import { Stories } from './Stories';
 import { DiscoverStories } from './Discoverstories';
 import { setRefreshState } from '../../store/actions';
 import { SelectLanguage } from './SelectLanguage';
-import { DailyPopUp } from './DailyPopUp';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Discover = ({
@@ -42,7 +41,6 @@ export const Discover = ({
   const [loadKey, setLoadKey] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [showLanguage, setShowLanguage] = useState(false);
-  const [dailyPop, setDailyPop] = useState(false);
 
   const scrollRef = useRef();
   const mounted = useRef(false);
@@ -82,13 +80,13 @@ export const Discover = ({
     mounted.current = true;
     let today = await AsyncStorage.getItem(TODAY);
     let day = new Date().getDate();
-    if (today == null || parseInt(today) != day) {
-      await AsyncStorage.setItem(
-        TODAY,
-        day.toString()
-      );
-      setDailyPop(true);
-    }
+    // if (today == null || parseInt(today) == day) {
+    //   await AsyncStorage.setItem(
+    //     TODAY,
+    //     day.toString()
+    //   );
+    //   setDailyPop(true);
+    // }
     return () => {
       mounted.current = false;
     }
@@ -337,10 +335,6 @@ export const Discover = ({
           />
         </Pressable>
       </Modal>
-      {dailyPop && <DailyPopUp
-        props={props}
-        onCloseModal={() => setDailyPop(false)}
-      />}
       {showLanguage &&
         <SelectLanguage
           onCloseModal={() => setShowLanguage(false)}

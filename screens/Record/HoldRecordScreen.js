@@ -44,6 +44,7 @@ import { SemiBoldText } from '../component/SemiBoldText';
 const HoldRecordScreen = (props) => {
 
   const param = props.navigation.state.params;
+  const imgSource = param?.photoInfo;
 
   let { user, voiceState, refreshState } = useSelector((state) => state.user);
 
@@ -114,7 +115,7 @@ const HoldRecordScreen = (props) => {
       setKey(prevKey => prevKey + 1);
       if (publish == true) {
         let tp = Math.max(wasteTime.current, 1);
-        props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0), isTemporary: temporary, photoInfo:param.photoInfo, categoryId:param.categoryId })
+        props.navigation.navigate('PostingVoice', { recordSecs: Math.ceil(tp / 1000.0), isTemporary: temporary, photoInfo: param.photoInfo, categoryId: param.categoryId })
         setTemporary(false);
         clearRecorder();
       }
@@ -242,27 +243,36 @@ const HoldRecordScreen = (props) => {
             {({ remainingTime, animatedColor }) => {
               return (
                 <ImageBackground
-                  source={require('../../assets/record/Waves.png')}
+                  source={imgSource ? { uri: imgSource.path } : user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri}
                   resizeMode="stretch"
-                  style={{ width: 197, height: 197, alignItems: 'center' }}
+                  style={{ width: 189, height: 189, alignItems: 'center' }}
+                  imageStyle={{ borderRadius: 100 }}
                 >
-                  <DescriptionText
-                    text={t("seconds")}
-                    color="rgba(59, 31, 82, 0.6)"
-                    fontSize={20}
-                    marginTop={32}
-                  />
-                  <LinearTextGradient
-                    style={{ fontSize: 80, marginTop: -10 }}
-                    locations={[0, 1]}
-                    colors={["#C479FF", "#650DD6"]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 0, y: 1 }}
-                  >
-                    <Animated.Text style={{ color: animatedColor, fontFamily: "SFProDisplay-Semibold" }}>
-                      {fill - Math.floor(wasteTime.current / 1000)}
-                    </Animated.Text>
-                  </LinearTextGradient>
+                  <View style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: 100,
+                    alignItems: 'center',
+                    backgroundColor: "#00000050"
+                  }}>
+                    <DescriptionText
+                      text={t("seconds")}
+                      color="rgba(255, 255, 255, 1)"
+                      fontSize={20}
+                      marginTop={32}
+                    />
+                    <LinearTextGradient
+                      style={{ fontSize: 67, marginTop: 0 }}
+                      locations={[0, 1]}
+                      colors={["#FFFFFF", "#FFFFFF"]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 0, y: 1 }}
+                    >
+                      <Animated.Text style={{ color: '#FFF', fontFamily: "SFProDisplay-Semibold" }}>
+                        {fill - Math.floor(wasteTime.current / 1000)}
+                      </Animated.Text>
+                    </LinearTextGradient>
+                  </View>
                 </ImageBackground>
               )
             }}
@@ -277,8 +287,8 @@ const HoldRecordScreen = (props) => {
           <Image
             source={require("../../assets/record/finger.png")}
             style={{
-              width:32,
-              height:32
+              width: 32,
+              height: 32
             }}
           />
           <SemiBoldText
