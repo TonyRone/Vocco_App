@@ -8,7 +8,8 @@ import {
   Text,
   Platform,
   FlatList,
-  ScrollView
+  ScrollView,
+  ImageBackground
 } from 'react-native';
 
 import { SvgXml } from 'react-native-svg';
@@ -16,6 +17,7 @@ import ShareIconsSvg from '../../assets/post/ShareIcons.svg';
 import ShareHintSvg from '../../assets/post/ShareHint.svg';
 import shareSvg from '../../assets/post/share.svg';
 import cameraSvg from '../../assets/discover/camera.svg';
+import photoSvg from '../../assets/record/photo.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Categories, POST_CHECK, windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
@@ -72,11 +74,11 @@ export const DailyPopUp = ({
   }
 
   const onSetRecordImg = async (img) => {
-        setPhotoInfo(img);
-        setPhotoIndex(-1);
-        setCameraPath(img.path);
-        setWarning(false);
-        setPickModal(false);
+    setPhotoInfo(img);
+    setPhotoIndex(-1);
+    setCameraPath(img.path);
+    setWarning(false);
+    setPickModal(false);
   }
 
   useEffect(() => {
@@ -190,7 +192,7 @@ export const DailyPopUp = ({
               marginBottom={12}
             />
             <TouchableOpacity
-              onPress={()=> setShowCategoryModal(true) }
+              onPress={() => setShowCategoryModal(true)}
             >
               <DescriptionText
                 text={t("See all")}
@@ -203,7 +205,7 @@ export const DailyPopUp = ({
           </View>
           <FlatList
             horizontal={true}
-            ref = {scrollRef}
+            ref={scrollRef}
             showsHorizontalScrollIndicator={false}
             style={{
               width: windowWidth - 36,
@@ -217,7 +219,7 @@ export const DailyPopUp = ({
                 onPress={() => {
                   setSelectedCategory(index);
                   setWarning(false);
-                  scrollRef.current?.scrollToIndex({animated: true, index: index});
+                  scrollRef.current?.scrollToIndex({ animated: true, index: index });
                 }}
                 active={selectedCategory == index ? true : false}
               />
@@ -226,7 +228,7 @@ export const DailyPopUp = ({
           />
           <ScrollView
             style={{
-              maxHeight:430
+              maxHeight: 430
             }}
           >
             <View
@@ -245,29 +247,27 @@ export const DailyPopUp = ({
                 marginTop: 16,
                 marginHorizontal: 8,
               }}
-                onPress={()=> setPickModal(true)}
+                onPress={() => setPickModal(true)}
               >
-                <Image
+                <ImageBackground
                   source={cameraPath ? { uri: cameraPath } : require("../../assets/discover/road.png")}
                   style={{
                     width: imgLength,
                     height: imgLength,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor:'#FFF'
+                  }}
+                  imageStyle={{
                     borderRadius: 16,
                     borderWidth: photoIndex == -1 ? 1 : 0,
-                    borderColor: '#A24EE4'
-                  }}
-                />
-                <View
-                  style={{
-                    position: 'absolute',
-                    top: 8,
-                    right: 8
+                    borderColor: '#A24EE4',
                   }}
                 >
                   <SvgXml
-                    xml={cameraSvg}
+                    xml={photoSvg}
                   />
-                </View>
+                </ImageBackground>
               </TouchableOpacity>
               {photos.map((item, index) => {
                 return <TouchableOpacity
@@ -308,7 +308,7 @@ export const DailyPopUp = ({
             }}
           >
             <MyButton
-              label={t("Record my story")}
+              label={t("Next")}
               onPress={() => {
                 if (selectedCategory == -1 || photoInfo == null)
                   setWarning(true);
@@ -360,7 +360,7 @@ export const DailyPopUp = ({
                 setSelectedCategory(id);
                 setShowCategoryModal(false);
                 setWarning(false);
-                scrollRef.current?.scrollToIndex({animated: true, index: id});
+                scrollRef.current?.scrollToIndex({ animated: true, index: id });
               }}
             />
           </Pressable>
