@@ -309,7 +309,7 @@ const PostingVoiceScreen = (props) => {
                   alignItems: 'center'
                 }}
                 onPress={() => {
-                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                  //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                   setVisibleStatus(!visibleStatus);
                 }}
               >
@@ -339,7 +339,7 @@ const PostingVoiceScreen = (props) => {
                 alignItems: 'center'
               }}
                 onPress={() => {
-                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                  //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                   setNotSafe(!notSafe);
                 }}
               >
