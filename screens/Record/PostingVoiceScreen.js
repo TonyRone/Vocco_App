@@ -319,7 +319,7 @@ const PostingVoiceScreen = (props) => {
                 <LinearTextGradient
                   style={{ fontSize: 17, marginLeft: 8 }}
                   locations={[0, 0.4, 1]}
-                  colors={(Platform.OS == 'ios' ^ visibleStatus) ? ["#CF68FF", "#A24EE4", "#4C32EC"] : ["#361252", "#361252", "#361252"]}
+                  colors={visibleStatus ? ["#CF68FF", "#A24EE4", "#4C32EC"] : ["#361252", "#361252", "#361252"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 0, y: 1 }}
                 >
@@ -344,7 +344,7 @@ const PostingVoiceScreen = (props) => {
                 }}
               >
                 <SvgXml
-                  xml={(Platform.OS == 'ios' ^ notSafe) ? brightPrivacySvg : privacySvg}
+                  xml={notSafe ? brightPrivacySvg : privacySvg}
                 />
                 <LinearTextGradient
                   style={{ fontSize: 17, marginLeft: 8 }}
@@ -659,7 +659,7 @@ const PostingVoiceScreen = (props) => {
                   style={
                     {
                       height: 56,
-                      width:100,
+                      width: 100,
                       borderRadius: 28,
                       alignItems: 'center',
                       justifyContent: 'center',
