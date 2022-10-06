@@ -319,7 +319,7 @@ const PostingVoiceScreen = (props) => {
                 <LinearTextGradient
                   style={{ fontSize: 17, marginLeft: 8 }}
                   locations={[0, 0.4, 1]}
-                  colors={visibleStatus ? ["#CF68FF", "#A24EE4", "#4C32EC"] : ["#361252", "#361252", "#361252"]}
+                  colors={!visibleStatus ? ["#CF68FF", "#A24EE4", "#4C32EC"] : ["#361252", "#361252", "#361252"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 0, y: 1 }}
                 >
@@ -349,7 +349,7 @@ const PostingVoiceScreen = (props) => {
                 <LinearTextGradient
                   style={{ fontSize: 17, marginLeft: 8 }}
                   locations={[0, 0.4, 1]}
-                  colors={notSafe ? ["#CF68FF", "#A24EE4", "#4C32EC"] : ["#361252", "#361252", "#361252"]}
+                  colors={!notSafe ? ["#CF68FF", "#A24EE4", "#4C32EC"] : ["#361252", "#361252", "#361252"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 0, y: 1 }}
                 >
