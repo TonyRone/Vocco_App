@@ -71,7 +71,7 @@ const SearchScreen = (props) => {
     setCategory(id);
     getLabel('');
     setSelectedCategory(id);
-    scrollRef.current?.scrollToOffset({ animated: true, offset: 0 });
+    scrollRef.current?.scrollToIndex({ animated: true, index: id });
     setShowModal(false);
   }
 
@@ -393,22 +393,15 @@ const SearchScreen = (props) => {
             style={[{ marginLeft: 12 }, styles.mt16]}
             data={Categories}
             renderItem={({ item, index }) => {
-              let idx = 0;
-              if (selectedCategory > 0) {
-                if (index == 0) idx = selectedCategory;
-                else if (index <= selectedCategory) idx = index - 1;
-                else idx = index;
-              }
-              else idx = index;
               return <CategoryIcon
-                key={'category' + idx}
-                label={Categories[idx].label}
-                source={Categories[idx].uri}
+                key={'category' + index}
+                label={Categories[index].label}
+                source={Categories[index].uri}
                 //  onPress={()=>{setCategory(index);getLabel('');}}
-                active={category == idx ? true : false}
+                active={category == index ? true : false}
               />
             }}
-            keyExtractor={(item, idx) => idx.toString()}
+            keyExtractor={(item, index) => index.toString()}
           />
         </View>
         <TitleText
@@ -469,22 +462,18 @@ const SearchScreen = (props) => {
             style={[{ marginLeft: 12 }, styles.mt16]}
             data={Categories}
             renderItem={({ item, index }) => {
-              let idx = 0;
-              if (selectedCategory > 0) {
-                if (index == 0) idx = selectedCategory;
-                else if (index <= selectedCategory) idx = index - 1;
-                else idx = index;
-              }
-              else idx = index;
               return <CategoryIcon
-                key={'category' + idx}
-                label={Categories[idx].label}
-                source={Categories[idx].uri}
-                onPress={() => setCategory(idx)}
-                active={category == idx ? true : false}
+                key={'category' + index}
+                label={Categories[index].label}
+                source={Categories[index].uri}
+                onPress={() => {
+                  setCategory(index);
+                  scrollRef.current?.scrollToIndex({ animated: true, index: index });
+                }}
+                active={category == index ? true : false}
               />
             }}
-            keyExtractor={(item, idx) => idx.toString()}
+            keyExtractor={(item, index) => index.toString()}
           />
         </View>
         <ScrollView style={{ paddingLeft: 16, marginTop: 31 }}>
