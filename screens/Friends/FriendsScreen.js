@@ -198,7 +198,12 @@ const FriendsScreen = (props) => {
     const onShareLink = () => {
         Share.open({
             url: `https://vocco.app.link/${user.name}`,
-        });
+        }).then(res => {
+
+        })
+            .catch(err => {
+                console.log("err");
+            });;
     }
 
     useEffect(() => {
@@ -320,7 +325,7 @@ const FriendsScreen = (props) => {
                                 lineHeight={24}
                             />
                             <DescriptionText
-                                text={'vocco.ai/'+user.name}
+                                text={'vocco.ai/' + user.name}
                                 fontSize={13}
                                 lineHeight={21}
                             />

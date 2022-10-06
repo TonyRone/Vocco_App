@@ -7,6 +7,9 @@ import {
     SafeAreaView,
     Vibration,
     Platform,
+    Pressable,
+    Text,
+    Image,
 } from 'react-native';
 
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
@@ -17,7 +20,7 @@ import closeSvg from '../../assets/common/close.svg';
 import { BottomButtons } from '../component/BottomButtons';
 import black_settingsSvg from '../../assets/notification/black_settings.svg';
 import notificationSvg from '../../assets/discover/notification.svg';
-import { windowWidth } from '../../config/config';
+import { Categories, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
 import VoiceService from '../../services/VoiceService';
@@ -32,6 +35,9 @@ import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { ShareHint } from '../component/ShareHint';
 import RNFetchBlob from 'rn-fetch-blob';
 import { DailyPopUp } from '../component/DailyPopUp';
+import searchSvg from '../../assets/login/search.svg';
+import { Modal } from 'react-native';
+import { AllCategory } from '../component/AllCategory';
 
 const HomeScreen = (props) => {
 
@@ -51,9 +57,10 @@ const HomeScreen = (props) => {
     const [isActiveState, setIsActiveState] = useState(false);
     const [showHint, setShowHint] = useState(postInfo ? true : false);
     const [notify, setNotify] = useState(false);
-    const [expandKey, setExpandKey] = useState(0);
     const [newStory, setNewStory] = useState(false);
-    const [dailyPop, setDailyPop] = useState(popUp?true:false);
+    const [dailyPop, setDailyPop] = useState(popUp ? true : false);
+    const [categoryId, setCategoryId] = useState(0);
+    const [showModal, setShowModal] = useState(false);
 
     const [noticeCount, noticeDispatch] = useReducer(reducer, 0);
 
@@ -73,8 +80,6 @@ const HomeScreen = (props) => {
         scrollIndicator,
         113 / windowWidth
     )
-
-    const scrollRef = useRef();
 
     const getNewNotifyCount = () => {
         VoiceService.unreadActivityCount().then(async res => {
@@ -170,6 +175,11 @@ const HomeScreen = (props) => {
             })
     }
 
+    const onChangeCategory = (id) => {
+        setCategoryId(id);
+        setShowModal(false);
+      }
+
     useEffect(() => {
         mounted.current = true;
         getNewNotifyCount();
@@ -259,15 +269,94 @@ const HomeScreen = (props) => {
                     </View>
                 </View>
             </View>
-
+            {!isActiveState&&<View style={[styles.paddingH16, {
+                flexDirection: 'row',
+                alignItems: "flex-start",
+                marginBottom: 6,
+            }]}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+                    <SvgXml
+                        width="20"
+                        height="20"
+                        xml={searchSvg}
+                        style={styles.searchIcon}
+                    />
+                    <Pressable
+                        style={styles.searchBox}
+                        onPress={() => {
+                            props.navigation.navigate("Search");
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontSize: 17,
+                                color: 'grey'
+                            }}
+                        >{t("Search") + '...'}</Text>
+                    </Pressable>
+                </View>
+                <View style={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: windowWidth / 375 * 14 }}>
+                    <View
+                        style={{
+                            height: windowWidth / 375 * 43,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: windowWidth / 375 * 43,
+                            borderRadius: 12,
+                            backgroundColor: '#B35CF8',
+                        }}
+                    >
+                        <TouchableOpacity
+                            style={{
+                                width: windowWidth / 375 * 43,
+                                alignItems: 'center',
+                                padding: 1,
+                                borderRadius: 12,
+                            }}
+                            onPress={() => setShowModal()}
+                        >
+                            <View style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                color: '#4C64FF',
+                                backgroundColor: '#FFF',
+                                padding: 15,
+                                width: windowWidth / 375 * 43 - 4,
+                                height: windowWidth / 375 * 43 - 4,
+                                borderRadius: 10,
+                            }}>
+                                <Image source={Categories[categoryId].uri}
+                                    style={{
+                                        width: 25,
+                                        height: 25
+                                    }}
+                                />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <Text
+                        style={{
+                            fontSize: 11,
+                            fontFamily: "SFProDisplay-Regular",
+                            letterSpacing: 0.066,
+                            color: '#A24EE4',
+                            textAlign: "center",
+                            marginTop: 4,
+                        }}
+                    >
+                        {Categories[categoryId].label == '' ? t('All') : t(Categories[categoryId].label)}
+                    </Text>
+                </View>
+            </View>}
             {isActiveState ?
                 <Feed
                     props={props}
-                    onSetExpandKey={() => setExpandKey(expandKey + 1)}
+                    category={categoryId}
                 />
                 :
                 <Discover
                     props={props}
+                    category={categoryId}
                 />
             }
             {
@@ -314,7 +403,6 @@ const HomeScreen = (props) => {
             <RecordIcon
                 props={props}
                 bottom={27}
-                expandKey={expandKey}
                 left={windowWidth / 2 - 27}
             />
             {dailyPop && <DailyPopUp
@@ -326,6 +414,22 @@ const HomeScreen = (props) => {
                     onShareAudio={() => shareAudio()}
                     onCloseModal={() => { setShowHint(false); }}
                 />}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={showModal}
+                onRequestClose={() => {
+                    setShowModal(!showModal);
+                }}
+            >
+                <Pressable style={styles.swipeModal}>
+                    <AllCategory
+                        closeModal={() => setShowModal(false)}
+                        selectedCategory={categoryId}
+                        setCategory={(id) => onChangeCategory(id)}
+                    />
+                </Pressable>
+            </Modal>
         </SafeAreaView>
     );
 };

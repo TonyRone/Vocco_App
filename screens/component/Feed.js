@@ -4,31 +4,36 @@ import {
   ScrollView,
   Platform,
   RefreshControl,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
 
 
 import { FeedStories } from './FeedStories';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
-import { windowWidth } from '../../config/config';
+import { Categories, windowWidth } from '../../config/config';
 import { useDispatch, useSelector } from 'react-redux';
 import { TemporaryStories } from './TemporaryStories';
 import { setUser } from '../../store/actions';
 import { DiscoverStories } from './Discoverstories';
+import { styles } from '../style/Common';
+import { SemiBoldText } from './SemiBoldText';
+import { DescriptionText } from './DescriptionText';
+import ShareSvg from '../../assets/friend/share.svg';
+import Share from 'react-native-share';
+import { SvgXml } from 'react-native-svg';
 
 export const Feed = ({
   props,
-  onSetExpandKey = () => { }
+  category = 0,
 }) => {
 
-  const [loadKey, setLoadKey] = useState(0);
-  const [refreshing, setRefreshing] = useState(false);
 
   const mounted = useRef(false);
 
   const { t, i18n } = useTranslation();
 
-  const scrollRef = useRef();
 
   let { user } = useSelector((state) => {
     return (
@@ -38,20 +43,16 @@ export const Feed = ({
 
   const dispatch = useDispatch();
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    setLoadKey(loadKey - 1);
-    setTimeout(() => {
-      if (mounted.current)
-        setRefreshing(false)
-    }, 1000);
-  };
+  const onShareLink = () => {
+    Share.open({
+      url: `https://vocco.app.link/${user.name}`,
+    }).then(res => {
 
-  const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-    const paddingToBottom = 10;
-    return layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom;
-  };
+    })
+      .catch(err => {
+        console.log("err");
+      });
+  }
 
   useEffect(() => {
     mounted.current = true;
@@ -71,25 +72,40 @@ export const Feed = ({
         flex: 1,
       }}
     >
-      {/* <ScrollView
-        style={{ marginBottom: Platform.OS == 'ios' ? 65 : 75, marginTop: 10, flex:1 }}
-        ref={scrollRef}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
+      <TouchableOpacity
+        style={[styles.rowSpaceBetween, { backgroundColor: '#F8F0FF', paddingVertical: 8, paddingHorizontal: 16, marginBottom: 6 }]}
+        onPress={() => onShareLink()}
+      >
+        <View style={styles.rowAlignItems}>
+          <Image
+            source={user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri}
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: 24,
+            }}
           />
-        }
-        onScroll={({ nativeEvent }) => {
-          if (isCloseToBottom(nativeEvent)) {
-            setLoadKey(loadKey + 1);
-          }
-        }}
-        scrollEventThrottle={400}
-      > */}
+          <View style={{
+            marginLeft: 12
+          }}>
+            <SemiBoldText
+              text={t("Invite friends")}
+              fontSize={15}
+              lineHeight={24}
+            />
+            <DescriptionText
+              text={'vocco.ai/' + user.name}
+              fontSize={13}
+              lineHeight={21}
+            />
+          </View>
+        </View>
+        <SvgXml
+          xml={ShareSvg}
+        />
+      </TouchableOpacity>
       <DiscoverStories
         props={props}
-        loadKey={loadKey}
         screenName="Feed"
       />
       {/* </ScrollView> */}

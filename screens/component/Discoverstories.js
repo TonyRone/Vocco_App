@@ -27,13 +27,11 @@ import { StoryPanel } from './StoryPanel';
 
 export const DiscoverStories = ({
   props,
-  loadKey = 0,
   screenName = '',
   category = '',
   userId = '',
   searchTitle = '',
   recordId = '',
-  setLoadKey = () => { }
 }) => {
 
   const dispatch = useDispatch();
@@ -87,7 +85,6 @@ export const DiscoverStories = ({
   }
 
   const getStories = (isNew) => {
-    setLocalKey(loadKey);
     if (!isNew && LoadMore < 10) {
       OnShowEnd();
       return;
@@ -126,7 +123,6 @@ export const DiscoverStories = ({
   const onRefresh = () => {
     setRefreshing(true);
     getStories(true);
-    setLoadKey(loadKey - 1);
     setTimeout(() => {
       if (mounted.current)
         setRefreshing(false)
@@ -135,11 +131,11 @@ export const DiscoverStories = ({
 
   useEffect(() => {
     mounted.current = true;
-    getStories(loadKey <= localKey);
+    getStories(true);
     return () => {
       mounted.current = false;
     }
-  }, [refreshState, loadKey, category])
+  }, [refreshState, category])
 
   useEffect(() => {
     if (visibleOne >= 0)
@@ -189,39 +185,6 @@ export const DiscoverStories = ({
         }
       </View>
     </ScrollView>
-    // return <FlatList
-    //   onMomentumScrollEnd={(e) => {
-    //     let contentOffset = e.nativeEvent.contentOffset;
-    //     let ind = Math.round(contentOffset.y / (pageHeight));
-    //     if(currentVisible.current>=0)
-    //     dispatch(setVisibleOne(ind));
-    //   }}
-    //   data={stories}
-    //   pagingEnabled
-    //   showsVerticalScrollIndicator={false}
-    //   style={{
-    //     height: pageHeight
-    //   }}
-    //   keyboardShouldPersistTaps='handled'
-    //   refreshControl={
-    //     <RefreshControl
-    //       refreshing={refreshing}
-    //       onRefresh={onRefresh}
-    //     />}
-    //   renderItem={({ item, index }) => {
-    //     return <StoryItem
-    //       key={index + item.id + screenName}
-    //       itemIndex={index}
-    //       itemHeight={pageHeight}
-    //       props={props}
-    //       info={item}
-    //       userClick={userClick}
-    //       onSetUserClick={() => setUserClick(!userClick)}
-    //       onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
-    //     />
-    //   }}
-    //   onEndReached={() => fetchLoadMore()}
-    // />
   }, [storyPanels, refreshState])
 
   return <View style={{ height: pageHeight }}>

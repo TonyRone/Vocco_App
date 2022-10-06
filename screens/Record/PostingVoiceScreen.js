@@ -216,11 +216,11 @@ const PostingVoiceScreen = (props) => {
 
   const onClickPost = async () => {
     Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-    if (category == 0) {
-      setWarning(true);
-      setPostStep(1);
-      return;
-    }
+    // if (category == 0) {
+    //   setWarning(true);
+    //   setPostStep(1);
+    //   return;
+    // }
     if (param.info)
       changeStory();
     else {

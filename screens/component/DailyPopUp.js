@@ -30,6 +30,7 @@ import CameraRoll from "@react-native-community/cameraroll"
 import { CategoryIcon } from './CategoryIcon';
 import ImagePicker from 'react-native-image-crop-picker';
 import { AllCategory } from './AllCategory';
+import { PickImage } from './PickImage';
 
 export const DailyPopUp = ({
   props,
@@ -44,11 +45,12 @@ export const DailyPopUp = ({
 
   const [showModal, setShowModal] = useState(true);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(-1);
+  const [selectedCategory, setSelectedCategory] = useState(0);
   const [photos, setPhotos] = useState([]);
   const [photoIndex, setPhotoIndex] = useState(-2);
   const [photoInfo, setPhotoInfo] = useState(null);
   const [cameraPath, setCameraPath] = useState(null);
+  const [pickModal, setPickModal] = useState(false);
   const [warning, setWarning] = useState(false);
 
   const options = {
@@ -69,19 +71,12 @@ export const DailyPopUp = ({
     onCloseModal();
   }
 
-  const selectFileByCamera = async () => {
-    await ImagePicker.openCamera(options).then(image => {
-      if (mounted.current) {
-        setPhotoInfo(image);
+  const onSetRecordImg = async (img) => {
+        setPhotoInfo(img);
         setPhotoIndex(-1);
-        setCameraPath(image.path);
+        setCameraPath(img.path);
         setWarning(false);
-      }
-    })
-      .catch(err => {
-        console.log(err);
-      })
-      ;
+        setPickModal(false);
   }
 
   useEffect(() => {
@@ -250,7 +245,7 @@ export const DailyPopUp = ({
                 marginTop: 16,
                 marginHorizontal: 8,
               }}
-                onPress={selectFileByCamera}
+                onPress={()=> setPickModal(true)}
               >
                 <Image
                   source={cameraPath ? { uri: cameraPath } : require("../../assets/discover/road.png")}
@@ -370,6 +365,12 @@ export const DailyPopUp = ({
             />
           </Pressable>
         </Modal>
+        {pickModal &&
+          <PickImage
+            onCloseModal={() => setPickModal(false)}
+            onSetImageSource={(img) => onSetRecordImg(img)}
+          />
+        }
       </View>
     </Modal>
   );

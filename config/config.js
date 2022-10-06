@@ -22,10 +22,10 @@ export const TODAY = "today";
 
 export const Categories = 
 [
-    // {
-    //     label:'',
-    //     uri:require('../assets/categories/all.png')
-    // },
+    {
+        label:'',
+        uri:require('../assets/categories/all.png')
+    },
     {
         label:'Fun',
         uri:require('../assets/categories/fun.png')
