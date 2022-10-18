@@ -299,7 +299,7 @@ const ProfileScreen = (props) => {
                     </ImageBackground>
                   }
                 </TouchableOpacity>
-                <View style={{
+                {/* <View style={{
                   paddingHorizontal: 6,
                   paddingVertical: 3,
                   borderRadius: 8,
@@ -332,7 +332,7 @@ const ProfileScreen = (props) => {
                     color={userInfo.likes < 100 ? '#E4373A' : userInfo.likes < 1000 ? '#FFC30E' : '#6497C5'}
                     marginLeft={8}
                   />
-                </View>
+                </View> */}
               </View>
             </View>
             <View style={[styles.contentCenter, { height: 40, width: 40, borderRadius: 20, backgroundColor: '#F8F0FF' }]}>

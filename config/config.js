@@ -4,7 +4,8 @@ export const windowHeight = Dimensions.get('window').height;
 
 //export const API_URL = 'https://voccoservice.wl.r.appspot.com';
 export const API_URL = 'https://api.vocco.ai';
-//export const API_URL = 'http://192.168.111.196:80';
+// export const API_URL = 'http://95.217.49.127:3001';
+// export const API_URL = 'http://10.0.2.2:3001'
 export const SOCKET_URL = 'https://realservice-kqnrsfqveq-od.a.run.app';
 //export const SOCKET_URL = 'http://192.168.111.196:3000';
 export const ACCESSTOKEN_KEY = "@VoccoAT:2021";
@@ -225,3 +226,7 @@ export const Avatars = [
         uri:require('../assets/phoneNumber/avatar-11.png')
     },
 ]
+
+export const Days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
+export const Months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]

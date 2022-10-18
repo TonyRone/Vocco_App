@@ -1,28 +1,33 @@
 import React, { useState, useEffect, useRef, useReducer, useMemo, useCallback } from 'react';
 import {
   View,
+  Text,
   ScrollView,
+  FlatList,
   Platform,
   RefreshControl,
   TouchableOpacity,
   Image,
 } from 'react-native';
-
-
-import { FeedStories } from './FeedStories';
-import { useTranslation } from 'react-i18next';
-import '../../language/i18n';
-import { Categories, windowWidth } from '../../config/config';
 import { useDispatch, useSelector } from 'react-redux';
+import Share from 'react-native-share';
+import { SvgXml } from 'react-native-svg';
+import { useTranslation } from 'react-i18next';
+import LinearGradient from "react-native-linear-gradient";
+
+import '../../language/i18n';
+import { FeedStories } from './FeedStories';
+import { Categories, windowWidth, Days, Months } from '../../config/config';
 import { TemporaryStories } from './TemporaryStories';
 import { setUser } from '../../store/actions';
-import { DiscoverStories } from './Discoverstories';
+import { FriendStories } from './FriendStories';
 import { styles } from '../style/Common';
 import { SemiBoldText } from './SemiBoldText';
 import { DescriptionText } from './DescriptionText';
+import VoiceService from '../../services/VoiceService';
+
 import ShareSvg from '../../assets/friend/share.svg';
-import Share from 'react-native-share';
-import { SvgXml } from 'react-native-svg';
+import DropdownSvg from '../../assets/Feed/monthdown.svg';
 
 export const Feed = ({
   props,
@@ -31,9 +36,14 @@ export const Feed = ({
 
 
   const mounted = useRef(false);
+  const current_Month = new Date().getMonth();
 
   const { t, i18n } = useTranslation();
-
+  const [selectedDay, setSelectedDay] = useState(0);
+  const [selectedMonth, setSelectedMonth] = useState(0);
+  const [monthDate, setMonthDate] = useState([]);
+  const scrollRef = useRef();
+  const [showMonthDropdown, setShowMonthDropdown] = useState(false);
 
   let { user } = useSelector((state) => {
     return (
@@ -55,6 +65,10 @@ export const Feed = ({
   }
 
   useEffect(() => {
+    const currentDate = new Date();
+    setSelectedDay(currentDate.getDate());
+    setSelectedMonth(currentDate.getMonth() + 1);
+
     mounted.current = true;
     let tp = user;
     tp.lastSee = new Date();
@@ -62,7 +76,35 @@ export const Feed = ({
     return () => {
       mounted.current = false;
     }
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    if (selectedMonth > 0) {
+      let month_dates = [];
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth();
+      let daysInMonth = new Date(currentYear, selectedMonth, 0).getDate();
+      if (selectedMonth === currentMonth + 1) {
+        daysInMonth = new Date().getDate();
+      }
+      for (let i = 1; i <= daysInMonth; i++) {
+        let dayName = Days[new Date(`${currentYear}/${selectedMonth}/${i}`).getDay()];
+        month_dates.push({
+          date: i,
+          day: dayName
+        });
+      }
+
+      setMonthDate([...month_dates]);
+      setSelectedDay(daysInMonth);
+    }
+  }, [selectedMonth])
+
+  // useEffect(() => {
+  //   if (selectedMonth && selectedDay) {
+  //     VoiceService.getStories(0, '', '', '', '', 'friend', 10, `2022-${selectedMonth.toString().padStart(2, '0')}-${selectedDay.toString().padStart(2, '0')}`);
+  //   }
+  // }, [selectedMonth, selectedDay])
 
   return (
     <View
@@ -72,7 +114,7 @@ export const Feed = ({
         flex: 1,
       }}
     >
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={[styles.rowSpaceBetween, { backgroundColor: '#F8F0FF', paddingVertical: 8, paddingHorizontal: 16, marginBottom: 6 }]}
         onPress={() => onShareLink()}
       >
@@ -103,10 +145,71 @@ export const Feed = ({
         <SvgXml
           xml={ShareSvg}
         />
-      </TouchableOpacity>
-      <DiscoverStories
+      </TouchableOpacity> */}
+      <View style={{ flexDirection : "row", justifyContent: "space-between", paddingHorizontal: 16 }}>
+        <Text style={{ fontWeight: "700", fontSize: 18, lineHeight: 26, color: "#000000" }}>Moments - Timeline</Text>
+        <View style={{ position: "relative" }}>
+          <TouchableOpacity onPress={() => setShowMonthDropdown(!showMonthDropdown)}>
+            <View style={{ flexDirection: "row", alignItems: "center", width: 75, justifyContent: "space-between" }}>
+              <Text style={{ fontWeight: "700", fontSize: 12, lineHeight: 26, color: "#858585" }}>{ Months[selectedMonth - 1] }</Text>
+              <SvgXml xml={DropdownSvg} />
+            </View>
+          </TouchableOpacity>
+          { showMonthDropdown &&
+            <ScrollView style={{ position: "absolute", width: "100%", top: 25, height: 100, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#858585", zIndex: 10, overflow: "scroll" }}>
+              {
+                Months.map((item, index) => {
+                  if (index <= current_Month) {
+                    return <TouchableOpacity
+                            key={index}
+                            style={{
+                              paddingVertical: 3,
+                              backgroundColor: index === selectedMonth - 1 ? "#000000" : "#FFFFFF"
+                            }}
+                            onPress={() => {
+                              setSelectedMonth(index + 1);
+                              setShowMonthDropdown(false);
+                            }}
+                          >
+                            <Text style={{ color: index === selectedMonth - 1 ? "#FFFFFF" : "#858585", fontSize: 12 }}>{item}</Text>
+                          </TouchableOpacity>
+                  }
+                })
+              }
+            </ScrollView>
+          }
+        </View>
+      </View>
+      <View style={{ width: windowWidth, paddingHorizontal: 20, marginTop: 24 }}>
+        <FlatList
+          horizontal={true}
+          ref={scrollRef}
+          onContentSizeChange={() => {
+            scrollRef.current?.scrollToEnd({ animated: true })
+          }}
+          showsHorizontalScrollIndicator={false}
+          data={monthDate}
+          keyExtractor={(item) => item.date + item.day}
+          renderItem={({item}) => (
+            <View style={{ flexDirection: "column", alignItems: "center", marginRight: 30 }}>
+              <Text style={{ fontWeight: "500", fontSize: 12, lineHeight: 12, color: "#A8A8A8" }}>{ item.day }</Text>
+              <TouchableOpacity style={{ marginTop: item.date === selectedDay ? 2 : 3 }} onPress={() => setSelectedDay(item.date)}>
+                <LinearGradient
+                  style={{ width: 29, height: 29, borderRadius: 20, flexDirection: "row", alignItems: "center", justifyContent: "center" }}
+                  colors={ item.date === selectedDay ? [ '#D596F5', '#8A31F6' ] : ['#FFFFFF', '#FFFFFF']}
+                >
+                  <Text style={{ fontWeight: "500", fontSize: 16, lineHeight: 16, color: item.date === selectedDay ? '#FFFFFF' : '#000000' }}>{ item.date }</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          ) }
+        />
+      </View>
+      <FriendStories
         props={props}
         screenName="Feed"
+        selectedDay={selectedDay}
+        selectedMonth={selectedMonth}
       />
       {/* </ScrollView> */}
     </View>

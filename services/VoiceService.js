@@ -136,10 +136,10 @@ class VoiceService {
             });
     }
 
-    async getStories(skip = 0, userId = '', category = '', searchTitle = '', recordId = '', friend = '', take = 10) {
+    async getStories(skip = 0, userId = '', category = '', searchTitle = '', recordId = '', friend = '', take = 10, date = '') {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
-            fetch('GET', `${API_URL}/records/stories?skip=${skip}&take=${take}&order=DESC&userId=${userId}&category=${category}&search=${searchTitle}&recordId=${recordId}&friend=${friend}`, {
+            fetch('GET', `${API_URL}/records/stories?skip=${skip}&take=${take}&order=DESC&userId=${userId}&category=${category}&search=${searchTitle}&recordId=${recordId}&friend=${friend}&date=${date}`, {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             });

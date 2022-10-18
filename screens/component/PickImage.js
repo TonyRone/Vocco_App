@@ -3,6 +3,7 @@ import {
   View,
   Pressable,
   Modal,
+  TouchableOpacity,
 
 } from 'react-native';
 
@@ -91,7 +92,7 @@ export const PickImage = ({
             backgroundColor: '#FFF'
           }}
         >
-          <Pressable
+          <TouchableOpacity
             style={{
               flexDirection: 'row',
               justifyContent: 'center',
@@ -108,8 +109,8 @@ export const PickImage = ({
               fontSize={20}
               lineHeight={24}
             />
-          </Pressable>
-          <Pressable
+          </TouchableOpacity>
+          <TouchableOpacity
             style={{
               flexDirection: 'row',
               justifyContent: 'center',
@@ -124,7 +125,7 @@ export const PickImage = ({
               fontSize={20}
               lineHeight={24}
             />
-          </Pressable>
+          </TouchableOpacity>
         </View>
         <Pressable
           style={{

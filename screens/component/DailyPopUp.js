@@ -277,6 +277,7 @@ export const DailyPopUp = ({
                     setPhotoInfo({ path: item.node.image.uri, mime: item.node.type });
                     setWarning(false);
                   }}
+                  style={{ position: "relative" }}
                 >
                   <Image
                     source={{ uri: item.node.image.uri }}
@@ -286,10 +287,11 @@ export const DailyPopUp = ({
                       borderRadius: 16,
                       marginHorizontal: 8,
                       marginTop: 16,
-                      borderWidth: index == photoIndex ? 1 : 0,
+                      borderWidth: index == photoIndex ? 3 : 0,
                       borderColor: '#A24EE4'
                     }}
                   />
+                  { index == photoIndex && <View style={{ position: "absolute", width: 22, height: 22, backgroundColor: "white", borderRadius: 11, top: 26, right: 18, elevation: 3 }}></View>}
                 </TouchableOpacity>
               })}
             </View>

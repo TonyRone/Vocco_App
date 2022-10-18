@@ -9,7 +9,8 @@ export const HeartIcon = ({
   marginLeft = 0,
   marginRight = 0,
   marginBottom = 0,
-  OnSetLike = () => { }
+  OnSetLike = () => { },
+  borderColor = "#515151"
 }) => {
 
   const [liked, setLiked] = useState(isLike);
@@ -44,7 +45,7 @@ export const HeartIcon = ({
       <AnimatedIcon
         ref={smallAnimatedIcon}
         name={isLike ? 'heart' : 'hearto'}
-        color={isLike ? colors.heartColor : colors.textPrimary}
+        color={isLike ? colors.heartColor : borderColor}
         size={height}
         style={styles.icon}
       />
