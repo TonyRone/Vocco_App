@@ -148,7 +148,7 @@ export const Feed = ({
       </TouchableOpacity> */}
       <View style={{ flexDirection : "row", justifyContent: "space-between", paddingHorizontal: 16 }}>
         <Text style={{ fontWeight: "700", fontSize: 18, lineHeight: 26, color: "#000000" }}>Moments - Timeline</Text>
-        <View style={{ position: "relative" }}>
+        <View style={{ position: "relative", zIndex: 10 }}>
           <TouchableOpacity onPress={() => setShowMonthDropdown(!showMonthDropdown)}>
             <View style={{ flexDirection: "row", alignItems: "center", width: 75, justifyContent: "space-between" }}>
               <Text style={{ fontWeight: "700", fontSize: 12, lineHeight: 26, color: "#858585" }}>{ Months[selectedMonth - 1] }</Text>
@@ -156,7 +156,7 @@ export const Feed = ({
             </View>
           </TouchableOpacity>
           { showMonthDropdown &&
-            <ScrollView style={{ position: "absolute", width: "100%", top: 25, height: 100, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#858585", zIndex: 10, overflow: "scroll" }}>
+            <ScrollView style={{ position: "absolute", width: "100%", top: 25, height: 100, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#858585", zIndex: 20, overflow: "scroll" }}>
               {
                 Months.map((item, index) => {
                   if (index <= current_Month) {
@@ -180,7 +180,7 @@ export const Feed = ({
           }
         </View>
       </View>
-      <View style={{ width: windowWidth, paddingHorizontal: 20, marginTop: 24 }}>
+      <View style={{ width: windowWidth, paddingHorizontal: 20, marginTop: 24, zIndex: 0 }}>
         <FlatList
           horizontal={true}
           ref={scrollRef}
