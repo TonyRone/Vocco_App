@@ -25,6 +25,7 @@ import { StoryItem } from '../component/StoryItem';
 import { setVisibleOne } from '../../store/actions';
 import { StoryPanel } from './StoryPanel';
 import { FriendStoryItem } from './FriendStoryItem';
+import { FriendStoryItems } from './FriendStoryItems';
 
 export const FriendStories = ({
   props,
@@ -135,6 +136,13 @@ export const FriendStories = ({
     tp[id].isLike = val;
     setStories([...tp]);
   }
+  const renderFooter=()=>{
+    return(
+    <View style={{ backgroundColor: "#00FF00" }}>
+      <Text style={{ color: "#FF0000" }}>End of the Line!</Text>
+    </View>
+    )
+  }
 
   const storyItems = useMemo(() => {
     return <FlatList
@@ -159,6 +167,30 @@ export const FriendStories = ({
       }}
       keyExtractor={(item, index) => index.toString()}
     />
+    // return <FlatList
+    //   horizontal={true}
+    //   ListFooterComponent={renderFooter}
+    //   decelerationRate={'normal'}
+    //   showsHorizontalScrollIndicator={false}
+    //   snapToInterval={ windowWidth }
+    //   snapToAlignment={'start'}
+    //   data={stories}
+    //   renderItem={({ item, index }) => {
+    //     return <FriendStoryItem
+    //       key={index + item.id}
+    //       props={props}
+    //       itemIndex={index}
+    //       info={item}
+    //       height={pageHeight}
+    //       storyLength={stories.length}
+    //       onMoveNext={(index1) => {
+    //         scrollRef.current?.scrollToIndex({ animated: true, index: index1 })
+    //       } }
+    //       onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
+    //     />
+    //   }}
+    //   keyExtractor={(item, index) => index.toString()}
+    // />
   }, [stories, selectedDay, selectedMonth])
 
   return <View style={{ height: pageHeight }}>

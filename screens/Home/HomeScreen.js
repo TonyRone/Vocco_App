@@ -192,7 +192,11 @@ const HomeScreen = (props) => {
             mounted.current = false;
             socketInstance.off("notice_Voice")
         };
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        setDailyPop(popUp ? true : false);
+    }, [popUp])
 
     return (
         <SafeAreaView
@@ -210,6 +214,16 @@ const HomeScreen = (props) => {
                     />
                 </TouchableOpacity>
                 <View style={styles.rowSpaceBetween}>
+                    <TouchableOpacity onPress={() => { setIsActiveState(false); Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100); }} style={[styles.contentCenter, { width: 97, height: 44, marginRight: 16 }]}>
+                        <SemiBoldText
+
+                            text={t("Discover")}
+                            fontFamily={!isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
+                            color={!isActiveState ? '#281E30' : 'rgba(59, 31, 82, 0.6)'}
+                            fontSize={17}
+                            lineHeight={28}
+                        />
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={() => onClickFriend()} style={[styles.contentCenter, { width: 97, height: 44 }]}>
                         <SemiBoldText
                             text={t("Friends")}
@@ -224,16 +238,6 @@ const HomeScreen = (props) => {
                                 borderWidth: 2, borderColor: '#FFF', backgroundColor: '#D82783'
                             }}>
                         </View>}
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { setIsActiveState(false); Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100); }} style={[styles.contentCenter, { width: 97, height: 44, marginLeft: 16 }]}>
-                        <SemiBoldText
-
-                            text={t("Discover")}
-                            fontFamily={!isActiveState ? 'SFProDisplay-Semibold' : 'SFProDisplay-Regular'}
-                            color={!isActiveState ? '#281E30' : 'rgba(59, 31, 82, 0.6)'}
-                            fontSize={17}
-                            lineHeight={28}
-                        />
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity onPress={() => props.navigation.navigate('Notification')}>
@@ -264,7 +268,7 @@ const HomeScreen = (props) => {
                         width: 97,
                         height: 1,
                         backgroundColor: '#281E30',
-                        marginLeft: isActiveState ? 0 : 113
+                        marginLeft: isActiveState ? 113 : 0
                     }}>
                     </View>
                 </View>

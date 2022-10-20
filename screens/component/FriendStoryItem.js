@@ -23,6 +23,8 @@ import { DescriptionText } from './DescriptionText';
 import { StoryLikes } from './StoryLikes';
 import { StoryScreens } from './StoryScreens';
 import VoicePlayer from '../Home/VoicePlayer';
+import RangeSlider from './RangeSlider';
+import FriendPlayer from './FriendPlayer';
 
 import notifySvg from '../../assets/common/whitenotify.svg';
 import notificationDisableSvg from '../../assets/record/disable_notification.svg';
@@ -127,16 +129,18 @@ export const FriendStoryItem = ({
            start={{ x: 0, y: 0 }}
            end={{ x:0, y: 1 }}
         >
-          <SemiBoldText
-            text={voiceTitle}
-            fontSize={20}
-            lineHeight={23}
-            color='#FFFFFF'
-            marginLeft={0}
-          />
+          <View style={{ width: "60%" }}>
+            <SemiBoldText
+              text={voiceTitle}
+              fontSize={20}
+              lineHeight={23}
+              color='#FFFFFF'
+              marginLeft={0}
+            />
+          </View>
           <View style={{ marginTop: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={{ fontWeight: "400", fontSize: 13, lineHeight: 16, color: "#FFFFFF" }}>{info.user.name}</Text>
+              <TouchableOpacity onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}><Text style={{ fontWeight: "400", fontSize: 13, lineHeight: 16, color: "#FFFFFF" }}>{info.user.name}</Text></TouchableOpacity>
               {info.address != 'null' && info.address && 
                 <Text style={{ fontWeight: "400", fontSize: 13, lineHeight: 16, color: "#FFFFFF" }}> - {info.address}</Text>
               }
@@ -253,14 +257,16 @@ export const FriendStoryItem = ({
           </View>
         }
       </ImageBackground>
+      <View style={{ width: windowWidth, height: 1, backgroundColor: "#EEEEEE", marginTop: 20 }}></View>
       <View style={{ width: windowWidth / 376 * 275, marginTop: 20 }}>
-        <View style={{ width: "100%", borderRadius: 5, height: 6, backgroundColor: "#000" }}>
+        <View style={{ width: "100%", borderRadius: 5, height: 6, backgroundColor: "#000", flexDirection: "row" }}>
           <Animated.View style={{
             backgroundColor: "#8E35F6",
             borderRadius: 5,
             height: 6,
             width: progressWidth,
           }} />
+          <View style={{ width: 12, height: 12, backgroundColor: "#8E35F6", borderRadius: 6, marginTop: -3, marginLeft: -3 }} ></View>
         </View>
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20, marginTop: 5, }}>
           <TouchableOpacity onPress={() => { onMoveNext(itemIndex - 1 >= 0 ? itemIndex - 1 : 0); setIsPlayed(false); setIsPlaying(false); onSetIsPlaying(false) }}>
@@ -317,6 +323,23 @@ export const FriendStoryItem = ({
           </TouchableOpacity>
         </View>
       </View>
+      {/* <View style={{ width: windowWidth }} >
+        <RangeSlider from={0} to={100} token="s" onValueChanged={(newLow, newHigh, token) => {}} />
+      </View> */}
+      {/* <View style={{ width: windowWidth }}> 
+      <FriendPlayer
+        voiceUrl={info.file.url}
+        playBtn={true}
+        waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
+        playing={false}
+        startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
+        stopPlay={() => {setIsPlaying(false); setIsPlayed(false); onSetIsPlaying(false)}}
+        tinWidth={ windowWidth / 376 * 275 / 150}
+        mrg={windowWidth / 530}
+        duration={info.duration * 1000}
+        speed={speed}
+      />
+      </View> */}
       { isPlaying && <View style={{ width: 1, opacity: 0 }}>
         <VoicePlayer
           voiceUrl={info.file.url}

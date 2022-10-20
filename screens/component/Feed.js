@@ -146,8 +146,8 @@ export const Feed = ({
           xml={ShareSvg}
         />
       </TouchableOpacity> */}
-      <View style={{ flexDirection : "row", justifyContent: "space-between", paddingHorizontal: 16 }}>
-        <Text style={{ fontWeight: "700", fontSize: 18, lineHeight: 26, color: "#000000" }}>Moments - Timeline</Text>
+      <View style={{ flexDirection : "row", justifyContent: "space-between", paddingHorizontal: 20, zIndex: 10 }}>
+        <Text style={{ fontWeight: "700", fontSize: 18, lineHeight: 26, color: "#000000" }}>Your friends moments</Text>
         <View style={{ position: "relative", zIndex: 10 }}>
           <TouchableOpacity onPress={() => setShowMonthDropdown(!showMonthDropdown)}>
             <View style={{ flexDirection: "row", alignItems: "center", width: 75, justifyContent: "space-between" }}>
@@ -164,7 +164,8 @@ export const Feed = ({
                             key={index}
                             style={{
                               paddingVertical: 3,
-                              backgroundColor: index === selectedMonth - 1 ? "#000000" : "#FFFFFF"
+                              backgroundColor: index === selectedMonth - 1 ? "#000000" : "#FFFFFF",
+                              zIndex: 20,
                             }}
                             onPress={() => {
                               setSelectedMonth(index + 1);
@@ -180,8 +181,9 @@ export const Feed = ({
           }
         </View>
       </View>
-      <View style={{ width: windowWidth, paddingHorizontal: 20, marginTop: 24, zIndex: 0 }}>
+      <View style={{ width: windowWidth, paddingHorizontal: 20, marginTop: 24, zIndex: 0, position: "relative" }}>
         <FlatList
+          style={{ zIndex: 0 }}
           horizontal={true}
           ref={scrollRef}
           onContentSizeChange={() => {
@@ -191,11 +193,11 @@ export const Feed = ({
           data={monthDate}
           keyExtractor={(item) => item.date + item.day}
           renderItem={({item}) => (
-            <View style={{ flexDirection: "column", alignItems: "center", marginRight: 30 }}>
-              <Text style={{ fontWeight: "500", fontSize: 12, lineHeight: 12, color: "#A8A8A8" }}>{ item.day }</Text>
-              <TouchableOpacity style={{ marginTop: item.date === selectedDay ? 2 : 3 }} onPress={() => setSelectedDay(item.date)}>
+            <View style={{ flexDirection: "column", alignItems: "center", zIndex: 0, width: (windowWidth - 40) / 7 }}>
+              <Text style={{ fontWeight: "500", fontSize: 12, lineHeight: 12, color: "#A8A8A8", zIndex: 0 }}>{ item.day }</Text>
+              <TouchableOpacity style={{ marginTop: item.date === selectedDay ? 2 : 3 , zIndex: 0}} onPress={() => setSelectedDay(item.date)}>
                 <LinearGradient
-                  style={{ width: 29, height: 29, borderRadius: 20, flexDirection: "row", alignItems: "center", justifyContent: "center" }}
+                  style={{ width: 29, height: 29, borderRadius: 20, flexDirection: "row", alignItems: "center", justifyContent: "center", zIndex: 0 }}
                   colors={ item.date === selectedDay ? [ '#D596F5', '#8A31F6' ] : ['#FFFFFF', '#FFFFFF']}
                 >
                   <Text style={{ fontWeight: "500", fontSize: 16, lineHeight: 16, color: item.date === selectedDay ? '#FFFFFF' : '#000000' }}>{ item.date }</Text>

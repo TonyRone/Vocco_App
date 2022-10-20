@@ -41,6 +41,7 @@ const RangeSlider = ({ from, to ,token,  onValueChanged}) => {
         // renderLabel={renderLabel}
         // renderNotch={renderNotch}
         onValueChanged={handleValueChange}
+        disableRange
       />
       <View
         style={{
