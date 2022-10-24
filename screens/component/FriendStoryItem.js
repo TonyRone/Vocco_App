@@ -10,7 +10,7 @@ import {
   Animated
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
+// import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { SvgXml } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -23,8 +23,6 @@ import { DescriptionText } from './DescriptionText';
 import { StoryLikes } from './StoryLikes';
 import { StoryScreens } from './StoryScreens';
 import VoicePlayer from '../Home/VoicePlayer';
-import RangeSlider from './RangeSlider';
-import FriendPlayer from './FriendPlayer';
 
 import notifySvg from '../../assets/common/whitenotify.svg';
 import notificationDisableSvg from '../../assets/record/disable_notification.svg';
@@ -58,7 +56,7 @@ export const FriendStoryItem = ({
   const voiceTitle = info.title;
 
   const OnSetLike = () => {
-    Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     if (info.isLike == true) {
       VoiceService.recordUnAppreciate(info.id);
     }
@@ -161,7 +159,7 @@ export const FriendStoryItem = ({
                 backgroundColor: "#FFFFFF",
                 marginLeft: 4
               }}>
-                <Text style={{ fontWeight: "400", fontSize: 11, lineHeight: 14, color: "#DD3FEE" }}>{info.user.language}</Text>
+                <Text style={{ fontWeight: "400", fontSize: 11, lineHeight: 14, color: "#DD3FEE" }}>{t(info.user.language)}</Text>
               </View>
             </View>
           </View>
@@ -351,7 +349,8 @@ export const FriendStoryItem = ({
           tinWidth={ windowWidth / 376 * 275 / 150}
           mrg={windowWidth / 530}
           duration={info.duration * 1000}
-          speed={speed}
+          playSpeed={speed}
+          height={0}
         />
       </View>}
       { allLikes && 

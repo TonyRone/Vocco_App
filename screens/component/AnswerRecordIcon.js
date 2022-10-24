@@ -18,7 +18,7 @@ import AudioRecorderPlayer, {
 } from 'react-native-audio-recorder-player';
 
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
+// import RNVibrationFeedback from 'react-native-vibration-feedback';
 import RNFetchBlob from 'rn-fetch-blob';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import Draggable from 'react-native-draggable';
@@ -134,7 +134,7 @@ export const AnswerRecordIcon = ({
 
   const onChangeRecord = async (e, v = false) => {
     if (v == true && isRecording == false) {
-      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+      // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
       onStartRecord();
     }
     if (v == false && isRecording == true) {
@@ -159,7 +159,7 @@ export const AnswerRecordIcon = ({
         if (res.respInfo.status !== 201) {
         } else {
           const jsonRes = res.json();
-          Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+          // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
           onPublishStory(jsonRes);
         }
       })
@@ -329,9 +329,9 @@ export const AnswerRecordIcon = ({
             onDragRelease={(event, gestureState, bounds) => {
               dragPos.current = gestureState.dx;
               if (gestureState.dx < - 100) {
-                setTimeout(() => {
-                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-                }, 100);
+                // setTimeout(() => {
+                //   Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                // }, 100);
                 onStopRecord(false);
               }
             }}

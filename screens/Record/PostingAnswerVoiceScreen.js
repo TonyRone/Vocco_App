@@ -24,7 +24,7 @@ import VoiceService from '../../services/VoiceService';
 import VoicePlayer from '../Home/VoicePlayer';
 import { setRefreshState } from '../../store/actions';
 import { useSelector, useDispatch } from 'react-redux';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
+// import RNVibrationFeedback from 'react-native-vibration-feedback';
 
 const PostingAnswerVoiceScreen = (props) => {
 
@@ -78,7 +78,7 @@ const PostingAnswerVoiceScreen = (props) => {
         const jsonRes = await res.json();
         if (res.respInfo.status !== 201) {
         } else {
-          Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+          // Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
           dispatch(setRefreshState(!refreshState));
           props.navigation.navigate("VoiceProfile", { id: recordId });
         }

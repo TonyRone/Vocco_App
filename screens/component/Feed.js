@@ -147,11 +147,11 @@ export const Feed = ({
         />
       </TouchableOpacity> */}
       <View style={{ flexDirection : "row", justifyContent: "space-between", paddingHorizontal: 20, zIndex: 10 }}>
-        <Text style={{ fontWeight: "700", fontSize: 18, lineHeight: 26, color: "#000000" }}>Your friends moments</Text>
+        <Text style={{ fontWeight: "700", fontSize: 18, lineHeight: 26, color: "#000000" }}>{t('Moments')}</Text>
         <View style={{ position: "relative", zIndex: 10 }}>
           <TouchableOpacity onPress={() => setShowMonthDropdown(!showMonthDropdown)}>
             <View style={{ flexDirection: "row", alignItems: "center", width: 75, justifyContent: "space-between" }}>
-              <Text style={{ fontWeight: "700", fontSize: 12, lineHeight: 26, color: "#858585" }}>{ Months[selectedMonth - 1] }</Text>
+              <Text style={{ fontWeight: "700", fontSize: 12, lineHeight: 26, color: "#858585" }}>{ t(Months[selectedMonth - 1]) }</Text>
               <SvgXml xml={DropdownSvg} />
             </View>
           </TouchableOpacity>
@@ -161,19 +161,19 @@ export const Feed = ({
                 Months.map((item, index) => {
                   if (index <= current_Month) {
                     return <TouchableOpacity
-                            key={index}
-                            style={{
-                              paddingVertical: 3,
-                              backgroundColor: index === selectedMonth - 1 ? "#000000" : "#FFFFFF",
-                              zIndex: 20,
-                            }}
-                            onPress={() => {
-                              setSelectedMonth(index + 1);
-                              setShowMonthDropdown(false);
-                            }}
-                          >
-                            <Text style={{ color: index === selectedMonth - 1 ? "#FFFFFF" : "#858585", fontSize: 12 }}>{item}</Text>
-                          </TouchableOpacity>
+                          key={index}
+                          style={{
+                            paddingVertical: 3,
+                            backgroundColor: index === selectedMonth - 1 ? "#000000" : "#FFFFFF",
+                            zIndex: 20,
+                          }}
+                          onPress={() => {
+                            setSelectedMonth(index + 1);
+                            setShowMonthDropdown(false);
+                          }}
+                        >
+                          <Text style={{ color: index === selectedMonth - 1 ? "#FFFFFF" : "#858585", fontSize: 12 }}>{item}</Text>
+                        </TouchableOpacity>
                   }
                 })
               }
@@ -194,7 +194,7 @@ export const Feed = ({
           keyExtractor={(item) => item.date + item.day}
           renderItem={({item}) => (
             <View style={{ flexDirection: "column", alignItems: "center", zIndex: 0, width: (windowWidth - 40) / 7 }}>
-              <Text style={{ fontWeight: "500", fontSize: 12, lineHeight: 12, color: "#A8A8A8", zIndex: 0 }}>{ item.day }</Text>
+              <Text style={{ fontWeight: "500", fontSize: 12, lineHeight: 12, color: "#A8A8A8", zIndex: 0 }}>{ t(item.day) }</Text>
               <TouchableOpacity style={{ marginTop: item.date === selectedDay ? 2 : 3 , zIndex: 0}} onPress={() => setSelectedDay(item.date)}>
                 <LinearGradient
                   style={{ width: 29, height: 29, borderRadius: 20, flexDirection: "row", alignItems: "center", justifyContent: "center", zIndex: 0 }}
@@ -212,6 +212,8 @@ export const Feed = ({
         screenName="Feed"
         selectedDay={selectedDay}
         selectedMonth={selectedMonth}
+        setSelectedDay={(day) => setSelectedDay(day)}
+        setSelectedMonth={(month) => setSelectedMonth(month)}
       />
       {/* </ScrollView> */}
     </View>

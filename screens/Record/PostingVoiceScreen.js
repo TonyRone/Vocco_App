@@ -18,7 +18,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import RNFetchBlob from 'rn-fetch-blob';
 import { NavigationActions, StackActions } from 'react-navigation';
 import EmojiPicker from 'rn-emoji-keyboard';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
+// import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { composeInitialProps, useTranslation } from 'react-i18next';
 import { SvgXml } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -159,13 +159,13 @@ const PostingVoiceScreen = (props) => {
               }
               formData.append('file', fileData);
               VoiceService.postRecordImage(formData).then(res => {
-                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                 socketInstance.emit("newVoice", { uid: user.id });
                 onNavigate("Home", { shareInfo: jsonRes })
               })
             }
             else {
-              Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+              // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
               socketInstance.emit("newVoice", { uid: user.id });
               onNavigate("Home", { shareInfo: jsonRes })
             }
@@ -199,7 +199,7 @@ const PostingVoiceScreen = (props) => {
     setIsLoading(true);
     VoiceService.changeVoice(formData).then(async res => {
       if (mounted.current) {
-        Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+        // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
         let info = param.info;
         info.title = param.title;
         info.emoji = icon;
@@ -215,7 +215,7 @@ const PostingVoiceScreen = (props) => {
   }
 
   const onClickPost = async () => {
-    Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     // if (category == 0) {
     //   setWarning(true);
     //   setPostStep(1);
@@ -319,7 +319,7 @@ const PostingVoiceScreen = (props) => {
                 <LinearTextGradient
                   style={{ fontSize: 17, marginLeft: 8 }}
                   locations={[0, 0.4, 1]}
-                  colors={!visibleStatus ? ["#CF68FF", "#A24EE4", "#4C32EC"] : ["#361252", "#361252", "#361252"]}
+                  colors={!visibleStatus ? ["#000000", "#000000", "#000000"] : ["#CF68FF", "#A24EE4", "#4C32EC"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 0, y: 1 }}
                 >
@@ -349,7 +349,7 @@ const PostingVoiceScreen = (props) => {
                 <LinearTextGradient
                   style={{ fontSize: 17, marginLeft: 8 }}
                   locations={[0, 0.4, 1]}
-                  colors={!notSafe ? ["#CF68FF", "#A24EE4", "#4C32EC"] : ["#361252", "#361252", "#361252"]}
+                  colors={!notSafe ? ["#000000", "#000000", "#000000"] : ["#CF68FF", "#A24EE4", "#4C32EC"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 0, y: 1 }}
                 >
@@ -384,7 +384,7 @@ const PostingVoiceScreen = (props) => {
                   text={storyAddress == '' ? t("Locate my story") : storyAddress}
                   fontSize={17}
                   lineHeight={20}
-                  color={storyAddress == '' ? '#361252' : '#A24EE4'}
+                  color={storyAddress == '' ? '#000000' : '#A24EE4'}
                   marginLeft={10}
                 />
               </TouchableOpacity>
@@ -552,7 +552,7 @@ const PostingVoiceScreen = (props) => {
               <TouchableOpacity
                 onPress={() => {
                   setPickModal(true);
-                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                  // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                 }}
               >
                 <LinearGradient
@@ -599,7 +599,7 @@ const PostingVoiceScreen = (props) => {
               <TouchableOpacity
                 onPress={() => {
                   setShowCategoryModal(true);
-                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                  // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                 }}
               >
                 <LinearGradient
@@ -650,7 +650,7 @@ const PostingVoiceScreen = (props) => {
                   }
                   else {
                     onClickPost();
-                    Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                    // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                   }
                 }}
                 disabled={isLoading}
@@ -732,7 +732,7 @@ const PostingVoiceScreen = (props) => {
                     onPress={() => {
                       setWarning(false);
                       setCategory(index);
-                      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                      // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                     }}
                     key={index + "topics"}
                     style={{

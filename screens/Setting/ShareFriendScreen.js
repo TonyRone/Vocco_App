@@ -24,7 +24,7 @@ import { SemiBoldText } from '../component/SemiBoldText';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import VoiceService from '../../services/VoiceService';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
+// import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { useDispatch, useSelector } from 'react-redux';
 
 const ShareFriendScreen = (props) => {
@@ -69,7 +69,7 @@ const ShareFriendScreen = (props) => {
     };
     const onCopyLink = () => {
         Clipboard.setString(referLink);
-        Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+        // Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
 
     let msg = t("You'll love these stories 🤣👀🙈. Download Vocco app for free on ")

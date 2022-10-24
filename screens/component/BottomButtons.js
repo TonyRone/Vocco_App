@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, TouchableOpacity, Vibration, Image, Platform } from "react-native";
 import { NavigationActions, StackActions } from 'react-navigation';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
+// import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { SvgXml } from 'react-native-svg';
 //Bottom Icons
 import homeSvg from '../../assets/common/bottomIcons/home.svg';
@@ -75,7 +75,10 @@ export const BottomButtons = ({
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => { Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100); props.navigation.navigate("HoldRecord"); }}
+        onPress={() => {
+          // Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+          props.navigation.navigate("HoldRecord");
+        }}
         style={{ width: 54, height: 54 }}
       >
       </TouchableOpacity>

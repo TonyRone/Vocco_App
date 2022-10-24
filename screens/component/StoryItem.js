@@ -36,7 +36,7 @@ import forwardSvg from '../../assets/record/forward.svg';
 import add_Svg from '../../assets/common/add.svg';
 import addYellow_Svg from '../../assets/common/add_yellow.svg';
 import addSuccess_Svg from '../../assets/common/add_success.svg';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
+// import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { styles } from '../style/Common';
 import Share from 'react-native-share';
 import VoiceService from '../../services/VoiceService';
@@ -107,7 +107,7 @@ export const StoryItem = ({
     }
     else {
       VoiceService.recordAppreciate({ count: 1, id: info.id });
-      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+      // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
     onChangeLike(!info.isLike);
   }
@@ -136,8 +136,8 @@ export const StoryItem = ({
         }
         setIsLoading(false);
       });
-      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+      // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+      // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     } else {
       setIsLoading(true);
       VoiceService.followFriend(info.user.id).then(async res => {
@@ -147,7 +147,7 @@ export const StoryItem = ({
         }
         setIsLoading(false);
       });
-      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+      // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
   }
 

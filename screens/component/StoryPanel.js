@@ -26,7 +26,7 @@ import { useSelector } from 'react-redux';
 import { SvgXml } from 'react-native-svg';
 import notifySvg from '../../assets/common/notify.svg';
 import yellow_starSvg from '../../assets/common/yellow_star.svg';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
+// import RNVibrationFeedback from 'react-native-vibration-feedback';
 import VoiceService from '../../services/VoiceService';
 import VoicePlayer from '../Home/VoicePlayer';
 import { Avatars, Categories, windowWidth } from '../../config/config';
@@ -92,7 +92,7 @@ export const StoryPanel = ({
   }
 
   const OnSetLike = () => {
-    Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     if (info.isLike == true) {
       VoiceService.recordUnAppreciate(info.id);
     }
@@ -111,8 +111,8 @@ export const StoryPanel = ({
         }
         setIsLoading(false);
       });
-      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+      // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+      // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     } else {
       setIsLoading(true);
       VoiceService.followFriend(info.user.id).then(async res => {
@@ -122,7 +122,7 @@ export const StoryPanel = ({
         }
         setIsLoading(false);
       });
-      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+      // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
   }
 

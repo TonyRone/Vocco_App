@@ -36,6 +36,8 @@ export const FriendStories = ({
   recordId = '',
   selectedDay = 0,
   selectedMonth = 0,
+  setSelectedDay = () => {},
+  setSelectedMonth = () => {}
 }) => {
 
   const dispatch = useDispatch();
@@ -52,6 +54,8 @@ export const FriendStories = ({
   const [localKey, setLocalKey] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [storyPanels, setStoryPanels] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [beforeIndex, setBeforeIndex] = useState(-1);
 
   let { visibleOne, refreshState } = useSelector((state) => {
     return (
@@ -86,6 +90,60 @@ export const FriendStories = ({
       tp.push(v[i]);
     }
     setStoryPanels([...tp]);
+  }
+  
+  const [touchStart, setTouchStart] = useState(null)
+  const [touchEnd, setTouchEnd] = useState(null)
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
+    setTouchStart(e.nativeEvent.locationX);
+  }
+  
+  const onTouchMove = (e) => setTouchEnd(e.nativeEvent.locationX)
+  
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+    if (isLeftSwipe || isRightSwipe) {
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth() + 1;
+      const currentDay = new Date().getDate();
+      if (isLeftSwipe) {
+        if (selectedMonth == currentMonth) {
+          if (selectedDay < currentDay) {
+            setSelectedDay(selectedDay + 1);
+          }
+        } else {
+          const specific_days = new Date(currentYear, selectedMonth, 0).getDate();
+          if (selectedDay < specific_days) {
+            setSelectedDay(selectedDay + 1);
+          } else {
+            setSelectedMonth(selectedMonth + 1);
+            setSelectedDay(1);
+          }
+        }
+      } else {
+        if (selectedMonth > 1) {
+          if (selectedDay > 1) {
+            setSelectedDay(selectedDay - 1);
+          } else {
+            const specific_days = new Date(currentYear, selectedMonth - 1, 0).getDate();
+            setSelectedMonth(selectedMonth - 1);
+            setSelectedDay(specific_days);
+          }
+        } else {
+          if (selectedDay > 1) {
+            setSelectedDay(selectedDay - 1);
+          }
+        }
+      }
+    }
+    // add your conditional logic here
   }
 
   const getStories = () => {
@@ -151,6 +209,9 @@ export const FriendStories = ({
       pagingEnabled={true}
       ref={scrollRef}
       data={stories}
+      onScrollEndDrag={(event) => {
+        console.log(event.nativeEvent);
+      }}
       renderItem={({ item, index }) => {
         return <FriendStoryItem
           key={index + item.id}
@@ -167,45 +228,23 @@ export const FriendStories = ({
       }}
       keyExtractor={(item, index) => index.toString()}
     />
-    // return <FlatList
-    //   horizontal={true}
-    //   ListFooterComponent={renderFooter}
-    //   decelerationRate={'normal'}
-    //   showsHorizontalScrollIndicator={false}
-    //   snapToInterval={ windowWidth }
-    //   snapToAlignment={'start'}
-    //   data={stories}
-    //   renderItem={({ item, index }) => {
-    //     return <FriendStoryItem
-    //       key={index + item.id}
-    //       props={props}
-    //       itemIndex={index}
-    //       info={item}
-    //       height={pageHeight}
-    //       storyLength={stories.length}
-    //       onMoveNext={(index1) => {
-    //         scrollRef.current?.scrollToIndex({ animated: true, index: index1 })
-    //       } }
-    //       onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
-    //     />
-    //   }}
-    //   keyExtractor={(item, index) => index.toString()}
-    // />
   }, [stories, selectedDay, selectedMonth])
 
   return <View style={{ height: pageHeight }}>
     {(stories.length > 0 ? storyItems :
     (!loading ?
-      <View style={{ alignItems: 'center', justifyContent: "center", width: windowWidth, height: pageHeight }}>
-        <SvgXml
-          xml={box_blankSvg}
-        />
-        <DescriptionText
-          text={t("No friend stories")}
-          fontSize={17}
-          lineHeight={28}
-          marginTop={22}
-        />
+      <View style={{ alignItems: 'center', justifyContent: "center", width: windowWidth, height: pageHeight }} onTouchStart={(e) => onTouchStart(e)} onTouchEnd={onTouchEnd} onTouchMove={(e) => onTouchMove(e)} >
+        <View style={{ width: "100%", height: "100%", alignItems: "center", justifyContent: "center", backgroundColor: "white" }}>
+          <SvgXml
+            xml={box_blankSvg}
+          />
+          <DescriptionText
+            text={t("No friend stories")}
+            fontSize={17}
+            lineHeight={28}
+            marginTop={22}
+          />
+        </View>
       </View>
       : null)
           )}

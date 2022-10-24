@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { TitleText } from './TitleText';
 import { VoiceItem } from './VoiceItem';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
+// import RNVibrationFeedback from 'react-native-vibration-feedback';
 import Share from 'react-native-share';
 import { SvgXml } from 'react-native-svg';
 import blankHeartSvg from '../../assets/post/blankHeart.svg';

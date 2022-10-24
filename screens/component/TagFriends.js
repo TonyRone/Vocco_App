@@ -15,7 +15,7 @@ import { styles } from '../style/Common';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import searchSvg from '../../assets/login/search.svg';
 import closeCircleSvg from '../../assets/common/close-circle.svg';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
+// import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { SemiBoldText } from "./SemiBoldText";
 import { DescriptionText } from "./DescriptionText";
 import { useDispatch, useSelector } from 'react-redux';
@@ -135,7 +135,7 @@ export const TagFriends = ({
     VoiceService.postTag(payload).then(async res => {
       if (res.respInfo.status !== 201) {
       } else {
-        Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+        // Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
         dispatch(setRefreshState(!refreshState));
         if(mounted.current) setSubmitLoading(false);
       }

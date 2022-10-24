@@ -20,7 +20,7 @@ import pauseSvg from '../../assets/common/pause.svg';
 import playSvg from '../../assets/common/play.svg';
 import notifySvg from '../../assets/common/notify.svg';
 import yellow_starSvg from '../../assets/common/yellow_star.svg';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
+// import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { styles } from '../style/Common';
 import VoiceService from '../../services/VoiceService';
 import VoicePlayer from '../Home/VoicePlayer';

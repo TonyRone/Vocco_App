@@ -7,7 +7,7 @@ import {
   Vibration,
 } from 'react-native';
 
-import RNVibrationFeedback from 'react-native-vibration-feedback';
+// import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { styles } from '../style/Common';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -32,7 +32,7 @@ export const DeleteConfirm = ({
   }
 
   const confirmDelete = ()=>{
-    Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     onConfirmDelete();
     setShowModal(false);
   }

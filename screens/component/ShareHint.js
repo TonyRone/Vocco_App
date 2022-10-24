@@ -8,6 +8,8 @@ import {
   Text,
   Platform
 } from 'react-native';
+import Share from 'react-native-share';
+import { useSelector } from 'react-redux';
 
 import { SvgXml } from 'react-native-svg';
 import ShareIconsSvg from '../../assets/post/ShareIcons.svg';
@@ -30,6 +32,7 @@ export const ShareHint = ({
 }) => {
 
   const { t, i18n } = useTranslation();
+  let { user } = useSelector((state) => state.user);
 
   const mounted = useRef(false);
 
@@ -43,6 +46,17 @@ export const ShareHint = ({
   const shareAudio = () => {
     onShareAudio();
   };
+
+  const onShareLink = () => {
+      Share.open({
+          url: `https://vocco.app.link/${user.name}`,
+      }).then(res => {
+
+      })
+          .catch(err => {
+              console.log("err");
+          });;
+  }
 
   useEffect(()=>{
     mounted.current = true;
@@ -106,14 +120,24 @@ export const ShareHint = ({
           <View
             style={{
               paddingHorizontal: 16,
-              width: '100%',
-              marginBottom: 30
+              width: '100%'
             }}
           >
             <MyButton
               label={t("Share it now")}
               onPress={()=>shareAudio()}
             />
+          </View>
+          <View
+            style={{
+              paddingHorizontal: 16,
+              width: '100%',
+              marginBottom: 30
+            }}>
+              <MyButton
+                label={t("Invite friends")}
+                onPress={() => onShareLink()}
+              />
           </View>
         </View>
       </Pressable>

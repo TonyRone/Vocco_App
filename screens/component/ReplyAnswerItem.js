@@ -10,7 +10,7 @@ import whiteTrashSvg from '../../assets/notification/white_trash.svg'
 import pauseSvg from '../../assets/common/pause.svg';
 import playSvg from '../../assets/common/play.svg';
 import { styles } from '../style/Common';
-import RNVibrationFeedback from 'react-native-vibration-feedback';
+// import RNVibrationFeedback from 'react-native-vibration-feedback';
 import VoicePlayer from '../Home/VoicePlayer';
 import VoiceService from "../../services/VoiceService";
 import { Avatars, windowWidth } from "../../config/config";
