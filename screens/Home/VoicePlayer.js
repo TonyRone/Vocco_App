@@ -19,6 +19,8 @@ import pauseSvg from '../../assets/common/pause.svg';
 import playSvg from '../../assets/common/play.svg';
 import replaySvg from '../../assets/common/replay.svg';
 import Sound from 'react-native-sound'
+import greyWaveSvg from '../../assets/record/grey-wave.svg';
+import whiteWaveSvg from '../../assets/record/white-wave.svg';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -166,11 +168,43 @@ class VoicePlayer extends Component {
             width={windowWidth / (this.props.playBtnSize ? this.props.playBtnSize : 10)}
             height={windowWidth / (this.props.playBtnSize ? this.props.playBtnSize : 10)}
             style={{
-              marginRight: 8
+              marginRight: 5
             }}
             xml={this.state.isPlaying ? pauseSvg : playSvg}
           />
         </TouchableOpacity>}
+        {this.props.accelerator && <TouchableOpacity
+              onPress={() => this.props.onSetSpeed()}
+              style={{ marginRight: 5 }}
+            >
+              <LinearGradient
+                style={
+                  {
+                    width: 60,
+                    height: 30,
+                    borderRadius: 14,
+                    borderWidth: this.props.playSpeed != 2 ? 0.63 : 0,
+                    borderColor: '#D4C9DE',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'row'
+                  }
+                }
+                start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                colors={this.props.playSpeed == 2 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#F2F0F5', '#F2F0F5', '#F2F0F5']}
+              >
+                <SvgXml
+                  xml={this.props.playSpeed == 2 ? whiteWaveSvg : greyWaveSvg}
+                />
+                <DescriptionText
+                  text={'x' + this.props.playSpeed.toString()}
+                  fontSize={11}
+                  lineHeight={18}
+                  marginLeft={3}
+                  color={this.props.playSpeed == 2 ? '#F6EFFF' : '#361252'}
+                />
+              </LinearGradient>
+            </TouchableOpacity>}
         <View>
           <View
             style={{

@@ -6,6 +6,7 @@ import {
   Image,
   Vibration,
 } from "react-native";
+import LinearGradient from 'react-native-linear-gradient';
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -25,6 +26,9 @@ import { styles } from '../style/Common';
 import VoiceService from '../../services/VoiceService';
 import VoicePlayer from '../Home/VoicePlayer';
 import { Avatars, windowWidth } from '../../config/config';
+
+import greyWaveSvg from '../../assets/record/grey-wave.svg';
+import whiteWaveSvg from '../../assets/record/white-wave.svg';
 
 export const VoiceItem = ({
   props,
@@ -62,10 +66,11 @@ export const VoiceItem = ({
   num = (num - minute) / 60;
   let hour = num % 24;
   let day = (num - hour) / 24
-  let time = (day > 0 ? (day.toString() + ' ' + t("day") + (day > 1 ? 's' : '')) : (hour > 0 ? (hour.toString() + ' ' + t("hour") + (hour > 1 ? 's' : '')) : (minute > 0 ? (minute.toString() + ' ' + t("minute") + (minute > 1 ? 's' : '')) : '')));
+  let time = (day > 0 ? (day.toString() + ' ' + "d") : (hour > 0 ? (hour.toString() + ' ' + "h") : (minute > 0 ? (minute.toString() + ' ' + "m") : '')));
 
   const [reactions, setReactions] = useState(info.reactions);
   const [reactionsCount, setReactionsCount] = useState(info.reactionsCount);
+  const [speed, setSpeed] = useState(1);
 
   if (isRefresh != refresh) {
     setRefresh(isRefresh);
@@ -75,6 +80,13 @@ export const VoiceItem = ({
     return ((v).length > 20) ?
       (((v).substring(0, 17)) + '...') :
       v;
+  }
+
+  const onSetSpeed = () => {
+    let v = 1;
+    if (speed < 2)
+      v = speed + 0.5;
+    setSpeed(v);
   }
 
   const OnSetLike = () => {
@@ -208,6 +220,8 @@ export const VoiceItem = ({
               tinWidth={windowWidth / 160}
               mrg={windowWidth / 600}
               duration={info.duration * 1000}
+              playSpeed={speed}
+              control={true}
             />
           </View>
         }
@@ -231,11 +245,43 @@ export const VoiceItem = ({
                 color="rgba(59, 31, 82, 0.6)"
               />
             </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => onSetSpeed()}
+              style={{ marginLeft: 15 }}
+            >
+              <LinearGradient
+                style={
+                  {
+                    width: 60,
+                    height: 30,
+                    borderRadius: 14,
+                    borderWidth: speed != 2 ? 0.63 : 0,
+                    borderColor: '#D4C9DE',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'row'
+                  }
+                }
+                start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                colors={speed == 2 ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#F2F0F5', '#F2F0F5', '#F2F0F5']}
+              >
+                <SvgXml
+                  xml={speed == 2 ? whiteWaveSvg : greyWaveSvg}
+                />
+                <DescriptionText
+                  text={'x' + speed.toString()}
+                  fontSize={11}
+                  lineHeight={18}
+                  marginLeft={3}
+                  color={speed == 2 ? '#F6EFFF' : '#361252'}
+                />
+              </LinearGradient>
+            </TouchableOpacity>
             <DescriptionText
-              text={info.listenCount + " " + t("reading") +(info.listenCount>1?'s':'')+(time != '' ? " - " : '') + time}
+              text={info.listenCount + " " + t("Play") +(info.listenCount>1?'s':'')+(time != '' ? " - " : '') + time}
               fontSize={13}
               lineHeight={15}
-              marginLeft={30}
+              marginLeft={15}
               color='rgba(54, 36, 68, 0.8)'
             />
           </View>

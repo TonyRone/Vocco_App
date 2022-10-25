@@ -11,6 +11,7 @@ import {
   ScrollView,
   ImageBackground
 } from 'react-native';
+import { useSelector } from 'react-redux';
 
 import { SvgXml } from 'react-native-svg';
 import ShareIconsSvg from '../../assets/post/ShareIcons.svg';
@@ -40,6 +41,7 @@ export const DailyPopUp = ({
 }) => {
 
   const { t, i18n } = useTranslation();
+  let { user } = useSelector(state => state.user);
 
   const mounted = useRef(false);
 
@@ -89,7 +91,7 @@ export const DailyPopUp = ({
     })
       .then(res => {
         if (mounted.current)
-          setPhotos(res.edges);
+          setPhotos(res.edges.slice(0, 4));
       })
       .catch((err) => {
         console.log(err);
@@ -167,68 +169,16 @@ export const DailyPopUp = ({
             />
           </TouchableOpacity>
           <TitleText
-            text={t("To discover world stories, share yours.")}
+            text={t("What memory are you sharing today, ") + user.name + '?'}
             color='#361252'
             maxWidth={315}
             fontSize={25.7}
             lineHeight={30}
             textAlign='center'
           />
-          <View
-            style={{
-              width: windowWidth,
-              paddingHorizontal: 18,
-              marginTop: 38,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}
-          >
-            <DescriptionText
-              text={t("What is it all about? 👀")}
-              color='#361252'
-              fontSize={20}
-              lineHeight={28}
-              marginBottom={12}
-            />
-            <TouchableOpacity
-              onPress={() => setShowCategoryModal(true)}
-            >
-              <DescriptionText
-                text={t("See all")}
-                color='#C1C1C1'
-                fontSize={20}
-                lineHeight={28}
-                marginBottom={12}
-              />
-            </TouchableOpacity>
-          </View>
-          <FlatList
-            horizontal={true}
-            ref={scrollRef}
-            showsHorizontalScrollIndicator={false}
-            style={{
-              width: windowWidth - 36,
-            }}
-            data={Categories}
-            renderItem={({ item, index }) => {
-              return <CategoryIcon
-                key={'all_catagory' + index.toString()}
-                label={Categories[index].label}
-                source={Categories[index].uri}
-                onPress={() => {
-                  setSelectedCategory(index);
-                  setWarning(false);
-                  scrollRef.current?.scrollToIndex({ animated: true, index: index });
-                }}
-                active={selectedCategory == index ? true : false}
-              />
-            }}
-            keyExtractor={(item, index) => index.toString()}
-          />
           <ScrollView
             style={{
-              maxHeight: 430
+              maxHeight: 260
             }}
           >
             <View
@@ -295,22 +245,74 @@ export const DailyPopUp = ({
                 </TouchableOpacity>
               })}
             </View>
-            <View style={{
+            {/* <View style={{
               windowWidth: 100,
               height: 160
             }}>
-            </View>
+            </View> */}
           </ScrollView>
           <View
             style={{
-              position: 'absolute',
+              width: windowWidth,
+              paddingHorizontal: 18,
+              marginTop: 38,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}
+          >
+            <DescriptionText
+              text={t("What is it all about? 👀")}
+              color='#361252'
+              fontSize={20}
+              lineHeight={28}
+              marginBottom={12}
+            />
+            <TouchableOpacity
+              onPress={() => setShowCategoryModal(true)}
+            >
+              <DescriptionText
+                text={t("See all")}
+                color='#CF71FC'
+                fontSize={20}
+                lineHeight={28}
+                marginBottom={12}
+              />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            horizontal={true}
+            ref={scrollRef}
+            showsHorizontalScrollIndicator={false}
+            style={{
+              width: windowWidth - 36,
+            }}
+            data={Categories}
+            renderItem={({ item, index }) => {
+              return <CategoryIcon
+                key={'all_catagory' + index.toString()}
+                label={Categories[index].label}
+                source={Categories[index].uri}
+                onPress={() => {
+                  setSelectedCategory(index);
+                  setWarning(false);
+                  scrollRef.current?.scrollToIndex({ animated: true, index: index });
+                }}
+                active={selectedCategory == index ? true : false}
+              />
+            }}
+            keyExtractor={(item, index) => index.toString()}
+          />
+          <View
+            style={{
               paddingHorizontal: 16,
               width: '100%',
-              bottom: 18
+              paddingBottom: 10
             }}
           >
             <MyButton
               label={t("Next")}
+              marginTop={0}
               onPress={() => {
                 if (selectedCategory == -1 || photoInfo == null)
                   setWarning(true);
@@ -324,7 +326,7 @@ export const DailyPopUp = ({
               style={{
                 height: 60,
                 width: windowWidth - 32,
-                marginTop: 22,
+                marginTop: 12,
                 borderRadius: 16,
                 backgroundColor: '#FFF',
                 shadowColor: 'rgba(88, 74, 117, 1)',

@@ -65,7 +65,7 @@ export const FriendStories = ({
 
   const currentVisible = useRef(visibleOne);
 
-  const pageHeight = windowHeight / 814 * 518;
+  const pageHeight = windowHeight / 814 * 546;
 
   const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
     const paddingToBottom = 10;
@@ -204,14 +204,17 @@ export const FriendStories = ({
 
   const storyItems = useMemo(() => {
     return <FlatList
-      style={{ width: windowWidth, height: pageHeight, paddingTop: 22 }}
+      style={{ width: windowWidth, height: pageHeight, paddingTop: windowHeight / 812 * 17 }}
       horizontal={true}
       pagingEnabled={true}
       ref={scrollRef}
       data={stories}
-      onScrollEndDrag={(event) => {
+      onMomentumScrollBegin={(event) => {
         console.log(event.nativeEvent);
       }}
+      // onScrollEndDrag={(event) => {
+      //   console.log(event.nativeEvent);
+      // }}
       renderItem={({ item, index }) => {
         return <FriendStoryItem
           key={index + item.id}

@@ -104,8 +104,8 @@ export const FriendStoryItem = ({
         style={{
           flexDirection: "column",
           justifyContent: "flex-end",
-          width: windowWidth / 376 * 275,
-          height: windowHeight / 815 * 350,
+          width: windowWidth / 376 * 324,
+          height: height / 546 * 413,
           borderRadius: 10,
         }}
         imageStyle={{
@@ -136,11 +136,11 @@ export const FriendStoryItem = ({
               marginLeft={0}
             />
           </View>
-          <View style={{ marginTop: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <View style={{ marginTop: 8, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TouchableOpacity onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}><Text style={{ fontWeight: "400", fontSize: 13, lineHeight: 16, color: "#FFFFFF" }}>{info.user.name}</Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}><Text style={{ fontWeight: "400", fontSize: 16, lineHeight: 19, color: "#FFFFFF" }}>{info.user.name}</Text></TouchableOpacity>
               {info.address != 'null' && info.address && 
-                <Text style={{ fontWeight: "400", fontSize: 13, lineHeight: 16, color: "#FFFFFF" }}> - {info.address}</Text>
+                <Text style={{ fontWeight: "400", fontSize: 16, lineHeight: 19, color: "#FFFFFF" }}> - {info.address}</Text>
               }
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -150,7 +150,7 @@ export const FriendStoryItem = ({
                 borderRadius: 8,
                 backgroundColor: "#FFFFFF"
               }}>
-                <Text style={{ fontWeight: "400", fontSize: 11, lineHeight: 14, color: "#DD3FEE" }}>{info.category == "" ? "All" : info.category}</Text>
+                <Text style={{ fontWeight: "400", fontSize: 15, lineHeight: 18, color: "#DD3FEE" }}>{info.category == "" ? "All" : info.category}</Text>
               </View>
               <View style={{
                 paddingHorizontal: 16,
@@ -159,15 +159,15 @@ export const FriendStoryItem = ({
                 backgroundColor: "#FFFFFF",
                 marginLeft: 4
               }}>
-                <Text style={{ fontWeight: "400", fontSize: 11, lineHeight: 14, color: "#DD3FEE" }}>{t(info.user.language)}</Text>
+                <Text style={{ fontWeight: "400", fontSize: 15, lineHeight: 18, color: "#DD3FEE" }}>{t(info.user.language)}</Text>
               </View>
             </View>
           </View>
-          <View style={{ marginTop: 11, flexDirection: "row", alignItems: "center" }}>
+          <View style={{ marginTop: 10, flexDirection: "row", alignItems: "center" }}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <HeartIcon
                 isLike={info.isLike}
-                height={20}
+                height={25}
                 OnSetLike={() => OnSetLike()}
                 marginLeft={0}
                 borderColor={"#FFFFFF"}
@@ -175,7 +175,7 @@ export const FriendStoryItem = ({
               <TouchableOpacity onPress={() => setAllLikes(true)}>
                 <DescriptionText
                   text={ info.likesCount }
-                  fontSize={14}
+                  fontSize={18}
                   lineHeight={23}
                   color="#FFFFFF"
                   marginLeft={4}
@@ -184,13 +184,13 @@ export const FriendStoryItem = ({
             </View>
             <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", marginLeft: 16 }} onPress={() => setShowChat(true)}>
               <SvgXml
-                width={20}
-                height={20}
+                width={25}
+                height={25}
                 xml={notifySvg}
               />
               <DescriptionText
                 text={ info.answersCount }
-                fontSize={14}
+                fontSize={18}
                 lineHeight={23}
                 color="#FFFFFF"
                 marginLeft={4}
@@ -255,8 +255,8 @@ export const FriendStoryItem = ({
           </View>
         }
       </ImageBackground>
-      <View style={{ width: windowWidth, height: 1, backgroundColor: "#EEEEEE", marginTop: 20 }}></View>
-      <View style={{ width: windowWidth / 376 * 275, marginTop: 20 }}>
+      <View style={{ width: windowWidth, height: 1, backgroundColor: "#EEEEEE", marginTop: windowHeight / 814 * 15 }}></View>
+      <View style={{ width: windowWidth / 376 * 290, marginTop: windowHeight / 814 * 15 }}>
         <View style={{ width: "100%", borderRadius: 5, height: 6, backgroundColor: "#000", flexDirection: "row" }}>
           <Animated.View style={{
             backgroundColor: "#8E35F6",
@@ -266,6 +266,10 @@ export const FriendStoryItem = ({
           }} />
           <View style={{ width: 12, height: 12, backgroundColor: "#8E35F6", borderRadius: 6, marginTop: -3, marginLeft: -3 }} ></View>
         </View>
+        {/* <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 5 }}>
+          <Text style={{ fontSize: 12, lineHeight: 13, color: "#1A141F" }}>{counter._value}</Text>
+          <Text style={{ fontSize: 12, lineHeight: 13, color: "#1A141F" }}>{new Date(Math.max(info.duration * 1000)).toISOString().substr(14, 5)}</Text>
+        </View> */}
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20, marginTop: 5, }}>
           <TouchableOpacity onPress={() => { onMoveNext(itemIndex - 1 >= 0 ? itemIndex - 1 : 0); setIsPlayed(false); setIsPlaying(false); onSetIsPlaying(false) }}>
             <SvgXml

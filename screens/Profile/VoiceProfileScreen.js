@@ -43,6 +43,7 @@ import moreSvg from '../../assets/common/more.svg';
 import editSvg from '../../assets/common/edit.svg';
 import blueShareSvg from '../../assets/common/blue_share.svg';
 import redTrashSvg from '../../assets/common/red_trash.svg';
+import starSvg from '../../assets/common/star.svg';
 
 import { windowHeight, windowWidth, SHARE_CHECK, Avatars } from '../../config/config';
 import { styles } from '../style/Common';
@@ -81,6 +82,7 @@ const VoiceProfileScreen = (props) => {
   const [visibleReaction, setVisibleReaction] = useState(false);
   const [friends, setFriends] = useState([]);
   const [filter, setFilter] = useState([]);
+  const [speed, setSpeed] = useState(1);
 
   const mounted = useRef(false);
 
@@ -308,6 +310,13 @@ const VoiceProfileScreen = (props) => {
     }
   }
 
+  const onSetSpeed = () => {
+    let v = 1;
+    if (speed < 2)
+      v = speed + 0.5;
+    setSpeed(v);
+  }
+
   useEffect(() => {
     mounted.current = true;
     getFollowUsers();
@@ -387,12 +396,19 @@ const VoiceProfileScreen = (props) => {
                   </Text>
                 </View>
               </View>}
-              <SemiBoldText
-                text={info?.user.name}
-                fontFamily="SFProDisplay-Semibold"
-                marginTop={8}
-                color='rgba(54, 36, 68, 0.8)'
-              />
+              <View style={{ flexDirection: "row", alignItems: "center", marginLeft: -35 }}>
+                <SvgXml
+                  xml={starSvg}
+                  width={30}
+                  height={30}
+                />
+                <SemiBoldText
+                  text={info?.user.name}
+                  fontFamily="SFProDisplay-Semibold"
+                  marginLeft={0}
+                  color='rgba(54, 36, 68, 0.8)'
+                />
+              </View>
             </TouchableOpacity>
           </View>
           {info && <View
@@ -413,13 +429,17 @@ const VoiceProfileScreen = (props) => {
             <VoicePlayer
               voiceUrl={info?.file.url}
               playBtn={true}
-              waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
+              waveColor={info.user.premium != 'none' ? ['#D89DF4', '#B35CF8', '#8229F4'] : ['#D89DF4', '#B35CF8', '#8229F4']}
               playing={false}
               startPlay={() => { VoiceService.listenStory(recordId, 'record') }}
               stopPlay={() => { }}
-              tinWidth={windowWidth / 200}
+              tinWidth={(windowWidth - 120) / 200}
               mrg={windowWidth / 530}
               duration={info.duration * 1000}
+              accelerator={true}
+              onSetSpeed={() => onSetSpeed()}
+              playSpeed={speed}
+              control={true}
             />
           </View>}
         </ImageBackground>
