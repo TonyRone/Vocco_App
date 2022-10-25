@@ -351,6 +351,7 @@ export const FriendStoryItem = ({
           duration={info.duration * 1000}
           playSpeed={speed}
           height={0}
+          control={true}
         />
       </View>}
       { allLikes && 
