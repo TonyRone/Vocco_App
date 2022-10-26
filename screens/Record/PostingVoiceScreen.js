@@ -138,7 +138,8 @@ const PostingVoiceScreen = (props) => {
         { name: 'category', data: Categories[category].label },
         { name: 'privacy', data: String(visibleStatus) },
         { name: 'notSafe', data: String(notSafe) },
-        { name: 'address', data: String(storyAddress) }
+        { name: 'address', data: String(storyAddress) },
+        { name: 'createdAt', data: String(param.createdAt) }
       ];
       setIsLoading(true);
       VoiceService.postVoice(voiceFile).then(async res => {

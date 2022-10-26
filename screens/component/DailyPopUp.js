@@ -37,6 +37,7 @@ import { PickImage } from './PickImage';
 
 export const DailyPopUp = ({
   props,
+  createdAt = '',
   onCloseModal = () => { }
 }) => {
 
@@ -84,6 +85,7 @@ export const DailyPopUp = ({
   }
 
   useEffect(() => {
+    console.log(createdAt);
     mounted.current = true;
     CameraRoll.getPhotos({
       first: 50,
@@ -317,7 +319,7 @@ export const DailyPopUp = ({
                 if (selectedCategory == -1 || photoInfo == null)
                   setWarning(true);
                 else {
-                  props.navigation.navigate("HoldRecord", { photoInfo, categoryId: selectedCategory });
+                  props.navigation.navigate("HoldRecord", { photoInfo, categoryId: selectedCategory, createdAt: createdAt });
                   closeModal();
                 }
               }}

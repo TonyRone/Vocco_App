@@ -5,7 +5,8 @@ import {
   Text,
   FlatList,
   RefreshControl,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -26,6 +27,7 @@ import { setVisibleOne } from '../../store/actions';
 import { StoryPanel } from './StoryPanel';
 import { FriendStoryItem } from './FriendStoryItem';
 import { FriendStoryItems } from './FriendStoryItems';
+import { DailyPopUp } from './DailyPopUp';
 
 export const FriendStories = ({
   props,
@@ -56,6 +58,7 @@ export const FriendStories = ({
   const [storyPanels, setStoryPanels] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [beforeIndex, setBeforeIndex] = useState(-1);
+  const [dailyPop, setDailyPop] = useState(false);
 
   let { visibleOne, refreshState } = useSelector((state) => {
     return (
@@ -237,7 +240,7 @@ export const FriendStories = ({
     {(stories.length > 0 ? storyItems :
     (!loading ?
       <View style={{ alignItems: 'center', justifyContent: "center", width: windowWidth, height: pageHeight }} onTouchStart={(e) => onTouchStart(e)} onTouchEnd={onTouchEnd} onTouchMove={(e) => onTouchMove(e)} >
-        <View style={{ width: "100%", height: "100%", alignItems: "center", justifyContent: "center", backgroundColor: "white" }}>
+        <View style={{ width: "100%", height: "100%", alignItems: "center", justifyContent: "center", backgroundColor: "white", position: "relative" }}>
           <SvgXml
             xml={box_blankSvg}
           />
@@ -247,6 +250,11 @@ export const FriendStories = ({
             lineHeight={28}
             marginTop={22}
           />
+          <View style={{ position: "absolute", bottom: 70, width: "100%", justifyContent: "center", alignItems: "center" }}>
+            <TouchableOpacity style={{ padding: 14, borderRadius: 14, backgroundColor: "#F8F0FF" }} onPress={() => setDailyPop(true)}>
+              <Text style={{ fontWeight: "500", fontSize: 17, lineHeight: 28, color: "#8327D8" }}>{t("Share a moment that happened on that day")}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
       : null)
@@ -273,5 +281,11 @@ export const FriendStories = ({
         onCloseModal={() => setShowInviteList(false)}
       />
     } */}
+    {dailyPop && 
+      <DailyPopUp
+        props={props}
+        onCloseModal={() => setDailyPop(false)}
+        createdAt={`${new Date().getFullYear()}-${selectedMonth}-${selectedDay}`}
+      />}
   </View>
 };
