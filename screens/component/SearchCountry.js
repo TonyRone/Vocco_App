@@ -65,7 +65,8 @@ export const SearchCountry = ({
           fontFamily: 'SFProDisplay-Regular',
           paddingLeft: 55,
           paddingRight: 16,
-          paddingVertical: 12
+          paddingVertical: 12,
+          color: "#000000"
         }}
         value={searchKeyword}
         placeholder={t("Search")}

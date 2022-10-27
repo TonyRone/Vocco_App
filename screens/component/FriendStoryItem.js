@@ -7,7 +7,8 @@ import {
   ImageBackground,
   Platform,
   Vibration,
-  Animated
+  Animated,
+  Pressable
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 // import RNVibrationFeedback from 'react-native-vibration-feedback';
@@ -23,6 +24,7 @@ import { DescriptionText } from './DescriptionText';
 import { StoryLikes } from './StoryLikes';
 import { StoryScreens } from './StoryScreens';
 import VoicePlayer from '../Home/VoicePlayer';
+import { PostContext } from './PostContext';
 
 import notifySvg from '../../assets/common/whitenotify.svg';
 import notificationDisableSvg from '../../assets/record/disable_notification.svg';
@@ -53,7 +55,13 @@ export const FriendStoryItem = ({
   const [showChat, setShowChat] = useState(false);
   const [isPlayed, setIsPlayed] = useState(false);
   const [speed, setSpeed] = useState(1);
+  const [lastTap, setLastTap] = useState(0);
+  const [delayTime, setDelayTime] = useState(null);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const [showContext, setShowContext] = useState(false);
   const voiceTitle = info.title;
+  const DOUBLE_PRESS_DELAY = 400;
 
   const OnSetLike = () => {
     // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
@@ -97,84 +105,133 @@ export const FriendStoryItem = ({
     extrapolate: "clamp"
   })
 
+  const onClickDouble = () => {
+    if (info.notSafe && isPlayed == false)
+      return;
+    const timeNow = Date.now();
+    if (lastTap && timeNow - lastTap < DOUBLE_PRESS_DELAY) {
+      clearTimeout(delayTime);
+      OnSetLike();
+    } else {
+      setLastTap(timeNow);
+      setDelayTime(setTimeout(() => {
+        // props.navigation.navigate('VoiceProfile', { id: info.id });
+      }, DOUBLE_PRESS_DELAY));
+    }
+  };
+  
+  const onTouchStart = (e) => {
+    setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
+    setTouchStart(e.nativeEvent.locationX);
+  }
+  
+  const onTouchMove = (e) => setTouchEnd(e.nativeEvent.locationX)
+  
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+    
+    if (isLeftSwipe || isRightSwipe) {
+      console.log(isLeftSwipe ? 'left' : 'right');
+    }
+  }
+
   return (
-    <View style={{ width: windowWidth, height: height, flexDirection: "column", alignItems: "center" }}>
-      <ImageBackground
-        source={info.imgFile ? { uri: info.imgFile.url } : info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
-        style={{
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          width: windowWidth / 376 * 324,
-          height: height / 546 * 413,
-          borderRadius: 10,
-        }}
-        imageStyle={{
-          borderRadius: 10
-        }}
-        blurRadius={(info.notSafe && isPlayed == false ) ? 20 : 0}
-      >
-        {(!info.notSafe || isPlayed == true) && <LinearGradient
-          style={{ 
+    <View style={{ width: windowWidth, height: height, flexDirection: "column", alignItems: "center" }} onTouchStart={(e) => onTouchStart(e)} onTouchEnd={onTouchEnd} onTouchMove={(e) => onTouchMove(e)}>
+      <TouchableOpacity onPress={() => onClickDouble()} onLongPress={() => setShowContext(true)}>
+        <ImageBackground
+          source={info.imgFile ? { uri: info.imgFile.url } : info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
+          style={{
             flexDirection: "column",
             justifyContent: "flex-end",
-            width: "100%",
-            height: "50%",
-            paddingHorizontal: 13,
+            width: windowWidth / 376 * 324,
+            height: height / 546 * 413,
             borderRadius: 10,
-            paddingBottom: 13
-           }}
-           colors={[ 'rgba(167, 0, 255, 0)', 'rgba(112, 0, 255, 0.7)' ]}
-           start={{ x: 0, y: 0 }}
-           end={{ x:0, y: 1 }}
+          }}
+          imageStyle={{
+            borderRadius: 10
+          }}
+          blurRadius={(info.notSafe && isPlayed == false ) ? 20 : 0}
         >
-          <View style={{ width: "60%" }}>
-            <SemiBoldText
-              text={voiceTitle}
-              fontSize={20}
-              lineHeight={23}
-              color='#FFFFFF'
-              marginLeft={0}
-            />
-          </View>
-          <View style={{ marginTop: 8, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TouchableOpacity onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}><Text style={{ fontWeight: "400", fontSize: 16, lineHeight: 19, color: "#FFFFFF" }}>{info.user.name}</Text></TouchableOpacity>
-              {info.address != 'null' && info.address && 
-                <Text style={{ fontWeight: "400", fontSize: 16, lineHeight: 19, color: "#FFFFFF" }}> - {info.address}</Text>
-              }
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <View style={{
-                paddingHorizontal: 16,
-                paddingVertical: 4,
-                borderRadius: 8,
-                backgroundColor: "#FFFFFF"
-              }}>
-                <Text style={{ fontWeight: "400", fontSize: 15, lineHeight: 18, color: "#DD3FEE" }}>{info.category == "" ? "All" : info.category}</Text>
-              </View>
-              <View style={{
-                paddingHorizontal: 16,
-                paddingVertical: 4,
-                borderRadius: 8,
-                backgroundColor: "#FFFFFF",
-                marginLeft: 4
-              }}>
-                <Text style={{ fontWeight: "400", fontSize: 15, lineHeight: 18, color: "#DD3FEE" }}>{t(info.user.language)}</Text>
-              </View>
-            </View>
-          </View>
-          <View style={{ marginTop: 10, flexDirection: "row", alignItems: "center" }}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <HeartIcon
-                isLike={info.isLike}
-                height={25}
-                OnSetLike={() => OnSetLike()}
+          {(!info.notSafe || isPlayed == true) && <LinearGradient
+            style={{ 
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              width: "100%",
+              height: "50%",
+              paddingHorizontal: 13,
+              borderRadius: 10,
+              paddingBottom: 13
+            }}
+            colors={[ 'rgba(167, 0, 255, 0)', 'rgba(112, 0, 255, 0.7)' ]}
+            start={{ x: 0, y: 0 }}
+            end={{ x:0, y: 1 }}
+          >
+            <View style={{ width: "60%" }}>
+              <SemiBoldText
+                text={voiceTitle}
+                fontSize={20}
+                lineHeight={23}
+                color='#FFFFFF'
                 marginLeft={0}
-                borderColor={"#FFFFFF"}
               />
-              <TouchableOpacity onPress={() => setAllLikes(true)}>
+            </View>
+            <View style={{ marginTop: 8, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <TouchableOpacity onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}><Text style={{ fontWeight: "400", fontSize: 16, lineHeight: 19, color: "#FFFFFF" }}>{info.user.name}</Text></TouchableOpacity>
+                {info.address != 'null' && info.address && 
+                  <Text style={{ fontWeight: "400", fontSize: 16, lineHeight: 19, color: "#FFFFFF" }}> - {info.address}</Text>
+                }
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View style={{
+                  paddingHorizontal: 16,
+                  paddingVertical: 4,
+                  borderRadius: 8,
+                  backgroundColor: "#FFFFFF"
+                }}>
+                  <Text style={{ fontWeight: "400", fontSize: 13, lineHeight: 16, color: "#DD3FEE" }}>{info.category == "" ? "All" : info.category}</Text>
+                </View>
+                <View style={{
+                  paddingHorizontal: 16,
+                  paddingVertical: 4,
+                  borderRadius: 8,
+                  backgroundColor: "#FFFFFF",
+                  marginLeft: 4
+                }}>
+                  <Text style={{ fontWeight: "400", fontSize: 13, lineHeight: 16, color: "#DD3FEE" }}>{t(info.user.language)}</Text>
+                </View>
+              </View>
+            </View>
+            <View style={{ marginTop: 10, flexDirection: "row", alignItems: "center" }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <HeartIcon
+                  isLike={info.isLike}
+                  height={25}
+                  OnSetLike={() => OnSetLike()}
+                  marginLeft={0}
+                  borderColor={"#FFFFFF"}
+                />
+                <TouchableOpacity onPress={() => setAllLikes(true)}>
+                  <DescriptionText
+                    text={ info.likesCount }
+                    fontSize={18}
+                    lineHeight={23}
+                    color="#FFFFFF"
+                    marginLeft={4}
+                  />
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", marginLeft: 16 }} onPress={() => setShowChat(true)}>
+                <SvgXml
+                  width={25}
+                  height={25}
+                  xml={notifySvg}
+                />
                 <DescriptionText
-                  text={ info.likesCount }
+                  text={ info.answersCount }
                   fontSize={18}
                   lineHeight={23}
                   color="#FFFFFF"
@@ -182,79 +239,65 @@ export const FriendStoryItem = ({
                 />
               </TouchableOpacity>
             </View>
-            <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", marginLeft: 16 }} onPress={() => setShowChat(true)}>
-              <SvgXml
-                width={25}
-                height={25}
-                xml={notifySvg}
-              />
-              <DescriptionText
-                text={ info.answersCount }
-                fontSize={18}
-                lineHeight={23}
-                color="#FFFFFF"
-                marginLeft={4}
-              />
-            </TouchableOpacity>
-          </View>
-        </LinearGradient> }
-        {
-          (info.notSafe && isPlayed == false) && <View style={{
-            width: "100%",
-            height: "100%",
-            borderRadius: 12,
-            backgroundColor: 'rgba(203, 203, 203, 0.54)',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            paddingHorizontal: 14
-          }}>
-            <View></View>
-            <View style={{ 
-              alignItems: "center"
+          </LinearGradient> }
+          {
+            (info.notSafe && isPlayed == false) && <View style={{
+              width: "100%",
+              height: "100%",
+              borderRadius: 12,
+              backgroundColor: 'rgba(203, 203, 203, 0.54)',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              paddingHorizontal: 14
             }}>
-              <SvgXml
-                xml={notificationDisableSvg}
-                width={32}
-                height={32}
-              />
-              <SemiBoldText
-                text={t("Sensitive content")}
-                fontSize={15}
-                lineHeight={18}
-                color="#000"
-                marginTop={15}
-              />
-              <DescriptionText
-                text={t("This audio may not be appropriated")}
-                fontSize={11}
-                lineHeight={13}
-                color="#000"
-                marginTop={18}
-              />
-            </View>
-            <View style={{
-              width: '100%',
-              alignItems: 'center',
-              paddingTop: 22,
-              borderTopColor: "#1F1F1F",
-              borderTopWidth: 1
-            }}>
-              <TouchableOpacity
-                onPress={() => { setIsPlayed(true); setIsPlaying(true); onSetIsPlaying(true) }}
-              >
+              <View></View>
+              <View style={{ 
+                alignItems: "center"
+              }}>
+                <SvgXml
+                  xml={notificationDisableSvg}
+                  width={32}
+                  height={32}
+                />
                 <SemiBoldText
-                  text={t("Play story")}
-                  fontSize={14}
+                  text={t("Sensitive content")}
+                  fontSize={15}
                   lineHeight={18}
                   color="#000"
-                  marginTop={0}
-                  marginBottom={16}
+                  marginTop={15}
                 />
-              </TouchableOpacity>
+                <DescriptionText
+                  text={t("This audio may not be appropriated")}
+                  fontSize={11}
+                  lineHeight={13}
+                  color="#000"
+                  marginTop={18}
+                />
+              </View>
+              <View style={{
+                width: '100%',
+                alignItems: 'center',
+                paddingTop: 22,
+                borderTopColor: "#1F1F1F",
+                borderTopWidth: 1
+              }}>
+                <TouchableOpacity
+                  onPress={() => { setIsPlayed(true); setIsPlaying(true); onSetIsPlaying(true) }}
+                >
+                  <SemiBoldText
+                    text={t("Play story")}
+                    fontSize={14}
+                    lineHeight={18}
+                    color="#000"
+                    marginTop={0}
+                    marginBottom={16}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        }
-      </ImageBackground>
+          }
+        </ImageBackground>
+      </TouchableOpacity>
       <View style={{ width: windowWidth, height: 1, backgroundColor: "#EEEEEE", marginTop: windowHeight / 814 * 15 }}></View>
       <View style={{ width: windowWidth / 376 * 290, marginTop: windowHeight / 814 * 15 }}>
         <View style={{ width: "100%", borderRadius: 5, height: 6, backgroundColor: "#000", flexDirection: "row" }}>
@@ -372,6 +415,14 @@ export const FriendStoryItem = ({
           props={props}
           info={info}
           onCloseModal={() => setShowChat(false)}
+        />
+      }
+      {
+        showContext && 
+        <PostContext
+          postInfo={info}
+          props={props}
+          onCloseModal={() => setShowContext(false)}
         />
       }
     </View>
