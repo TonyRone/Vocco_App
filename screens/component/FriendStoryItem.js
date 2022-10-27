@@ -62,6 +62,7 @@ export const FriendStoryItem = ({
   const [showContext, setShowContext] = useState(false);
   const voiceTitle = info.title;
   const DOUBLE_PRESS_DELAY = 400;
+  const minSwipeDistance = 50;
 
   const OnSetLike = () => {
     // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
