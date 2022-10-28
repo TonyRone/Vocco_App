@@ -50,7 +50,7 @@ export const ShareHint = ({
   const onShareLink = () => {
       Share.open({
           url: `https://vocco.app.link/${user.name}`,
-          message: t("Hey! Are you ok? I'm a little tired of apps like Insta, BeReal etc. I want to share real moments with my loved ones, including you, on Vocco. Will you join me?") + `https://vocco.app.link/${user.name}` + '(' +  t("it's free!") + ')'
+          message: t("Hey! Are you ok? I'm a little tired of apps like Insta, BeReal etc. I want to share real moments with my loved ones, including you, on Vocco. Will you join me?") + '(' +  t("it's free!") + ')'
       }).then(res => {
 
       })

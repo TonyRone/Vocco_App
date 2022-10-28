@@ -85,7 +85,6 @@ export const DailyPopUp = ({
   }
 
   useEffect(() => {
-    console.log(createdAt);
     mounted.current = true;
     CameraRoll.getPhotos({
       first: 50,

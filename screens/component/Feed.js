@@ -19,7 +19,7 @@ import '../../language/i18n';
 import { FeedStories } from './FeedStories';
 import { Categories, windowWidth, Days, Months } from '../../config/config';
 import { TemporaryStories } from './TemporaryStories';
-import { setUser } from '../../store/actions';
+import { setUser, setUsed } from '../../store/actions';
 import { FriendStories } from './FriendStories';
 import { styles } from '../style/Common';
 import { SemiBoldText } from './SemiBoldText';
@@ -33,6 +33,7 @@ export const Feed = ({
   props,
   category = 0,
 }) => {
+  const { createdAt, isUsed } = useSelector((state) => state.user);
 
 
   const mounted = useRef(false);
@@ -56,7 +57,7 @@ export const Feed = ({
   const onShareLink = () => {
     Share.open({
       url: `https://vocco.app.link/${user.name}`,
-      message: t("Hey! Are you ok? I'm a little tired of apps like Insta, BeReal etc. I want to share real moments with my loved ones, including you, on Vocco. Will you join me?") + `https://vocco.app.link/${user.name}` + '(' +  t("it's free!") + ')'
+      message: t("Hey! Are you ok? I'm a little tired of apps like Insta, BeReal etc. I want to share real moments with my loved ones, including you, on Vocco. Will you join me?") + '(' +  t("it's free!") + ')'
     }).then(res => {
 
     })
@@ -66,9 +67,14 @@ export const Feed = ({
   }
 
   useEffect(() => {
-    const currentDate = new Date();
-    setSelectedDay(currentDate.getDate());
-    setSelectedMonth(currentDate.getMonth() + 1);
+    if (isUsed == false && createdAt != '') {
+      setSelectedDay(parseInt(createdAt.split('-')[2]));
+      setSelectedMonth(parseInt(createdAt.split('-')[1]));
+    } else {
+      const currentDate = new Date();
+      setSelectedDay(currentDate.getDate());
+      setSelectedMonth(currentDate.getMonth() + 1);
+    }
 
     mounted.current = true;
     let tp = user;
@@ -97,7 +103,11 @@ export const Feed = ({
       }
 
       setMonthDate([...month_dates]);
-      setSelectedDay(daysInMonth);
+      if (isUsed == true) {
+        setSelectedDay(daysInMonth);
+      } else {
+        dispatch(setUsed());
+      }
     }
   }, [selectedMonth])
 

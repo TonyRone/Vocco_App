@@ -181,7 +181,7 @@ export const FriendStoryItem = ({
             </View>
             <View style={{ marginTop: 8, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <TouchableOpacity onPress={() => props.navigation.navigate('UserProfile', { userId: info.user.id })}><Text style={{ fontWeight: "400", fontSize: 16, lineHeight: 19, color: "#FFFFFF" }}>{info.user.name}</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => { info.isMine ? props.navigation.navigate('Profile') : props.navigation.navigate('UserProfile', { userId: info.user.id }); }}><Text style={{ fontWeight: "400", fontSize: 16, lineHeight: 19, color: "#FFFFFF" }}>{info.user.name}</Text></TouchableOpacity>
                 {info.address != 'null' && info.address && 
                   <Text style={{ fontWeight: "400", fontSize: 16, lineHeight: 19, color: "#FFFFFF" }}> - {info.address}</Text>
                 }

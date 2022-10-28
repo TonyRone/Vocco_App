@@ -79,7 +79,7 @@ export const PostContext = ({
         //let filePath = `${Platform.OS === 'android' ? res.path() : `${fileName}.m4a`}`;
         let filePath = res.path();
         Share.open({
-          url: Platform.OS == 'android' ? 'file://' : '' + filePath,
+          url: (Platform.OS == 'android' ? 'file://' : '') + filePath,
           type: 'audio/' + (Platform.OS === 'android' ? 'mp3' : 'm4a'),
         }).then(res => {
         })

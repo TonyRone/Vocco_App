@@ -167,7 +167,7 @@ const HoldRecordScreen = (props) => {
   let r = 0;
 
   useEffect(() => {
-    setFill(user.premium != 'none' ? 180 : 30);
+    setFill(user.premium != 'none' ? 60 : 30);
     setKey(prevKey => prevKey + 1);
     return () => clearRecorder();
   }, [])

@@ -52,7 +52,7 @@ const ShareFriendScreen = (props) => {
     const shareMessage = async () => {
         const options = {
             title: 'Sharing!',
-            message: msg,
+            message: t("Hey! Are you ok? I'm a little tired of apps like Insta, BeReal etc. I want to share real moments with my loved ones, including you, on Vocco. Will you join me?") + referLink + '(' +  t("it's free!") + ')',
             url: referLink,
         };
         await Share.share(options);
