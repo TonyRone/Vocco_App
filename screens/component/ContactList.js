@@ -56,7 +56,7 @@ export const ContactList = ({
     SendSMS.send(
       {
         // Message body
-        body: `Gosh, these stories are crazy! Download Vocco app for free!\nhttps://vocco.app.link/${user.name}`,
+        body: `Hey! Are you ok? I'm a little tired of apps like Insta, BeReal etc. I want to share real moments with my loved ones, including you, on Vocco. Will you join me?\nhttps://vocco.app.link/${user.name}`,
         // Recipients Number
         recipients: [contactUsers[index].phoneNumbers[0].number],
         // An array of types 
