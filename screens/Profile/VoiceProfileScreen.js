@@ -316,6 +316,16 @@ const VoiceProfileScreen = (props) => {
       v = speed + 0.5;
     setSpeed(v);
   }
+  useEffect(() => {
+    mounted.current = true;
+    getFollowUsers();
+    getUserInfo();
+    getAnswers();
+    dispatch(setVoiceState(voiceState + 1));
+    return () => {
+      mounted.current = false;
+    }
+  }, [])
 
   useEffect(() => {
     mounted.current = true;
