@@ -474,6 +474,7 @@ const VoiceProfileScreen = (props) => {
                   onChangeIsLiked={() => setIsLiked(index)}
                   onDeleteItem={() => onDeleteItem(index)}
                   holdToAnswer={(v) => setIsHolding(v)}
+                  friends={friends}
                 /> :
                 <TagItem
                   key={index + item.id + 'tagFriend'}

@@ -27,6 +27,7 @@ import { MoreOrLess } from "@rntext/more-or-less";
 export const AnswerVoiceItem = ({
   info,
   props,
+  friends = [],
   onChangeIsLiked = () => { },
   onDeleteItem = () => { },
   holdToAnswer = () => { }
@@ -133,6 +134,74 @@ export const AnswerVoiceItem = ({
     }
   }, [])
 
+  const taggedName = () => {
+    console.log(friends);
+    if (info.type == 'bio') {
+      if (info.bio.includes('@')) {
+        let i = info.bio.indexOf('@');
+        let j = i;
+        for (j = i + 1; j < info.bio.length; j++) {
+          if ((info.bio[j] >= 'a' && info.bio[j] <= 'z') || (info.bio[j] >= 'A' && info.bio[j] <= 'Z')) {
+          } else {
+            break;
+          }
+        }
+        let flag = false;
+        let friend_ID;
+        let user_Name = info.bio.slice(i + 1, j);
+        for (i = 0; i < friends.length; i++) {
+          if (friends[i].user.name.toLowerCase() == user_Name.toLowerCase()) {
+            flag = true;
+            friend_ID = friends[i].user.id;
+          }
+        }
+        if (flag == true) {
+          return <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text style={{ 
+                    fontFamily: "SFProDisplay-Regular",
+                    fontSize: 15,
+                    color: "#281E30",
+                    textAlign: "left",
+                    lineHeight: 24
+                  }}>{info.bio.slice(0, info.bio.indexOf('@'))}</Text>
+                  <TouchableOpacity onPress={() => props.navigation.navigate('UserProfile', { userId: friend_ID })}>
+                    <Text style={{ 
+                      fontFamily: "SFProDisplay-Bold",
+                      fontSize: 15,
+                      color: "#8327D8",
+                      textAlign: "left",
+                      lineHeight: 24
+                    }}>{'@' + user_Name}</Text>
+                  </TouchableOpacity>
+                  <Text style={{ 
+                    fontFamily: "SFProDisplay-Regular",
+                    fontSize: 15,
+                    color: "#281E30",
+                    textAlign: "left",
+                    lineHeight: 24
+                  }}>{info.bio.slice(j)}</Text>
+          </View>
+        }else {
+          return <Text style={{ 
+            fontFamily: "SFProDisplay-Regular",
+            fontSize: 15,
+            color: "#281E30",
+            textAlign: "left",
+            lineHeight: 24
+          }}>{info.bio}</Text>
+        }
+      } else {
+        return <Text style={{ 
+          fontFamily: "SFProDisplay-Regular",
+          fontSize: 15,
+          color: "#281E30",
+          textAlign: "left",
+          lineHeight: 24
+        }}>{info.bio}</Text>
+      }
+    }
+  }
+
   return (<>
     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={{ maxWidth: windowWidth }}>
       <TouchableOpacity
@@ -172,7 +241,7 @@ export const AnswerVoiceItem = ({
                 />
               </TouchableOpacity>
               {info.type == 'bio' && <View style={{ width: 260 }}>
-                <MoreOrLess
+                {/* <MoreOrLess
                   numberOfLines={3}
                   moreText={t("more")}
                   lessText={t("less")}
@@ -192,7 +261,8 @@ export const AnswerVoiceItem = ({
                   }}
                 >
                   {info.bio}
-                </MoreOrLess>
+                </MoreOrLess> */}
+                {taggedName()}
               </View>}
               {info.type == 'gif' &&
                 <AutoHeightImage

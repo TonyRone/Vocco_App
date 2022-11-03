@@ -343,6 +343,7 @@ export const StoryScreens = ({
                       onChangeIsLiked={() => setIsLiked(index)}
                       onDeleteItem={() => onDeleteItem(index)}
                       holdToAnswer={(v) => setIsHolding(v)}
+                      friends={friends}
                     /> :
                     <TagItem
                       key={index + item.id + 'tagFriend'}

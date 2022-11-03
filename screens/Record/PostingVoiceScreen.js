@@ -81,7 +81,7 @@ const PostingVoiceScreen = (props) => {
   const { t, i18n } = useTranslation();
 
   const [category, setCategory] = useState(initCategory);
-  const [visibleStatus, setVisibleStatus] = useState(param.info ? param.info.privacy : false);
+  const [visibleStatus, setVisibleStatus] = useState(user.isPrivate ? user.isPrivate : false);
   const [notSafe, setNotSafe] = useState(false);
   const [visibleReaction, setVisibleReaction] = useState(false);
   const [icon, setIcon] = useState(param.info ? param.info.emoji : "😁");
