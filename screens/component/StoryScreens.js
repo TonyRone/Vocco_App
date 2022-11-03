@@ -436,7 +436,7 @@ export const StoryScreens = ({
                 elevation: 5,
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.5,
-                shadowRadius: 8,
+                shadowRadius: 4,
                 zIndex: 10
               }}
               >
