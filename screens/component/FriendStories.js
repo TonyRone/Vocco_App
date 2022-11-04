@@ -38,6 +38,7 @@ export const FriendStories = ({
   recordId = '',
   selectedDay = 0,
   selectedMonth = 0,
+  isFirst,
   setSelectedDay = () => {},
   setSelectedMonth = () => {}
 }) => {
@@ -230,7 +231,7 @@ export const FriendStories = ({
         setSelectedDay(selectedDay + 1);
       } else {
         setSelectedMonth(selectedMonth + 1);
-        setSelectedDay(1);
+        isFirst.current = true;
       }
     }
   }

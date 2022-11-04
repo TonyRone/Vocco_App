@@ -38,6 +38,7 @@ export const Feed = ({
 
   const mounted = useRef(false);
   const current_Month = new Date().getMonth();
+  const isFirst = useRef(false);
 
   const { t, i18n } = useTranslation();
   const [selectedDay, setSelectedDay] = useState(0);
@@ -103,8 +104,11 @@ export const Feed = ({
       }
 
       setMonthDate([...month_dates]);
-      if (isUsed == true) {
+      if (isUsed == true && isFirst.current != true) {
         setSelectedDay(daysInMonth);
+      } else if (isFirst.current == true) {
+        setSelectedDay(1);
+        isFirst.current = false;
       } else {
         dispatch(setUsed());
       }
@@ -225,6 +229,7 @@ export const Feed = ({
         selectedMonth={selectedMonth}
         setSelectedDay={(day) => setSelectedDay(day)}
         setSelectedMonth={(month) => setSelectedMonth(month)}
+        isFirst={isFirst}
       />
       {/* </ScrollView> */}
     </View>
