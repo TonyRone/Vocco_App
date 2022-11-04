@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, TouchableOpacity, Text, Image, Vibration } from "react-native";
+import { View, TouchableOpacity, Text, Image, Vibration, Linking } from "react-native";
 import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
 
@@ -23,6 +23,7 @@ import { Avatars, windowWidth } from "../../config/config";
 import { ReplyAnswerItem } from "./ReplyAnswerItem";
 import AutoHeightImage from "react-native-auto-height-image";
 import { MoreOrLess } from "@rntext/more-or-less";
+import Hyperlink from "react-native-hyperlink";
 
 export const AnswerVoiceItem = ({
   info,
@@ -135,61 +136,84 @@ export const AnswerVoiceItem = ({
   }, [])
 
   const taggedName = () => {
-    console.log(friends);
     if (info.type == 'bio') {
-      if (info.bio.includes('@')) {
-        let i = info.bio.indexOf('@');
-        let j = i;
-        for (j = i + 1; j < info.bio.length; j++) {
-          if ((info.bio[j] >= 'a' && info.bio[j] <= 'z') || (info.bio[j] >= 'A' && info.bio[j] <= 'Z')) {
+      let temp = info.bio;
+      let result = [];
+      let index_res = "";
+      let flags = false;
+      for (let i = 0; i < temp.length; i++) {
+        if (temp[i] == '@') {
+          if (index_res.length > 0) {
+            result.push(index_res);
+            index_res = "@";
+            flags = true;
           } else {
-            break;
+            index_res = index_res + temp[i];
+            flags = true;
+          }
+        } else {
+          if (flags == true) {
+            if ((temp[i] >= 'a' && temp[i] <= 'z') || (temp[i] >= 'A' && temp[i] <= 'Z')) {
+              index_res = index_res + temp[i];
+            } else {
+              result.push(index_res);
+              index_res = "" + temp[i];
+              flags = false;
+            }
+          } else {
+            index_res = index_res + temp[i];
           }
         }
-        let flag = false;
-        let friend_ID;
-        let user_Name = info.bio.slice(i + 1, j);
-        for (i = 0; i < friends.length; i++) {
-          if (friends[i].user.name.toLowerCase() == user_Name.toLowerCase()) {
-            flag = true;
-            friend_ID = friends[i].user.id;
+      }
+      result.push(index_res);
+      if (result.length > 1 || result[0][0] == '@') {
+        let res = result.map((item, index) => {
+          if (item[0] == '@') {
+            let user_Name = item.slice(1);
+            let flag = false;
+            let friend_ID;
+            for (let j = 0; j < friends.length; j++) {
+              if (friends[j].user.name.toLowerCase() == user_Name.toLowerCase()) {
+                flag = true;
+                friend_ID = friends[j].user.id;
+              }
+            }
+            if (user_Name.toLowerCase() == user.name.toLowerCase()) {
+              flag = true;
+              friend_ID = user.id;
+            }
+            if (flag == true) {
+              return <TouchableOpacity onPress={() => { friend_ID == user.id ? props.navigation.navigate('Profile') : props.navigation.navigate('UserProfile', { userId: friend_ID })}} key={index}>
+                      <Text style={{ 
+                        fontFamily: "SFProDisplay-Bold",
+                        fontSize: 15,
+                        color: "#8327D8",
+                        textAlign: "left",
+                        lineHeight: 24
+                      }}>{'@' + user_Name}</Text>
+                    </TouchableOpacity>
+            } else {
+              <Text style={{
+                fontFamily: "SFProDisplay-Regular",
+                fontSize: 15,
+                color: "#281E30",
+                textAlign: "left",
+                lineHeight: 24
+              }} key={index}>{'@' + user_Name}</Text>
+            }
+          } else {
+            return <Text style={{ 
+              fontFamily: "SFProDisplay-Regular",
+              fontSize: 15,
+              color: "#281E30",
+              textAlign: "left",
+              lineHeight: 24
+            }} key={index}>{item}</Text>
           }
-        }
-        if (flag == true) {
-          return <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text style={{ 
-                    fontFamily: "SFProDisplay-Regular",
-                    fontSize: 15,
-                    color: "#281E30",
-                    textAlign: "left",
-                    lineHeight: 24
-                  }}>{info.bio.slice(0, info.bio.indexOf('@'))}</Text>
-                  <TouchableOpacity onPress={() => props.navigation.navigate('UserProfile', { userId: friend_ID })}>
-                    <Text style={{ 
-                      fontFamily: "SFProDisplay-Bold",
-                      fontSize: 15,
-                      color: "#8327D8",
-                      textAlign: "left",
-                      lineHeight: 24
-                    }}>{'@' + user_Name}</Text>
-                  </TouchableOpacity>
-                  <Text style={{ 
-                    fontFamily: "SFProDisplay-Regular",
-                    fontSize: 15,
-                    color: "#281E30",
-                    textAlign: "left",
-                    lineHeight: 24
-                  }}>{info.bio.slice(j)}</Text>
-          </View>
-        }else {
-          return <Text style={{ 
-            fontFamily: "SFProDisplay-Regular",
-            fontSize: 15,
-            color: "#281E30",
-            textAlign: "left",
-            lineHeight: 24
-          }}>{info.bio}</Text>
-        }
+        });
+        return <View style={{ flexDirection: "row", alignItems: "center" }}>
+          {res}
+        </View>
       } else {
         return <Text style={{ 
           fontFamily: "SFProDisplay-Regular",
@@ -197,7 +221,7 @@ export const AnswerVoiceItem = ({
           color: "#281E30",
           textAlign: "left",
           lineHeight: 24
-        }}>{info.bio}</Text>
+        }}>{result[0]}</Text>
       }
     }
   }
@@ -262,7 +286,9 @@ export const AnswerVoiceItem = ({
                 >
                   {info.bio}
                 </MoreOrLess> */}
+                <Hyperlink onPress={(url, text) => Linking.openURL(url) } linkStyle={{ color: "#8327D8" }}>
                 {taggedName()}
+                </Hyperlink>
               </View>}
               {info.type == 'gif' &&
                 <AutoHeightImage

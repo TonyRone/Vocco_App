@@ -17,7 +17,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { MyButton } from './MyButton';
 import { SemiBoldText } from './SemiBoldText';
 import { DescriptionText } from './DescriptionText';
-import { windowHeight, windowWidth } from '../../config/config';
+import { windowHeight, windowWidth, MAIN_LANGUAGE } from '../../config/config';
 import EditService from '../../services/EditService';
 import { setRefreshState, setUser } from '../../store/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
