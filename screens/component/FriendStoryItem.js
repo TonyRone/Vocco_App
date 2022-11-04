@@ -43,7 +43,9 @@ export const FriendStoryItem = ({
   height,
   storyLength,
   onMoveNext = () => {},
-  onChangeLike = () => {}
+  onChangeLike = () => {},
+  onChangePrevDay = () => {},
+  onChangeNextDay = () => {}
 }) => {
   const { t, i18n } = useTranslation();
   const counter = useRef(new Animated.Value(0)).current;
@@ -135,6 +137,11 @@ export const FriendStoryItem = ({
     const isRightSwipe = distance < -minSwipeDistance
     
     if (isLeftSwipe || isRightSwipe) {
+      if (!isLeftSwipe && itemIndex == 0) {
+        onChangePrevDay()
+      } else if(isLeftSwipe && itemIndex == storyLength - 1) {
+        onChangeNextDay();
+      }
       console.log(isLeftSwipe ? 'left' : 'right');
     }
   }

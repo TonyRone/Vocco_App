@@ -71,9 +71,13 @@ export const FriendStories = ({
   const pageHeight = windowHeight / 814 * 546;
 
   const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-    const paddingToBottom = 10;
-    return layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom;
+    const paddingToBottom = -110;
+    return layoutMeasurement.width + contentOffset.x >=
+      contentSize.width - paddingToBottom;
+  };
+  const isCloseToTop = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    const paddingToBottom = -110;
+    return contentOffset.x <= paddingToBottom;
   };
 
   const OnShowEnd = () => {
@@ -204,6 +208,32 @@ export const FriendStories = ({
     </View>
     )
   }
+  const onChangePrevDay = () => {
+    if (selectedDay > 1) {
+      setSelectedDay(selectedDay - 1);
+    } else {
+      setSelectedMonth(selectedMonth - 1);
+    }
+  }
+
+  const onChangeNextDay = () => {
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+    const currentDay = new Date().getDate();
+    let daysInMonth = new Date(currentYear, selectedMonth, 0).getDate();
+    if (currentMonth == selectedMonth) {
+      if (currentDay > selectedDay) {
+        setSelectedDay(selectedDay + 1);
+      }
+    } else {
+      if (selectedDay < daysInMonth) {
+        setSelectedDay(selectedDay + 1);
+      } else {
+        setSelectedMonth(selectedMonth + 1);
+        setSelectedDay(1);
+      }
+    }
+  }
 
   const storyItems = useMemo(() => {
     return <FlatList
@@ -212,8 +242,13 @@ export const FriendStories = ({
       pagingEnabled={true}
       ref={scrollRef}
       data={stories}
-      onMomentumScrollBegin={(event) => {
-        console.log(event.nativeEvent);
+      onScroll={({ nativeEvent }) => {
+        if (isCloseToBottom(nativeEvent)) {
+          console.log("next day");
+        }
+        if (isCloseToTop(nativeEvent)) {
+          console.log("prev day");
+        }
       }}
       // onScrollEndDrag={(event) => {
       //   console.log(event.nativeEvent);
@@ -230,6 +265,8 @@ export const FriendStories = ({
             scrollRef.current?.scrollToIndex({ animated: true, index: index1 })
           } }
           onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
+          onChangePrevDay={() => onChangePrevDay()}
+          onChangeNextDay={() => onChangeNextDay()}
         />
       }}
       keyExtractor={(item, index) => index.toString()}
