@@ -35,6 +35,7 @@ import playgraySvg from '../../assets/common/play2gray.svg';
 import greyWaveSvg from '../../assets/record/grey-wave.svg';
 import whiteWaveSvg from '../../assets/record/white-wave.svg';
 import pauseSvg2 from '../../assets/common/pause2.svg';
+import { useSelector } from 'react-redux';
 
 export const FriendStoryItem = ({
   props,
@@ -48,6 +49,7 @@ export const FriendStoryItem = ({
   onChangeNextDay = () => {}
 }) => {
   const { t, i18n } = useTranslation();
+  const { visibleOne } = useSelector((state) => state.user);
   const counter = useRef(new Animated.Value(0)).current;
   const counterValue = useRef(0);
 
@@ -65,6 +67,17 @@ export const FriendStoryItem = ({
   const voiceTitle = info.title;
   const DOUBLE_PRESS_DELAY = 400;
   const minSwipeDistance = 50;
+
+  useEffect(() => {
+    if (itemIndex === visibleOne) {
+      onSetIsPlaying(true);
+      setIsPlaying(true);
+      setIsPlayed(true);
+    } else {
+      setIsPlaying(false);
+      onSetIsPlaying(false);
+    }
+  }, [visibleOne])
 
   const OnSetLike = () => {
     // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);

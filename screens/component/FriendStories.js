@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import {
   View,
   Image,
@@ -23,7 +23,7 @@ import { MyButton } from './MyButton';
 import { InviteUsers } from './InviteUsers';
 import SelectTopicScreen from '../PhoneNumberLogin/SelectTopicScreen';
 import { StoryItem } from '../component/StoryItem';
-import { setVisibleOne } from '../../store/actions';
+import { setVisibleOne, setViewable } from '../../store/actions';
 import { StoryPanel } from './StoryPanel';
 import { FriendStoryItem } from './FriendStoryItem';
 import { FriendStoryItems } from './FriendStoryItems';
@@ -42,6 +42,10 @@ export const FriendStories = ({
   setSelectedDay = () => {},
   setSelectedMonth = () => {}
 }) => {
+  const viewabilityConfig = {
+    itemVisiblePercentThreshold: 40,
+    waitForInteraction: true,
+  };
 
   const dispatch = useDispatch();
 
@@ -60,6 +64,8 @@ export const FriendStories = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [beforeIndex, setBeforeIndex] = useState(-1);
   const [dailyPop, setDailyPop] = useState(false);
+  const [visibleItemIndex, setVisibleItemIndex] = useState();
+  const [focused, setFocused] = useState();
 
   let { visibleOne, refreshState } = useSelector((state) => {
     return (
@@ -236,6 +242,15 @@ export const FriendStories = ({
     }
   }
 
+  const onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
+    if (changed && changed.length > 0) {
+      // setVisibleItemIndex(changed[0].index);
+      dispatch(setVisibleOne(changed[0].index));
+    }
+  });
+
+  const viewabilityConfigCallbackPairs = useRef([{ viewabilityConfig, onViewableItemsChanged }]);
+
   const storyItems = useMemo(() => {
     return <FlatList
       style={{ width: windowWidth, height: pageHeight, paddingTop: windowHeight / 812 * 17 }}
@@ -251,6 +266,7 @@ export const FriendStories = ({
           console.log("prev day");
         }
       }}
+      viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
       // onScrollEndDrag={(event) => {
       //   console.log(event.nativeEvent);
       // }}

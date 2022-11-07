@@ -148,11 +148,12 @@ const HoldRecordScreen = (props) => {
         let delta = Math.abs(dragPos.current);
         if (delta < 80) {
           setIsPaused(true);
+          setIsRecording(true);
           await recorderPlayer.pauseRecorder().then(res => {
+            onStopRecord(true);
           })
             .catch(err => {
               console.log(err);
-              onStopRecord(false);
             });
 
         }
