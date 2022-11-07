@@ -76,9 +76,9 @@ const WelcomeScreen = (props) => {
                     </View>
                 </ImageBackground>
             </View>
-            { isWarning && <View style={{ position: "absolute", width: "100%", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+            { isWarning && <View style={{ position: "absolute", width: "100%", flexDirection: "row", justifyContent: "center", alignItems: "center", top: 70 }}>
                 <View style={{
-                paddingHorizontal: 100,
+                paddingHorizontal: 20,
                 paddingVertical: 16,
                 backgroundColor: "#E41717",
                 borderRadius: 16,
@@ -86,8 +86,7 @@ const WelcomeScreen = (props) => {
                 elevation: 10,
                 shadowOffset: { width: 0, height: 5.22 },
                 shadowOpacity: 0.5,
-                shadowRadius: 16,
-                top: 20
+                shadowRadius: 16
             }}>
                 <Text style={{ color: "white", fontSize: 15, lineHeight: 18 }}>{t("You must agree our terms")}</Text>
             </View>
