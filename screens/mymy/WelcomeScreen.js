@@ -78,7 +78,7 @@ const WelcomeScreen = (props) => {
             </View>
             { isWarning && <View style={{ position: "absolute", width: "100%", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                 <View style={{
-                paddingHorizontal: 70,
+                paddingHorizontal: 100,
                 paddingVertical: 16,
                 backgroundColor: "#E41717",
                 borderRadius: 16,
