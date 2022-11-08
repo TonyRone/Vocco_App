@@ -68,16 +68,16 @@ export const FriendStoryItem = ({
   const DOUBLE_PRESS_DELAY = 400;
   const minSwipeDistance = 50;
 
-  useEffect(() => {
-    if (itemIndex === visibleOne) {
-      onSetIsPlaying(true);
-      setIsPlaying(true);
-      setIsPlayed(true);
-    } else {
-      setIsPlaying(false);
-      onSetIsPlaying(false);
-    }
-  }, [visibleOne])
+  // useEffect(() => {
+  //   if (itemIndex === visibleOne) {
+  //     onSetIsPlaying(true);
+  //     setIsPlaying(true);
+  //     setIsPlayed(true);
+  //   } else {
+  //     setIsPlaying(false);
+  //     onSetIsPlaying(false);
+  //   }
+  // }, [visibleOne])
 
   const OnSetLike = () => {
     // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
