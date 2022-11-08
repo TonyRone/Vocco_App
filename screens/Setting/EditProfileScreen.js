@@ -329,7 +329,7 @@ const EditProfileScreen = (props) => {
                     />
                     <SelectForm
                         label={t("Your gender")}
-                        contentText={gender == 'm' ? t("man") : gender == 'f' ? t("woman") : t("other")}
+                        contentText={gender == 'm' ? t("Man") : gender == 'f' ? t("Woman") : t("Other")}
                         onPressChange={() => openModal('gender')}
                         isCheck={true}
                     />
