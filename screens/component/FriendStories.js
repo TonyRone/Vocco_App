@@ -62,7 +62,9 @@ export const FriendStories = ({
   const [refreshing, setRefreshing] = useState(false);
   const [storyPanels, setStoryPanels] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [beforeIndex, setBeforeIndex] = useState(-1);
+  const debounceIndex = useDebounce(currentIndex, 600);
+  const [isScrollDragging, setIsscrollDragging] = useState(false);
+  const debounceDragging = useDebounce(isScrollDragging, 600);
   const [dailyPop, setDailyPop] = useState(false);
   const [visibleItemIndex, setVisibleItemIndex] = useState();
   const [focused, setFocused] = useState();
@@ -73,9 +75,34 @@ export const FriendStories = ({
     )
   });
 
-  const currentVisible = useRef(visibleOne);
-
   const pageHeight = windowHeight / 814 * 546;
+
+  function useDebounce(value, delay) {
+    // State and setters for debounced value
+    const [debouncedValue, setDebouncedValue] = useState(value);
+    useEffect(
+      () => {
+        // Update debounced value after delay
+        const handler = setTimeout(() => {
+          setDebouncedValue(value);
+        }, delay);
+        // Cancel the timeout if value changes (also on delay change or unmount)
+        // This is how we prevent debounced value from updating if value is changed ...
+        // .. within the delay period. Timeout gets cleared and restarted.
+        return () => {
+          clearTimeout(handler);
+        };
+      },
+      [value, delay] // Only re-call effect if value or delay changes
+    );
+    return debouncedValue;
+  }
+
+  useEffect(() => {
+    if (!debounceDragging) {
+      dispatch(setVisibleOne(debounceIndex));
+    }
+  }, [debounceIndex, debounceDragging]);
 
   const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
     const paddingToBottom = -110;
@@ -242,14 +269,20 @@ export const FriendStories = ({
     }
   }
 
-  const onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
-    if (changed && changed.length > 0) {
-      // setVisibleItemIndex(changed[0].index);
-      dispatch(setVisibleOne(changed[0].index));
-    }
-  });
+  // const onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
+  //   if (changed && changed.length > 0) {
+  //     // setVisibleItemIndex(changed[0].index);
+  //     dispatch(setVisibleOne(changed[0].index));
+  //   }
+  // });
 
-  const viewabilityConfigCallbackPairs = useRef([{ viewabilityConfig, onViewableItemsChanged }]);
+  // const viewabilityConfigCallbackPairs = useRef([{ viewabilityConfig, onViewableItemsChanged }]);
+
+  const onViewableItemsChanged = ({ viewableItems, changed }) => {
+    if (changed && changed.length > 0) {
+      setCurrentIndex(changed[0].index);
+    }
+  }
 
   const storyItems = useMemo(() => {
     return <FlatList
@@ -266,10 +299,12 @@ export const FriendStories = ({
           console.log("prev day");
         }
       }}
-      viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
-      // onScrollEndDrag={(event) => {
-      //   console.log(event.nativeEvent);
-      // }}
+      onViewableItemsChanged={onViewableItemsChanged}
+      viewabilityConfig={{
+        itemVisiblePercentThreshold: 50
+      }}
+      onScrollBeginDrag={(e) => setIsscrollDragging(true)}
+      onScrollEndDrag={(e) => setIsscrollDragging(false)}
       renderItem={({ item, index }) => {
         return <FriendStoryItem
           key={index + item.id}
