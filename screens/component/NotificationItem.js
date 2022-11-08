@@ -62,10 +62,13 @@ export const NotificationItem = ({
     if (details == 'userFollow')
         label = t("Has followed you")
 
-    const onLimit = (v) => {
+    const onLimit = (v, v2 = false) => {
+        if (v2 == false) {
         return ((v).length > 25) ?
             (((v).substring(0, 22)) + '...') :
             v;
+        }
+        return ((v).length > 20) ? (((v).substring(0, 17) + '...')) : v;
     }
 
     return (
@@ -123,10 +126,10 @@ export const NotificationItem = ({
                                 />
                                 {(details == 'likeRecord' || details == 'newAnswer' || details == 'newStory') &&
                                     <DescriptionText
-                                        text={": " + recordInfo.title}
+                                        text={onLimit(": " + recordInfo.title, true)}
                                         fontSize={13}
                                         lineHeight={21}
-                                        marginLeft={6}
+                                        marginLeft={2}
                                     />
                                 }
                             </View>

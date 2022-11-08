@@ -183,15 +183,15 @@ export const AnswerVoiceItem = ({
               friend_ID = user.id;
             }
             if (flag == true) {
-              return <TouchableOpacity onPress={() => { friend_ID == user.id ? props.navigation.navigate('Profile') : props.navigation.navigate('UserProfile', { userId: friend_ID })}} key={index}>
-                      <Text style={{ 
+              return <Text style={{ 
                         fontFamily: "SFProDisplay-Bold",
                         fontSize: 15,
                         color: "#8327D8",
                         textAlign: "left",
                         lineHeight: 24
-                      }}>{'@' + user_Name}</Text>
-                    </TouchableOpacity>
+                      }}
+                      onPress={() => { friend_ID == user.id ? props.navigation.navigate('Profile') : props.navigation.navigate('UserProfile', { userId: friend_ID })}} key={index}
+                      >{'@' + user_Name}</Text>
             } else {
               <Text style={{
                 fontFamily: "SFProDisplay-Regular",
@@ -211,9 +211,9 @@ export const AnswerVoiceItem = ({
             }} key={index}>{item}</Text>
           }
         });
-        return <View style={{ flexDirection: "row", alignItems: "center" }}>
+        return <Text style={{ flexWrap: "wrap" }}>
           {res}
-        </View>
+        </Text>
       } else {
         return <Text style={{ 
           fontFamily: "SFProDisplay-Regular",

@@ -187,7 +187,7 @@ export const Feed = ({
                             setShowMonthDropdown(false);
                           }}
                         >
-                          <Text style={{ color: index === selectedMonth - 1 ? "#FFFFFF" : "#858585", fontSize: 12 }}>{item}</Text>
+                          <Text style={{ color: index === selectedMonth - 1 ? "#FFFFFF" : "#858585", fontSize: 12 }}>{t(item)}</Text>
                         </TouchableOpacity>
                   }
                 })

@@ -73,7 +73,7 @@ export const MessageItem = ({
                 marginRight: 12,
               }}>
               </View>
-              <View>
+              <View style={{ maxWidth: windowWidth - (isSelect >= 0 ? 56 : 16) - 15  }}>
                 <MessageContent
                   info={ancestorInfo}
                   onPressContent={(url) => onPressContent(url)}
