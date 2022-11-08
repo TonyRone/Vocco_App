@@ -68,16 +68,16 @@ export const FriendStoryItem = ({
   const DOUBLE_PRESS_DELAY = 400;
   const minSwipeDistance = 50;
 
-  useEffect(() => {
-    if (itemIndex === visibleOne) {
-      onSetIsPlaying(true);
-      setIsPlaying(true);
-      setIsPlayed(true);
-    } else {
-      setIsPlaying(false);
-      onSetIsPlaying(false);
-    }
-  }, [visibleOne])
+  // useEffect(() => {
+  //   if (itemIndex === visibleOne) {
+  //     onSetIsPlaying(true);
+  //     setIsPlaying(true);
+  //     setIsPlayed(true);
+  //   } else {
+  //     setIsPlaying(false);
+  //     onSetIsPlaying(false);
+  //   }
+  // }, [visibleOne])
 
   const OnSetLike = () => {
     // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
@@ -90,12 +90,11 @@ export const FriendStoryItem = ({
     onChangeLike(!info.isLike);
   }
 
-  const onSetIsPlaying = (v) => {
-    counter.setValue(0);
-    counter.stopAnimation(res => {
-    });
-    if (v == true) {
+  const onSetIsPlaying = (isPlay) => {
+    if (isPlay) {
       onStartProgress(speed);
+    } else {
+      counter.stopAnimation();
     }
   }
 
@@ -105,7 +104,42 @@ export const FriendStoryItem = ({
       toValue: 100,
       duration: info.duration * 10 * (100 - tp) / v,
       useNativeDriver: false,
-    }).start();
+    }).start(({ finished }) => {
+      if (finished) {
+        onSetIsPlaying(false);
+        setIsPlaying(false);
+        setIsPlayed(true);
+        counter.setValue(0);
+      }
+    });
+  }
+
+  const togglePlay = () => {
+    onSetIsPlaying(!isPlaying);
+    setIsPlaying(!isPlaying);
+    setIsPlayed(false);
+  }
+
+  const onPlayStory = () => {
+    setIsPlayed(true);
+    setIsPlaying(true);
+    onSetIsPlaying(true);
+  }
+
+  const stopPlay = () => {
+    setIsPlayed(false);
+    setIsPlaying(false);
+    onSetIsPlaying(false);
+  }
+
+  const onPrevStory = () => {
+    onMoveNext(itemIndex - 1 >= 0 ? itemIndex - 1 : 0);
+    stopPlay();
+  }
+
+  const onNextStory = () => {
+    onMoveNext(itemIndex + 1 >= storyLength ? storyLength - 1 : itemIndex + 1);
+    stopPlay();
   }
 
   const onSetSpeed = () => {
@@ -303,7 +337,7 @@ export const FriendStoryItem = ({
                 borderTopWidth: 1
               }}>
                 <TouchableOpacity
-                  onPress={() => { setIsPlayed(true); setIsPlaying(true); onSetIsPlaying(true) }}
+                  onPress={onPlayStory}
                 >
                   <SemiBoldText
                     text={t("Play story")}
@@ -335,14 +369,14 @@ export const FriendStoryItem = ({
           <Text style={{ fontSize: 12, lineHeight: 13, color: "#1A141F" }}>{new Date(Math.max(info.duration * 1000)).toISOString().substr(14, 5)}</Text>
         </View> */}
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20, marginTop: 5, }}>
-          <TouchableOpacity onPress={() => { onMoveNext(itemIndex - 1 >= 0 ? itemIndex - 1 : 0); setIsPlayed(false); setIsPlaying(false); onSetIsPlaying(false) }}>
+          <TouchableOpacity onPress={onPrevStory}>
             <SvgXml
               xml={prevSvg}
               width={18}
               height={18}
             />
           </TouchableOpacity>
-          <TouchableOpacity disabled={info.notSafe && !isPlayed} onPress={() => { onSetIsPlaying(!isPlaying); setIsPlaying(!isPlaying); setIsPlayed(false)}}>
+          <TouchableOpacity disabled={info.notSafe && !isPlayed} onPress={togglePlay}>
             <SvgXml
               xml={ isPlaying ? pauseSvg2 : info.notSafe ? playgraySvg : playSvg}
               width={44}
@@ -380,7 +414,7 @@ export const FriendStoryItem = ({
               />
             </LinearGradient>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => { onMoveNext(itemIndex + 1 >= storyLength ? storyLength - 1 : itemIndex + 1); setIsPlayed(false); setIsPlaying(false); onSetIsPlaying(false) }}>
+          <TouchableOpacity onPress={onNextStory}>
             <SvgXml
               xml={nextSvg}
               width={18}
@@ -413,7 +447,7 @@ export const FriendStoryItem = ({
           waveColor={info.user.premium != 'none' ? ['#FFC701', '#FFA901', '#FF8B02'] : ['#D89DF4', '#B35CF8', '#8229F4']}
           playing={true}
           startPlay={() => { VoiceService.listenStory(info.id, 'record') }}
-          stopPlay={() => {setIsPlaying(false); setIsPlayed(false); onSetIsPlaying(false)}}
+          stopPlay={stopPlay}
           tinWidth={ windowWidth / 376 * 275 / 150}
           mrg={windowWidth / 530}
           duration={info.duration * 1000}
