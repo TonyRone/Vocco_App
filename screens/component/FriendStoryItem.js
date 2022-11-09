@@ -172,10 +172,10 @@ export const FriendStoryItem = ({
   
   const onTouchStart = (e) => {
     setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
-    setTouchStart(e.nativeEvent.locationX);
+    setTouchStart(e.nativeEvent.locationY);
   }
   
-  const onTouchMove = (e) => setTouchEnd(e.nativeEvent.locationX)
+  const onTouchMove = (e) => setTouchEnd(e.nativeEvent.locationY)
   
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return
@@ -189,7 +189,7 @@ export const FriendStoryItem = ({
       } else if(isLeftSwipe && itemIndex == storyLength - 1) {
         onChangeNextDay();
       }
-      console.log(isLeftSwipe ? 'left' : 'right');
+      console.log(isLeftSwipe ? 'Top' : 'Down');
     }
   }
 
