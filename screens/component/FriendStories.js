@@ -23,7 +23,7 @@ import { MyButton } from './MyButton';
 import { InviteUsers } from './InviteUsers';
 import SelectTopicScreen from '../PhoneNumberLogin/SelectTopicScreen';
 import { StoryItem } from '../component/StoryItem';
-import { setVisibleOne, setViewable } from '../../store/actions';
+import { setVisibleOne } from '../../store/actions';
 import { StoryPanel } from './StoryPanel';
 import { FriendStoryItem } from './FriendStoryItem';
 import { FriendStoryItems } from './FriendStoryItems';
@@ -193,7 +193,8 @@ export const FriendStories = ({
     VoiceService.getStories(0, userId, category, searchTitle, recordId, 'friend', 10, `${currentYear}-${selectedMonth.toString().padStart(2, '0')}-${selectedDay.toString().padStart(2, '0')}`).then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
-        setStories([...jsonRes]);
+        const result = jsonRes.reverse();
+        setStories([...result]);
         setLoading(false);
       }
     })
@@ -233,7 +234,8 @@ export const FriendStories = ({
       tp[id].likesCount++;
     }
     tp[id].isLike = val;
-    setStories([...tp]);
+    const result = tp.reverse();
+    setStories([...result]);
   }
   const renderFooter=()=>{
     return(
@@ -287,10 +289,13 @@ export const FriendStories = ({
   const storyItems = useMemo(() => {
     return <FlatList
       style={{ width: windowWidth, height: pageHeight, paddingTop: windowHeight / 812 * 17 }}
-      horizontal={true}
+      // horizontal={true}
       pagingEnabled={true}
       ref={scrollRef}
       data={stories}
+      onContentSizeChange={() => {
+        scrollRef.current?.scrollToIndex({ index: 0, animated: true })
+      }}
       onScroll={({ nativeEvent }) => {
         if (isCloseToBottom(nativeEvent)) {
           console.log("next day");

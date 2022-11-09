@@ -223,7 +223,7 @@ const HoldRecordScreen = (props) => {
         </View>
         <View
           style={{
-            marginBottom: 40
+            marginBottom: 20
           }}
         >
           <CountdownCircleTimer
@@ -319,6 +319,58 @@ const HoldRecordScreen = (props) => {
                 color="#E41717"
               />
             </TouchableOpacity>
+            <View style={{ width: 76, height: 76 }}>
+              <Draggable
+                key={key}
+                x={0}
+                y={0}
+                shouldReverse={true}
+                minX={-82}
+                maxX={174}
+                minY={0}
+                maxY={0}
+                touchableOpacityProps={{
+                  // activeOpactiy: 1,
+                }}
+                onDrag={(event, gestureState) => {
+
+                }}
+                onDragRelease={(event, gestureState, bounds) => {
+                  dragPos.current = gestureState.dx;
+                  if (gestureState.dx > 80) {
+                    // setTimeout(() => {
+                    //   Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                    // }, 100);
+                    onStopRecord(true);
+                  }
+                  else if (gestureState.dx < -80) {
+                    // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                    // setTimeout(() => {
+                    //   Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                    // }, 300);
+                    onStopRecord(false);
+                  }
+                }}
+                onReverse={() => {
+
+                }}
+
+              >
+                <View
+                  onTouchStart={(e) => onChangeRecord(e, true)}
+                  onTouchEnd={(e) => onChangeRecord(e, false)}
+                  style={{
+                    opacity: isPaused ? 1 : 0.1
+                  }}
+                >
+                  <SvgXml
+                    width={76}
+                    height={76}
+                    xml={recordSvg}
+                  />
+                </View>
+              </Draggable>
+            </View>
             <TouchableOpacity
               style={{ flexDirection: 'row', alignItems: 'center', marginRight: 18 }}
               onPress={() => onStopRecord(true)}
@@ -336,7 +388,7 @@ const HoldRecordScreen = (props) => {
           </ImageBackground>
         </View>
       </View>
-      <View style={{ position: 'absolute', bottom: '6%', width: 76, height: 76 }}>
+      {/* <View style={{ position: 'absolute', bottom: '6%', width: 76, height: 76 }}>
         <Draggable
           key={key}
           x={windowWidth / 2 - 38}
@@ -356,15 +408,15 @@ const HoldRecordScreen = (props) => {
             dragPos.current = gestureState.dx;
             if (gestureState.dx > 80) {
               setTimeout(() => {
-                //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
               }, 100);
               onStopRecord(true);
             }
             else if (gestureState.dx < -80) {
-              // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-              // setTimeout(() => {
-              //   Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-              // }, 300);
+              Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+              setTimeout(() => {
+                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+              }, 300);
               onStopRecord(false);
             }
           }}
@@ -387,7 +439,7 @@ const HoldRecordScreen = (props) => {
             />
           </View>
         </Draggable>
-      </View>
+      </View> */}
     </View>
   );
 };
