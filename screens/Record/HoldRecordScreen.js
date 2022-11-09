@@ -223,7 +223,7 @@ const HoldRecordScreen = (props) => {
         </View>
         <View
           style={{
-            marginBottom: 40
+            marginBottom: 20
           }}
         >
           <CountdownCircleTimer

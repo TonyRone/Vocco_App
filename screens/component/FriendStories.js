@@ -260,6 +260,9 @@ export const FriendStories = ({
       pagingEnabled={true}
       ref={scrollRef}
       data={stories}
+      onContentSizeChange={() => {
+        scrollRef.current?.scrollToIndex({ index: 0, animated: true })
+      }}
       onScroll={({ nativeEvent }) => {
         if (isCloseToBottom(nativeEvent)) {
           console.log("next day");
