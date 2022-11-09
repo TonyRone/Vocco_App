@@ -166,7 +166,8 @@ export const FriendStories = ({
     VoiceService.getStories(0, userId, category, searchTitle, recordId, 'friend', 10, `${currentYear}-${selectedMonth.toString().padStart(2, '0')}-${selectedDay.toString().padStart(2, '0')}`).then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
-        setStories([...jsonRes]);
+        const result = jsonRes.reverse();
+        setStories([...result]);
         setLoading(false);
       }
     })
@@ -206,7 +207,8 @@ export const FriendStories = ({
       tp[id].likesCount++;
     }
     tp[id].isLike = val;
-    setStories([...tp]);
+    const result = tp.reverse();
+    setStories([...result]);
   }
   const renderFooter=()=>{
     return(
