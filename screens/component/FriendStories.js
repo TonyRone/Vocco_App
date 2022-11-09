@@ -23,7 +23,7 @@ import { MyButton } from './MyButton';
 import { InviteUsers } from './InviteUsers';
 import SelectTopicScreen from '../PhoneNumberLogin/SelectTopicScreen';
 import { StoryItem } from '../component/StoryItem';
-import { setVisibleOne, setViewable } from '../../store/actions';
+import { setVisibleOne } from '../../store/actions';
 import { StoryPanel } from './StoryPanel';
 import { FriendStoryItem } from './FriendStoryItem';
 import { FriendStoryItems } from './FriendStoryItems';
@@ -254,7 +254,7 @@ export const FriendStories = ({
   const storyItems = useMemo(() => {
     return <FlatList
       style={{ width: windowWidth, height: pageHeight, paddingTop: windowHeight / 812 * 17 }}
-      horizontal={true}
+      // horizontal={true}
       pagingEnabled={true}
       ref={scrollRef}
       data={stories}
