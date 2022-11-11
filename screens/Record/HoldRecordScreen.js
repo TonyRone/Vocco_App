@@ -245,8 +245,8 @@ const HoldRecordScreen = (props) => {
               return (
                 <ImageBackground
                   source={imgSource ? { uri: imgSource.path } : user.avatar ? { uri: user.avatar.url } : Avatars[user.avatarNumber].uri}
-                  resizeMode="stretch"
-                  style={{ width: 189, height: 189, alignItems: 'center' }}
+                  resizeMode="cover"
+                  style={{ width: 189, height: 189 }}
                   imageStyle={{ borderRadius: 100 }}
                 >
                   <View style={{
