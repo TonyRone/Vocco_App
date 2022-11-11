@@ -9,8 +9,6 @@ import {
     ImageBackground,
     Platform,
     Pressable,
-    TextInput,
-    Keyboard,
     KeyboardAvoidingView,
     RefreshControl
 } from 'react-native';
@@ -35,8 +33,6 @@ import trashSvg from '../../assets/chat/trash.svg';
 import replySvg from '../../assets/chat/reply.svg';
 import selectSvg from '../../assets/chat/select.svg';
 import closeSvg from '../../assets/chat/close.svg';
-import whitePostSvg from '../../assets/record/white_post.svg';
-import colorPostSvg from '../../assets/record/color_post.svg';
 import emojiSymbolSvg from '../../assets/common/emoji_symbol.svg'
 import gifSymbolSvg from '../../assets/common/gif_symbol.svg'
 import { SvgXml } from 'react-native-svg';
@@ -67,6 +63,7 @@ import { TitleText } from '../component/TitleText';
 import { PhotoSelector } from '../component/PhotoSelector';
 import SwipeDownModal from 'react-native-swipe-down';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { ChatComposer } from '../component/ChatComposer';
 
 const ConversationScreen = (props) => {
 
@@ -927,7 +924,6 @@ const ConversationScreen = (props) => {
                         position: 'absolute',
                         bottom: 0,
                         width: windowWidth,
-                        height: 70,
                         borderTopLeftRadius: 24,
                         borderTopRightRadius: 24,
                         backgroundColor: '#FFF',
@@ -935,66 +931,30 @@ const ConversationScreen = (props) => {
                         shadowOpacity: 0.5,
                         shadowRadius: 8,
                         marginTop: 8,
+                        paddingTop: 6,
+                        paddingBottom: 24,
                     }}>
                         <View style={{
                             flexDirection: 'row',
-                            alignItems: 'center',
-                            marginTop: 6,
-                            marginBottom: 0,
+                            alignItems: 'flex-end',
                         }}>
                             <TouchableOpacity onPress={() => {
                                 setShowComment(!showComment);
                             }}>
                                 <SvgXml
                                     style={{
-                                        marginLeft: 14
+                                        marginLeft: 14,
+                                        marginBottom: 6,
                                     }}
                                     xml={gifSymbolSvg}
                                 />
                             </TouchableOpacity>
-                            <View
-                                style={{
-                                    borderRadius: 40,
-                                    paddingHorizontal: 16,
-                                    //paddingVertical: 8,
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    backgroundColor: '#F2F0F5',
-                                    flex: 1,
-                                    height: 40,
-                                    marginRight: 65,
-                                    marginLeft: 10,
-                                }}
-                            >
-                                <TextInput
-                                    style={
-                                        {
-                                            fontSize: 15,
-                                            width: windowWidth*10/19,
-                                            lineHeight: 18,
-                                            color: '#281E30',
-                                        }
-                                    }
-                                    value={label}
-                                    autoCapitalize='none'
-                                    onSubmitEditing={() => {
-                                        onAnswerBio();
-                                    }}
-                                    onChangeText={(e) => setLabel(e)}
-                                    onFocus={() => scrollRef.current?.scrollToEnd({ animated: true })}
-                                    placeholder={t("Send your message")}
-                                    placeholderTextColor="rgba(59, 31, 82, 0.6)"
-                                />
-                                <TouchableOpacity disabled={label.length == 0} onPress={() => {
-                                    onAnswerBio();
-                                    Keyboard.dismiss();
-                                }}>
-                                    <SvgXml
-                                        xml={label == '' ? whitePostSvg : colorPostSvg}
-                                    />
-                                </TouchableOpacity>
-                            </View>
+                            <ChatComposer
+                                text={label}
+                                onChangeText={setLabel}
+                                onFocus={() => scrollRef.current?.scrollToEnd({ animated: true })}
+                                onSend={onAnswerBio}
+                            />
                         </View>
                     </View>
                 }
