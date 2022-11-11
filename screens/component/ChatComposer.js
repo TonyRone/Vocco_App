@@ -22,7 +22,6 @@ export const ChatComposer = (props) => {
         setFinalInputHeight(0);
         return;
       }
-      console.log(text, contentSize.height);
       setFinalInputHeight(contentSize.height);
     }
   }
