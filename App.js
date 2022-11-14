@@ -463,8 +463,7 @@ const OnSetPushNotification = () => {
       // }
       if (notification.userInteraction) {
         if (notification.data.nav == "Conversation") {
-          NavigationService.navigate("Home");
-          NavigationService.navigate(notification.data.nav, notification.data.params);
+          NavigationService.navigate("Home", notification.data.params);
         } else 
           NavigationService.navigate(notification.data.nav, notification.data.params);
       }
