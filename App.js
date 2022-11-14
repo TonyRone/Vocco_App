@@ -461,8 +461,13 @@ const OnSetPushNotification = () => {
       //   );
       //   NavigationService.navigate(notification.data.nav,notification.data.params);
       // }
-      if (notification.userInteraction)
-        NavigationService.navigate(notification.data.nav, notification.data.params);
+      if (notification.userInteraction) {
+        if (notification.data.nav == "Conversation") {
+          NavigationService.navigate("Home");
+          NavigationService.navigate(notification.data.nav, notification.data.params);
+        } else 
+          NavigationService.navigate(notification.data.nav, notification.data.params);
+      }
       notification.finish(PushNotificationIOS.FetchResult.NoData);
     }
 
