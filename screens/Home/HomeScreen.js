@@ -181,9 +181,6 @@ const HomeScreen = (props) => {
       }
 
     useEffect(() => {
-        if (param?.info) {
-            props.navigation.navigate("Conversation", { info: param.info } );
-        }
         mounted.current = true;
         getNewNotifyCount();
         getUnreadChatCount();
