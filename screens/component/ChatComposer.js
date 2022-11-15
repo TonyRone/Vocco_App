@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Platform,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -22,7 +23,11 @@ export const ChatComposer = (props) => {
         setFinalInputHeight(0);
         return;
       }
-      setFinalInputHeight(contentSize.height);
+      if (Platform.OS === 'android') {
+        setFinalInputHeight(contentSize.height);
+      } else {
+        setFinalInputHeight(contentSize.height + 20);
+      }
     }
   }
 
@@ -83,7 +88,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     minHeight: 39,
-    maxHeight: 92,
+    maxHeight: 108,
     backgroundColor: '#F2F0F5',
     borderRadius: 40,
     paddingHorizontal: 16,
@@ -95,6 +100,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 18,
     color: '#281E30',
+    paddingBottom: 10,
   },
   sendButton: {
     marginBottom: 6,
