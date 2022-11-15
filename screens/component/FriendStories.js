@@ -271,20 +271,13 @@ export const FriendStories = ({
     }
   }
 
-  // const onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
-  //   if (changed && changed.length > 0) {
-  //     // setVisibleItemIndex(changed[0].index);
-  //     dispatch(setVisibleOne(changed[0].index));
-  //   }
-  // });
-
-  // const viewabilityConfigCallbackPairs = useRef([{ viewabilityConfig, onViewableItemsChanged }]);
-
-  const onViewableItemsChanged = ({ viewableItems, changed }) => {
+  const onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
     if (changed && changed.length > 0) {
       setCurrentIndex(changed[0].index);
     }
-  }
+  });
+
+  const viewabilityConfigCallbackPairs = useRef([{ viewabilityConfig, onViewableItemsChanged }]);
 
   const storyItems = useMemo(() => {
     return <FlatList
@@ -304,7 +297,7 @@ export const FriendStories = ({
           console.log("prev day");
         }
       }}
-      onViewableItemsChanged={onViewableItemsChanged}
+      viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
       viewabilityConfig={{
         itemVisiblePercentThreshold: 50
       }}
