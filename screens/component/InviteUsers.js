@@ -68,9 +68,9 @@ export const InviteUsers = ({
               </Pressable>
             </View>
           </View>
-          <ContactList
+          {/* <ContactList
             props={props}
-          />
+          /> */}
         </View>
       </Pressable>
     </Modal>

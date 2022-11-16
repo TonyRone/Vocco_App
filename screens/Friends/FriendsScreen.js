@@ -548,7 +548,7 @@ const FriendsScreen = (props) => {
                         }
                     </View>
                 </ScrollView>
-                <SemiBoldText
+                {/* <SemiBoldText
                     text={t("Invite your contacts")}
                     lineHeight={24}
                     fontSize={15}
@@ -565,7 +565,7 @@ const FriendsScreen = (props) => {
                 </View>
                 <ContactList
                     props={props}
-                />
+                /> */}
             </ScrollView>
             <BottomButtons
                 active='friends'
