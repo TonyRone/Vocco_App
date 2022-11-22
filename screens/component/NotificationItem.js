@@ -52,15 +52,19 @@ export const NotificationItem = ({
     if (details == 'likeRecord')
         label = t("Liked your story");
     if (details == 'newAnswer')
-        label = t("Answered your story");
+        label = t("Has commented your story");
     if (details == 'newStory')
         label = t("Posted a new story");
     if (details == 'likeAnswer')
-        label = t("Liked your answer");
+        label = t("Has liked your comment");
     if (details == 'tagFriend')
-        label = t("Tagged you in a story");
+        label = t("Tagged you in a comment");
     if (details == 'userFollow')
         label = t("Has followed you")
+    if (details == 'oldStory')
+        label = t("Has posted an old memory 👵🧓")
+    if (details == 'newReply')
+        label = t("Has replied to you")
 
     const onLimit = (v, v2 = false) => {
         if (v2 == false) {

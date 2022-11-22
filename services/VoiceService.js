@@ -81,12 +81,12 @@ class VoiceService {
             );
     }
 
-    async postAnswerReply(data) {
+    async postAnswerReply(data, receiverId) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(
                 'POST',
-                `${API_URL}/actions/answerReply`, {
+                `${API_URL}/actions/answerReply?receiverId=${receiverId}`, {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
             },
@@ -699,7 +699,7 @@ class VoiceService {
             );
     }
 
-    async answerBio(id, receiverId, isCommented, data) {
+    async answerBio(id, receiverId, data, isCommented = '') {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob
             .config({ trusty: true })

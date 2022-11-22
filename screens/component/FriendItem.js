@@ -60,7 +60,7 @@ export const FriendItem = ({
           marginTop: 4
         }}
       >
-        {isUserName ? onLimit(info.user.name) : onLimit(info.title)}
+        {isUserName ? onLimit(info.user.name) : onLimit(info.title.toUpperCase())}
       </Text>
     </TouchableOpacity>
   );

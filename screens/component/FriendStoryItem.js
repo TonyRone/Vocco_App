@@ -171,25 +171,29 @@ export const FriendStoryItem = ({
   };
   
   const onTouchStart = (e) => {
-    setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
-    setTouchStart(e.nativeEvent.locationY);
+    if (!showChat) {
+      setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
+      setTouchStart(e.nativeEvent.locationY);
+    }
   }
   
   const onTouchMove = (e) => setTouchEnd(e.nativeEvent.locationY)
   
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return
-    const distance = touchStart - touchEnd
-    const isLeftSwipe = distance > minSwipeDistance
-    const isRightSwipe = distance < -minSwipeDistance
-    
-    if (isLeftSwipe || isRightSwipe) {
-      if (!isLeftSwipe && itemIndex == 0) {
-        onChangePrevDay()
-      } else if(isLeftSwipe && itemIndex == storyLength - 1) {
-        onChangeNextDay();
+    if (!showChat) {
+      const distance = touchStart - touchEnd
+      const isLeftSwipe = distance > minSwipeDistance
+      const isRightSwipe = distance < -minSwipeDistance
+      
+      if (isLeftSwipe || isRightSwipe) {
+        if (!isLeftSwipe && itemIndex == 0) {
+          onChangePrevDay()
+        } else if(isLeftSwipe && itemIndex == storyLength - 1) {
+          onChangeNextDay();
+        }
+        console.log(isLeftSwipe ? 'Top' : 'Down');
       }
-      console.log(isLeftSwipe ? 'Top' : 'Down');
     }
   }
 

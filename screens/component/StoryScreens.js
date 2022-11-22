@@ -212,7 +212,7 @@ export const StoryScreens = ({
 
   const onAnswerBio = (isCommented = '') => {
     setIsLoading(true);
-    VoiceService.answerBio(info.id, info.user.id, isCommented, { bio: label }).then(async res => {
+    VoiceService.answerBio(info.id, info.user.id, { bio: label }, isCommented).then(async res => {
       if (res.respInfo.status == 200) {
         const answerBio = await res.json();
         answerBio.user = user;
