@@ -142,8 +142,8 @@ const PostingVoiceScreen = (props) => {
         { name: 'createdAt', data: String(param.createdAt) }
       ];
       let data = {
-        voiceFile: voiceFile,
-        isPast: param.isPast
+        "voiceFile": voiceFile,
+        "isPast": param.isPast
       }
       setIsLoading(true);
       VoiceService.postVoice(data).then(async res => {
