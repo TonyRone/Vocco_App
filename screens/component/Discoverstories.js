@@ -90,7 +90,7 @@ export const DiscoverStories = ({
       return;
     }
     if (isNew) setLoading(true);
-    VoiceService.getStories(isNew ? 0 : stories.length, userId, category, searchTitle, recordId, screenName == 'Feed' ? 'friend' : '').then(async res => {
+    VoiceService.getStories(isNew ? 0 : stories.length, userId, category, searchTitle, recordId, screenName == 'Feed' ? 'friend' : 'discover').then(async res => {
       if (mounted.current)
         setLoading(false);
       if (res.respInfo.status === 200 && mounted.current) {
