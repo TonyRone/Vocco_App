@@ -11,11 +11,11 @@ import {
 import { DescriptionText } from '../component/DescriptionText';
 import { SvgXml } from 'react-native-svg';
 import { BottomButtons } from '../component/BottomButtons';
-import searchSvg from '../../assets/login/search.svg';
+import searchSvg from '../../assets/login/search2.svg';
 import closeCircleSvg from '../../assets/common/close-circle.svg';
 import greenCheckSvg from '../../assets/friend/green-check.svg';
 import ShareSvg from '../../assets/friend/share2.svg';
-import addSvg from '../../assets/setting/add.svg';
+import addSvg from '../../assets/friend/add2.svg';
 import { Avatars, windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
@@ -295,7 +295,7 @@ const FriendsScreen = (props) => {
                             <SvgXml
                                 width="24"
                                 height="24"
-                                style={{ marginLeft: 12 }}
+                                style={{ marginLeft: 20 }}
                                 xml={addSvg}
                             />
                         </TouchableOpacity>

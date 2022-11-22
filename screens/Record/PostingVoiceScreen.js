@@ -141,12 +141,8 @@ const PostingVoiceScreen = (props) => {
         { name: 'address', data: String(storyAddress) },
         { name: 'createdAt', data: String(param.createdAt) }
       ];
-      let data = {
-        "voiceFile": voiceFile,
-        "isPast": param.isPast
-      }
       setIsLoading(true);
-      VoiceService.postVoice(data).then(async res => {
+      VoiceService.postVoice(voiceFile, param.isPast).then(async res => {
         const jsonRes = await res.json();
         setPostInfo(jsonRes);
         if (mounted.current) {

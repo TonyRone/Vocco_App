@@ -28,12 +28,12 @@ class VoiceService {
         });
     }
 
-    async postVoice(data) {
+    async postVoice(data, isPast) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(
                 'POST',
-                `${API_URL}/actions/addRecord`, {
+                `${API_URL}/actions/addRecord?isPast=${isPast}`, {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
             },
