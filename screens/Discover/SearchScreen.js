@@ -353,7 +353,7 @@ const SearchScreen = (props) => {
             renderItem={({ item, index }) => {
               return <TouchableOpacity key={index + 'loadvoices'} onPress={() => onLoadVoices(item.title, item.id)}>
                 <TitleText
-                  text={item.title}
+                  text={item.title.toUpperCase()}
                   fontSize={15}
                   fontFamily='SFProDisplay-Regular'
                   color='#281E30'

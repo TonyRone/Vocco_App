@@ -179,7 +179,7 @@ export const MessageContent = ({
                     color='#000'
                   />
                   <DescriptionText
-                    text={info.record.title}
+                    text={info.record.title.toUpperCase()}
                     fontFamily="SFProDisplay-Light"
                     fontSize={15}
                     lineHeight={18}

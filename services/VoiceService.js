@@ -699,13 +699,13 @@ class VoiceService {
             );
     }
 
-    async answerBio(id, data) {
+    async answerBio(id, receiverId, isCommented, data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob
             .config({ trusty: true })
             .fetch(
                 'PUT',
-                `${API_URL}/actions/answerBio?id=${id}`, {
+                `${API_URL}/actions/answerBio?id=${id}&receiverId=${receiverId}&isCommented=${isCommented}`, {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
@@ -727,13 +727,13 @@ class VoiceService {
             );
     }
 
-    async answerGif(id, data) {
+    async answerGif(id, receiverId, data) {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob
             .config({ trusty: true })
             .fetch(
                 'PUT',
-                `${API_URL}/actions/answerGif?id=${id}`, {
+                `${API_URL}/actions/answerGif?id=${id}&receiverId=${receiverId}`, {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },

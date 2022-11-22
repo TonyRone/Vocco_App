@@ -226,7 +226,7 @@ export const FriendStoryItem = ({
           >
             <View style={{ width: "60%" }}>
               <SemiBoldText
-                text={voiceTitle}
+                text={voiceTitle.toUpperCase()}
                 fontSize={20}
                 lineHeight={23}
                 color='#FFFFFF'

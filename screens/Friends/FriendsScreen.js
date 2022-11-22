@@ -14,7 +14,7 @@ import { BottomButtons } from '../component/BottomButtons';
 import searchSvg from '../../assets/login/search.svg';
 import closeCircleSvg from '../../assets/common/close-circle.svg';
 import greenCheckSvg from '../../assets/friend/green-check.svg';
-import ShareSvg from '../../assets/friend/share.svg';
+import ShareSvg from '../../assets/friend/share2.svg';
 import addSvg from '../../assets/setting/add.svg';
 import { Avatars, windowHeight, windowWidth } from '../../config/config';
 import { styles } from '../style/Common';

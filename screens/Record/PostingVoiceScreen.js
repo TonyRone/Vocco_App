@@ -85,7 +85,7 @@ const PostingVoiceScreen = (props) => {
   const [notSafe, setNotSafe] = useState(false);
   const [visibleReaction, setVisibleReaction] = useState(false);
   const [icon, setIcon] = useState(param.info ? param.info.emoji : "😁");
-  const [voiceTitle, setVoiceTitle] = useState(param.info ? param.info.title : '');
+  const [voiceTitle, setVoiceTitle] = useState(param.info ? param.info.title.toUpperCase() : '');
   const [isLoading, setIsLoading] = useState(false);
   const [showShareVoice, setShowShareVoice] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(initCategory);
@@ -204,7 +204,7 @@ const PostingVoiceScreen = (props) => {
       if (mounted.current) {
         // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
         let info = param.info;
-        info.title = param.title;
+        info.title = param.title.toUpperCase();
         info.emoji = icon;
         info.category = Categories[category].label;
         info.privacy = visibleStatus;

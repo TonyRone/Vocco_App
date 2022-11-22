@@ -473,7 +473,7 @@ export const StoryPanel = ({
                 }}
               >
                 <SemiBoldText
-                  text={info.title}
+                  text={info.title.toUpperCase()}
                   fontSize={12}
                   lineHeight={18}
                   color="#FFF"

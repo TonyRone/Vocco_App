@@ -88,7 +88,7 @@ export const StoryItem = ({
 
   const DOUBLE_PRESS_DELAY = 400;
 
-  let voiceTitle = info.title,
+  let voiceTitle = info.title.toUpperCase(),
     voiceTime = info.duration,
     premium = info.user.premium;
 

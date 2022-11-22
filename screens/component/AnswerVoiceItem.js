@@ -60,7 +60,7 @@ export const AnswerVoiceItem = ({
   const onLikeVoice = () => {
     let rep;
     if (info.isLiked == false)
-      VoiceService.answerAppreciate({ id: info.id });
+      VoiceService.answerAppreciate({ id: info.id, receiverId: info.user.id });
     else
       VoiceService.answerUnAppreciate(info.id);
     onChangeIsLiked();

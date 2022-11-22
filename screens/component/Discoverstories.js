@@ -95,6 +95,7 @@ export const DiscoverStories = ({
         setLoading(false);
       if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
+        // let result = jsonRes.filter((item, index) => item.privacy);
         let temp = (stories.length == 0 || isNew) ? [...jsonRes] : [...stories, ...jsonRes];
         setStories(temp);
         setLoadMore(jsonRes.length);

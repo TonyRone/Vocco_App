@@ -389,7 +389,7 @@ export const FeedItem = ({
           </View>
           <View>
             <SemiBoldText
-              text={voiceTitle}
+              text={voiceTitle.toUpperCase()}
               fontSize={27}
               lineHeight={34}
               color='#361252'

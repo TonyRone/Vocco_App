@@ -89,6 +89,8 @@ export const StoryScreens = ({
   const [friends, setFriends] = useState([]);
   const [filter, setFilter] = useState([]);
   const [showScr, setShowScr] = useState(true);
+  const [forceAnswer, setForceAnswer] = useState(false);
+  const [commentedUserId, setCommentedUserId] = useState('');
 
   const mounted = useRef(false);
 
@@ -147,6 +149,13 @@ export const StoryScreens = ({
     onSetCommentCount(combines.length);
   }, [combines])
 
+  useEffect(() => {
+    if (forceAnswer == true) {
+      onAnswerBio(commentedUserId);
+      setForceAnswer(false);
+    }
+  }, [forceAnswer])
+
   const editVoice = () => {
     props.navigation.navigate("PostingVoice", { info: info });
     setShowModal(false);
@@ -201,9 +210,9 @@ export const StoryScreens = ({
     }
   }
 
-  const onAnswerBio = () => {
+  const onAnswerBio = (isCommented = '') => {
     setIsLoading(true);
-    VoiceService.answerBio(info.id, { bio: label }).then(async res => {
+    VoiceService.answerBio(info.id, info.user.id, isCommented, { bio: label }).then(async res => {
       if (res.respInfo.status == 200) {
         const answerBio = await res.json();
         answerBio.user = user;
@@ -226,7 +235,7 @@ export const StoryScreens = ({
   const onAnswerGif = (gif) => {
     setShowComment(false);
     setIsLoading(true);
-    VoiceService.answerGif(info.id, { link: gif }).then(async res => {
+    VoiceService.answerGif(info.id, info.user.id, { link: gif }).then(async res => {
       if (res.respInfo.status == 200) {
         const gifAnswer = await res.json();
         gifAnswer.user = user;
@@ -282,11 +291,13 @@ export const StoryScreens = ({
     setFilter(filterFriends);
   }
 
-  const onReplace = (e) => {
+  const onReplace = (e, id) => {
     let i = findPosition(label);
     if (i != -1) {
       setLabel(label.slice(0, i + 1).concat(e) + ' ');
       setFilter([]);
+      setCommentedUserId(id);
+      setForceAnswer(true);
     }
   }
 
@@ -404,7 +415,7 @@ export const StoryScreens = ({
                   alignItems: 'center'
                 }}
                   key={item.user.id + index.toString()}
-                  onPress={() => onReplace(item.user.name)}
+                  onPress={() => onReplace(item.user.name, item.user.id)}
                 >
                   <Image
                     source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
@@ -577,7 +588,7 @@ export const StoryScreens = ({
                       />
                       <View style={{ marginLeft: 18 }}>
                         <SemiBoldText
-                          text={info?.title}
+                          text={info?.title.toUpperCase()}
                           fontSize={17}
                           lineHeight={28}
                         />

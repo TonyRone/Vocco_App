@@ -40,6 +40,7 @@ export const FriendStories = ({
   selectedDay = 0,
   selectedMonth = 0,
   isFirst,
+  forceRefreshDay,
   setSelectedDay = () => {},
   setSelectedMonth = () => {}
 }) => {
@@ -77,6 +78,10 @@ export const FriendStories = ({
   });
 
   const pageHeight = windowHeight / 814 * 546;
+
+  useEffect(() => {
+    getStories();
+  }, [forceRefreshDay])
 
   function useDebounce(value, delay) {
     // State and setters for debounced value

@@ -126,7 +126,7 @@ export const NotificationItem = ({
                                 />
                                 {(details == 'likeRecord' || details == 'newAnswer' || details == 'newStory') &&
                                     <DescriptionText
-                                        text={onLimit(": " + recordInfo.title, true)}
+                                        text={onLimit(": " + recordInfo.title.toUpperCase(), true)}
                                         fontSize={13}
                                         lineHeight={21}
                                         marginLeft={2}

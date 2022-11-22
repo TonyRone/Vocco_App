@@ -46,6 +46,30 @@ export const Feed = ({
   const [monthDate, setMonthDate] = useState([]);
   const scrollRef = useRef();
   const [showMonthDropdown, setShowMonthDropdown] = useState(false);
+  const [lastTap, setLastTap] = useState(0);
+  const [delayTime, setDelayTime] = useState(null);
+  const [forceRefreshDay, setForceRefreshDay] = useState(false);
+
+  const DOUBLE_PRESS_DELAY = 400;
+
+  const onClickDouble = (date) => {
+    if (date !== selectedDay) {
+      setSelectedDay(date);
+    } else {
+      const timeNow = Date.now();
+      if (lastTap && timeNow - lastTap < DOUBLE_PRESS_DELAY) {
+        clearTimeout(delayTime);
+        setForceRefreshDay(!forceRefreshDay);
+      } else {
+        setLastTap(timeNow);
+        setDelayTime(setTimeout(() => {
+          if (mounted.current) {
+            setLastTap(0);
+          }
+        }, DOUBLE_PRESS_DELAY));
+      }
+    }
+  };
 
   let { user } = useSelector((state) => {
     return (
@@ -210,7 +234,7 @@ export const Feed = ({
           renderItem={({item}) => (
             <View style={{ flexDirection: "column", alignItems: "center", zIndex: 0, width: (windowWidth - 40) / 7 }}>
               <Text style={{ fontWeight: "500", fontSize: 12, lineHeight: 20, color: "#A8A8A8", zIndex: 0 }}>{ t(item.day) }</Text>
-              <TouchableOpacity style={{ marginTop: item.date === selectedDay ? 0 : 1 , zIndex: 0}} onPress={() => setSelectedDay(item.date)}>
+              <TouchableOpacity style={{ marginTop: item.date === selectedDay ? 0 : 1 , zIndex: 0}} onPress={() => onClickDouble(item.date)}>
                 <LinearGradient
                   style={{ width: 29, height: 29, borderRadius: 20, flexDirection: "row", alignItems: "center", justifyContent: "center", zIndex: 0 }}
                   colors={ item.date === selectedDay ? [ '#D596F5', '#8A31F6' ] : ['#FFFFFF', '#FFFFFF']}
@@ -230,6 +254,7 @@ export const Feed = ({
         setSelectedDay={(day) => setSelectedDay(day)}
         setSelectedMonth={(month) => setSelectedMonth(month)}
         isFirst={isFirst}
+        forceRefreshDay={forceRefreshDay}
       />
       {/* </ScrollView> */}
     </View>
