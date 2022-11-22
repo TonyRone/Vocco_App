@@ -188,7 +188,11 @@ export const AnswerReply = ({
         { name: 'record', data: info.id },
         { name: 'file', filename: Platform.OS === 'android' ? 'answer.mp3' : 'answer.m4a', data: RNFetchBlob.wrap(String(path)) },
       ];
-      VoiceService.postAnswerReply(voiceFile).then(async res => {
+      let data = {
+        voiceFile: voiceFile,
+        receiverId: info.user.id
+      };
+      VoiceService.postAnswerReply(data).then(async res => {
         const jsonRes = await res.json();
         if (res.respInfo.status !== 201) {
         } else if (mounted.current) {

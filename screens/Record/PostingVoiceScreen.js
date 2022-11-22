@@ -141,8 +141,12 @@ const PostingVoiceScreen = (props) => {
         { name: 'address', data: String(storyAddress) },
         { name: 'createdAt', data: String(param.createdAt) }
       ];
+      let data = {
+        voiceFile: voiceFile,
+        isPast: param.isPast
+      }
       setIsLoading(true);
-      VoiceService.postVoice(voiceFile).then(async res => {
+      VoiceService.postVoice(data).then(async res => {
         const jsonRes = await res.json();
         setPostInfo(jsonRes);
         if (mounted.current) {
@@ -312,7 +316,7 @@ const PostingVoiceScreen = (props) => {
                   alignItems: 'center'
                 }}
                 onPress={() => {
-                  //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                  // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                   setVisibleStatus(!visibleStatus);
                 }}
               >
@@ -342,7 +346,7 @@ const PostingVoiceScreen = (props) => {
                 alignItems: 'center'
               }}
                 onPress={() => {
-                  //Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                  // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                   setNotSafe(!notSafe);
                 }}
               >

@@ -379,6 +379,7 @@ export const FriendStories = ({
       <DailyPopUp
         props={props}
         onCloseModal={() => setDailyPop(false)}
+        isPast={true}
         createdAt={`${new Date().getFullYear()}-${selectedMonth}-${selectedDay}`}
       />}
   </View>

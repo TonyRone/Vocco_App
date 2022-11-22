@@ -38,6 +38,7 @@ import { PickImage } from './PickImage';
 export const DailyPopUp = ({
   props,
   createdAt = '',
+  isPast = false,
   onCloseModal = () => { }
 }) => {
 
@@ -318,7 +319,7 @@ export const DailyPopUp = ({
                 if (selectedCategory == -1 || photoInfo == null)
                   setWarning(true);
                 else {
-                  props.navigation.navigate("HoldRecord", { photoInfo, categoryId: selectedCategory, createdAt: createdAt });
+                  props.navigation.navigate("HoldRecord", { photoInfo, categoryId: selectedCategory, createdAt: createdAt, isPast: isPast });
                   closeModal();
                 }
               }}
