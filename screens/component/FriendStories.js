@@ -199,8 +199,8 @@ export const FriendStories = ({
     VoiceService.getStories(0, userId, category, searchTitle, recordId, 'friend', 10, `${currentYear}-${selectedMonth.toString().padStart(2, '0')}-${selectedDay.toString().padStart(2, '0')}`).then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
-        const result = jsonRes.reverse();
-        setStories([...result]);
+        // const result = jsonRes.reverse();
+        setStories([...jsonRes]);
         setLoading(false);
       }
     })

@@ -111,8 +111,7 @@ export const ChatListItem = ({
 
     const onLimit = (v) => {
         return ((v).length > 16) ?
-            (((v).substring(0, 13)) + '...') :
-            v;
+            (((v).substring(0, 13)) + '...') : ((v).includes('\n')) ? ((v).slice(0, (v).indexOf('\n')) + '...') : v;
     }
 
     return (
