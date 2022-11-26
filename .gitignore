@@ -2,7 +2,7 @@
 /android
 /node_modules
 /dist
-/ios
+#/ios
 #/package.json
 /yarn.lock
 # Logs
