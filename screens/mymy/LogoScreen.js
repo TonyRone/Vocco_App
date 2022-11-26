@@ -4,6 +4,8 @@ import io from "socket.io-client";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import PushNotification from 'react-native-push-notification';
+import firebase from '@react-native-firebase/app';
+import messaging from '@react-native-firebase/messaging';
 import { ACCESSTOKEN_KEY, SOCKET_URL, TUTORIAL_CHECK, MAIN_LANGUAGE, APP_NAV, OPEN_COUNT, DEVICE_TOKEN, DEVICE_OS } from '../../config/config';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +17,7 @@ import { setUser, setSocketInstance } from '../../store/actions/index';
 import AuthService from '../../services/AuthService';
 import EditService from '../../services/EditService';
 import NavigationService from '../../services/NavigationService';
+import { NotificationServices } from '.';
 
 const LogoScreen = (props) => {
 
@@ -213,7 +216,7 @@ const LogoScreen = (props) => {
         mounted.current = true;
         checkPermission();
         checkLogin();
-        if (Platform.OS == 'ios')
+       if (Platform.OS == 'ios')
             OnSetPushNotification();
         return () => {
             mounted.current = false;
