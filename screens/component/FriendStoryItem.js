@@ -11,7 +11,7 @@ import {
   Pressable
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { SvgXml } from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -80,7 +80,7 @@ export const FriendStoryItem = ({
   // }, [visibleOne]);
 
   const OnSetLike = () => {
-    // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     if (info.isLike == true) {
       VoiceService.recordUnAppreciate(info.id);
     }

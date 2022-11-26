@@ -21,7 +21,7 @@ import AudioRecorderPlayer, {
 } from 'react-native-audio-recorder-player';
 
 import * as Progress from "react-native-progress";
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { Menu } from 'react-native-material-menu';
 import RNFetchBlob from 'rn-fetch-blob';
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
@@ -256,7 +256,7 @@ const ConversationScreen = (props) => {
             const jsonRes = await res.json();
             if (res.respInfo.status !== 201) {
             } else if (mounted.current) {
-                // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                 setIsPublish(false);
                 if (fileType == 'record' || fileType == 'voice' || fileType == 'photo') {
                     let tp = messages;
@@ -315,7 +315,7 @@ const ConversationScreen = (props) => {
 
     const onChangeRecord = async (e, v = false) => {
         if (v == true && isRecording == false) {
-            // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+            Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
             onStartRecord();
         }
         if (v == false && isRecording == true) {
@@ -976,10 +976,10 @@ const ConversationScreen = (props) => {
                         onDragRelease={(event, gestureState, bounds) => {
                             dragPos.current = gestureState.dx;
                             if (gestureState.dx <= -100) {
-                                // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-                                // setTimeout(() => {
-                                //     Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-                                // }, 300);
+                                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                                setTimeout(() => {
+                                    Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                                }, 300);
                             }
                         }}
                         onReverse={() => {
