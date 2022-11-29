@@ -20,7 +20,6 @@ import { SvgXml } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import ImagePicker from 'react-native-image-crop-picker';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 
 import '../../language/i18n';

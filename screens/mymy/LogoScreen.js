@@ -17,7 +17,6 @@ import { setUser, setSocketInstance } from '../../store/actions/index';
 import AuthService from '../../services/AuthService';
 import EditService from '../../services/EditService';
 import NavigationService from '../../services/NavigationService';
-import { NotificationServices } from '.';
 
 const LogoScreen = (props) => {
 
