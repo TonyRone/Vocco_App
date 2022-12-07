@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import DatePicker from 'react-native-date-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationActions, StackActions } from 'react-navigation';
@@ -269,7 +269,7 @@ const EditProfileScreen = (props) => {
                     </View>
                     <TouchableOpacity onPress={() => {
                         setPrivateStatus(!privated);
-                        // Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                        Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                     }}>
                         <SvgXml
                             width={51}

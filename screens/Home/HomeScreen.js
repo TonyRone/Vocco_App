@@ -31,7 +31,7 @@ import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { Feed } from '../component/Feed';
 import { Discover } from '../component/Discover';
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { ShareHint } from '../component/ShareHint';
 import RNFetchBlob from 'rn-fetch-blob';
 import { DailyPopUp } from '../component/DailyPopUp';
@@ -142,7 +142,7 @@ const HomeScreen = (props) => {
     const onClickFriend = () => {
         setIsActiveState(true);
         setNewStory(false);
-        // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+        Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
 
     const shareAudio = () => {
@@ -216,7 +216,7 @@ const HomeScreen = (props) => {
                 <View style={styles.rowSpaceBetween}>
                     <TouchableOpacity onPress={() => {
                         setIsActiveState(false);
-                        // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                        Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                     }}
                         style={[styles.contentCenter, { width: 97, height: 44, marginRight: 16 }]}>
                         <SemiBoldText
@@ -383,7 +383,7 @@ const HomeScreen = (props) => {
                 }}
                     onPress={() => {
                         if (noticeCount > 0) {
-                            // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                            Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                         }
                         noticeDispatch("reset");
                         dispatch(setRefreshState(!refreshState));

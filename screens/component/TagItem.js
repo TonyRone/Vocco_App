@@ -13,7 +13,7 @@ import { TagUserList } from "./TagUserList";
 import whiteTrashSvg from '../../assets/notification/white_trash.svg'
 import { SvgXml } from 'react-native-svg';
 import { ScrollView } from 'react-native-gesture-handler';
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 
 export const TagItem = ({
   info,

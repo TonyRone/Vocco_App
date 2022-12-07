@@ -31,7 +31,7 @@ import { TitleText } from '../component/TitleText';
 import { ScrollView } from 'react-native-gesture-handler';
 import VoiceService from '../../services/VoiceService';
 import { useDispatch, useSelector } from 'react-redux';
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 
 const ShareStoryScreen = (props) => {
 
@@ -275,7 +275,7 @@ const ShareStoryScreen = (props) => {
         </View>
         <TouchableOpacity style={{ position: 'absolute', left: 16, top: 20 }} onPress={() => {
           onNavigate("Home");
-          // Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+          Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
         }}>
           <SvgXml width="24" height="24" xml={closeBlackSvg} />
         </TouchableOpacity>

@@ -31,7 +31,7 @@ import heartYellow_Svg from '../../assets/common/heart_yellow.svg';
 import add_Svg from '../../assets/common/add.svg';
 import addYellow_Svg from '../../assets/common/add_yellow.svg';
 import addSuccess_Svg from '../../assets/common/add_success.svg';
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { styles } from '../style/Common';
 import VoiceService from '../../services/VoiceService';
 import VoicePlayer from '../Home/VoicePlayer';
@@ -175,7 +175,7 @@ export const FeedItem = ({
     }
     else {
       VoiceService.recordAppreciate({ count: 1, id: info.id });
-      // Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+      Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
     onChangeLike(!info.isLike);
   }
