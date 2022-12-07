@@ -171,7 +171,7 @@ export const DailyPopUp = ({
             />
           </TouchableOpacity>
           <TitleText
-            text={t("What memory are you sharing today, ") + user.name + '?'}
+            text={t("Share a great moment with them, ") + user.name + '!'}
             color='#361252'
             maxWidth={315}
             fontSize={25.7}

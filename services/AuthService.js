@@ -1,6 +1,7 @@
 import { ACCESSTOKEN_KEY, DEVICE_TOKEN, DEVICE_OS, API_URL } from '../config/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFetchBlob from 'rn-fetch-blob';
+import { Platform } from 'react-native';
 
 class AuthService {
     login(data) {
@@ -87,7 +88,8 @@ class AuthService {
 
     async getUserInfo(accessToken = null, checkDevice = '') {
         const token = accessToken ? accessToken : await AsyncStorage.getItem(ACCESSTOKEN_KEY);
-        const deviceToken = await AsyncStorage.getItem(DEVICE_TOKEN);
+        //const deviceToken = await AsyncStorage.getItem(DEVICE_TOKEN);
+        const deviceToken = Platform.OS=='ios'?await AsyncStorage.getItem(DEVICE_TOKEN):await AsyncStorage.getItem('fcmtoken');
         const deviceOs = await AsyncStorage.getItem(DEVICE_OS);
         return RNFetchBlob
             .config({ trusty: true })

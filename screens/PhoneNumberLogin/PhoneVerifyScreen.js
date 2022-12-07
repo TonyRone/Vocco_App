@@ -36,6 +36,7 @@ const PhoneVerifyScreen = (props) => {
     const phoneNumber = props.navigation.state.params?.number;
     const country = props.navigation.state.params?.country;
     const type = props.navigation.state.params?.type;
+    const firstName = props.navigation.state.params?.firstName;
 
     const { user, socketInstance } = useSelector((state) => state.user);
     const dispatch = useDispatch();
@@ -137,44 +138,7 @@ const PhoneVerifyScreen = (props) => {
     }
 
     const onCreateSocket = async (jsonRes, isRegister) => {
-        let systemLanguage = '';
-        if (deviceLanguage[0] == 'p') {
-            await AsyncStorage.setItem(
-                MAIN_LANGUAGE,
-                'Portuguese'
-            );
-            systemLanguage = 'Portuguese';
-        }
-        // else if (deviceLanguage[0] == 'f') {
-        //     await AsyncStorage.setItem(
-        //         MAIN_LANGUAGE,
-        //         'French'
-        //     );
-        //     systemLanguage = 'French';
-        // }
-        else {
-            await AsyncStorage.setItem(
-                MAIN_LANGUAGE,
-                'English'
-            );
-            systemLanguage = 'English';
-        }
-        if (jsonRes.language != systemLanguage)
-            EditService.changeLanguage(systemLanguage);
-        if (jsonRes.storyLanguage == 'none') {
-            EditService.changeStoryLanguage(systemLanguage);
-            jsonRes.storyLanguage = systemLanguage;
-        }
         dispatch(setUser(jsonRes));
-        let mainLanguage = await AsyncStorage.getItem(MAIN_LANGUAGE);
-        if (mainLanguage == null) {
-            mainLanguage = systemLanguage;
-            await AsyncStorage.setItem(
-                MAIN_LANGUAGE,
-                systemLanguage
-            );
-        }
-        i18n.changeLanguage(mainLanguage);
         let open_count = await AsyncStorage.getItem(OPEN_COUNT);
         if (socketInstance == null) {
             let socket = io(SOCKET_URL);
@@ -209,7 +173,8 @@ const PhoneVerifyScreen = (props) => {
     const confirmCode = () => {
         const payload = {
             phoneNumber: phoneNumber,
-            verificationCode: pseudo
+            verificationCode: pseudo,
+            firstName: firstName
         };
         setLoading(true);
         AuthService.confirmPhoneVerify(payload).then(async res => {

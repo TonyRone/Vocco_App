@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, ImageBackground, Image, Text, TouchableOpacity, Linking } from 'react-native';
 import { TitleText } from '../component/TitleText';
-import { DescriptionText } from '../component/DescriptionText';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import CheckBox from 'react-native-check-box';
@@ -38,24 +37,19 @@ const WelcomeScreen = (props) => {
                             style={styles.rowJustifyCenter}
                         >
                             <TitleText
-                                text={t("Worldwide stories")}
+                                text={t("Your loved ones, everyday")}
                                 marginTop={20}
                             />
                         </View>
-                        <DescriptionText
-                            text={t("Everyday")}
-                            textAlign="center"
-                            marginTop={15}
-                        />
                         <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: 15 }}>
                             <CheckBox
                                 isChecked={isSelected}
                                 onClick={() => {setIsSelected(!isSelected); setIsWarning(false)}}
                                 // style={{ width: 12, height: 12 }}
                             />
-                            <Text style={{ color: "#000000", fontSize: 13, lineHeight: 13, marginLeft: 3 }}>{t("I accept the")}</Text>
+                            <Text style={{ color: "#000000", fontSize: 11, lineHeight: 13, marginLeft: 3 }}>{t("I accept the")}</Text>
                             <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => Linking.openURL("https://vocco.ai/privacy")}>
-                                <Text style={{ color: "#A24EE4", fontSize: 13, lineHeight: 13 }}>{t("terms of use and privacy policy")}</Text>
+                                <Text style={{ color: "#A24EE4", fontSize: 11, lineHeight: 13 }}>{t("terms of use and privacy policy")}</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={[styles.rowSpaceEvenly, { marginBottom: 25, marginTop: 50 }]}>
@@ -63,7 +57,7 @@ const WelcomeScreen = (props) => {
                                 style={styles.registerButton}
                                 onPress={() => { isSelected ? props.navigation.navigate("MainName") : setIsWarning(true)}}
                             >
-                                <Text style={styles.registerText} >{t("Get Started")}</Text>
+                                <Text style={styles.registerText} >{t("Register")}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.loginButton}

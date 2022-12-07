@@ -309,7 +309,7 @@ export const NewChat = ({
                           color='#281E30'
                         />
                         <DescriptionText
-                          text={label == '' ? renderState(item.lastSeen) : renderName(item.user.firstname, item.user.lastname)}
+                          text={label == '' ? renderState(item.lastSeen) : item.user.firstname}
                           fontSize={13}
                           lineHeight={21}
                           color={(label == '' && item.lastSeen == 'onSession') ? '#8327D8' : 'rgba(54, 36, 68, 0.8)'}

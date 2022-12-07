@@ -7,7 +7,6 @@ import { ConfirmVerify } from '../component/ConfirmVerify';
 import { SvgXml } from 'react-native-svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GoogleSignin } from 'react-native-google-signin';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { ACCESSTOKEN_KEY } from '../../config/config';
 import { styles } from '../style/Login';
@@ -38,9 +37,6 @@ const VerifyScreen = (props) => {
     await AsyncStorage.removeItem(
       ACCESSTOKEN_KEY
     );
-    const isSignedIn = await GoogleSignin.isSignedIn();
-    if (isSignedIn)
-      await GoogleSignin.signOut();
     socketInstance.disconnect();
     dispatch(setSocketInstance(null));
     onNavigate("Welcome")

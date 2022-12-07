@@ -283,8 +283,8 @@ const SearchScreen = (props) => {
           <View><FlatList
             style={[styles.paddingH16]}
             data={filterTitles.user}
-            renderItem={({ item, index }) =>
-              (!showMore && index > 3) ? null :
+            renderItem={({ item, index }) => {
+              return (!showMore && index > 3) ? null :
                 <TouchableOpacity
                   onPress={() => {
                     if (item.id == user.id)
@@ -334,6 +334,7 @@ const SearchScreen = (props) => {
                     </View>
                   </TouchableOpacity>}
                 </TouchableOpacity>
+            }
             }
             keyExtractor={(item, index) => index.toString()}
             //  onEndReached = {()=>onLoadMoreTitle()}

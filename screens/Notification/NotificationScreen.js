@@ -26,7 +26,8 @@ import { NotificationItem } from '../component/NotificationItem';
 import VoiceService from '../../services/VoiceService';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState } from '../../store/actions';
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
@@ -67,6 +68,14 @@ const NotificationScreen = (props) => {
     )
 
     const scrollRef = useRef();
+
+    const onNavigate = (des, par = null) => {
+        const resetActionTrue = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: des, params: par })],
+        });
+        props.navigation.dispatch(resetActionTrue);
+    }
 
     const getNewActivityCount = () => {
         VoiceService.unreadActivityCount().then(async res => {
@@ -140,7 +149,7 @@ const NotificationScreen = (props) => {
 
     const onReadNotification = (index, isActive) => {
         if (isActive) {
-            let tp= activities;
+            let tp = activities;
             if (tp[index].seen == false) {
                 VoiceService.seenNotification(tp[index].id);
                 tp[index].seen = true;
@@ -149,8 +158,11 @@ const NotificationScreen = (props) => {
                 if (activeNum - 1 + requestNum == 0)
                     dispatch(setRefreshState(!refreshState));
             }
-            if (tp[index].type == 'likeRecord' || tp[index].type == 'newAnswer'||tp[index].type == 'newStory' || tp[index].type == 'likeAnswer' || tp[index].type == 'tagFriend') {
+            if (tp[index].type == 'likeRecord' || tp[index].type == 'newAnswer' || tp[index].type == 'likeAnswer' || tp[index].type == 'tagFriend') {
                 props.navigation.navigate("VoiceProfile", { id: tp[index].record.id, answerId: tp[index].answer?.id })
+            }
+            else if (tp[index].type == 'newStory'||tp[index].type == 'oldStory') {
+                onNavigate('Home', {targetRecord:tp[index].record});
             }
             else {
                 if (tp[index].fromUser.id == user.id)
@@ -165,7 +177,7 @@ const NotificationScreen = (props) => {
                 VoiceService.seenNotification(tp[index].id)
                 tp[index].seen = true;
                 setRequests(tp);
-                setRequestNum(Math.max(requestNum - 1,0));
+                setRequestNum(Math.max(requestNum - 1, 0));
                 if (activeNum + requestNum - 1 == 0)
                     dispatch(setRefreshState(!refreshState));
             }
@@ -188,7 +200,7 @@ const NotificationScreen = (props) => {
         else {
             let tp = [...requests];
             if (tp[index].seen == false) {
-                setRequestNum(Math.max(requestNum - 1,0));
+                setRequestNum(Math.max(requestNum - 1, 0));
                 if (activeNum + requestNum - 1 == 0)
                     dispatch(setRefreshState(!refreshState));
             }
@@ -222,7 +234,7 @@ const NotificationScreen = (props) => {
 
     const onAcceptRequest = (index) => {
         setIsLoading(true);
-        // Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+        Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
         VoiceService.acceptFriend(requests[index].fromUser.id, requests[index].id).then(async res => {
             if (res.respInfo.status == 201 && mounted.current) {
                 let tp = requests;
@@ -239,7 +251,7 @@ const NotificationScreen = (props) => {
             VoiceService.seenNotification(tp[index].id)
             tp[index].seen = true;
             setRequests(tp);
-            setRequestNum(Math.max(requestNum - 1,0));
+            setRequestNum(Math.max(requestNum - 1, 0));
             if (activeNum + requestNum - 1 == 0)
                 dispatch(setRefreshState(!refreshState));
         }
@@ -247,7 +259,7 @@ const NotificationScreen = (props) => {
 
     const onFollowUser = (id, index) => {
         setIsLoading(true);
-        // Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+        Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
         VoiceService.followFriend(id).then(async res => {
             if (mounted.current) {
                 let tp = activities;
@@ -267,7 +279,7 @@ const NotificationScreen = (props) => {
         getNewRequestCount();
         getActivities();
         getRequests();
-        return ()=>{
+        return () => {
             mounted.current = false;
         }
     }, [])

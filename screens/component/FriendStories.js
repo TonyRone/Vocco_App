@@ -7,7 +7,8 @@ import {
   RefreshControl,
   ScrollView,
   TouchableOpacity,
-  Platform
+  Platform,
+  Vibration
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -29,6 +30,7 @@ import { StoryPanel } from './StoryPanel';
 import { FriendStoryItem } from './FriendStoryItem';
 import { FriendStoryItems } from './FriendStoryItems';
 import { DailyPopUp } from './DailyPopUp';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 
 export const FriendStories = ({
   props,
@@ -41,19 +43,25 @@ export const FriendStories = ({
   selectedMonth = 0,
   isFirst,
   forceRefreshDay,
-  setSelectedDay = () => {},
-  setSelectedMonth = () => {}
+  setSelectedDay = () => { },
+  setSelectedMonth = () => { },
+  targetRecordId
 }) => {
   const viewabilityConfig = {
     itemVisiblePercentThreshold: 40,
     waitForInteraction: true,
   };
 
+
   const dispatch = useDispatch();
 
   const { t, i18n } = useTranslation();
   const scrollRef = useRef();
   const mounted = useRef(false);
+
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
+  const currentDay = new Date().getDate();
 
   const [stories, setStories] = useState([]);
   const [LoadMore, setLoadMore] = useState(10);
@@ -71,7 +79,7 @@ export const FriendStories = ({
   const [visibleItemIndex, setVisibleItemIndex] = useState();
   const [focused, setFocused] = useState();
 
-  let { visibleOne, refreshState } = useSelector((state) => {
+  let { visibleOne, refreshState, user } = useSelector((state) => {
     return (
       state.user
     )
@@ -129,16 +137,16 @@ export const FriendStories = ({
     }, 2000);
   }
 
-  const onInsert = ( v )=>{
-    let tp=[];
-    for(let i=0;i<v.length;i++){
-      if((i+1)%80 == 0)
-        tp.push({isPopUp:true});
+  const onInsert = (v) => {
+    let tp = [];
+    for (let i = 0; i < v.length; i++) {
+      if ((i + 1) % 80 == 0)
+        tp.push({ isPopUp: true });
       tp.push(v[i]);
     }
     setStoryPanels([...tp]);
   }
-  
+
   const [touchStart, setTouchStart] = useState(null)
   const [touchEnd, setTouchEnd] = useState(null)
 
@@ -148,9 +156,9 @@ export const FriendStories = ({
     setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
     setTouchStart(e.nativeEvent.locationX);
   }
-  
+
   const onTouchMove = (e) => setTouchEnd(e.nativeEvent.locationX)
-  
+
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return
     const distance = touchStart - touchEnd
@@ -196,7 +204,7 @@ export const FriendStories = ({
   const getStories = () => {
     setLoading(true);
     const currentYear = new Date().getFullYear();
-    VoiceService.getStories(0, userId, category, searchTitle, recordId, 'friend', 10, `${currentYear}-${selectedMonth.toString().padStart(2, '0')}-${selectedDay.toString().padStart(2, '0')}`).then(async res => {
+    VoiceService.getStories(0, userId, category, searchTitle, recordId, 'friend', 10, `${currentYear}-${selectedMonth.toString().padStart(2, '0')}-${selectedDay.toString().padStart(2, '0')}`,targetRecordId?targetRecordId:"").then(async res => {
       if (res.respInfo.status === 200) {
         const jsonRes = await res.json();
         // const result = jsonRes.reverse();
@@ -204,9 +212,9 @@ export const FriendStories = ({
         setLoading(false);
       }
     })
-    .catch(err => {
-      console.log(err);
-    });
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   const onRefresh = () => {
@@ -244,11 +252,11 @@ export const FriendStories = ({
     const result = tp;
     setStories([...result]);
   }
-  const renderFooter=()=>{
-    return(
-    <View style={{ backgroundColor: "#00FF00" }}>
-      <Text style={{ color: "#FF0000" }}>End of the Line!</Text>
-    </View>
+  const renderFooter = () => {
+    return (
+      <View style={{ backgroundColor: "#00FF00" }}>
+        <Text style={{ color: "#FF0000" }}>End of the Line!</Text>
+      </View>
     )
   }
   const onChangePrevDay = () => {
@@ -260,9 +268,6 @@ export const FriendStories = ({
   }
 
   const onChangeNextDay = () => {
-    const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth() + 1;
-    const currentDay = new Date().getDate();
     let daysInMonth = new Date(currentYear, selectedMonth, 0).getDate();
     if (currentMonth == selectedMonth) {
       if (currentDay > selectedDay) {
@@ -320,7 +325,7 @@ export const FriendStories = ({
           storyLength={stories.length}
           onMoveNext={(index1) => {
             scrollRef.current?.scrollToIndex({ animated: true, index: index1 })
-          } }
+          }}
           onChangeLike={(isLiked) => onChangeLike(index, isLiked)}
           onChangePrevDay={() => onChangePrevDay()}
           onChangeNextDay={() => onChangeNextDay()}
@@ -332,28 +337,60 @@ export const FriendStories = ({
 
   return <View style={{ height: pageHeight }}>
     {(stories.length > 0 ? storyItems :
-    (!loading ?
-      <View style={{ alignItems: 'center', justifyContent: "center", width: windowWidth, height: pageHeight }} onTouchStart={(e) => onTouchStart(e)} onTouchEnd={onTouchEnd} onTouchMove={(e) => onTouchMove(e)} >
-        <View style={{ width: "100%", height: "100%", alignItems: "center", justifyContent: "center", backgroundColor: "white", position: "relative" }}>
-          <SvgXml
-            xml={box_blankSvg}
-          />
-          <DescriptionText
-            text={t("No friend stories")}
-            fontSize={17}
-            lineHeight={28}
-            marginTop={22}
-          />
-          <View style={{ position: "absolute", bottom: 70, width: "100%", justifyContent: "center", alignItems: "center" }}>
-            <TouchableOpacity style={{ padding: Platform.OS == 'android' ? 12 : 14, borderRadius: 14, backgroundColor: "#F8F0FF" }} onPress={() => setDailyPop(true)}>
-              <Text style={{ fontWeight: "500", fontSize: Platform.OS == 'android' ? 15 : 17, lineHeight: Platform.OS == 'android' ? 24 : 28, color: "#8327D8" }}>{t("Share a moment that happened on that day")}</Text>
-            </TouchableOpacity>
-          </View>
+      (!loading ?
+        <View style={{ alignItems: 'center', justifyContent: "center", width: windowWidth, height: pageHeight }} onTouchStart={(e) => onTouchStart(e)} onTouchEnd={onTouchEnd} onTouchMove={(e) => onTouchMove(e)} >
+          {(currentDay == selectedDay && currentMonth == selectedMonth) ?
+            <View View style={{ width: "100%", height: "100%", alignItems: "center", justifyContent: "center", backgroundColor: "white", position: "relative" }}>
+              <Image
+                style={{
+                  width: 343,
+                  height: 321
+                }}
+                source={require('../../assets/Feed/InviteFriend.png')}
+              />
+              <Text
+                numberOfLines={2}
+                style={{
+                  fontFamily: "SFProDisplay-Semibold",
+                  fontSize: 16.84,
+                  lineHeight: 32,
+                  width: 320,
+                  color: "#361252",
+                  textAlign: 'center',
+                }}
+              >
+                {"Hello, "+`${user.name}! `+t("Be the first one to share a moment with your loved ones today!")}
+              </Text>
+              <MyButton
+                width={320}
+                label={t("Share a moment with my friends")}
+                onPress={() =>{
+                  setDailyPop(true);
+                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                }}
+              />
+            </View> :
+            <View View style={{ width: "100%", height: "100%", alignItems: "center", justifyContent: "center", backgroundColor: "white", position: "relative" }}>
+              <SvgXml
+                xml={box_blankSvg}
+              />
+              <DescriptionText
+                text={t("No friend stories")}
+                fontSize={17}
+                lineHeight={28}
+                marginTop={22}
+              />
+              <View style={{ position: "absolute", bottom: 70, width: "100%", justifyContent: "center", alignItems: "center" }}>
+                <TouchableOpacity style={{ padding: Platform.OS == 'android' ? 12 : 14, borderRadius: 14, backgroundColor: "#F8F0FF" }} onPress={() => setDailyPop(true)}>
+                  <Text style={{ fontWeight: "500", fontSize: Platform.OS == 'android' ? 15 : 17, lineHeight: Platform.OS == 'android' ? 24 : 28, color: "#8327D8" }}>{t("Share a moment that happened on that day")}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>}
         </View>
-      </View>
-      : null)
-          )}
-    {loading &&
+        : null)
+    )}
+    {
+      loading &&
       <View style={{
         position: stories.length ? 'absolute' : 'relative',
         width: '100%',
@@ -375,12 +412,14 @@ export const FriendStories = ({
         onCloseModal={() => setShowInviteList(false)}
       />
     } */}
-    {dailyPop && 
+    {
+      dailyPop &&
       <DailyPopUp
         props={props}
         onCloseModal={() => setDailyPop(false)}
         isPast={true}
         createdAt={`${new Date().getFullYear()}-${selectedMonth}-${selectedDay}`}
-      />}
-  </View>
+      />
+    }
+  </View >
 };

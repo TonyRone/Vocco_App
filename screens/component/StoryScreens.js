@@ -68,6 +68,8 @@ export const StoryScreens = ({
 
   let recordId = info.id;
 
+  const tempTagUsers = useRef([]);
+
   // let recordId = props.navigation.state.params.id, answerId = props.navigation.state.params.answerId ? props.navigation.state.params.answerId : '';
   // let answerId = props.navigation.state.params.answerId ? props.navigation.state.params.answerId : '';
   const [showModal, setShowModal] = useState(false);
@@ -229,7 +231,24 @@ export const StoryScreens = ({
       .catch(err => {
         console.log(err);
       })
+    let userIds = [];
+    tempTagUsers.current.forEach(el => {
+      if (label.includes('@' + el.name + ' '))
+        userIds.push(el.id);
+    });
+    let payload = {
+      storyType: 'record',
+      tagUserIds: userIds,
+      recordId: recordId,
+    };
+    VoiceService.postTag(payload).then(async res => {
+    })
+      .catch(err => {
+        console.log(err);
+      });
+    tempTagUsers.current = [];
     setLabel('');
+    setFilter([]);
   }
 
   const onAnswerGif = (gif) => {
@@ -291,13 +310,14 @@ export const StoryScreens = ({
     setFilter(filterFriends);
   }
 
-  const onReplace = (e, id) => {
+  const onReplace = (tagUser) => {
     let i = findPosition(label);
     if (i != -1) {
-      setLabel(label.slice(0, i + 1).concat(e) + ' ');
+      setLabel(label.slice(0, i + 1).concat(tagUser.name) + ' ');
       setFilter([]);
-      setCommentedUserId(id);
-      setForceAnswer(true);
+      tempTagUsers.current.push(tagUser);
+      //setCommentedUserId(id);
+      //setForceAnswer(true);
     }
   }
 
@@ -324,7 +344,7 @@ export const StoryScreens = ({
         onClose();
       }}
     >
-      <Pressable onPressOut={onClose} style={[styles.swipeModal, { marginTop: 0 }]}>
+      <Pressable onPressOut={onClose} style={[styles.swipeModal, { height:windowHeight, marginTop: 0, flex:1 }]}>
         <View style={[styles.swipeContainerContent, { bottom: 0, maxHeight: windowHeight }]}>
           <KeyboardAvoidingView
             style={{
@@ -415,7 +435,7 @@ export const StoryScreens = ({
                   alignItems: 'center'
                 }}
                   key={item.user.id + index.toString()}
-                  onPress={() => onReplace(item.user.name, item.user.id)}
+                  onPress={() => onReplace(item.user)}
                 >
                   <Image
                     source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}

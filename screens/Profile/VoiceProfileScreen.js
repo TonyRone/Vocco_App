@@ -10,19 +10,15 @@ import {
   Modal,
   TouchableOpacity,
   TextInput,
-  Vibration,
   Keyboard,
-  TouchableWithoutFeedback
 } from 'react-native';
 
 import {
   GifSearch,
-  poweredByGiphyLogoGrey,
 } from 'react-native-gif-search'
 
 import { ScrollView } from 'react-native-gesture-handler';
 import * as Progress from "react-native-progress";
-import { Picker } from 'emoji-mart-native'
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRefreshState, setVoiceState } from '../../store/actions';
@@ -37,7 +33,6 @@ import { SvgXml } from 'react-native-svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import whitePostSvg from '../../assets/record/white_post.svg';
 import colorPostSvg from '../../assets/record/color_post.svg';
-import emojiSymbolSvg from '../../assets/common/emoji_symbol.svg'
 import gifSymbolSvg from '../../assets/common/gif_symbol.svg'
 import moreSvg from '../../assets/common/more.svg';
 import editSvg from '../../assets/common/edit.svg';
@@ -56,7 +51,6 @@ import { TagItem } from '../component/TagItem';
 import { NewChat } from '../component/NewChat';
 import { AnswerRecordIcon } from '../component/AnswerRecordIcon';
 import SwipeDownModal from 'react-native-swipe-down';
-import EmojiPicker from 'rn-emoji-keyboard';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { DeleteConfirm } from '../component/DeleteConfirm';
 
@@ -76,30 +70,21 @@ const VoiceProfileScreen = (props) => {
   const [showTagFriends, setShowTagFriends] = useState(false);
   const [showFriendsList, setShowFriendsList] = useState(false)
   const [combines, setCombines] = useState([]);
-  const [answerType, setAnswerType] = useState('emoji');
   const [label, setLabel] = useState('');
   const [showComment, setShowComment] = useState(false);
-  const [visibleReaction, setVisibleReaction] = useState(false);
   const [friends, setFriends] = useState([]);
   const [filter, setFilter] = useState([]);
   const [speed, setSpeed] = useState(1);
   const [forceAnswer, setForceAnswer] = useState(false);
   const [commentedUserId, setCommentedUserId] = useState('');
 
+  const tempTagUsers = useRef([]);
+
   const mounted = useRef(false);
 
   const dispatch = useDispatch();
 
   const { t, i18n } = useTranslation();
-
-  const OnShareVoice = async () => {
-    const share_check = await AsyncStorage.getItem(SHARE_CHECK);
-    if (!share_check) {
-      props.navigation.navigate('Share', { info: info });
-    }
-    else
-      setShowShareVoice(true);
-  }
 
   let { user, refreshState, voiceState } = useSelector((state) => {
     return (
@@ -134,13 +119,6 @@ const VoiceProfileScreen = (props) => {
     if (a.createdAt > b.createdAt)
       return -1;
     return 0;
-  }
-
-  const onCombine = (ar0, ar1) => {
-    let ar = [...ar0, ...ar1];
-    ar.sort(onCompare);
-    setCombines(ar);
-    setLoading(false);
   }
 
   const getAnswers = async () => {
@@ -228,28 +206,24 @@ const VoiceProfileScreen = (props) => {
       .catch(err => {
         console.log(err);
       })
-    setLabel('');
-  }
-
-  const onAnswerEmoji = (emoji) => {
-    setShowComment(false);
-    setIsLoading(true);
-    VoiceService.answerEmoji(info.id, { emoji }).then(async res => {
-      if (res.respInfo.status == 200) {
-        const emojiAnswer = await res.json();
-        emojiAnswer.user = user;
-        let tp = combines;
-        tp.unshift(emojiAnswer);
-        tp.sort((a, b) => a.createdAt < b.createdAt);
-        if (mounted.current) {
-          setCombines([...tp]);
-          setIsLoading(false);
-        }
-      }
+    let userIds = [];
+    tempTagUsers.current.forEach(el => {
+      if (label.includes('@' + el.name + ' '))
+        userIds.push(el.id);
+    });
+    let payload = {
+      storyType: 'record',
+      tagUserIds: userIds,
+      recordId: recordId,
+    };
+    VoiceService.postTag(payload).then(async res => {
     })
       .catch(err => {
         console.log(err);
-      })
+      });
+    tempTagUsers.current = [];
+    setLabel('');
+    setFilter([]);
   }
 
   const onAnswerGif = (gif) => {
@@ -311,13 +285,14 @@ const VoiceProfileScreen = (props) => {
     setFilter(filterFriends);
   }
 
-  const onReplace = (e, id) => {
+  const onReplace = (tagUser) => {
     let i = findPosition(label);
     if (i != -1) {
-      setLabel(label.slice(0, i + 1).concat(e) + ' ');
+      setLabel(label.slice(0, i + 1).concat(tagUser.name) + ' ');
       setFilter([]);
-      setCommentedUserId(id);
-      setForceAnswer(true);
+      tempTagUsers.current.push(tagUser);
+      //setCommentedUserId(id);
+      //setForceAnswer(true);
     }
   }
 
@@ -352,8 +327,8 @@ const VoiceProfileScreen = (props) => {
     <Pressable
       onPress={() => Keyboard.dismiss()}
       style={{
-        flex:1,
-        backgroundColor:'#FFF'
+        flex: 1,
+        backgroundColor: '#FFF'
       }}
     >
       <View
@@ -546,7 +521,7 @@ const VoiceProfileScreen = (props) => {
               alignItems: 'center'
             }}
               key={item.user.id + index.toString()}
-              onPress={() => onReplace(item.user.name, item.user.id)}
+              onPress={() => onReplace(item.user)}
             >
               <Image
                 source={item.user.avatar ? { uri: item.user.avatar.url } : Avatars[item.user.avatarNumber].uri}
@@ -627,7 +602,6 @@ const VoiceProfileScreen = (props) => {
                   onSubmitEditing={() => {
                     onAnswerBio();
                   }}
-                  onBlur={() => onSetLabel('')}
                   onChangeText={(e) => onSetLabel(e)}
                   placeholder={t("Type your answer")}
                   placeholderTextColor="rgba(59, 31, 82, 0.6)"

@@ -4,6 +4,7 @@ import PhoneInput from "react-native-phone-number-input";
 import { SvgXml } from 'react-native-svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import rightArrowSvg from '../../assets/phoneNumber/right-arrow.svg';
+import errorSvg from '../../assets/phoneNumber/error.svg';
 import { TitleText } from '../component/TitleText';
 import { DescriptionText } from '../component/DescriptionText';
 import { useTranslation } from 'react-i18next';
@@ -17,11 +18,38 @@ import { TextInput } from 'react-native-gesture-handler';
 
 const MainNameScreen = (props) => {
 
+
     const [value, setValue] = useState("");
+    const [error, setError] = useState('');
+    const [validUsername, setValidUsername] = useState(false);
     const [formattedValue, setFormattedValue] = useState("");
 
     const { t, i18n } = useTranslation();
     const phoneInput = useRef();
+
+    const checkUsername = (newVal) => {
+        setValue(newVal);
+        setError('');
+        let reg = /^[A-Za-z0-9]+(?:[.-_-][A-Za-z0-9]+)*$/;
+        // /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+        if (reg.test(newVal) === true) {
+            setValidUsername(true);
+        } else {
+            setValidUsername(false);
+        }
+    }
+
+    const handleSubmit = () => {
+        if (validUsername == false) {
+            setError("Username is not available");
+        }
+        else if (value.length < 3) {
+            setError("Username must be at least 3 letters");
+        }
+        else {
+            props.navigation.navigate('PhoneRegister',{firstName:value});
+        }
+    }
 
     useEffect(() => {
     }, [])
@@ -91,16 +119,30 @@ const MainNameScreen = (props) => {
                             maxWidth={250}
                             value={value}
                             autoCapitalize='words'
-                            onChangeText={e => setValue(e)}
+                            onChangeText={e => checkUsername(e)}
                         />
                     </View>
+                    {error != '' && <View style={[styles.rowAlignItems, { marginTop: 10 }]}>
+                        <SvgXml
+                            width={24}
+                            height={24}
+                            xml={errorSvg}
+                        />
+                        <DescriptionText
+                            text={t(error)}
+                            fontSize={12}
+                            lineHeigh={16}
+                            marginLeft={8}
+                            color='#E41717'
+                        />
+                    </View>}
                 </View>
                 <TouchableOpacity style={{
                     position: 'absolute',
                     right: 16,
                     bottom: 16,
                 }}
-                    onPress={() => props.navigation.navigate('PhoneRegister')}
+                    onPress={() => handleSubmit()}
                     disabled={value.length < 3}
                 >
                     <LinearGradient

@@ -78,44 +78,7 @@ const LogoScreen = (props) => {
     }
 
     const onCreateSocket = async (jsonRes) => {
-        let systemLanguage = '';
-        if (deviceLanguage[0] == 'p') {
-            await AsyncStorage.setItem(
-                MAIN_LANGUAGE,
-                'Portuguese'
-            );
-            systemLanguage = 'Portuguese';
-        }
-        // else if (deviceLanguage[0] == 'f') {
-        //     await AsyncStorage.setItem(
-        //         MAIN_LANGUAGE,
-        //         'French'
-        //     );
-        //     systemLanguage = 'French';
-        // }
-        else {
-            await AsyncStorage.setItem(
-                MAIN_LANGUAGE,
-                'English'
-            );
-            systemLanguage = 'English';
-        }
-        if (jsonRes.language != systemLanguage)
-            EditService.changeLanguage(systemLanguage);
-        if (jsonRes.storyLanguage == 'none') {
-            EditService.changeStoryLanguage(systemLanguage);
-            jsonRes.storyLanguage = systemLanguage;
-        }
         dispatch(setUser(jsonRes));
-        let mainLanguage = await AsyncStorage.getItem(MAIN_LANGUAGE);
-        if (mainLanguage == null || mainLanguage == 'French') {
-            mainLanguage = systemLanguage;
-            await AsyncStorage.setItem(
-                MAIN_LANGUAGE,
-                systemLanguage
-            );
-        }
-        i18n.changeLanguage(mainLanguage);
         let open_count = await AsyncStorage.getItem(OPEN_COUNT);
         if (socketInstance == null) {
             let socket = io(SOCKET_URL);
@@ -135,10 +98,37 @@ const LogoScreen = (props) => {
             onGoScreen(jsonRes, open_count);
     }
     const checkLogin = async () => {
+        // if (jsonRes.language != systemLanguage)
+        //     EditService.changeLanguage(systemLanguage);
+        // if (jsonRes.storyLanguage == 'none') {
+        //     EditService.changeStoryLanguage(systemLanguage);
+        //     jsonRes.storyLanguage = systemLanguage;
+        // }
+        let mainLanguage = await AsyncStorage.getItem(MAIN_LANGUAGE);
+        if (mainLanguage == null) {
+            let systemLanguage = '';
+            if (deviceLanguage[0] == 'p') {
+                systemLanguage = 'Portuguese';
+            }
+            else if (deviceLanguage[0] == 'f') {
+                systemLanguage = 'French';
+            }
+            else {
+                systemLanguage = 'English';
+            }
+            mainLanguage = systemLanguage;
+            await AsyncStorage.setItem(
+                MAIN_LANGUAGE,
+                systemLanguage
+            );
+        }
+        await i18n.changeLanguage(mainLanguage);
         const aToken = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         if (aToken != null) {
             AuthService.getUserInfo().then(async res => {
                 const jsonRes = await res.json();
+                if (jsonRes.language != mainLanguage)
+                    await EditService.changeLanguage(mainLanguage);
                 if (res.respInfo.status == 200 && jsonRes != null) {
                     onCreateSocket(jsonRes);
                 }

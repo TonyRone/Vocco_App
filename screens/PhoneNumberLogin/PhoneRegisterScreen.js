@@ -38,7 +38,7 @@ const PhoneRegisterScreen = (props) => {
             if (mounted.current) {
                 const jsonRes = await res.json();
                 if (res.respInfo.status === 201) {
-                    props.navigation.navigate('PhoneVerify', { number: formattedValue, country: country, type: 'register' })
+                    props.navigation.navigate('PhoneVerify', { number: formattedValue, country: country, type: 'register',firstName:props.navigation.state.params.firstName })
                 }
                 else {
                     setError(jsonRes.message);

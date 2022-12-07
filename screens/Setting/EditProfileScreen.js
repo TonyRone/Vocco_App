@@ -14,7 +14,6 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 // import RNVibrationFeedback from 'react-native-vibration-feedback';
 import DatePicker from 'react-native-date-picker';
-import { GoogleSignin } from 'react-native-google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { TitleText } from '../component/TitleText';
@@ -55,8 +54,8 @@ const EditProfileScreen = (props) => {
     let userData = { ...user };
 
     const [username, setUsername] = useState(userData.name);
-    const [firstName, setFirstName] = useState(userData.firstname);
-    const [lastName, setLastName] = useState(userData.lastname);
+    const [firstName, setFirstName] = useState(userData.firstname?.split(" ")[0]);
+    const [lastName, setLastName] = useState(userData.firstname?.split(" ")[1]);
     const [birthDate, setBirthDate] = useState(new Date(userData.dob));
     const [showModal, setShowModal] = useState(false);
     const [gender, setGender] = useState(userData.gender);
@@ -103,9 +102,6 @@ const EditProfileScreen = (props) => {
             await AsyncStorage.removeItem(
                 ACCESSTOKEN_KEY
             );
-            const isSignedIn = await GoogleSignin.isSignedIn();
-            if (isSignedIn)
-                await GoogleSignin.signOut();
             socketInstance.disconnect();
             dispatch(setSocketInstance(null));
             onNavigate("Welcome");
@@ -174,7 +170,7 @@ const EditProfileScreen = (props) => {
             dob: birthDate,
             country: userCountry.country,
             gender: gender,
-            first: firstName,
+            first: firstName+' '+lastName,
             last: lastName,
             isPrivate: privated ? 'true' : 'false'
         };
@@ -202,6 +198,7 @@ const EditProfileScreen = (props) => {
             mounted.current = false;
         }
     }, [])
+
     return (
         <KeyboardAvoidingView
             style={{

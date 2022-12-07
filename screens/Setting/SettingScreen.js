@@ -18,7 +18,7 @@ import { BottomButtons } from '../component/BottomButtons';
 import { SearchLanguage } from '../component/SearchLanguage';
 import { MyButton } from '../component/MyButton';
 import { SvgXml } from 'react-native-svg';
-import OpenFile from 'react-native-doc-viewer';
+//import OpenFile from 'react-native-doc-viewer';
 import chewronRightSvg from '../../assets/common/chewron_right.svg';
 import termsSvg from '../../assets/setting/terms.svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
@@ -28,7 +28,6 @@ import contactsSvg from '../../assets/setting/contacts.svg';
 import logoutSvg from '../../assets/setting/logout.svg';
 import websiteSvg from '../../assets/setting/website.svg';
 import { Avatars, windowWidth } from '../../config/config';
-import { GoogleSignin } from 'react-native-google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ACCESSTOKEN_KEY, MAIN_LANGUAGE, windowHeight } from '../../config/config';
 import { styles } from '../style/Common';
@@ -70,7 +69,7 @@ const SettingScreen = (props) => {
     }
 
     const OnSelectLanguage = async () => {
-        //EditService.changeLanguage(language.language);
+        EditService.changeLanguage(language.language);
         i18n.changeLanguage(language.language).then(async () => {
             await AsyncStorage.setItem(
                 MAIN_LANGUAGE,
@@ -96,49 +95,43 @@ const SettingScreen = (props) => {
         await AsyncStorage.removeItem(
             ACCESSTOKEN_KEY
         );
-        const isSignedIn = await GoogleSignin.isSignedIn();
-        if (isSignedIn)
-            await GoogleSignin.signOut();
         socketInstance.disconnect();
         dispatch(setSocketInstance(null));
         onNavigate("Welcome");
     }
 
     const pressTerms = () => {
-        if (Platform.OS === 'ios') {
-            //IOS
-            OpenFile.openDoc([{
-                url: "https://storage.googleapis.com/voccosrg/CGUVOCCO.docx",
-                fileNameOptional: "Terms and conditions"
-            }], (error, url) => {
-                if (error) {
-                    console.error(error);
-                } else {
-                    console.log(url)
-                }
-            })
-        } else {
-            //Android
-            OpenFile.openDoc([{
-                url: "https://storage.googleapis.com/voccosrg/CGUVOCCO.docx", // Local "file://" + filepath
-                fileName: "Terms and conditions",
-                cache: false,
-                fileType: "docx"
-            }], (error, url) => {
-                if (error) {
-                    console.error(error);
-                } else {
-                    console.log(url)
-                }
-            })
-        }
+        // if (Platform.OS === 'ios') {
+        //     //IOS
+        //     OpenFile.openDoc([{
+        //         url: "https://storage.googleapis.com/voccosrg/CGUVOCCO.docx",
+        //         fileNameOptional: "Terms and conditions"
+        //     }], (error, url) => {
+        //         if (error) {
+        //             console.error(error);
+        //         } else {
+        //             console.log(url)
+        //         }
+        //     })
+        // } else {
+        //     //Android
+        //     OpenFile.openDoc([{
+        //         url: "https://storage.googleapis.com/voccosrg/CGUVOCCO.docx", // Local "file://" + filepath
+        //         fileName: "Terms and conditions",
+        //         cache: false,
+        //         fileType: "docx"
+        //     }], (error, url) => {
+        //         if (error) {
+        //             console.error(error);
+        //         } else {
+        //             console.log(url)
+        //         }
+        //     })
+        // }
     }
 
     useEffect(() => {
-        GoogleSignin.configure({
-            androidClientId: '411872622691-jtn0id6ql8ugta4i8qo962tngerf79vl.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-            iosClientId: '1034099036541-va0ioishaoaueb7elaogc2ra1h4u1if3.apps.googleusercontent.com'
-        });
+       
     }, [])
     return (
         <KeyboardAvoidingView
@@ -173,7 +166,7 @@ const SettingScreen = (props) => {
                                 lineHeight={28}
                             />
                             <DescriptionText
-                                text={renderName(userData.firstname, userData.lastname)}
+                                text={userData.firstname}
                                 fontSize={13}
                                 lineHeight={21}
                             />

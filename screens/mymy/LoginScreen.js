@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Platform, ImageBackground, Text, TouchableOpacity } from 'react-native';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { GoogleSignin, statusCodes } from 'react-native-google-signin';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
 import { v4 as uuid } from 'uuid'
@@ -228,9 +227,6 @@ const LoginScreen = (props) => {
 
   const signIn = async () => {
     try {
-      await GoogleSignin.hasPlayServices();
-      const { idToken } = await GoogleSignin.signIn();
-      const tokens = await GoogleSignin.getTokens()
       setLoading(true);
       AuthService.googleLogin({ token: tokens.accessToken }).then(async res => {
         const jsonRes = await res.json();
@@ -264,18 +260,12 @@ const LoginScreen = (props) => {
   };
 
   const isSignedIn = async () => {
-    const isSignedIn = await GoogleSignin.isSignedIn();
-    if (!!isSignedIn) {
-      getCurrentUserInfo()
-    } else {
-      console.log('Please Login')
-    }
+   
   };
 
   const getCurrentUserInfo = async () => {
     try {
-      const { idToken } = await GoogleSignin.signIn()
-      const tokens = await GoogleSignin.getTokens()
+    
 
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_REQUIRED) {
@@ -287,9 +277,6 @@ const LoginScreen = (props) => {
   };
   const signOut = async () => {
     try {
-      await GoogleSignin.hasPlayServices();
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
       dispatch(setUser({})); // Remember to remove the user from your app's state as well
     } catch (error) {
       console.error(error);
@@ -298,11 +285,6 @@ const LoginScreen = (props) => {
 
   useEffect(() => {
     checkLogin();
-
-    GoogleSignin.configure({
-      androidClientId: '411872622691-jtn0id6ql8ugta4i8qo962tngerf79vl.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-      iosClientId: '1034099036541-va0ioishaoaueb7elaogc2ra1h4u1if3.apps.googleusercontent.com'
-    });
 
     // isSignedIn()
   }, [])

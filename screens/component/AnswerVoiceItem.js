@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, TouchableOpacity, Text, Image, Vibration, Linking } from "react-native";
+import { View, TouchableOpacity, Text, Image, Linking } from "react-native";
 import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
 
 import { useSelector } from 'react-redux';
 
 import { HeartIcon } from './HeartIcon';
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { AnswerReply } from "./AnswerReply";
 import { StoryLikes } from "./StoryLikes";
 import { useTranslation } from 'react-i18next';

@@ -81,6 +81,8 @@ import SelectTopicScreen from './screens/PhoneNumberLogin/SelectTopicScreen';
 import AddFriendScreen from './screens/PhoneNumberLogin/AddFriendScreen';
 import ShareStoryScreen from './screens/mymy/ShareStoryScreen';
 import HoldRecordScreen from './screens/Record/HoldRecordScreen';
+import { NotificationServices } from './screens/mymy';
+import CalendarScreen from './screens/Home/CalendarScreen';
 
 
 const slideAnimation2 = (bottomToTop) => {
@@ -431,6 +433,13 @@ const AppNavigator = createStackNavigator({
       animationEnabled: false
     }
   },
+  Calendar: {
+    screen: CalendarScreen,
+    navigationOptions: {
+      headerShown: false,
+      animationEnabled: false
+    }
+  },
 },
   {
     //initialRouteName:'AddFriend'
@@ -507,6 +516,7 @@ export default App = () => {
           NavigationService.setTopLevelNavigator(navigatorRef);
         }}
       />
+      <NotificationServices />
     </Provider>
   );
 };

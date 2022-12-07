@@ -178,7 +178,7 @@ const HomeScreen = (props) => {
     const onChangeCategory = (id) => {
         setCategoryId(id);
         setShowModal(false);
-      }
+    }
 
     useEffect(() => {
         mounted.current = true;
@@ -218,7 +218,7 @@ const HomeScreen = (props) => {
                         setIsActiveState(false);
                         // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                     }}
-                    style={[styles.contentCenter, { width: 97, height: 44, marginRight: 16 }]}>
+                        style={[styles.contentCenter, { width: 97, height: 44, marginRight: 16 }]}>
                         <SemiBoldText
 
                             text={t("Discover")}
@@ -277,7 +277,7 @@ const HomeScreen = (props) => {
                     </View>
                 </View>
             </View>
-            {!isActiveState&&<View style={[styles.paddingH16, {
+            {!isActiveState && <View style={[styles.paddingH16, {
                 flexDirection: 'row',
                 alignItems: "flex-start",
                 marginBottom: 6,

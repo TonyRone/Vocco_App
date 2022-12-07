@@ -14,7 +14,6 @@ import { SvgXml } from 'react-native-svg';
 import arrowBendUpLeft from '../../assets/login/arrowbend.svg';
 import appleSvg from '../../assets/login/apple.svg';
 import googleSvg from '../../assets/login/google.svg';
-import { GoogleSignin, statusCodes } from 'react-native-google-signin';
 import { v4 as uuid } from 'uuid'
 import AuthService from '../../services/AuthService';
 
@@ -204,9 +203,6 @@ const RegisterScreen = (props) => {
 
   const signIn = async () => {
     try {
-      await GoogleSignin.hasPlayServices();
-      const { idToken } = await GoogleSignin.signIn();
-      const tokens = await GoogleSignin.getTokens()
       setLoading(true);
       AuthService.googleLogin({ token: tokens.accessToken }).then(async res => {
         const jsonRes = await res.json();
@@ -240,10 +236,6 @@ const RegisterScreen = (props) => {
   };
 
   useEffect(() => {
-    GoogleSignin.configure({
-      androidClientId: '411872622691-jtn0id6ql8ugta4i8qo962tngerf79vl.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-      iosClientId: '1034099036541-va0ioishaoaueb7elaogc2ra1h4u1if3.apps.googleusercontent.com'
-    });
   }, [])
 
   return (

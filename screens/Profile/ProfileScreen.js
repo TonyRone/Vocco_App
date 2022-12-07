@@ -345,6 +345,12 @@ const ProfileScreen = (props) => {
               </TouchableOpacity>
             </View>
           </View>
+          <DescriptionText
+            text={'@' + user.firstname}
+            fontSize={12}
+            lineHeight={16}
+            color='rgba(54, 18, 82, 0.8)'
+          />
           {user.bio && <DescriptionText
             numberOfLines={3}
             marginTop={15}

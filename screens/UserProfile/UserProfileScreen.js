@@ -114,6 +114,7 @@ const UserProfileScreen = (props) => {
       if (res.respInfo.status == 200 && mounted.current) {
         setFollowLoading(false);
         const jsonRes = await res.json();
+        console.log(jsonRes.user);
         setUserInfo(jsonRes);
         if (jsonRes.isFriend)
           setFollowState(jsonRes.isFriend.status);
@@ -398,6 +399,13 @@ const UserProfileScreen = (props) => {
                 </TouchableOpacity>
               </View>
             </View>
+            <DescriptionText
+              text={'@'+userInfo?.user.firstname}
+              fontSize={12}
+              lineHeight={16}
+              color='rgba(54, 18, 82, 0.8)'
+              marginLeft={16}
+            />
             {userInfo.user?.bio && <View style={{ paddingHorizontal: 16 }}>
               <DescriptionText
                 numberOfLines={3}
@@ -482,7 +490,7 @@ const UserProfileScreen = (props) => {
                     fontSize={13}
                     lineHeight={21}
                     color={'rgba(54, 36, 68, 0.8)'}
-                    text={renderName(userInfo.user?.firstname, userInfo.user?.lastname)}
+                    text={userInfo.user?.firstname}
                   />
                 </View>
               </View>
