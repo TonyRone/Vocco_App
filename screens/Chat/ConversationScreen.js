@@ -36,7 +36,7 @@ import closeSvg from '../../assets/chat/close.svg';
 import emojiSymbolSvg from '../../assets/common/emoji_symbol.svg'
 import gifSymbolSvg from '../../assets/common/gif_symbol.svg'
 import { SvgXml } from 'react-native-svg';
-import arrowSvg from '../../assets/chat/Arrow.svg';
+import arrowSvg from '../../assets/chat/arrow.svg';
 import photoSvg from '../../assets/chat/photo.svg';
 import disableNotificationSvg from '../../assets/chat/disable_notification.svg';
 import recordSvg from '../../assets/common/bottomIcons/record.svg';
