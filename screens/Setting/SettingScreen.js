@@ -18,7 +18,7 @@ import { BottomButtons } from '../component/BottomButtons';
 import { SearchLanguage } from '../component/SearchLanguage';
 import { MyButton } from '../component/MyButton';
 import { SvgXml } from 'react-native-svg';
-import OpenFile from 'react-native-doc-viewer';
+//import OpenFile from 'react-native-doc-viewer';
 import chewronRightSvg from '../../assets/common/chewron_right.svg';
 import termsSvg from '../../assets/setting/terms.svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
@@ -28,7 +28,6 @@ import contactsSvg from '../../assets/setting/contacts.svg';
 import logoutSvg from '../../assets/setting/logout.svg';
 import websiteSvg from '../../assets/setting/website.svg';
 import { Avatars, windowWidth } from '../../config/config';
-import { GoogleSignin } from 'react-native-google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ACCESSTOKEN_KEY, MAIN_LANGUAGE, windowHeight } from '../../config/config';
 import { styles } from '../style/Common';
@@ -41,6 +40,7 @@ import { setSocketInstance, setUser } from '../../store/actions';
 import VoiceService from '../../services/VoiceService';
 import EditService from '../../services/EditService';
 import { SelectLanguage } from '../component/SelectLanguage';
+import { GoogleSignin } from 'react-native-google-signin';
 
 const SettingScreen = (props) => {
 
@@ -70,7 +70,7 @@ const SettingScreen = (props) => {
     }
 
     const OnSelectLanguage = async () => {
-        //EditService.changeLanguage(language.language);
+        EditService.changeLanguage(language.language);
         i18n.changeLanguage(language.language).then(async () => {
             await AsyncStorage.setItem(
                 MAIN_LANGUAGE,
@@ -105,33 +105,33 @@ const SettingScreen = (props) => {
     }
 
     const pressTerms = () => {
-        if (Platform.OS === 'ios') {
-            //IOS
-            OpenFile.openDoc([{
-                url: "https://storage.googleapis.com/voccosrg/CGUVOCCO.docx",
-                fileNameOptional: "Terms and conditions"
-            }], (error, url) => {
-                if (error) {
-                    console.error(error);
-                } else {
-                    console.log(url)
-                }
-            })
-        } else {
-            //Android
-            OpenFile.openDoc([{
-                url: "https://storage.googleapis.com/voccosrg/CGUVOCCO.docx", // Local "file://" + filepath
-                fileName: "Terms and conditions",
-                cache: false,
-                fileType: "docx"
-            }], (error, url) => {
-                if (error) {
-                    console.error(error);
-                } else {
-                    console.log(url)
-                }
-            })
-        }
+        // if (Platform.OS === 'ios') {
+        //     //IOS
+        //     OpenFile.openDoc([{
+        //         url: "https://storage.googleapis.com/voccosrg/CGUVOCCO.docx",
+        //         fileNameOptional: "Terms and conditions"
+        //     }], (error, url) => {
+        //         if (error) {
+        //             console.error(error);
+        //         } else {
+        //             console.log(url)
+        //         }
+        //     })
+        // } else {
+        //     //Android
+        //     OpenFile.openDoc([{
+        //         url: "https://storage.googleapis.com/voccosrg/CGUVOCCO.docx", // Local "file://" + filepath
+        //         fileName: "Terms and conditions",
+        //         cache: false,
+        //         fileType: "docx"
+        //     }], (error, url) => {
+        //         if (error) {
+        //             console.error(error);
+        //         } else {
+        //             console.log(url)
+        //         }
+        //     })
+        // }
     }
 
     useEffect(() => {
@@ -173,7 +173,7 @@ const SettingScreen = (props) => {
                                 lineHeight={28}
                             />
                             <DescriptionText
-                                text={renderName(userData.firstname, userData.lastname)}
+                                text={userData.firstname}
                                 fontSize={13}
                                 lineHeight={21}
                             />
@@ -313,8 +313,8 @@ const SettingScreen = (props) => {
             </Modal>
             {showLanguageModal &&
                 <SelectLanguage
-                    type = {"description"}
-                    onCloseModal={()=> setShowLanguageModal(false) }
+                    type={"description"}
+                    onCloseModal={() => setShowLanguageModal(false)}
                 />
             }
             <RecordIcon

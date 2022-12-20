@@ -21,7 +21,7 @@ import AudioRecorderPlayer, {
 } from 'react-native-audio-recorder-player';
 
 import * as Progress from "react-native-progress";
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { Menu } from 'react-native-material-menu';
 import RNFetchBlob from 'rn-fetch-blob';
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
@@ -36,7 +36,7 @@ import closeSvg from '../../assets/chat/close.svg';
 import emojiSymbolSvg from '../../assets/common/emoji_symbol.svg'
 import gifSymbolSvg from '../../assets/common/gif_symbol.svg'
 import { SvgXml } from 'react-native-svg';
-import arrowSvg from '../../assets/chat/Arrow.svg';
+import arrowSvg from '../../assets/chat/arrow.svg';
 import photoSvg from '../../assets/chat/photo.svg';
 import disableNotificationSvg from '../../assets/chat/disable_notification.svg';
 import recordSvg from '../../assets/common/bottomIcons/record.svg';
@@ -256,7 +256,7 @@ const ConversationScreen = (props) => {
             const jsonRes = await res.json();
             if (res.respInfo.status !== 201) {
             } else if (mounted.current) {
-                // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                 setIsPublish(false);
                 if (fileType == 'record' || fileType == 'voice' || fileType == 'photo') {
                     let tp = messages;
@@ -315,7 +315,7 @@ const ConversationScreen = (props) => {
 
     const onChangeRecord = async (e, v = false) => {
         if (v == true && isRecording == false) {
-            // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+            Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
             onStartRecord();
         }
         if (v == false && isRecording == true) {
@@ -448,7 +448,7 @@ const ConversationScreen = (props) => {
         else
             getMessages(0);
         setKey(prevKey => prevKey + 1);
-        setFill(user.premium == 'none' ? 30 : 60);
+        setFill(user.premium == 'none' ? 3 : 6);
         socketInstance.on("receiveMessage", ({ info }) => {
             setMessages((prev) => {
                 prev.push(info);
@@ -783,7 +783,7 @@ const ConversationScreen = (props) => {
                                 strokeWidth={0}
                                 trailColor="#D4C9DE"
                                 trailStrokeWidth={0}
-                                onComplete={() => onStopRecord(true)}
+                                // onComplete={() => onStopRecord(true)}
                                 colors={[
                                     ['#B35CF8', 0.4],
                                     ['#8229F4', 0.4],
@@ -976,10 +976,10 @@ const ConversationScreen = (props) => {
                         onDragRelease={(event, gestureState, bounds) => {
                             dragPos.current = gestureState.dx;
                             if (gestureState.dx <= -100) {
-                                // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-                                // setTimeout(() => {
-                                //     Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-                                // }, 300);
+                                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                                setTimeout(() => {
+                                    Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                                }, 300);
                             }
                         }}
                         onReverse={() => {

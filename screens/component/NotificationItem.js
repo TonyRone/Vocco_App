@@ -62,7 +62,7 @@ export const NotificationItem = ({
     if (details == 'userFollow')
         label = t("Has followed you")
     if (details == 'oldStory')
-        label = t("Has posted an old memory 👵🧓")
+        label = t("Has shared a great moment with you 🙂")
     if (details == 'newReply')
         label = t("Has replied to you")
 

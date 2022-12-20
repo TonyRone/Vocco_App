@@ -46,7 +46,7 @@ import { TemporaryStories } from '../component/TemporaryStories';
 import { FollowUsers } from '../component/FollowUsers';
 import { ShareQRcode } from '../component/ShareQRcode';
 import { ShowLikesCount } from '../component/ShowLikesCount';
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 
 const UserProfileScreen = (props) => {
 
@@ -114,6 +114,7 @@ const UserProfileScreen = (props) => {
       if (res.respInfo.status == 200 && mounted.current) {
         setFollowLoading(false);
         const jsonRes = await res.json();
+        console.log(jsonRes.user);
         setUserInfo(jsonRes);
         if (jsonRes.isFriend)
           setFollowState(jsonRes.isFriend.status);
@@ -129,7 +130,7 @@ const UserProfileScreen = (props) => {
     setFollowLoading(true);
     let repo = followState == 'none' ? VoiceService.followFriend(userId) : VoiceService.unfollowFriend(userId);
     if (followState == 'none') {
-      // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     }
     repo.then(async res => {
       if (mounted.current) {
@@ -398,6 +399,13 @@ const UserProfileScreen = (props) => {
                 </TouchableOpacity>
               </View>
             </View>
+            {userInfo?.user.firstname&&<DescriptionText
+              text={'@'+userInfo?.user.firstname}
+              fontSize={12}
+              lineHeight={16}
+              color='rgba(54, 18, 82, 0.8)'
+              marginLeft={16}
+            />}
             {userInfo.user?.bio && <View style={{ paddingHorizontal: 16 }}>
               <DescriptionText
                 numberOfLines={3}
@@ -482,7 +490,7 @@ const UserProfileScreen = (props) => {
                     fontSize={13}
                     lineHeight={21}
                     color={'rgba(54, 36, 68, 0.8)'}
-                    text={renderName(userInfo.user?.firstname, userInfo.user?.lastname)}
+                    text={userInfo.user?.firstname}
                   />
                 </View>
               </View>

@@ -136,10 +136,19 @@ class VoiceService {
             });
     }
 
-    async getStories(skip = 0, userId = '', category = '', searchTitle = '', recordId = '', friend = '', take = 10, date = '') {
+    async getStories(skip = 0, userId = '', category = '', searchTitle = '', recordId = '', friend = '', take = 10, date = '', targetId = '') {
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
-            fetch('GET', `${API_URL}/records/stories?skip=${skip}&take=${take}&order=DESC&userId=${userId}&category=${category}&search=${searchTitle}&recordId=${recordId}&friend=${friend}&date=${date}`, {
+            fetch('GET', `${API_URL}/records/stories?skip=${skip}&take=${take}&order=DESC&userId=${userId}&category=${category}&search=${searchTitle}&recordId=${recordId}&friend=${friend}&date=${date}&targetId=${targetId}`, {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            });
+    }
+
+    async getCalendarStories(year = 2022, month = 1) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob.config({ trusty: true }).
+            fetch('GET', `${API_URL}/records/monthStories?year=${year}&month=${month}`, {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             });
@@ -645,6 +654,7 @@ class VoiceService {
     }
 
     async getReplyAnswerVoices(id) {
+        console.log(id,"$$$$$$$$$$$$$$$$$$$$$$$$$$");
         const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
         return RNFetchBlob.config({ trusty: true }).
             fetch(
@@ -706,6 +716,35 @@ class VoiceService {
             .fetch(
                 'PUT',
                 `${API_URL}/actions/answerBio?id=${id}&receiverId=${receiverId}&isCommented=${isCommented}`, {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+                JSON.stringify(data)
+            );
+    }
+
+    async replyAnswerBio(id, receiverId, data) {
+        console.log(id, receiverId, data,"0");
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob
+            .config({ trusty: true })
+            .fetch(
+                'PUT',
+                `${API_URL}/actions/replyAnswerBio?id=${id}&receiverId=${receiverId}`, {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+                JSON.stringify(data)
+            );
+    }
+
+    async replyAnswerGif(id, receiverId, data) {
+        const token = await AsyncStorage.getItem(ACCESSTOKEN_KEY);
+        return RNFetchBlob
+            .config({ trusty: true })
+            .fetch(
+                'PUT',
+                `${API_URL}/actions/replyAnswerGif?id=${id}&receiverId=${receiverId}`, {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },

@@ -444,7 +444,7 @@ const FriendsScreen = (props) => {
                                                 lineHeight={24}
                                             />
                                             <DescriptionText
-                                                text={renderName(item.user.firstname, item.user.lastname)}
+                                                text={item.user.firstname}
                                                 fontSize={13}
                                                 lineHeight={21}
                                             />
@@ -503,7 +503,7 @@ const FriendsScreen = (props) => {
                                                 lineHeight={24}
                                             />
                                             <DescriptionText
-                                                text={renderName(item.fromUser.firstname, item.fromUser.lastname)}
+                                                text={item.fromUser.firstname}
                                                 fontSize={13}
                                                 lineHeight={21}
                                             />

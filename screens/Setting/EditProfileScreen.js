@@ -12,9 +12,8 @@ import {
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import DatePicker from 'react-native-date-picker';
-import { GoogleSignin } from 'react-native-google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { TitleText } from '../component/TitleText';
@@ -45,6 +44,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setSocketInstance, setUser } from '../../store/actions';
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
+import { GoogleSignin } from 'react-native-google-signin';
 
 const EditProfileScreen = (props) => {
 
@@ -55,8 +55,8 @@ const EditProfileScreen = (props) => {
     let userData = { ...user };
 
     const [username, setUsername] = useState(userData.name);
-    const [firstName, setFirstName] = useState(userData.firstname);
-    const [lastName, setLastName] = useState(userData.lastname);
+    const [firstName, setFirstName] = useState(userData.firstname?.split(" ")[0]);
+    const [lastName, setLastName] = useState(userData.firstname?.split(" ")[1]);
     const [birthDate, setBirthDate] = useState(new Date(userData.dob));
     const [showModal, setShowModal] = useState(false);
     const [gender, setGender] = useState(userData.gender);
@@ -103,11 +103,11 @@ const EditProfileScreen = (props) => {
             await AsyncStorage.removeItem(
                 ACCESSTOKEN_KEY
             );
+            socketInstance.disconnect();
+            dispatch(setSocketInstance(null));
             const isSignedIn = await GoogleSignin.isSignedIn();
             if (isSignedIn)
                 await GoogleSignin.signOut();
-            socketInstance.disconnect();
-            dispatch(setSocketInstance(null));
             onNavigate("Welcome");
             if (mounted.current)
                 setShowModal(false);
@@ -174,7 +174,7 @@ const EditProfileScreen = (props) => {
             dob: birthDate,
             country: userCountry.country,
             gender: gender,
-            first: firstName,
+            first: firstName + ' ' + lastName,
             last: lastName,
             isPrivate: privated ? 'true' : 'false'
         };
@@ -198,10 +198,15 @@ const EditProfileScreen = (props) => {
 
     useEffect(() => {
         mounted.current = true;
-        return ()=>{
+        GoogleSignin.configure({
+            androidClientId: '411872622691-jtn0id6ql8ugta4i8qo962tngerf79vl.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+            iosClientId: '1034099036541-va0ioishaoaueb7elaogc2ra1h4u1if3.apps.googleusercontent.com'
+        });
+        return () => {
             mounted.current = false;
         }
     }, [])
+
     return (
         <KeyboardAvoidingView
             style={{
@@ -272,7 +277,7 @@ const EditProfileScreen = (props) => {
                     </View>
                     <TouchableOpacity onPress={() => {
                         setPrivateStatus(!privated);
-                        // Platform.OS =='ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                        Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
                     }}>
                         <SvgXml
                             width={51}

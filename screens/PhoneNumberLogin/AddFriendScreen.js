@@ -4,6 +4,7 @@ import {
     KeyboardAvoidingView,
     TouchableOpacity,
     Image,
+    TextInput
 } from 'react-native';
 
 import { TitleText } from '../component/TitleText';
@@ -14,6 +15,7 @@ import { ConfirmVerify } from '../component/ConfirmVerify';
 import { SvgXml } from 'react-native-svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
 import greenCheckSvg from '../../assets/friend/green-check.svg';
+import searchSvg from '../../assets/login/search.svg';
 import { styles } from '../style/Common';
 import { SemiBoldText } from '../component/SemiBoldText';
 import EditService from '../../services/EditService';
@@ -36,6 +38,7 @@ const AddFriendScreen = (props) => {
 
     const [activeUsers, setActiveUsers] = useState([]);
     const [followedUsers, setFollowedUsers] = useState([]);
+    const [label, setLabel] = useState('');
 
     const mounted = useRef(false);
 
@@ -65,10 +68,14 @@ const AddFriendScreen = (props) => {
         setFollowedUsers([...tp]);
     }
 
+    const onSetLabel = (v) => {
+        setLabel(v);
+    }
+
     useEffect(() => {
         mounted.current = true;
         getActiveUsers();
-        return ()=>{
+        return () => {
             mounted.current = false;
         }
     }, [])
@@ -104,6 +111,35 @@ const AddFriendScreen = (props) => {
                     />
                 </TouchableOpacity>
             </View>
+            <View style={{ width: windowWidth, marginTop: 8, alignItems: 'center' }}>
+                <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    backgroundColor: '#F2F0F5',
+                    borderRadius: 24,
+                    height: 44,
+                    width: windowWidth - 50,
+                    paddingHorizontal: 12
+                }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <SvgXml
+                            width="20"
+                            height="20"
+                            xml={searchSvg}
+                        />
+                        <TextInput
+                            style={[styles.searchInput, { paddingLeft: 12, width: windowWidth - 175 }]}
+                            value={label}
+                            color='#281E30'
+                            autoFocus={true}
+                            placeholder={t("Search your friends from here")}
+                            onChangeText={(v) => onSetLabel(v)}
+                            placeholderTextColor="rgba(59, 31, 82, 0.6)"
+                        />
+                    </View>
+                </View>
+            </View>
             <ScrollView
                 style={{
                     maxHeight: windowHeight / 2
@@ -119,7 +155,7 @@ const AddFriendScreen = (props) => {
                 {
                     activeUsers.map((item, index) => {
                         let isFollowed = followedUsers.includes(index);
-                        if(item.id == user.id)
+                        if (item.id == user.id || !item.name.toLowerCase().includes(label.toLowerCase()))
                             return null;
                         return <View key={"AddFriends" + index.toString()} style={[styles.rowSpaceBetween, { marginTop: 16 }]}>
                             <View style={styles.rowAlignItems}>
@@ -178,7 +214,7 @@ const AddFriendScreen = (props) => {
                         </View>
                     })
                 }
-                <View style={{height:100,width:10}}>
+                <View style={{ height: 100, width: 10 }}>
                 </View>
             </ScrollView>
             {/* <ScrollView>

@@ -6,10 +6,7 @@ import { createAppContainer } from 'react-navigation'
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import PushNotification from 'react-native-push-notification';
 import SplashScreen from 'react-native-splash-screen'
-import LoginScreen from './screens/mymy/LoginScreen';
-import RegisterScreen from './screens/mymy/RegisterScreen';
 import WelcomeScreen from './screens/mymy/WelcomeScreen';
-import VerifyScreen from './screens/mymy/VerifyScreen';
 import UsernameScreen from './screens/mymy/UsernameScreen';
 import BirthdayScreen from './screens/mymy/BirthdayScreen';
 import IdentifyScreen from './screens/mymy/IdentifyScreen';
@@ -81,6 +78,8 @@ import SelectTopicScreen from './screens/PhoneNumberLogin/SelectTopicScreen';
 import AddFriendScreen from './screens/PhoneNumberLogin/AddFriendScreen';
 import ShareStoryScreen from './screens/mymy/ShareStoryScreen';
 import HoldRecordScreen from './screens/Record/HoldRecordScreen';
+import { NotificationServices } from './screens/mymy';
+import CalendarScreen from './screens/Home/CalendarScreen';
 
 
 const slideAnimation2 = (bottomToTop) => {
@@ -113,27 +112,6 @@ const AppNavigator = createStackNavigator({
   },
   Welcome: {
     screen: WelcomeScreen,
-    navigationOptions: {
-      headerShown: false,
-      animationEnabled: false
-    }
-  },
-  Login: {
-    screen: LoginScreen,
-    navigationOptions: {
-      headerShown: false,
-      animationEnabled: false
-    }
-  },
-  Register: {
-    screen: RegisterScreen,
-    navigationOptions: {
-      headerShown: false,
-      animationEnabled: false
-    }
-  },
-  Verify: {
-    screen: VerifyScreen,
     navigationOptions: {
       headerShown: false,
       animationEnabled: false
@@ -431,6 +409,13 @@ const AppNavigator = createStackNavigator({
       animationEnabled: false
     }
   },
+  Calendar: {
+    screen: CalendarScreen,
+    navigationOptions: {
+      headerShown: false,
+      animationEnabled: false
+    }
+  },
 },
   {
     //initialRouteName:'AddFriend'
@@ -507,6 +492,7 @@ export default App = () => {
           NavigationService.setTopLevelNavigator(navigatorRef);
         }}
       />
+      <NotificationServices />
     </Provider>
   );
 };

@@ -21,7 +21,7 @@ import AudioRecorderPlayer, {
 
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
 import RNFetchBlob from 'rn-fetch-blob';
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import Draggable from 'react-native-draggable';
 import { LinearTextGradient } from "react-native-text-gradient";
@@ -130,8 +130,8 @@ const HoldRecordScreen = (props) => {
   };
 
   const onChangeRecord = async (e, v = false) => {
-    // if (v == true)
-    //   Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+    if (v == true)
+      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
     if (v == true && isRecording == false) {
       onStartRecord();
     }
@@ -338,16 +338,16 @@ const HoldRecordScreen = (props) => {
                 onDragRelease={(event, gestureState, bounds) => {
                   dragPos.current = gestureState.dx;
                   if (gestureState.dx > 80) {
-                    // setTimeout(() => {
-                    //   Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-                    // }, 100);
+                    setTimeout(() => {
+                      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                    }, 100);
                     onStopRecord(true);
                   }
                   else if (gestureState.dx < -80) {
-                    // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-                    // setTimeout(() => {
-                    //   Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-                    // }, 300);
+                    Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                    setTimeout(() => {
+                      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                    }, 300);
                     onStopRecord(false);
                   }
                 }}

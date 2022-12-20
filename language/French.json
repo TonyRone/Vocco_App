@@ -76,7 +76,7 @@
     "You can now talk to the world. Tell your story, ask a quetion or simply share whatever you have in mind!": "Tu peux maintenant parler au monde entier. Raconter tes histoires, poser une question ou partager tout simplement ce que tu as en tête !",
     "Click & hold on the microphone to start recording your first story.": "Appuies et maintiens le microphone pour partager ta première histoire.",
     "You have 1:00 maximum": "Tu as 1:00 maximum",
-    "Tap here to answer": "Appuyer ici pour répondre",
+    "Reply": "Appuyer ici pour répondre",
     "Discover": "Découvrir",
     "Top categories": "Meilleures catégories",
     "SEE ALL": "VOIR TOUT",
@@ -405,6 +405,14 @@
     "Has posted an old memory 👵🧓": "Posté un vieux souvenir 👵🧓",
     "Has commented your story": "Aimé votre commentaire",
     "Has replied to you": "Vous a répondu",
-    "Tagged you in a comment": "T’a tagué dans une comment"
+    "Tagged you in a comment": "T’a tagué dans une comment",
+    "Your loved ones, everyday":"Tes amis proches, tous les jours",
+    "Be the first one to share a moment with your loved ones today!":"Sois le premier à partager un moment avec tes proches aujourd'hui !",
+    "Hello, ":"Bonjour, ",
+    "Share a moment with my friends":"Partager un moment avec mes amis",
+    "Has shared a great moment with you 🙂":"Vient de te partager une histoire ! 🙂",
+    "Posted a new story":"Vient de te partager une histoire !",
+    "Has liked your comment":"A aimé ton commentaire",
+    "Has followed you":"T’a suivi"
   }
 }

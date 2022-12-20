@@ -49,7 +49,7 @@ export const Discover = ({
 
   const { t, i18n } = useTranslation();
 
-  useEffect(async () => {
+  useEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;

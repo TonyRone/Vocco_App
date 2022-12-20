@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, TouchableOpacity, Text, Image, Vibration, Linking } from "react-native";
+import { View, TouchableOpacity, Text, Image, Linking } from "react-native";
 import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
 
 import { useSelector } from 'react-redux';
 
 import { HeartIcon } from './HeartIcon';
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
 import { AnswerReply } from "./AnswerReply";
 import { StoryLikes } from "./StoryLikes";
 import { useTranslation } from 'react-i18next';
@@ -31,10 +30,13 @@ export const AnswerVoiceItem = ({
   friends = [],
   onChangeIsLiked = () => { },
   onDeleteItem = () => { },
-  holdToAnswer = () => { }
+  holdToAnswer = () => { },
+  onReplyAnswer = () => { }
 }) => {
 
   const { user } = useSelector((state) => state.user);
+
+  let len = info.replyAnswers.length;
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [delayTime, setDelayTime] = useState(null);
@@ -82,24 +84,6 @@ export const AnswerVoiceItem = ({
     }
   };
 
-  const getReplies = () => {
-    // if(isExpanded){
-    //   setIsExpanded(false);
-    // }
-    // else{
-    //   setIsExpanded(true);
-    VoiceService.getReplyAnswerVoices(info.id).then(async res => {
-      if (res.respInfo.status === 200 && mounted.current) {
-        const jsonRes = await res.json();
-        setReplyAnswers([...jsonRes]);
-      }
-    })
-      .catch(err => {
-        console.log(err);
-      });
-    // }
-  }
-
   const setIsLiked = (index) => {
     let tp = [...replyAnswers];
     tp[index].isLiked = !tp[index].isLiked;
@@ -121,19 +105,14 @@ export const AnswerVoiceItem = ({
     setReplyAnswers(tp);
   }
 
-  const holdAnswer = (v) => {
-    setHold(v);
-    holdToAnswer(v);
-  }
-
   useEffect(() => {
     mounted.current = true;
-    if (info.type == 'voice')
-      getReplies();
+    let tp = info.replyAnswers;
+    setReplyAnswers([...tp]);
     return () => {
       mounted.current = false;
     }
-  }, [])
+  }, [len])
 
   const taggedName = () => {
     if (info.type == 'bio') {
@@ -183,15 +162,15 @@ export const AnswerVoiceItem = ({
               friend_ID = user.id;
             }
             if (flag == true) {
-              return <Text style={{ 
-                        fontFamily: "SFProDisplay-Bold",
-                        fontSize: 15,
-                        color: "#8327D8",
-                        textAlign: "left",
-                        lineHeight: 24
-                      }}
-                      onPress={() => { friend_ID == user.id ? props.navigation.navigate('Profile') : props.navigation.navigate('UserProfile', { userId: friend_ID })}} key={index}
-                      >{'@' + user_Name}</Text>
+              return <Text style={{
+                fontFamily: "SFProDisplay-Bold",
+                fontSize: 15,
+                color: "#8327D8",
+                textAlign: "left",
+                lineHeight: 24
+              }}
+                onPress={() => { friend_ID == user.id ? props.navigation.navigate('Profile') : props.navigation.navigate('UserProfile', { userId: friend_ID }) }} key={index}
+              >{'@' + user_Name}</Text>
             } else {
               <Text style={{
                 fontFamily: "SFProDisplay-Regular",
@@ -202,7 +181,7 @@ export const AnswerVoiceItem = ({
               }} key={index}>{'@' + user_Name}</Text>
             }
           } else {
-            return <Text style={{ 
+            return <Text style={{
               fontFamily: "SFProDisplay-Regular",
               fontSize: 15,
               color: "#281E30",
@@ -215,7 +194,7 @@ export const AnswerVoiceItem = ({
           {res}
         </Text>
       } else {
-        return <Text style={{ 
+        return <Text style={{
           fontFamily: "SFProDisplay-Regular",
           fontSize: 15,
           color: "#281E30",
@@ -286,8 +265,8 @@ export const AnswerVoiceItem = ({
                 >
                   {info.bio}
                 </MoreOrLess> */}
-                <Hyperlink onPress={(url, text) => Linking.openURL(url) } linkStyle={{ color: "#8327D8" }}>
-                {taggedName()}
+                <Hyperlink onPress={(url, text) => Linking.openURL(url)} linkStyle={{ color: "#8327D8" }}>
+                  {taggedName()}
                 </Hyperlink>
               </View>}
               {info.type == 'gif' &&
@@ -307,9 +286,9 @@ export const AnswerVoiceItem = ({
                   marginTop={2}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => holdAnswer(true)}>
+              <TouchableOpacity onPress={() => onReplyAnswer()}>
                 <DescriptionText
-                  text={t("Tap here to answer")}
+                  text={t("Reply")}
                   color="#8327D8"
                   fontSize={12}
                   lineHeight={16}
@@ -426,6 +405,7 @@ export const AnswerVoiceItem = ({
               onChangeIsLiked={() => setIsLiked(index)}
               onDeleteReplyItem={() => onDeleteReplyAnswer(index)}
               isEnd={(replyAnswers.length < 3 && index == replyAnswers.length - 1) ? true : false}
+              friends={friends}
             />
         )}
         {replyAnswers.length > 2 &&

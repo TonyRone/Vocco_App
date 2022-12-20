@@ -78,7 +78,7 @@ const SearchScreen = (props) => {
   const getLabel = (v) => {
     setLabel(v);
     if (showVoices) setShowVoices(false);
-    if (v != '') {
+    if (v != '' && v != ' ') {
       setIsLoading(true);
       VoiceService.getDiscoverTitle(v, 0, Categories[category].label).then(async res => {
         if (res.respInfo.status === 200 && mounted.current) {
@@ -283,8 +283,8 @@ const SearchScreen = (props) => {
           <View><FlatList
             style={[styles.paddingH16]}
             data={filterTitles.user}
-            renderItem={({ item, index }) =>
-              (!showMore && index > 3) ? null :
+            renderItem={({ item, index }) => {
+              return (!showMore && index > 3) ? null :
                 <TouchableOpacity
                   onPress={() => {
                     if (item.id == user.id)
@@ -301,7 +301,7 @@ const SearchScreen = (props) => {
                       resizeMode='cover'
                     />
                     <DescriptionText
-                      text={item.name}
+                      text={item.name+(item?.firstname?` - ${item.firstname}`:'')}
                       fontSize={15}
                       color='#281E30'
                       marginLeft={10}
@@ -334,6 +334,7 @@ const SearchScreen = (props) => {
                     </View>
                   </TouchableOpacity>}
                 </TouchableOpacity>
+            }
             }
             keyExtractor={(item, index) => index.toString()}
             //  onEndReached = {()=>onLoadMoreTitle()}

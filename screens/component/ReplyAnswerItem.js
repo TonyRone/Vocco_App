@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, TouchableOpacity, Image, ScrollView, Vibration } from "react-native";
+import { View, TouchableOpacity, Image, ScrollView, Vibration, Linking, Text } from "react-native";
 import { TitleText } from "./TitleText";
 import { DescriptionText } from "./DescriptionText";
 import { SvgXml } from 'react-native-svg';
@@ -10,18 +10,21 @@ import whiteTrashSvg from '../../assets/notification/white_trash.svg'
 import pauseSvg from '../../assets/common/pause.svg';
 import playSvg from '../../assets/common/play.svg';
 import { styles } from '../style/Common';
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import VoicePlayer from '../Home/VoicePlayer';
 import VoiceService from "../../services/VoiceService";
 import { Avatars, windowWidth } from "../../config/config";
+import Hyperlink from "react-native-hyperlink";
 
 import { useTranslation } from 'react-i18next';
 import '../../language/i18n';
+import AutoHeightImage from "react-native-auto-height-image";
 
 export const ReplyAnswerItem = ({
   props,
   info,
   isEnd = false,
+  friends = [],
   onChangeIsLiked = () => { },
   onDeleteReplyItem = () => { }
 }) => {
@@ -61,7 +64,7 @@ export const ReplyAnswerItem = ({
     } else {
       setLastTap(timeNow);
       const timeout = setTimeout(() => {
-        if(mounted.current)
+        if (mounted.current)
           setLastTap(0);
       }, DOUBLE_PRESS_DELAY);
     }
@@ -71,6 +74,97 @@ export const ReplyAnswerItem = ({
     if (info.user.id == user.id) {
       VoiceService.deleteReplyAnswer(info.id);
       onDeleteReplyItem();
+    }
+  }
+
+  const taggedName = () => {
+    if (info.type == 'bio') {
+      let temp = info.bio;
+      let result = [];
+      let index_res = "";
+      let flags = false;
+      for (let i = 0; i < temp.length; i++) {
+        if (temp[i] == '@') {
+          if (index_res.length > 0) {
+            result.push(index_res);
+            index_res = "@";
+            flags = true;
+          } else {
+            index_res = index_res + temp[i];
+            flags = true;
+          }
+        } else {
+          if (flags == true) {
+            if ((temp[i] >= 'a' && temp[i] <= 'z') || (temp[i] >= 'A' && temp[i] <= 'Z')) {
+              index_res = index_res + temp[i];
+            } else {
+              result.push(index_res);
+              index_res = "" + temp[i];
+              flags = false;
+            }
+          } else {
+            index_res = index_res + temp[i];
+          }
+        }
+      }
+      result.push(index_res);
+      if (result.length > 1 || result[0][0] == '@') {
+        let res = result.map((item, index) => {
+          if (item[0] == '@') {
+            let user_Name = item.slice(1);
+            let flag = false;
+            let friend_ID;
+            for (let j = 0; j < friends.length; j++) {
+              if (friends[j].user.name.toLowerCase() == user_Name.toLowerCase()) {
+                flag = true;
+                friend_ID = friends[j].user.id;
+              }
+            }
+            if (user_Name.toLowerCase() == user.name.toLowerCase()) {
+              flag = true;
+              friend_ID = user.id;
+            }
+            if (flag == true) {
+              return <Text style={{
+                fontFamily: "SFProDisplay-Bold",
+                fontSize: 15,
+                color: "#8327D8",
+                textAlign: "left",
+                lineHeight: 24
+              }}
+                onPress={() => { friend_ID == user.id ? props.navigation.navigate('Profile') : props.navigation.navigate('UserProfile', { userId: friend_ID }) }} key={index}
+              >{'@' + user_Name}</Text>
+            } else {
+              <Text style={{
+                fontFamily: "SFProDisplay-Regular",
+                fontSize: 15,
+                color: "#281E30",
+                textAlign: "left",
+                lineHeight: 24
+              }} key={index}>{'@' + user_Name}</Text>
+            }
+          } else {
+            return <Text style={{
+              fontFamily: "SFProDisplay-Regular",
+              fontSize: 15,
+              color: "#281E30",
+              textAlign: "left",
+              lineHeight: 24
+            }} key={index}>{item}</Text>
+          }
+        });
+        return <Text style={{ flexWrap: "wrap" }}>
+          {res}
+        </Text>
+      } else {
+        return <Text style={{
+          fontFamily: "SFProDisplay-Regular",
+          fontSize: 15,
+          color: "#281E30",
+          textAlign: "left",
+          lineHeight: 24
+        }}>{result[0]}</Text>
+      }
     }
   }
 
@@ -98,7 +192,7 @@ export const ReplyAnswerItem = ({
         </View>
         {!isEnd && <View style={{
           width: 1,
-          height: isPlaying ? 132 : 56,
+          flex:1,
           backgroundColor: "#D4C9DE"
         }}>
 
@@ -114,7 +208,7 @@ export const ReplyAnswerItem = ({
           }}
           onPress={() => onClickDouble()}
         >
-          <View
+          {/* <View
             style={[styles.rowSpaceBetween]}
           >
             <View style={styles.rowAlignItems}>
@@ -128,7 +222,7 @@ export const ReplyAnswerItem = ({
                     borderColor: '#FFA002',
                     borderWidth: info.user.premium == 'none' ? 0 : 2
                   }}
-                  source={ info.user.avatar?{ uri: info.user.avatar.url }:Avatars[info.user.avatarNumber].uri}
+                  source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
                 />
               </TouchableOpacity>
               <View style={{ marginLeft: 16 }}>
@@ -171,6 +265,92 @@ export const ReplyAnswerItem = ({
                   fontSize={12}
                 />
               </View>
+            </View>
+          </View> */}
+          <View
+            style={[styles.rowSpaceBetween, { alignItems: 'flex-start' }]}
+          >
+            <View style={[styles.rowAlignItems, { alignItems: 'flex-start' }]}>
+              <TouchableOpacity onPress={() => info.user.id == user.id ? props.navigation.navigate('Profile') : props.navigation.navigate('UserProfile', { userId: info.user.id })}>
+                <Image
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 20,
+                    borderColor: '#FFA002',
+                    borderWidth: info.user.premium == 'none' ? 0 : 2
+                  }}
+                  source={info.user.avatar ? { uri: info.user.avatar.url } : Avatars[info.user.avatarNumber].uri}
+                />
+              </TouchableOpacity>
+              <View style={{ marginLeft: 16 }}>
+                <TouchableOpacity onPress={() => info.user.id == user.id ? props.navigation.navigate('Profile') : props.navigation.navigate('UserProfile', { userId: info.user.id })}>
+                  <TitleText
+                    text={userName}
+                    marginBottom={6}
+                    fontSize={15}
+                  />
+                </TouchableOpacity>
+                {info.type == 'bio' && <View style={{ width: 200 }}>
+                  <Hyperlink onPress={(url, text) => Linking.openURL(url)} linkStyle={{ color: "#8327D8" }}>
+                    {taggedName()}
+                  </Hyperlink>
+                </View>}
+                {info.type == 'gif' &&
+                  <AutoHeightImage
+                    source={{ uri: info.gifLink }}
+                    width={140}
+                    style={{
+                      borderRadius: 10,
+                    }}
+                  />
+                }
+                <TouchableOpacity onPress={() => setAllLikes(true)}>
+                  <DescriptionText
+                    text={time + " • " + heartNum + ' like' + (heartNum > 1 ? 's' : '')}
+                    fontSize={12}
+                    lineHeight={16}
+                    marginTop={2}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.rowAlignItems}>
+              {info.type == 'emoji' &&
+                <Text style={{
+                  fontSize: 22,
+                  marginRight: 26,
+                  marginBottom: 20,
+                  color: 'white'
+                }}>
+                  {info.emoji}
+                </Text>
+              }
+              <HeartIcon
+                isLike={check}
+                marginRight={12}
+                marginBottom={22}
+                OnSetLike={() => onLikeVoice()}
+              />
+              {info.type == 'voice' &&
+                <View style={{ alignItems: 'center', marginLeft: 10 }}>
+                  <TouchableOpacity
+                    onPress={() => setIsPlaying(!isPlaying)}
+                  >
+                    <SvgXml
+                      width={40}
+                      height={40}
+                      xml={isPlaying ? pauseSvg : playSvg}
+                    />
+                  </TouchableOpacity>
+                  <DescriptionText
+                    text={new Date(info.duration * 1000).toISOString().substr(14, 5)}
+                    lineHeight={16}
+                    marginTop={6}
+                    fontSize={12}
+                  />
+                </View>
+              }
             </View>
           </View>
           {

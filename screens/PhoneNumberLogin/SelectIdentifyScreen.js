@@ -32,19 +32,24 @@ const SelectIdentifyScreen = (props) => {
 
     const { t, i18n } = useTranslation();
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         let userData = { ...user };
         userData.gender = identify;
+        if (userData.country == null)
+            userData.country = 'France';
         dispatch(setUser(userData));
         const payload = {
+            first:userData.firstname,
             name: userData.name,
             dob: userData.dob,
             country: userData.country,
             gender: userData.gender,
         };
+        console.log(payload);
         setLoading(true);
-        EditService.changeProfile(payload).then(async res => {
+        await EditService.changeProfile(payload).then(async res => {
             const jsonRes = await res.json();
+            console.log(res.respInfo.status);
             if (mounted.current) {
                 if (res.respInfo.status !== 200) {
                     setError(jsonRes.message);
@@ -55,13 +60,13 @@ const SelectIdentifyScreen = (props) => {
             }
         })
             .catch(err => {
-                console.log(err);
+                console.log(err, "******");
             });
     }
 
     useEffect(() => {
         mounted.current = true;
-        return ()=>{
+        return () => {
             mounted.current = false;
         }
     }, [])

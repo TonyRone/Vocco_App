@@ -18,7 +18,7 @@ import AudioRecorderPlayer, {
 } from 'react-native-audio-recorder-player';
 
 import { recorderPlayer } from '../Home/AudioRecorderPlayer';
-// import RNVibrationFeedback from 'react-native-vibration-feedback';
+import RNVibrationFeedback from 'react-native-vibration-feedback';
 import RNFetchBlob from 'rn-fetch-blob';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import Draggable from 'react-native-draggable';
@@ -44,7 +44,9 @@ import VoiceService from '../../services/VoiceService';
 export const AnswerRecordIcon = ({
   props,
   recordId,
+  replyInfo,
   onPublishStory = () => { },
+  onPublishReplyStory = () => { },
   onStartPublish = () => { }
 }) => {
 
@@ -134,7 +136,7 @@ export const AnswerRecordIcon = ({
 
   const onChangeRecord = async (e, v = false) => {
     if (v == true && isRecording == false) {
-      // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+      Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
       onStartRecord();
     }
     if (v == false && isRecording == true) {
@@ -151,21 +153,37 @@ export const AnswerRecordIcon = ({
       let tp = Math.max(wasteTime.current, 1);
       let voiceFile = [
         { name: 'duration', data: String(Math.ceil(tp / 1000.0)) },
-        { name: 'record', data: recordId },
+        { name: 'record', data: replyInfo ? replyInfo.id : recordId },
         { name: 'file', filename: Platform.OS === 'android' ? 'answer.mp3' : 'answer.m4a', data: RNFetchBlob.wrap(String(path)) },
       ];
       onStartPublish();
-      VoiceService.postAnswerVoice(voiceFile).then(async res => {
-        if (res.respInfo.status !== 201) {
-        } else {
-          const jsonRes = res.json();
-          // Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-          onPublishStory(jsonRes);
-        }
-      })
-        .catch(err => {
-          console.log(err);
-        });
+      if (replyInfo == null) {
+        VoiceService.postAnswerVoice(voiceFile).then(async res => {
+          if (res.respInfo.status !== 201) {
+          } else {
+            const jsonRes = res.json();
+            Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+            onPublishStory(jsonRes);
+          }
+        })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+      else {
+        VoiceService.postAnswerReply(voiceFile, replyInfo.user.id).then(async res => {
+          const jsonRes = await res.json();
+          if (res.respInfo.status !== 201) {
+          } else if (mounted.current) {
+            Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+            onPublishReplyStory(jsonRes);
+          }
+          setIsLoading(false);
+        })
+          .catch(err => {
+            console.log(err);
+          });
+      }
       setIsPublish(false);
       wasteTime.current = 0;
     }
@@ -329,9 +347,9 @@ export const AnswerRecordIcon = ({
             onDragRelease={(event, gestureState, bounds) => {
               dragPos.current = gestureState.dx;
               if (gestureState.dx < - 100) {
-                // setTimeout(() => {
-                //   Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-                // }, 100);
+                setTimeout(() => {
+                  Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+                }, 100);
                 onStopRecord(false);
               }
             }}
