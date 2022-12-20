@@ -78,7 +78,7 @@ import SelectTopicScreen from './screens/PhoneNumberLogin/SelectTopicScreen';
 import AddFriendScreen from './screens/PhoneNumberLogin/AddFriendScreen';
 import ShareStoryScreen from './screens/mymy/ShareStoryScreen';
 import HoldRecordScreen from './screens/Record/HoldRecordScreen';
-import { NotificationServices } from './screens/mymy';
+// import { NotificationServices } from './screens/mymy';
 import CalendarScreen from './screens/Home/CalendarScreen';
 
 
@@ -492,7 +492,7 @@ export default App = () => {
           NavigationService.setTopLevelNavigator(navigatorRef);
         }}
       />
-      <NotificationServices />
+      {/* <NotificationServices /> */}
     </Provider>
   );
 };
