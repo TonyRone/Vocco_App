@@ -35,6 +35,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { SvgXml } from 'react-native-svg';
 import closeBlackSvg from '../../assets/record/closeBlack.svg';
+import closeSvg from '../../assets/record/x.svg';
 import whitePostSvg from '../../assets/record/white_post.svg';
 import colorPostSvg from '../../assets/record/color_post.svg';
 import emojiSymbolSvg from '../../assets/common/emoji_symbol.svg'
@@ -93,6 +94,7 @@ export const StoryScreens = ({
   const [showScr, setShowScr] = useState(true);
   const [forceAnswer, setForceAnswer] = useState(false);
   const [commentedUserId, setCommentedUserId] = useState('');
+  const [replyId, setReplyId] = useState(-1);
 
   const mounted = useRef(false);
 
@@ -212,41 +214,73 @@ export const StoryScreens = ({
     }
   }
 
+  const onReplyAnswerStory = (res) => {
+    res.user = user;
+    let tp = combines;
+    tp[replyId].replyAnswers.unshift(res);
+    if (mounted.current) {
+      setCombines([...tp]);
+      setIsLoading(false);
+    }
+    setReplyId(-1);
+  }
+
   const onAnswerBio = (isCommented = '') => {
     setIsLoading(true);
-    VoiceService.answerBio(info.id, info.user.id, { bio: label }, isCommented).then(async res => {
-      if (res.respInfo.status == 200) {
-        const answerBio = await res.json();
-        answerBio.user = user;
-        let tp = combines;
-        tp.unshift(answerBio);
-        tp.sort((a, b) => a.createdAt < b.createdAt);
-        if (mounted.current) {
-          setCombines([...tp]);
-          setIsLoading(false);
-          setRefreshState(!refreshState);
+    if (replyId == -1) {
+      VoiceService.answerBio(info.id, info.user.id, { bio: label }, isCommented).then(async res => {
+        if (res.respInfo.status == 200) {
+          const answerBio = await res.json();
+          answerBio.user = user;
+          let tp = combines;
+          tp.unshift(answerBio);
+          tp.sort((a, b) => a.createdAt < b.createdAt);
+          if (mounted.current) {
+            setCombines([...tp]);
+            setIsLoading(false);
+          }
         }
-      }
-    })
-      .catch(err => {
-        console.log(err);
       })
-    let userIds = [];
-    tempTagUsers.current.forEach(el => {
-      if (label.includes('@' + el.name + ' '))
-        userIds.push(el.id);
-    });
-    let payload = {
-      storyType: 'record',
-      tagUserIds: userIds,
-      recordId: recordId,
-    };
-    VoiceService.postTag(payload).then(async res => {
-    })
-      .catch(err => {
-        console.log(err);
+        .catch(err => {
+          console.log(err);
+        })
+      let userIds = [];
+      tempTagUsers.current.forEach(el => {
+        if (label.includes('@' + el.name + ' '))
+          userIds.push(el.id);
       });
-    tempTagUsers.current = [];
+      let payload = {
+        storyType: 'record',
+        tagUserIds: userIds,
+        recordId: recordId,
+      };
+      VoiceService.postTag(payload).then(async res => {
+      })
+        .catch(err => {
+          console.log(err);
+        });
+      tempTagUsers.current = [];
+    }
+    else {
+      let replyInfo = combines[replyId];
+      VoiceService.replyAnswerBio(replyInfo.id, replyInfo.user.id, { bio: label }).then(async res => {
+        setIsLoading(false);
+        if (res.respInfo.status == 200) {
+          const answerBio = await res.json();
+          answerBio.user = user;
+          let tp = combines;
+          tp[replyId].replyAnswers.unshift(answerBio);
+          if (mounted.current) {
+            setCombines([...tp]);
+            setIsLoading(false);
+          }
+        }
+      })
+        .catch(err => {
+          console.log(err);
+        })
+      setReplyId(-1);
+    }
     setLabel('');
     setFilter([]);
   }
@@ -254,23 +288,105 @@ export const StoryScreens = ({
   const onAnswerGif = (gif) => {
     setShowComment(false);
     setIsLoading(true);
-    VoiceService.answerGif(info.id, info.user.id, { link: gif }).then(async res => {
-      if (res.respInfo.status == 200) {
-        const gifAnswer = await res.json();
-        gifAnswer.user = user;
-        let tp = combines;
-        tp.unshift(gifAnswer);
-        tp.sort((a, b) => a.createdAt < b.createdAt);
-        if (mounted.current) {
-          setCombines([...tp]);
-          setIsLoading(false);
+    if (replyId == -1) {
+      VoiceService.answerGif(info.id, info.user.id, { link: gif }).then(async res => {
+        if (res.respInfo.status == 200) {
+          const gifAnswer = await res.json();
+          gifAnswer.user = user;
+          let tp = combines;
+          tp.unshift(gifAnswer);
+          tp.sort((a, b) => a.createdAt < b.createdAt);
+          if (mounted.current) {
+            setCombines([...tp]);
+            setIsLoading(false);
+          }
         }
-      }
-    })
-      .catch(err => {
-        console.log(err);
       })
+        .catch(err => {
+          console.log(err);
+        })
+    }
+    else {
+      let replyInfo = combines[replyId];
+      VoiceService.replyAnswerGif(replyInfo.id, replyInfo.user.id, { link: gif }).then(async res => {
+        setIsLoading(false);
+        if (res.respInfo.status == 200) {
+          const answerGif = await res.json();
+          answerGif.user = user;
+          let tp = combines;
+          tp[replyId].replyAnswers.unshift(answerGif);
+          if (mounted.current) {
+            setCombines([...tp]);
+            setIsLoading(false);
+          }
+        }
+      })
+        .catch(err => {
+          console.log(err);
+        })
+      setReplyId(-1);
+    }
   }
+
+  // const onAnswerBio = (isCommented = '') => {
+  //   setIsLoading(true);
+  //   VoiceService.answerBio(info.id, info.user.id, { bio: label }, isCommented).then(async res => {
+  //     if (res.respInfo.status == 200) {
+  //       const answerBio = await res.json();
+  //       answerBio.user = user;
+  //       let tp = combines;
+  //       tp.unshift(answerBio);
+  //       tp.sort((a, b) => a.createdAt < b.createdAt);
+  //       if (mounted.current) {
+  //         setCombines([...tp]);
+  //         setIsLoading(false);
+  //         setRefreshState(!refreshState);
+  //       }
+  //     }
+  //   })
+  //     .catch(err => {
+  //       console.log(err);
+  //     })
+  //   let userIds = [];
+  //   tempTagUsers.current.forEach(el => {
+  //     if (label.includes('@' + el.name + ' '))
+  //       userIds.push(el.id);
+  //   });
+  //   let payload = {
+  //     storyType: 'record',
+  //     tagUserIds: userIds,
+  //     recordId: recordId,
+  //   };
+  //   VoiceService.postTag(payload).then(async res => {
+  //   })
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+  //   tempTagUsers.current = [];
+  //   setLabel('');
+  //   setFilter([]);
+  // }
+
+  // const onAnswerGif = (gif) => {
+  //   setShowComment(false);
+  //   setIsLoading(true);
+  //   VoiceService.answerGif(info.id, info.user.id, { link: gif }).then(async res => {
+  //     if (res.respInfo.status == 200) {
+  //       const gifAnswer = await res.json();
+  //       gifAnswer.user = user;
+  //       let tp = combines;
+  //       tp.unshift(gifAnswer);
+  //       tp.sort((a, b) => a.createdAt < b.createdAt);
+  //       if (mounted.current) {
+  //         setCombines([...tp]);
+  //         setIsLoading(false);
+  //       }
+  //     }
+  //   })
+  //     .catch(err => {
+  //       console.log(err);
+  //     })
+  // }
 
   const getFollowUsers = () => {
     VoiceService.getFollows(user.id, "Following")
@@ -344,11 +460,12 @@ export const StoryScreens = ({
         onClose();
       }}
     >
-      <Pressable onPressOut={onClose} style={[styles.swipeModal, { height:windowHeight, marginTop: 0, flex:1 }]}>
+      <Pressable onPressOut={onClose} style={[styles.swipeModal, { height: windowHeight, marginTop: 0, flex: 1 }]}>
         <View style={[styles.swipeContainerContent, { bottom: 0, maxHeight: windowHeight }]}>
           <KeyboardAvoidingView
             style={{
-              backgroundColor: '#FFF'
+              backgroundColor: '#FFF',
+              flex: 1,
             }}
           >
             <Pressable style={{ backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 30 }}>
@@ -363,7 +480,7 @@ export const StoryScreens = ({
                 marginBottom={15}
               />
               <ScrollView
-                style={{ height: 300 }}
+                style={{ maxHeight: 300, marginBottom: 80 }}
               >
                 {!loading ? combines.length > 0 ? combines.map((item, index) =>
                   item.type ?
@@ -374,8 +491,10 @@ export const StoryScreens = ({
                       onChangeIsLiked={() => setIsLiked(index)}
                       onDeleteItem={() => onDeleteItem(index)}
                       holdToAnswer={(v) => setIsHolding(v)}
+                      onReplyAnswer={() => setReplyId(index)}
                       friends={friends}
-                    /> :
+                    />
+                    :
                     <TagItem
                       key={index + item.id + 'tagFriend'}
                       props={props}
@@ -458,6 +577,34 @@ export const StoryScreens = ({
                 </TouchableOpacity>
               })
               }
+              {replyId != -1 && <View
+                style={{
+                  width: windowWidth,
+                  height: 40,
+                  backgroundColor: '#F0F0F0',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}
+              >
+                <DescriptionText
+                  text={t("Reply to ") + '@' + combines[replyId].user.name}
+                  fontSize={15}
+                  color="#000"
+                  marginLeft={13}
+                />
+                <TouchableOpacity onPress={() => setReplyId(-1)}>
+                  <SvgXml
+                    xml={closeSvg}
+                    style={{
+                      marginRight: 13
+                    }}
+                    height={12}
+                    width={12}
+                  />
+                </TouchableOpacity>
+              </View>
+              }
               <Pressable style={{
                 width: windowWidth,
                 height: 80,
@@ -532,8 +679,10 @@ export const StoryScreens = ({
                 </View>
                 <AnswerRecordIcon
                   props={props}
+                  replyInfo={replyId != -1 ? combines[replyId] : null}
                   recordId={recordId}
                   onPublishStory={(res) => onAnswerStory(res)}
+                  onPublishReplyStory={(res) => onReplyAnswerStory(res)}
                   onStartPublish={() => setIsLoading(true)}
                 />
               </Pressable>

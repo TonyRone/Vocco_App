@@ -36,7 +36,7 @@ export const AnswerVoiceItem = ({
 
   const { user } = useSelector((state) => state.user);
 
-  let len = info.replyAnswers.length;
+  let len = info.replyAnswers ? info.replyAnswers.length : 0;
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [delayTime, setDelayTime] = useState(null);
@@ -77,7 +77,6 @@ export const AnswerVoiceItem = ({
       setLastTap(timeNow);
       setDelayTime(setTimeout(() => {
         if (mounted.current) {
-          holdAnswer(true);
           setLastTap(0);
         }
       }, DOUBLE_PRESS_DELAY));
@@ -107,8 +106,10 @@ export const AnswerVoiceItem = ({
 
   useEffect(() => {
     mounted.current = true;
-    let tp = info.replyAnswers;
-    setReplyAnswers([...tp]);
+    if (info.replyAnswers) {
+      let tp = info.replyAnswers;
+      setReplyAnswers([...tp]);
+    }
     return () => {
       mounted.current = false;
     }

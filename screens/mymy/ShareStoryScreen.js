@@ -54,7 +54,7 @@ const ShareStoryScreen = (props) => {
   };
 
   const onCopyLink = () => {
-    Clipboard.setString("https://bit.ly/3S9VVsu");
+    Clipboard.setString(`https://vocco.app.link/${user.name}`);
   }
 
   const onNavigate = (des, par = null) => {
@@ -69,7 +69,7 @@ const ShareStoryScreen = (props) => {
     const options = {
         title: 'Sharing!',
         message: "",
-        url: 'https://bit.ly/3S9VVsu',
+        url: `https://vocco.app.link/${user.name}`,
     };
     await Share.share(options);
 }
@@ -256,7 +256,7 @@ const ShareStoryScreen = (props) => {
           <View style={[styles.rowSpaceBetween, { width: '100%', height: 40, marginTop: 8, borderWidth: 1, borderColor: '#F2F0F5', borderRadius: 12 }]}>
             <View style={{ width: windowWidth - 115, height: 26 }}>
               <DescriptionText
-                text={"https://bit.ly/3S9VVsu"}
+                text={`https://vocco.app.link/${user.name}`}
                 color="#281E30"
                 fontSize={22}
                 lineHeight={26}

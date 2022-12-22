@@ -84,7 +84,6 @@ const PostingVoiceScreen = (props) => {
   const [pickModal, setPickModal] = useState(false);
   const [storyAddress, setStoryAddress] = useState(param.info ? param.info.address : '');
   const [showCityModal, setShowCityModal] = useState(false);
-  const [postInfo, setPostInfo] = useState(null);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
 
   const mounted = useRef(false);
@@ -129,42 +128,41 @@ const PostingVoiceScreen = (props) => {
       setIsLoading(true);
       VoiceService.postVoice(voiceFile, param.isPast).then(async res => {
         const jsonRes = await res.json();
-        setPostInfo(jsonRes);
-        if (mounted.current) {
-          if (res.respInfo.status !== 201) {
-          } else {
-            if (recordImg) {
-              let formData = new FormData();
-              formData.append('recordId', jsonRes.id);
-              const imagePath = Platform.OS == 'android' ? recordImg.path : decodeURIComponent(recordImg.path.replace('file://', ''));
-              const mimeType = recordImg.mime;
-              const fileData = {
-                uri: imagePath,
-                type: mimeType,
-                name: 'recordImage',
-              }
-              formData.append('file', fileData);
-              VoiceService.postRecordImage(formData).then(res => {
-                Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
-                socketInstance.emit("newVoice", { uid: user.id });
-                // dispatch(setCreatedAt(param.createdAt));
-                // onNavigate("Home", { shareInfo: jsonRes })
-              })
+        // if (mounted.current) {
+        if (res.respInfo.status !== 201) {
+        } else {
+          if (recordImg) {
+            let formData = new FormData();
+            formData.append('recordId', jsonRes.id);
+            const imagePath = Platform.OS == 'android' ? recordImg.path : decodeURIComponent(recordImg.path.replace('file://', ''));
+            const mimeType = recordImg.mime;
+            const fileData = {
+              uri: imagePath,
+              type: mimeType,
+              name: 'recordImage',
             }
-            else {
+            formData.append('file', fileData);
+            VoiceService.postRecordImage(formData).then(res => {
               Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
               socketInstance.emit("newVoice", { uid: user.id });
-              // dispatch(setCreatedAt(param.createdAt));
-              // onNavigate("Home", { shareInfo: jsonRes })
-            }
+              dispatch(setCreatedAt(param.createdAt));
+              onNavigate("Home", { shareInfo: jsonRes })
+            })
+          }
+          else {
+            Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
+            socketInstance.emit("newVoice", { uid: user.id });
+            // dispatch(setCreatedAt(param.createdAt));
+            // onNavigate("Home", { shareInfo: jsonRes })
           }
         }
+        // }
       })
         .catch(err => {
           console.log(err);
         });
-        props.navigation.navigate("Home");
-      
+      props.navigation.navigate("Home");
+
     }
   }
 

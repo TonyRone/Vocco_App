@@ -98,6 +98,7 @@ const VoiceProfileScreen = (props) => {
     VoiceService.getStories(0, '', '', '', recordId).then(async res => {
       if (res.respInfo.status === 200 && mounted.current) {
         const jsonRes = await res.json();
+        console.log(jsonRes);
         setIsLike(jsonRes[0].isLike);
         setLikeCount(jsonRes[0].likesCount);
         setInfo(jsonRes[0]);
@@ -622,8 +623,10 @@ const VoiceProfileScreen = (props) => {
               <SvgXml
                 xml={closeSvg}
                 style={{
-                  marginRight: 13
+                  marginRight: 13,
                 }}
+                height={12}
+                width={12}
               />
             </TouchableOpacity>
           </View>

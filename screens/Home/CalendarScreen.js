@@ -95,7 +95,7 @@ const CalendarScreen = (props) => {
                 flex: 1
             }}
         >
-            <View style={[styles.rowSpaceBetween, { marginTop: 16, paddingHorizontal: 20, marginBottom: 10 }]}>
+            <View style={[styles.rowSpaceBetween, { marginTop: 31, paddingHorizontal: 20, marginBottom: 15 }]}>
                 <TouchableOpacity onPress={() => props.navigation.goBack()}>
                     <SvgXml
                         xml={leftArrowSvg}
@@ -104,9 +104,7 @@ const CalendarScreen = (props) => {
                 <TitleText
                     text={t("Memories")}
                     fontSize={21}
-                    lineHeight={25}
-                    marginTop={15}
-                    marginBottom={5}
+                    lineHeight={21}
                     color="#B375F6"
                 />
                 <View></View>
@@ -159,7 +157,7 @@ const CalendarScreen = (props) => {
                             }}>
                                 {numbers.map((el, index) => {
                                     let el_day = new Date(2022, tempDate.getMonth());
-                                    el_day.setDate(index - startNum + 1);
+                                    el_day.setDate(index - startNum);
                                     let len = item[el_day.getDate()].length;
                                     return <TouchableOpacity
                                         style={{

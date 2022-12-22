@@ -174,7 +174,7 @@ export const AnswerRecordIcon = ({
         VoiceService.postAnswerReply(voiceFile, replyInfo.user.id).then(async res => {
           const jsonRes = await res.json();
           if (res.respInfo.status !== 201) {
-          } else if (mounted.current) {
+          } else {
             Platform.OS == 'ios' ? RNVibrationFeedback.vibrateWith(1519) : Vibration.vibrate(100);
             onPublishReplyStory(jsonRes);
           }
